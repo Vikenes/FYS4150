@@ -61,7 +61,7 @@ We want to check that
     u(x) = 1 - (1-e^{-10})x - e^{-10x}
 \end{align}
 
-is the solution of eq. \ref{eq:diff_eq}. We first control that eq. \ref{eq:analytical_sol} satisfies the boundary conditions. 
+is the solution of eq. \ref{eq:poisson_eq}. We first control that eq. \ref{eq:p1_analytical_sol} satisfies the boundary conditions. 
 
 \begin{align*}
     u(0) &= 1 - 0 - e^{0} = 0 \\
@@ -74,7 +74,7 @@ We find the double derivative of $u(x)$,
     \dv{u}{x} &= -(1-e^{-10}) - (-10)e^{-10x} \quad \Rightarrow \quad \dv[2]{u}{x} = -100e^{-10x},
 \end{align*}
 
-and see that this satisfies the differential eq. \ref{eq:diff_eq}.
+and see that this satisfies the differential eq. \ref{eq:poisson_eq}.
 
 
 \section*{Problem 2}
