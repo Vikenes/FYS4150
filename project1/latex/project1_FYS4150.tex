@@ -34,48 +34,10 @@
     citecolor={blue!50!black},
     urlcolor={blue!80!black}}
 
-%% Defines the style of the programming listing
-%% This is actually my personal template, go ahead and change stuff if you want
-
-
-
-%% USEFUL LINKS:
-%%
-%%   UiO LaTeX guides:        https://www.mn.uio.no/ifi/tjenester/it/hjelp/latex/
-%%   mathematics:             https://en.wikibooks.org/wiki/LaTeX/Mathematics
-
-%%   PHYSICS !                https://mirror.hmc.edu/ctan/macros/latex/contrib/physics/physics.pdf
-
-%%   the basics of Tikz:       https://en.wikibooks.org/wiki/LaTeX/PGF/Tikz
-%%   all the colors!:          https://en.wikibooks.org/wiki/LaTeX/Colors
-%%   how to draw tables:       https://en.wikibooks.org/wiki/LaTeX/Tables
-%%   code listing styles:      https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
-%%   \includegraphics          https://en.wikibooks.org/wiki/LaTeX/Importing_Graphics
-%%   learn more about figures  https://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions
-%%   automagic bibliography:   https://en.wikibooks.org/wiki/LaTeX/Bibliography_Management  (this one is kinda difficult the first time)
-%%   REVTeX Guide:             http://www.physics.csbsju.edu/370/papers/Journal_Style_Manuals/auguide4-1.pdf
-%%
-%%   (this document is of class "revtex4-1", the REVTeX Guide explains how the class works)
-
-
-%% CREATING THE .pdf FILE USING LINUX IN THE TERMINAL
-%%
-%% [terminal]$ pdflatex template.tex
-%%
-%% Run the command twice, always.
-%% If you want to use \footnote, you need to run these commands (IN THIS SPECIFIC ORDER)
-%%
-%% [terminal]$ pdflatex template.tex
-%% [terminal]$ bibtex template
-%% [terminal]$ pdflatex template.tex
-%% [terminal]$ pdflatex template.tex
-%%
-%% Don't ask me why, I don't know.
-
 \begin{document}
 
-\title{Title of the document}      % self-explanatory
-\author{Your name(s) here}          % self-explanatory
+\title{Project 1 FYS4150}      % self-explanatory
+\author{Vetle Vikenes, Johan Mylius Kroken and Nanna Bryne}          % self-explanatory
 \date{\today}                             % self-explanatory
 \noaffiliation                            % ignore this, but keep it.
 
@@ -86,11 +48,34 @@
     
 \section*{Problem 1}
 
-\subsection*{Problem a}
-Write a solution for problem 1a here.
+We have the equation 
 
-\subsection*{Problem b}
-Write a solution for problem 1b here.
+\begin{align}\label{eq:diff_eq}
+    -\dv[2]{u}{x} =  100e^{-10x}, \quad \text{where} \quad x\in [0,1], \quad u(0)=u(1)=0.
+\end{align}
+
+
+We want to check that 
+
+\begin{align}\label{eq:analytical_sol}
+    u(x) = 1 - (1-e^{-10})x - e^{-10x}
+\end{align}
+
+is the solution of eq. \ref{eq:diff_eq}. We first control that eq. \ref{eq:analytical_sol} satisfies the boundary conditions. 
+
+\begin{align*}
+    u(0) &= 1 - 0 - e^{0} = 0 \\
+    u(1) &= 1 - (1-e^{-10}) - e^{-10} = 0
+\end{align*}
+ 
+We find the double derivative of $u(x)$,
+
+\begin{align*}
+    \dv{u}{x} &= -(1-e^{-10}) - (-10)e^{-10x} \quad \Rightarrow \quad \dv[2]{u}{x} = -100e^{-10x},
+\end{align*}
+
+and see that this satisfies the differential eq. \ref{eq:diff_eq}.
+
 
 \section*{Problem 2}
 We write equations using the LaTeX \texttt{equation} (or \texttt{align}) environments. Here is an equation with numbering
@@ -103,7 +88,7 @@ and here is one without numbering:
 \end{equation*}
 Sometimes it is useful to refer back to a previous equation, like we're demonstrating here for equation \ref{eq:newton}.
 
-We can include figures using the \texttt{figure} environment. Whenever we include a figure or table, we \textit{must} make sure to actually refer to it in the main text, e.g.\ something like this: ``In figure \ref{fig:rel_err} we show \ldots''. 
+We can include figures using the \texttt{figure} environment. Whenever we include a figure or table, we \textit{must} make sure to actually refer to it in the main text, e.g.\ something like this: %``In figure \ref{fig:rel_err} we show \ldots''. 
 
 Also, note the LaTeX code we used to get correct quotation marks in the previous sentence. (Simply using the \texttt{"} key on your keyboard will give the wrong result.) Figures should preferably be vector graphics (e.g.\ a \texttt{.pdf} file) rather than raster graphics (e.g.\ a \texttt{.png} file).
 
