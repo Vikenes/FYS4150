@@ -16,6 +16,7 @@
 \usepackage{physics,amssymb}  % mathematical symbols (physics imports amsmath)
 \include{amsmath}
 \usepackage{graphicx}         % include graphics such as plots
+\graphicspath{{../output/plots/}} % path for figures
 \usepackage{xcolor}           % set colors
 \usepackage{hyperref}         % automagic cross-referencing (this is GODLIKE)
 \usepackage{listings}         % display code
@@ -79,6 +80,11 @@ and see that this satisfies the differential eq. \ref{eq:poisson_eq}.
 
 
 \section*{Problem 2}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{u_x.pdf}
+    \caption{CAPTION}
+\end{figure}
 
 \section*{Problem 3}
     We have the discretisation of the second order derivative as follows:
