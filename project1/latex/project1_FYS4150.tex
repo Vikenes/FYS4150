@@ -80,7 +80,17 @@ and see that this satisfies the differential eq. \ref{eq:poisson_eq}.
 \section*{Problem 2}
 
 \section*{Problem 3}
-    The blaballa
+    We have the discretisation of the second order derivative as follows:
+    \begin{align*}
+        \dv[2]{u}{x}\bigg\rvert_{x_i} = u_i'' = \frac{u_{i+1}-2u_i+u_{i-1}}{h^2} + \mathcal{O}(h^2) \approx \frac{v_{i+1}-2v_i+v_{i-1}}{h^2} = v_i''
+    \end{align*}
+    where we have approximated $u_i$ with $v_i$ by  neglecting the error term, and $h$ is the step length. We further insert this  into the Poisson equation  and obtain the following:
+    \begin{align*}
+        -\dv[2]{u}{x}\approx - \dv[2]{v}{x}\bigg\rvert_{x_i} &= -v_i'' = f(x_i) = f_i \\
+        \implies -v_i'' &= f_i \\
+        \implies \frac{-v_{i+1}+2v_i-v_{i-1}}{h^2} &= f_i \\
+        \implies -v_{i+1}+2v_i-v_{i-1} &= h^2f_i \equiv g_i
+    \end{align*}
 
 
 
