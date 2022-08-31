@@ -76,7 +76,7 @@ and see that this satisfies the differential eq. \ref{eq:poisson_eq}.
 \section*{Problem 2}
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.9\textwidth]{u_x.pdf}
+    \includegraphics[width=0.5\textwidth]{u_x.pdf}
     \caption{CAPTION}
 \end{figure}
 
@@ -85,20 +85,54 @@ and see that this satisfies the differential eq. \ref{eq:poisson_eq}.
     \begin{align*}
         \dv[2]{u}{x}\bigg\rvert_{x_i} = u_i'' = \frac{u_{i+1}-2u_i+u_{i-1}}{h^2} + \mathcal{O}(h^2) \approx \frac{v_{i+1}-2v_i+v_{i-1}}{h^2} = v_i''
     \end{align*}
-    where we have approximated $u_i$ with $v_i$ by  neglecting the error term, and $h$ is the step length. We further insert this  into the Poisson equation  and obtain the following:
-    \begin{align*}
-        -\dv[2]{u}{x}\approx - \dv[2]{v}{x}\bigg\rvert_{x_i} &= -v_i'' = f(x_i) = f_i \\
-        \implies -v_i'' &= f_i \\
-        \implies \frac{-v_{i+1}+2v_i-v_{i-1}}{h^2} &= f_i \\
-        \implies -v_{i+1}+2v_i-v_{i-1} &= h^2f_i \equiv g_i
-    \end{align*}
-
-
+    where we have approximated $u_i$ with $v_i$ by  neglecting the error term, and $h$ is the step length. Inserting $v_i$ into the Poisson equation yields  
+    \begin{align}
+        -v_i'' = \frac{-v_{i+1}+2v_i-v_{i-1}}{h^2} &= f_i \nonumber \\
+        -v_{i+1}+2v_i-v_{i-1} &= h^2f_i \equiv g_i, \label{eq:p3_disc_poisson_eq}
+    \end{align}
+    which is a discretized version of the Poisson equation. 
 
 
 
 \section*{Problem 4}
+The computations performed in equation \eqref{eq:p3_disc_poisson_eq} to obtain a value for $g_i$ can be expressed in terms of vectors. If we have two column vectors, $\mathbf{a}$ and $\mathbf{\tilde{v}}$, defined as $a=(-1,\,2,\,-1)$ and $\mathbf{\tilde{v}}=(v_{i-1},\,v_i,\,v_{i+1})$, respectively, equation \eqref{eq:p3_disc_poisson_eq} can be written as  
+\begin{align*}
+    \mathbf{a}^T \, \mathbf{\tilde{v}} = \begin{pmatrix}
+        -1 & 2 & -1 
+    \end{pmatrix}
+    \begin{pmatrix}
+        v_{i-1} \\ 
+        v_i \\ 
+        v_{i+1}
+    \end{pmatrix}
+    = -v_{i+1}+2v_i-v_{i-1} = g_i.
+\end{align*}
+We can extend this to to compute all elements of $\mathbf{g}=(g_0,\,\dots,\,g_n)$ by multiplying $\mathbf{v}=(v_0,\,\dots,\,v_n)$ with a tridiagonal matrix $A$ with $2$ on its main diagonal and $-1$ on its subdiagonal and superdiagonal. 
 
+As a matrix equation, equation \eqref{eq:p3_disc_poisson_eq} can be written as  
+\begin{align*}
+    A\mathbf{v} = 
+    \begin{pmatrix}
+        2 & -1 & & \\
+        -1 & \ddots & \ddots & \\ 
+         & \ddots & & -1 \\
+          & & -1 & 2
+    \end{pmatrix}
+    \begin{pmatrix}
+        v_0 \\
+        v_1 \\
+        \vdots \\ 
+        v_n
+    \end{pmatrix} = 
+    \begin{pmatrix}
+        g_0 \\
+        g_1 \\ 
+        \vdots \\
+        g_n
+    \end{pmatrix}
+    = \mathbf{g},
+\end{align*}
+where the value of the original differential equation is obtained by $\mathbf{f}=\mathbf{g}/h^2$
 
 
 \begin{algorithm}[H]
