@@ -42,6 +42,13 @@ urlcolor={blue!80!black}}
     
 \textit{List a link to your github repository here!}
     
+\section*{Introduction}
+We will solve the one-dimensional Poisson equation 
+\begin{align*}
+    - \dv[2]{u}{x}=f(x)
+\end{align*}
+where the source function, $f(x)=100e^{-10x}$, is known. We will du this for $x\in[0,\,1]$ with boundary conditions $u(0)=u(1)=0$.
+
 \section*{Problem 1}
 
 We have the equation 
@@ -81,21 +88,23 @@ and see that this satisfies the differential eq. \ref{eq:poisson_eq}.
 \end{figure}
 
 \section*{Problem 3}
-    We have the discretisation of the second order derivative as follows:
-    \begin{align*}
-        \dv[2]{u}{x}\bigg\rvert_{x_i} = u_i'' = \frac{u_{i+1}-2u_i+u_{i-1}}{h^2} + \mathcal{O}(h^2) \approx \frac{v_{i+1}-2v_i+v_{i-1}}{h^2} = v_i''
-    \end{align*}
-    where we have approximated $u_i$ with $v_i$ by  neglecting the error term, and $h$ is the step length. Inserting $v_i$ into the Poisson equation yields  
-    \begin{align}
-        -v_i'' = \frac{-v_{i+1}+2v_i-v_{i-1}}{h^2} &= f_i \nonumber \\
-        -v_{i+1}+2v_i-v_{i-1} &= h^2f_i \equiv g_i, \label{eq:p3_disc_poisson_eq}
-    \end{align}
-    which is a discretized version of the Poisson equation. 
+For the discrete value at point a $i$ we denote this as $x_i$, where the corresponding function value is defined as $u(x_i)\equiv u_i$. Similarly, the source function is defined as $f(x_i)\equiv f_i$. We now find the discretized version of the second order derivative of $u_i$
+\begin{align*}
+    \dv[2]{u}{x}\bigg\rvert_{x_i} = u_i'' = \frac{u_{i+1}-2u_i+u_{i-1}}{h^2} + \mathcal{O}(h^2) \approx \frac{v_{i+1}-2v_i+v_{i-1}}{h^2} = v_i'',
+\end{align*}
+where $v_i$ is the approximated value of $u_i$ obtained by neglecting the $\mathcal{O}(h^2)$ term, and $h=x_{i+1}-x_i$ is the step length. % Should define h differently
+
+Inserting for $v_i$ into the Poisson equation yields 
+\begin{align}
+    -v_i'' = \frac{-v_{i+1}+2v_i-v_{i-1}}{h^2} &= f_i \label{eq:p3_disc_poisson_eq} 
+\end{align}
+which is a discretized version of the Poisson equation. 
 
 
 
 \section*{Problem 4}
-The computations performed in equation \eqref{eq:p3_disc_poisson_eq} to obtain a value for $g_i$ can be expressed in terms of vectors. If we have two column vectors, $\mathbf{a}$ and $\mathbf{\tilde{v}}$, defined as $a=(-1,\,2,\,-1)$ and $\mathbf{\tilde{v}}=(v_{i-1},\,v_i,\,v_{i+1})$, respectively, equation \eqref{eq:p3_disc_poisson_eq} can be written as  
+% Should be rewritten to be "compatible" with P5 and P6 once those tasks are completed. 
+The computations performed in equation \eqref{eq:p3_disc_poisson_eq} to obtain a value for $f_i$ can be expressed in terms of vectors. If we have two column vectors, $\mathbf{a}$ and $\mathbf{\tilde{v}}$, defined as $a=(-1,\,2,\,-1)$ and $\mathbf{\tilde{v}}=(v_{i-1},\,v_i,\,v_{i+1})$, respectively, equation \eqref{eq:p3_disc_poisson_eq} can be written as  
 \begin{align*}
     \mathbf{a}^T \, \mathbf{\tilde{v}} = \begin{pmatrix}
         -1 & 2 & -1 
@@ -105,11 +114,9 @@ The computations performed in equation \eqref{eq:p3_disc_poisson_eq} to obtain a
         v_i \\ 
         v_{i+1}
     \end{pmatrix}
-    = -v_{i+1}+2v_i-v_{i-1} = g_i.
+    = -v_{i+1}+2v_i-v_{i-1} = h^2 f_i \equiv g_i.
 \end{align*}
-We can extend this to to compute all elements of $\mathbf{g}=(g_0,\,\dots,\,g_n)$ by multiplying $\mathbf{v}=(v_0,\,\dots,\,v_n)$ with a tridiagonal matrix $A$ with $2$ on its main diagonal and $-1$ on its subdiagonal and superdiagonal. 
-
-As a matrix equation, equation \eqref{eq:p3_disc_poisson_eq} can be written as  
+We can extend this to compute multiple elements of $\mathbf{g}=(g_0,\,\dots,\,g_n)$ by multiplying $\mathbf{v}=(v_0,\,\dots,\,v_n)$ with a tridiagonal matrix $A$ with $2$ on its main diagonal and $-1$ on its subdiagonal and superdiagonal. However, for $v_0$ and $v_n$ we are unable to compute the second derivative, since $v_{-1}$ and $v_{n+1}$ are not defined. From the boundary conditions we have $v_0=v_n=0$, so $v_1$, $v_{n-1}$ and all the elements in between can be computed. Omitting the end points, equation \eqref{eq:p3_disc_poisson_eq} can be written as a matrix equation by  
 \begin{align*}
     A\mathbf{v} = 
     \begin{pmatrix}
@@ -119,20 +126,30 @@ As a matrix equation, equation \eqref{eq:p3_disc_poisson_eq} can be written as
           & & -1 & 2
     \end{pmatrix}
     \begin{pmatrix}
-        v_0 \\
         v_1 \\
+        v_2 \\
         \vdots \\ 
-        v_n
+        v_{n-1}
     \end{pmatrix} = 
     \begin{pmatrix}
-        g_0 \\
-        g_1 \\ 
+        g_1 \\
+        g_2 \\ 
         \vdots \\
-        g_n
+        g_{n-1}
     \end{pmatrix}
     = \mathbf{g},
 \end{align*}
-where the value of the original differential equation is obtained by $\mathbf{f}=\mathbf{g}/h^2$
+where the value of the original differential equation is obtained by $\mathbf{f}=\mathbf{g}/h^2$. For the end-points we actually have $2v_1-v_2=g_1+v_0$ and $-v_{n-2}+2v_{n-1}=g_{n-1}+v_n$, but we have ommited these additional terms as they both are zero. 
+
+
+\section*{Problem 5}
+\subsection*{a)}
+We have two vectors of length $m$, $\mathbf{v}^*$ and $\mathbf{x}$, representing a complete solution to the discretized Poisson equation and corresponding $x$ values, respectively. With a matrix $A\in\mathbb{R}^{n\cross n}$ being the tridiagonal matrix from problem 4, we can find how $n$ relates to $m$. For all elements of $\mathbf{v}^*$ to be a complete solution, the derivative in equation \eqref{eq:p3_disc_poisson_eq} must be applicable,  
+
+
+
+
+
 
 
 \begin{algorithm}[H]
@@ -140,7 +157,8 @@ where the value of the original differential equation is obtained by $\mathbf{f}
     \begin{algorithmic}
         \State Some maths, e.g $f(x) = x^2$.  \Comment{Here's a comment}
         \For{$i = 0, 1, ..., n-1$}
-        \State Do something here 
+        \\
+        \State $g[i]=a[i-1]*v[i-1]+b[i]*v[i]+c[i]*v[i+1]$ \\
         \EndFor
         \While{Some condition}
         \State Do something more here 
