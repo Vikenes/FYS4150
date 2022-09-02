@@ -20,6 +20,11 @@
 \usepackage[noend]{algpseudocode}
 \usepackage{subfigure}
 \usepackage{tikz}
+
+%   NEW COMMANDS
+\renewcommand{\vec}{\mathbf}
+
+
 \usetikzlibrary{quantikz}
 % defines the color of hyperref objects
 % Blending two colors:  blue!80!black  =  80% blue and 20% black
@@ -90,13 +95,13 @@ and see that this satisfies the differential eq. \ref{eq:poisson_eq}.
 \section*{Problem 3}
 For the discrete value at point a $i$ we denote this as $x_i$, where the corresponding function value is defined as $u(x_i)\equiv u_i$. Similarly, the source function is defined as $f(x_i)\equiv f_i$. We now find the discretized version of the second order derivative of $u_i$
 \begin{align*}
-    \dv[2]{u}{x}\bigg\rvert_{x_i} = u_i'' = \frac{u_{i+1}-2u_i+u_{i-1}}{h^2} + \mathcal{O}(h^2) \approx \frac{v_{i+1}-2v_i+v_{i-1}}{h^2} = v_i'',
+    \dv[2]{u}{x}\bigg\rvert_{x_i} = u_i'' = \frac{u_{i-1}-2u_i+u_{i+1}}{h^2} + \mathcal{O}(h^2) \approx \frac{v_{i-1}-2v_i+v_{i+1}}{h^2} = v_i''
 \end{align*}
 where $v_i$ is the approximated value of $u_i$ obtained by neglecting the $\mathcal{O}(h^2)$ term, and $h=x_{i+1}-x_i$ is the step length. % Should define h differently
 
 Inserting for $v_i$ into the Poisson equation yields 
 \begin{align}
-    -v_i'' = \frac{-v_{i+1}+2v_i-v_{i-1}}{h^2} &= f_i \label{eq:p3_disc_poisson_eq} 
+    -v_i'' = \frac{-v_{i-1}+2v_i-v_{i+1}}{h^2} &= f_i \label{eq:p3_disc_poisson_eq} 
 \end{align}
 which is a discretized version of the Poisson equation. 
 
@@ -145,6 +150,98 @@ where the value of the original differential equation is obtained by $\mathbf{f}
 \section*{Problem 5}
 \subsection*{a)}
 We have two vectors of length $m$, $\mathbf{v}^*$ and $\mathbf{x}$, representing a complete solution to the discretized Poisson equation and corresponding $x$ values, respectively. With a matrix $A\in\mathbb{R}^{n\cross n}$ being the tridiagonal matrix from problem 4, we can find how $n$ relates to $m$. For all elements of $\mathbf{v}^*$ to be a complete solution, the derivative in equation \eqref{eq:p3_disc_poisson_eq} must be applicable,  
+
+\section*{Problem 6}
+We now concern ourselves with the general solution of the matrix equation $A\vec{v} = \vec{g}$ where $A$ is a \textit{general} $n\cross n$ tridiagonal matrix. We thus have the following:
+
+\begin{align*}
+    A\mathbf{v} = 
+    \begin{pmatrix}
+        b_1 & c_1 & & \\
+        a_2 & \ddots & \ddots & \\ 
+         & \ddots & & c_{n-1} \\
+          & & a_n & b_n
+    \end{pmatrix}
+    \begin{pmatrix}
+        v_1 \\
+        v_2 \\
+        \vdots \\ 
+        v_{n}
+    \end{pmatrix} = 
+    \begin{pmatrix}
+        g_1 \\
+        g_2 \\ 
+        \vdots \\
+        g_{n}
+    \end{pmatrix}
+    = \mathbf{g},
+\end{align*}
+In order to find a  general solution for $\vec{v}$ for such a tridiagonal matrix we use the method og Gaussian elimination; performing row operations on the entire equation until we are left with the identity matrix, effectively row reducing the following matrix into $\mathbb{I}^n$ and then the solution will be the $n+1$ th column:
+
+
+\begin{align*}
+    \begin{pmatrix}
+        b_1 & c_1 & &  & g_1 \\
+        a_2 & \ddots & \ddots & & g_2 \\ 
+         & \ddots & & c_{n-1} & \vdots \\
+          & & a_n & b_n & g_n
+    \end{pmatrix}
+    \sim 
+    \begin{pmatrix}
+        \mathbb{I}^n & \vec{v}
+    \end{pmatrix}
+\end{align*}
+We have obtained $\mathbb{I}^n$ if all elements in $vec{a}$ are equal to 1, and all elements in $\vec{b}$ and $\vec{c}$ are equal to 0. We firs remove the $\vec{a}$ vector by forward substitution. The first row will remain unchanged, but we need to perform row operations on the remaining rows:
+
+\begin{align*}
+    \tilde{R}_1 &= R_1 \\
+    \tilde{R}_2 &= R_2 - \frac{a_2}{\tilde{b}_1}\tilde{R}_1\\
+    \vdots & \\
+    \tilde{R}_n &= R_n - \frac{a_n}{\tilde{b}_{n-1}}\tilde{R}_{n-1}
+\end{align*}
+After this forward substitution we have that all elements of $\vec{a}$ is 0, and:
+\begin{align*}
+    \tilde{b}_1 &= b_1 \\
+    \tilde{b}_2 &= b_2 - \frac{a_2}{\tilde{b}_1}\tilde{c}_1 \\
+    \vdots & \\
+    \tilde{b}_n &= b_n - \frac{a_n}{\tilde{b}_{n-1}}\tilde{c}_{n-1}
+\end{align*}
+and $\tilde{c}_i = c_i$. For $\vec{g}$ we have likewise:
+\begin{align*}
+    \tilde{g}_1 &= g_1 \\
+    \tilde{g}_2 &= g_2 -  \frac{a_2}{\tilde{b}_1}\tilde{g}_1 \\
+    \vdots &= \\
+    \tilde{g}_n &= g_n - \frac{a_n}{\tilde{b}_{n-1}}\tilde{g}_{n-1}
+\end{align*}
+
+The next step is to get tid of $\vec{\tilde{c}}$ and normalise $\vec{\tilde{b}}$ in order to obtain the identity matrix. This is done through backward substitution:
+\begin{align*}
+    \tilde{R}^*_n &= \frac{\tilde{R}_n}{\tilde{b}_n} \\
+    \tilde{R}^*_{n-1} &= \frac{\tilde{R}_{n-1} - \tilde{c}_{n-1}\tilde{R}^*_n}{\tilde{b}_{n-1}} \\
+    \vdots & \\
+    \tilde{R}^*_1 &= \frac{\tilde{R}_{1} - \tilde{c}_{1}\tilde{R}^*_2}{\tilde{b}_{1}}
+\end{align*}
+We then write in terms of $v_i = \tilde{g}^*_i$:
+\begin{align*}
+    v_n &= \tilde{g}^*_n = \frac{\tilde{g}_n}{\tilde{b}_n} \\
+    v_{n-1} &= \frac{\tilde{g}_{n-1}- v_n\tilde{c}_{n-1}}{\tilde{b}_{n-1}}\\
+    v_1 &= \frac{\tilde{g}_1 - v_2\tilde{c}_1}{\tilde{b}_1}
+\end{align*}
+We then summarise all wee need from forward substitution:
+
+\begin{align*}
+    \tilde{b}_1 &= b_1 \\
+    \tilde{b}_i &= b_i - \frac{a_i}{\tilde{b}_{i-1}}\tilde{c}_{i-1} \\
+    \tilde{g}_1 &= g_1 \\
+    \tilde{g}_i &= g_i - \frac{a_i}{\tilde{b}_{i-1}}\tilde{g}_{i-1} \\
+    i &\in  [2,n]
+\end{align*}
+and from backward substitution:
+\begin{align*}
+    v_n &= \tilde{g}^*_n = \frac{\tilde{g}_n}{\tilde{b}_n} \\
+    v_{i} &= \frac{\tilde{g}_{i}- v_{i+1}\tilde{c}_{i}}{\tilde{b}_{i}} \\
+    i &\in  [n-1, 1]
+\end{align*}
 
 
 
