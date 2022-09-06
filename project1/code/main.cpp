@@ -38,7 +38,7 @@ std::vector<double> generalThomas(std::vector<double> a, std::vector<double> b, 
     // Step 2 - Backward
 
     std::vector<double> vstar(m);
-    vstar[-1] = gtilde[-1]/btilde[-1];
+    vstar[m-1] = gtilde[m-1]/btilde[m-1];
 
     for(int i=m-2; i>=0; i--){
         vstar[i] = (gtilde[i] - c[i]*vstar[i+1]) / btilde[i];
@@ -123,7 +123,7 @@ int problem7(int n_steps, double v0, double v1){
     int m = n_points - 2;
     std::vector<double> x(n_points);
     x[0] = x_min;
-    x[-1] = x_max;
+    x[n_points-1] = x_max;
     std::vector<double> g(m);
    
     for(int i=1; i<=m; i++){
@@ -131,7 +131,7 @@ int problem7(int n_steps, double v0, double v1){
         g[i-1] = std::pow(h,2) * f(x[i]); 
     }
     g[0] += v0;
-    g[-1] += v1;
+    g[n_points-1] += v1;
 
     std::vector<double> a(m, -1);
     std::vector<double> b(m, 2);
@@ -143,11 +143,10 @@ int problem7(int n_steps, double v0, double v1){
 
     std::vector<double> v(n_points);
     v[0] = v0;
-    v[-1] = v1;
+    v[n_points-1] = v1;
     for(int i=1; i<=m; i++){
         v[i] = vstar[i-1];
     }
-    std::cout << v[-2] << std::endl;
 
     // Write to file
 
