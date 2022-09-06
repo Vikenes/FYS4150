@@ -4,6 +4,7 @@
 #include <vector>
 #include <cmath>
 #include <fstream>
+#include <chrono>
 
 double f(double x){
     return 100 * exp(-10*x);
@@ -16,8 +17,9 @@ std::vector<double> Thomas(std::vector<double> a, std::vector<double> b, std::ve
 
     btilde[0] = b[0];
     gtilde[0] = g[0];
-    
+     
     // Step 1 - Forward
+
     for(int i=1; i<m; i++){
         double K = a[i]/btilde[i-1];
         btilde[i] = b[i] - K*c[i-1];
@@ -37,11 +39,41 @@ std::vector<double> Thomas(std::vector<double> a, std::vector<double> b, std::ve
 
 }
 
+std::vector<double> Thomas_special(std::vector<double> g){
+    int m = g.size();
+
+    std::vector<double> gtilde(m);
+
+    gtilde[0] = g[0];
+    
+    // Step 1 - Forward
+
+    for(int i=1; i<m; i++){
+        double ii = i-1;
+        gtilde[i] = g[i] + (ii+1)/(ii+2)*gtilde[i-1];
+    }
+
+    // Step 2 - Backward
+
+    std::vector<double> vstar(m);
+    double mm = m-1;
+    vstar[-1] = gtilde[-1]* (mm+1)/(mm+2);
+
+    for(int i=m-2; i>=0; i--){
+        vstar[i] = gtilde[i] + vstar[i+1]*(i+1.0)/(i+2.0);
+    }
+
+    return vstar;
+
+}
+
 int main(){
+
+    auto start_time = std::chrono::high_resolution_clock::now();
 
     double x_min = 0;
     double x_max = 1;
-    int n_steps = 10;
+    int n_steps = 100;
     int n_points = n_steps + 1;
     double h = (x_max - x_min) / n_steps;
 
@@ -61,7 +93,8 @@ int main(){
     std::vector<double> b(m, 2);
     std::vector<double> c(m, -1);
     
-    std::vector<double> vstar = Thomas(a, b, c, g);
+    // std::vector<double> vstar = Thomas(a, b, c, g);
+    std::vector<double> vstar = Thomas_special(g);
     std::vector<double> v(n_points);
 
     // Include endpoints
@@ -92,5 +125,13 @@ int main(){
     }
 
     ofile.close();
+
+    auto stop_time = std::chrono::high_resolution_clock::now();
+
+    double run_time = std::chrono::duration<double>(stop_time-start_time).count();
+
+    std::cout << "Running time: " << run_time << " s" << std::endl;
+
+
 
 }

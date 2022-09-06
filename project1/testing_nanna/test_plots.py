@@ -5,7 +5,10 @@ import matplotlib.pyplot as plt
 n_steps = [10, 100, 1000]
 path = "folder/"
 
+# Problem 7
+
 fig, ax = plt.subplots()
+
 for n in n_steps:
     file = f'num_sol_{n}steps.txt'
     x, v = np.loadtxt(path + file, unpack=True)
@@ -18,3 +21,6 @@ ax.legend()
 ax.set_xlabel(r'$x$')
 ax.set_ylabel(r'$v(x)$')
 plt.show()
+
+# Problem 8
+
