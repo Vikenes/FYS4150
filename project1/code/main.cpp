@@ -102,27 +102,28 @@ int writeto_file(std::vector<double> x, std::vector<double> v, std::string filen
 
 
 // Defining global variables (don't know if this is OK...)
-double x_min = 0; 
-double x_max = 1;
+const double x_min = 0; 
+const double x_max = 1;
+const double v0 = 0;
+const double v1 = 0;
 
 int problem2(int n_steps);
-int problem7(int n_steps, double v0, double v1);
-int problem9(int n_steps, double v0, double v1);
+int problem7(int n_steps);
+int problem9(int n_steps);
 
 int main(){
 
     auto start_time = std::chrono::high_resolution_clock::now();
-
-
+ 
     problem2(100);
 
-    problem7(10, 0, 0);
-    problem7(100, 0, 0);
-    problem7(1000, 0, 0);
+    problem7(10);
+    problem7(100);
+    problem7(1000);
 
-    problem9(10, 0, 0);
-    problem9(100, 0, 0);
-    problem9(1000, 0, 0);
+    problem9(10);
+    problem9(100);
+    problem9(1000);
 
     auto stop_time = std::chrono::high_resolution_clock::now();
 
@@ -138,7 +139,6 @@ int problem2(int n_steps){
     
     // Problem 2
 
-    
     int n_points = n_steps+1;
     double h = (x_max - x_min) / n_steps;
 
@@ -153,7 +153,7 @@ int problem2(int n_steps){
     return 0;
 }
 
-int problem7(int n_steps, double v0, double v1){
+int problem7(int n_steps){
 
 
     // Problem 7
@@ -193,7 +193,7 @@ int problem7(int n_steps, double v0, double v1){
     return 0;
 }
 
-int problem9(int n_steps, double v0, double v1){
+int problem9(int n_steps){
     
     // Problem 9
 
