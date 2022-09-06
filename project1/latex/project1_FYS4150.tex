@@ -215,7 +215,7 @@ and $\tilde{c}_i = c_i$. For $\vec{g}$ we have likewise:
 \end{align*}
 
 The next step is to get tid of $\vec{\tilde{c}}$ and normalise $\vec{\tilde{b}}$ in order to obtain the identity matrix. This is done through backward substitution:
-\begin{align*}
+\begin{align*} 
     \tilde{R}^*_n &= \frac{\tilde{R}_n}{\tilde{b}_n} \\
     \tilde{R}^*_{n-1} &= \frac{\tilde{R}_{n-1} - \tilde{c}_{n-1}\tilde{R}^*_n}{\tilde{b}_{n-1}} \\
     \vdots & \\
@@ -250,19 +250,40 @@ and from backward substitution:
 
 
 \begin{algorithm}[H]
-    \caption{Some algorithm}\label{algo:midpoint_rule}
+    \caption{General algorithm}\label{algo:p6_general_algorithm}
     \begin{algorithmic}
-        \State Some maths, e.g $f(x) = x^2$.  \Comment{Here's a comment}
-        \For{$i = 0, 1, ..., n-1$}
-        \\
-        \State $g[i]=a[i-1]*v[i-1]+b[i]*v[i]+c[i]*v[i+1]$ \\
+        \State $\tilde{b}_0 = b_0$ 
+        \State $\tilde{g}_0 = g_0$
+        \For{$i = 1, 2, ..., m-1$}
+        \State $K = a_i / \tilde{b}_{i-1}$
+        \State $\tilde{b}_i=b_i - K*\tilde{c}_{i-1}$
+        \State $\tilde{g}_i=g_i - K*\tilde{g}_{i-1}$
+        \EndFor \\
+        \State $v_{m-1} = \tilde{g}_{m-1} / \tilde{b}_{m-1}$
+        \For{$i = m-2, m-3, ..., 0$}
+        \State $v_i = (\tilde{g}_i - v_{i+1} * \tilde{c}_i) / \tilde{b}_i$ 
         \EndFor
-        \While{Some condition}
-        \State Do something more here 
-        \EndWhile
-        \State Maybe even some more math here, e.g $\int_0^1 f(x) \dd x$
     \end{algorithmic}
 \end{algorithm}
-   
+
+
+\begin{algorithm}[H]
+    \caption{Special algorithm}\label{algo:p9_special_algorithm}
+    \begin{algorithmic}
+        \State $\tilde{b}_0 = b_0$ 
+        \State $\tilde{g}_0 = g_0$
+        \For{$i = 1, 2, ..., m-1$}
+        \State $\tilde{b}_i = (i+2)/(i+1)$ 
+        \State $\tilde{g}_i = g_i + \tilde{g}_{i-1} / \tilde{b}_{i-1}$
+        \EndFor
+        \State $v_{m-1} = \tilde{g}_{m-1} / \tilde{b}_{m-1}$
+        \For{$i = m-2, m-3, ..., 0$}
+        \State $v_i = (\tilde{g}_i + v_{i+1} ) / \tilde{b}_i$ 
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+
+
 \end{document}
 
