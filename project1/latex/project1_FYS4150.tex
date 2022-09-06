@@ -1,4 +1,4 @@
-\documentclass[english,notitlepage]{revtex4-1}  % defines the basic parameters of the document
+\documentclass[english,notitlepage,nofootinbib]{revtex4-1}  % defines the basic parameters of the document
 %For preview: skriv i terminal: latexmk -pdf -pvc filnavn
 
 
@@ -20,6 +20,7 @@
 \usepackage[noend]{algpseudocode}
 \usepackage{subfigure}
 \usepackage{tikz}
+% \usepackage[toc,page]{appendix}
 
 %   NEW COMMANDS
 \renewcommand{\vec}{\mathbf}
@@ -86,6 +87,9 @@ and see that this satisfies the differential eq. \ref{eq:poisson_eq}.
 
 
 \section*{Problem 2}
+
+% Add proper plot. Comment plot 
+
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.5\textwidth]{u_x.pdf}
@@ -148,10 +152,15 @@ where the value of the original differential equation is obtained by $\mathbf{f}
 
 
 \section*{Problem 5}
+% Comment: Fix indices in the end 
 \subsection*{a)}
 We have two vectors of length $m$, $\mathbf{v}^*$ and $\mathbf{x}$, representing a complete solution to the discretized Poisson equation and corresponding $x$ values, respectively. With a matrix $A\in\mathbb{R}^{n\cross n}$ being the tridiagonal matrix from problem 4, we can find how $n$ relates to $m$. For all elements of $\mathbf{v}^*$ to be a complete solution, the derivative in equation \eqref{eq:p3_disc_poisson_eq} must be applicable,  
 
+% Comment: Write 5b)
+
+
 \section*{Problem 6}
+\subsection*{a)}
 We now concern ourselves with the general solution of the matrix equation $A\vec{v} = \vec{g}$ where $A$ is a \textit{general} $n\cross n$ tridiagonal matrix. We thus have the following:
 
 \begin{align*}
@@ -176,7 +185,61 @@ We now concern ourselves with the general solution of the matrix equation $A\vec
     \end{pmatrix}
     = \mathbf{g},
 \end{align*}
-In order to find a  general solution for $\vec{v}$ for such a tridiagonal matrix we use the method og Gaussian elimination; performing row operations on the entire equation until we are left with the identity matrix, effectively row reducing the following matrix into $\mathbb{I}^n$ and then the solution will be the $n+1$ th column:
+In order to find a  general solution for $\vec{v}$ for such a tridiagonal matrix we use the method of Gaussian elimination. In the end, we end up with an algorithm called the Thomas algorithm \footnote{The complete derivation is given in appendix \ref{Apx:Thomas_algorithm}} 
+
+
+We summarize the algorithm 
+
+\begin{algorithm}[H]
+    \caption{General algorithm}\label{algo:p6_general_algorithm}
+    \begin{algorithmic}
+        \State $\tilde{b}_0 = b_0$ \Comment{Define initial values}
+        \State $\tilde{g}_0 = g_0$
+        \For{$i = 1, 2, ..., m-1$} \Comment{Do forward substitution}
+        \State $K = a_i / \tilde{b}_{i-1}$
+        \State $\tilde{b}_i=b_i - K \cdot  c_{i-1}$
+        \State $\tilde{g}_i=g_i - K \cdot \tilde{g}_{i-1}$
+        \EndFor \\
+        \State $v_{m-1} = \tilde{g}_{m-1} / \tilde{b}_{m-1}$ \Comment{Define initial value}
+        \For{$i = m-2, m-3, ..., 0$} \Comment{Do backward substitution}
+        \State $v_i = (\tilde{g}_i - v_{i+1} \cdot  c_i) / \tilde{b}_i$ 
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+% Comment: 6b) - Count FLOPs
+
+\section*{Problem 7}
+
+\section*{Problem 8}
+
+\section*{Problem 9}
+
+\begin{algorithm}[H]
+    \caption{Special algorithm}\label{algo:p9_special_algorithm}
+    \begin{algorithmic}
+        \State $\tilde{b}_0 = b_0$ 
+        \State $\tilde{g}_0 = g_0$
+        \For{$i = 1, 2, ..., m-1$}
+        \State $\tilde{b}_i = (i+2)/(i+1)$ 
+        \State $\tilde{g}_i = g_i + \tilde{g}_{i-1} / \tilde{b}_{i-1}$
+        \EndFor
+        \State $v_{m-1} = \tilde{g}_{m-1} / \tilde{b}_{m-1}$
+        \For{$i = m-2, m-3, ..., 0$}
+        \State $v_i = (\tilde{g}_i + v_{i+1} ) / \tilde{b}_i$ 
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+\section*{Problem 10}
+
+
+
+\appendix
+
+\section{Derivation of the Thomas algorithm}\label{Apx:Thomas_algorithm}
+
+; performing row operations on the entire equation until we are left with the identity matrix, effectively row reducing the following matrix into $\mathbb{I}^n$ and then the solution will be the $n+1$ th column:
 
 
 \begin{align*}
@@ -202,11 +265,11 @@ We have obtained $\mathbb{I}^n$ if all elements in $vec{a}$ are equal to 1, and 
 After this forward substitution we have that all elements of $\vec{a}$ is 0, and:
 \begin{align*}
     \tilde{b}_1 &= b_1 \\
-    \tilde{b}_2 &= b_2 - \frac{a_2}{\tilde{b}_1}\tilde{c}_1 \\
+    \tilde{b}_2 &= b_2 - \frac{a_2}{\tilde{b}_1} c_1 \\
     \vdots & \\
-    \tilde{b}_n &= b_n - \frac{a_n}{\tilde{b}_{n-1}}\tilde{c}_{n-1}
+    \tilde{b}_n &= b_n - \frac{a_n}{\tilde{b}_{n-1}} c_{n-1}
 \end{align*}
-and $\tilde{c}_i = c_i$. For $\vec{g}$ we have likewise:
+For $\vec{g}$ we have likewise:
 \begin{align*}
     \tilde{g}_1 &= g_1 \\
     \tilde{g}_2 &= g_2 -  \frac{a_2}{\tilde{b}_1}\tilde{g}_1 \\
@@ -214,55 +277,32 @@ and $\tilde{c}_i = c_i$. For $\vec{g}$ we have likewise:
     \tilde{g}_n &= g_n - \frac{a_n}{\tilde{b}_{n-1}}\tilde{g}_{n-1}
 \end{align*}
 
-The next step is to get tid of $\vec{\tilde{c}}$ and normalise $\vec{\tilde{b}}$ in order to obtain the identity matrix. This is done through backward substitution:
-\begin{align*}
+The next step is to get tid of $\vec{ c}$ and normalise $\vec{\tilde{b}}$ in order to obtain the identity matrix. This is done through backward substitution:
+\begin{align*} 
     \tilde{R}^*_n &= \frac{\tilde{R}_n}{\tilde{b}_n} \\
-    \tilde{R}^*_{n-1} &= \frac{\tilde{R}_{n-1} - \tilde{c}_{n-1}\tilde{R}^*_n}{\tilde{b}_{n-1}} \\
+    \tilde{R}^*_{n-1} &= \frac{\tilde{R}_{n-1} -  c_{n-1}\tilde{R}^*_n}{\tilde{b}_{n-1}} \\
     \vdots & \\
-    \tilde{R}^*_1 &= \frac{\tilde{R}_{1} - \tilde{c}_{1}\tilde{R}^*_2}{\tilde{b}_{1}}
+    \tilde{R}^*_1 &= \frac{\tilde{R}_{1} -  c_{1}\tilde{R}^*_2}{\tilde{b}_{1}}
 \end{align*}
 We then write in terms of $v_i = \tilde{g}^*_i$:
 \begin{align*}
     v_n &= \tilde{g}^*_n = \frac{\tilde{g}_n}{\tilde{b}_n} \\
-    v_{n-1} &= \frac{\tilde{g}_{n-1}- v_n\tilde{c}_{n-1}}{\tilde{b}_{n-1}}\\
-    v_1 &= \frac{\tilde{g}_1 - v_2\tilde{c}_1}{\tilde{b}_1}
+    v_{n-1} &= \frac{\tilde{g}_{n-1}- v_n c_{n-1}}{\tilde{b}_{n-1}}\\
+    v_1 &= \frac{\tilde{g}_1 - v_2 c_1}{\tilde{b}_1}
 \end{align*}
-We then summarise all wee need from forward substitution:
+
+
+To summarize: We define $\tilde{b}_1 = b_1$ and $\tilde{g}_1 = g_1$. Through iteration, the follwing terms, valid for $i\in[2,\,n]$ become 
 
 \begin{align*}
-    \tilde{b}_1 &= b_1 \\
-    \tilde{b}_i &= b_i - \frac{a_i}{\tilde{b}_{i-1}}\tilde{c}_{i-1} \\
-    \tilde{g}_1 &= g_1 \\
-    \tilde{g}_i &= g_i - \frac{a_i}{\tilde{b}_{i-1}}\tilde{g}_{i-1} \\
-    i &\in  [2,n]
+    \tilde{b}_i &= b_i - \frac{a_i}{\tilde{b}_{i-1}} c_{i-1} \\
+    \tilde{g}_i &= g_i - \frac{a_i}{\tilde{b}_{i-1}}\tilde{g}_{i-1} 
 \end{align*}
-and from backward substitution:
+We now obtain an expression for $v_n=\tilde{g}^*_n = \tilde{g}_n/\tilde{b}_n$, and get the remaining elements by backwards iteration  
 \begin{align*}
-    v_n &= \tilde{g}^*_n = \frac{\tilde{g}_n}{\tilde{b}_n} \\
-    v_{i} &= \frac{\tilde{g}_{i}- v_{i+1}\tilde{c}_{i}}{\tilde{b}_{i}} \\
-    i &\in  [n-1, 1]
+    v_{i} &= \frac{\tilde{g}_{i}- v_{i+1} c_{i}}{\tilde{b}_{i}} 
 \end{align*}
+for $i\in[n-1,\,1]$. 
 
-
-
-
-
-
-
-\begin{algorithm}[H]
-    \caption{Some algorithm}\label{algo:midpoint_rule}
-    \begin{algorithmic}
-        \State Some maths, e.g $f(x) = x^2$.  \Comment{Here's a comment}
-        \For{$i = 0, 1, ..., n-1$}
-        \\
-        \State $g[i]=a[i-1]*v[i-1]+b[i]*v[i]+c[i]*v[i+1]$ \\
-        \EndFor
-        \While{Some condition}
-        \State Do something more here 
-        \EndWhile
-        \State Maybe even some more math here, e.g $\int_0^1 f(x) \dd x$
-    \end{algorithmic}
-\end{algorithm}
-   
 \end{document}
 
