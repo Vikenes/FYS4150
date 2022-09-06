@@ -83,7 +83,7 @@ def line_plot_txt(data_file, pdf_name):
     save_push(fig, pdf_name=pdf_name, push=True, save=True)
 
 
-def compare_plots_txt(data_files, pdf_name):
+def compare_plots_txt(data_files, pdf_name='none'):
     """Plot a function f(x) from a txt file
     Args:
         datafiles: txt files formatted as x, f(x), first one the analytical solution
@@ -106,13 +106,17 @@ def compare_plots_txt(data_files, pdf_name):
     set_ax_info(ax, xlabel, ylabel, title=title, legend=True)
     
     # Option to save, push and show resulting plot 
-    save_push(fig, pdf_name=pdf_name, show=True, push=False, save=False)
+    if pdf_name=="none":
+        save_push(fig, pdf_name=pdf_name, show=True, push=False, save=False)
+    else:
+        save_push(fig, pdf_name=pdf_name, push=True, save=True)
 
 
 
 # Problem 2
-#line_plot_txt(data_file="x_u.txt", pdf_name='ux')
 
+line_plot_txt(data_file="x_u.txt", pdf_name='ux')
+plt.close()
 # Problem 7
 
 files = ["x_u.txt"]
@@ -120,3 +124,13 @@ for n in [10, 100, 1000]:
     files.append(f"num_sol_{n}steps.txt")
 
 compare_plots_txt(files, "comparison_p7")
+plt.close()
+
+# Problem 9 - testing
+
+files = ["x_u.txt"]
+for n in [10, 100, 1000]:
+    files.append(f"special_num_sol_{n}steps.txt")
+
+compare_plots_txt(files)
+plt.close()
