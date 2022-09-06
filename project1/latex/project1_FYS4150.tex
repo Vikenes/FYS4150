@@ -87,6 +87,9 @@ and see that this satisfies the differential eq. \ref{eq:poisson_eq}.
 
 
 \section*{Problem 2}
+
+% Add proper plot. Comment plot 
+
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.5\textwidth]{u_x.pdf}
@@ -149,10 +152,15 @@ where the value of the original differential equation is obtained by $\mathbf{f}
 
 
 \section*{Problem 5}
+% Comment: Fix indices in the end 
 \subsection*{a)}
 We have two vectors of length $m$, $\mathbf{v}^*$ and $\mathbf{x}$, representing a complete solution to the discretized Poisson equation and corresponding $x$ values, respectively. With a matrix $A\in\mathbb{R}^{n\cross n}$ being the tridiagonal matrix from problem 4, we can find how $n$ relates to $m$. For all elements of $\mathbf{v}^*$ to be a complete solution, the derivative in equation \eqref{eq:p3_disc_poisson_eq} must be applicable,  
 
+% Comment: Write 5b)
+
+
 \section*{Problem 6}
+\subsection*{a)}
 We now concern ourselves with the general solution of the matrix equation $A\vec{v} = \vec{g}$ where $A$ is a \textit{general} $n\cross n$ tridiagonal matrix. We thus have the following:
 
 \begin{align*}
@@ -199,6 +207,13 @@ We summarize the algorithm
     \end{algorithmic}
 \end{algorithm}
 
+% Comment: 6b) - Count FLOPs
+
+\section*{Problem 7}
+
+\section*{Problem 8}
+
+\section*{Problem 9}
 
 \begin{algorithm}[H]
     \caption{Special algorithm}\label{algo:p9_special_algorithm}
@@ -215,6 +230,10 @@ We summarize the algorithm
         \EndFor
     \end{algorithmic}
 \end{algorithm}
+
+\section*{Problem 10}
+
+
 
 \appendix
 
