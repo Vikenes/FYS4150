@@ -83,6 +83,54 @@ def line_plot_txt(data_file, pdf_name):
     save_push(fig, pdf_name=pdf_name, push=True, save=True)
 
 
+def compare_plots_txt(data_files, pdf_name='none'):
+    """Plot a function f(x) from a txt file
+    Args:
+        datafiles: txt files formatted as x, f(x), first one the analytical solution
+        pdf_name: name of the resulting plot
+                    saved as: .../plots/pdf_name.pdf
+    """
+
+    # Plot 
+    fig, ax = plt.subplots()
+    x, u = np.loadtxt(data_path + data_files[0], unpack=True)    
+    ax.plot(x, u, lw=2, alpha=0.8, label=r"$u(x)$")
+   
+    for file in data_files[1:]:
+        x, v = np.loadtxt(data_path + file, unpack=True)
+        ax.plot(x, v, ls='--', label=r"$n_{steps}=%i$"%(x.size-1))
+
+    xlabel = r"$x$"
+    ylabel = r"$u(x)$"
+    title = "Numerical solution"
+    set_ax_info(ax, xlabel, ylabel, title=title, legend=True)
+    
+    # Option to save, push and show resulting plot 
+    if pdf_name=="none":
+        save_push(fig, pdf_name=pdf_name, show=True, push=False, save=False)
+    else:
+        save_push(fig, pdf_name=pdf_name, push=True, save=True)
 
 
-# line_plot_txt(data_file="x_u.txt", pdf_name='ux')
+
+# Problem 2
+
+line_plot_txt(data_file="x_u.txt", pdf_name='ux')
+plt.close()
+# Problem 7
+
+files = ["x_u.txt"]
+for n in [10, 100, 1000]:
+    files.append(f"num_sol_{n}steps.txt")
+
+compare_plots_txt(files, "comparison_p7")
+plt.close()
+
+# Problem 9 - testing
+
+files = ["x_u.txt"]
+for n in [10, 100, 1000]:
+    files.append(f"special_num_sol_{n}steps.txt")
+
+compare_plots_txt(files)
+plt.close()
