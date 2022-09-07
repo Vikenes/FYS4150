@@ -76,9 +76,6 @@ std::vector<double> specialThomas(std::vector<double> g){
 
 }
 
-
-
-
 int writeto_file(std::vector<double> x, std::vector<double> v, std::string filename){
 
     int width=15;
@@ -112,7 +109,8 @@ const double v1 = 0;
 int problem2(int n_steps);
 int problem7(int n_steps);
 int problem9(int n_steps);
-int problem8(int n_steps, bool absolute_error, bool maximum_error);
+double problem8(int n_steps, bool absolute_error, bool maximum_error);
+int problem8c(int number_of_n_steps);
 
 int main(){
 
@@ -135,6 +133,8 @@ int main(){
     problem8(10, false, false);
     problem8(100, false, false);
     problem8(1000, false, false);
+
+    problem8c(7);
 
     auto stop_time = std::chrono::high_resolution_clock::now();
 
@@ -239,7 +239,7 @@ int problem9(int n_steps){
     return 0;
 }
 
-int problem8(int n_steps, bool absolute_error, bool maximum_error){
+double problem8(int n_steps, bool absolute_error, bool maximum_error){
     int n_points = n_steps+1;
     double h = (x_max - x_min) / n_steps;
     int m = n_points - 2;
@@ -275,26 +275,52 @@ int problem8(int n_steps, bool absolute_error, bool maximum_error){
         u_exact[i] = u(x[i]);
     }
 
-    if (absolute_error==true && maximum_error==false){
-        std::vector<double> absolute_error(n_points);
-        absolute_error[0] = 0;
-        absolute_error[n_points-1] = 0;
-        for(int i=1; i<n_steps; i++){
-            double abs_err = std::abs(u(x[i])-v[i]);
+    double return_val = 0;
+    if (absolute_error==true){
+        std::vector<double> absolute_error(n_points-2);
+        for(int i=0; i<n_steps-1; i++){
+            double abs_err = std::abs(u(x[i+1])-v[i+1]);
             absolute_error[i] = std::log10(abs_err);
         }
         writeto_file(x, absolute_error, "absolute_error" + std::to_string(n_steps) + "steps");
     }
-    else if (absolute_error==false && maximum_error==false){
-        std::vector<double> relative_error(n_points);
-        relative_error[0] = 0;
-        relative_error[n_points-1] = 0;
-        for(int i=1; i<n_steps; i++){
-            double rel_err = std::abs((u(x[i])-v[i])/u(x[i]));
-            relative_error[i] = std::log10(rel_err);
+    else if (absolute_error==false){
+        std::vector<double> relative_error(n_points-2);
+        std::vector<double> log_relative_error(n_points-2);
+        for(int i=0; i<n_steps-1; i++){
+            double rel_err = std::abs((u(x[i+1])-v[i+1])/u(x[i+1]));
+            relative_error[i] = rel_err;
+            log_relative_error[i] = std::log10(rel_err);
         }
-        writeto_file(x, relative_error, "relative_error" + std::to_string(n_steps) + "steps");
+        if(maximum_error==true){
+            return_val = relative_error[0];
+            for(int i=1; i<= n_steps; i++){
+                double current = relative_error[i];
+                double prior = relative_error[i-1];
+                if(current>prior){
+                    return_val = current;
+                }
+            }
+        }
+        else{
+            writeto_file(x, log_relative_error, "relative_error" + std::to_string(n_steps) + "steps");
+        }
     }
-    // MAXIMUM RELATIVE ERROR FOR n_steps up to 10^7.
+
+    return return_val;
+}
+
+int problem8c(int number_of_n_steps){
+    //  problem 8c
+    // int n_step_max = 1e7;
+    // int n_step_min = 1e1;
+    // int step_difference = (n_step_max-n_step_min)/(number_of_n_steps-1);
+    std::vector<double> list_of_n_steps(number_of_n_steps); //should be int, but that messes with the writeto_file() function
+    std::vector<double> max_error_per_step_number(number_of_n_steps);
+    for(int i=1; i<=number_of_n_steps; i++){
+        list_of_n_steps[i-1] = std::pow(10,i);
+        max_error_per_step_number[i-1] = problem8(list_of_n_steps[i-1], false, true);
+    }
+    writeto_file(list_of_n_steps, max_error_per_step_number, "max_relative_error");
     return 0;
 }
