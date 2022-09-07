@@ -52,7 +52,7 @@ int main(){
     ofile.close();
 
 
-    // task 7 THIS IS PROBABLY WRONG
+    // task 7 THIS IS PROBABLY WRONG - YEP THIS IS WRONG
     std::vector<double> a(n_points, 2);
     std::vector<double> b(n_points-1, -1);
     std::vector<double> c(n_points-1, -1);
@@ -62,8 +62,6 @@ int main(){
         g[i] = a[i-1]*v[i-1]+ b[i]*v[i] + c[i]*v[i+1];
     }
     
-    //boundary points
-    g[0]= 
 
     return 0;
 
