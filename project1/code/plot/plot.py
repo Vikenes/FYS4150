@@ -124,25 +124,60 @@ def compare_plots_txt(data_files, pdf_name='none'):
         save_push(fig, pdf_name=pdf_name, push=True, save=True)
 
 
+def plot_error(data_files, pdf_name='none', relative_error=False):
+    fig, ax = plt.subplots(figsize=(12,7))
+    i = 0 
+    colors = ['red', 'magenta', 'darkorange']
+    for file in data_files:
+        x, error = np.loadtxt(data_path + file, unpack=True)
+        n = x.size-1
+        ax.plot(x, error, 'o', markersize=10/n**(1/8), c=colors[i], label=r"$n_{\mathrm{steps}}=%i$"%n)
+        i+=1
+    xlabel = r"x"
+    if relative_error:
+        ylabel = r"$\log_{10}(\epsilon)$"
+        title = r'Logarithm of relative error $\epsilon$'
+    else:
+        ylabel = r"$\log_{10}(\Delta)$"
+        title = r'Logarithm of absolute error $\Delta$'
+    fig.suptitle(title, fontsize=20)
+    set_ax_info(ax, xlabel, ylabel, legend=True)
+    fig.tight_layout()
+    if pdf_name=="none":
+        save_push(fig, pdf_name=pdf_name, show=True, push=False, save=False)
+    else:
+        save_push(fig, pdf_name=pdf_name, push=True, save=True)
+    
+    
 
-# Problem 2
 
-line_plot_txt(data_file="x_u.txt", pdf_name='ux')
+# # Problem 2
+
+# line_plot_txt(data_file="x_u.txt", pdf_name='ux')
 
 
-# Problem 7
+# # Problem 7
 
-files = ["x_u.txt"]
+# files = ["x_u.txt"]
+# for n in [10, 100, 1000]:
+#     files.append(f"num_sol_{n}steps.txt")
+
+# compare_plots_txt(files, "comparison_p7")
+
+
+# # Problem 9 - testing
+
+# files = ["x_u.txt"]
+# for n in [10, 100, 1000]:
+#     files.append(f"special_num_sol_{n}steps.txt")
+
+# compare_plots_txt(files)
+
+relative_error_files = []
+absolute_error_files = []
 for n in [10, 100, 1000]:
-    files.append(f"num_sol_{n}steps.txt")
+    relative_error_files.append(f'relative_error{n}steps.txt')
+    absolute_error_files.append(f'absolute_error{n}steps.txt')
 
-compare_plots_txt(files, "comparison_p7")
-
-
-# Problem 9 - testing
-
-files = ["x_u.txt"]
-for n in [10, 100, 1000]:
-    files.append(f"special_num_sol_{n}steps.txt")
-
-compare_plots_txt(files)
+plot_error(absolute_error_files)
+plot_error(relative_error_files, relative_error=True)
