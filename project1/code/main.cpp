@@ -283,6 +283,7 @@ double problem8(int n_steps, bool absolute_error, bool maximum_error){
         for(int i=0; i<m; i++){
             double abs_err = std::abs(u(x[i+1])-v[i+1]);
             absolute_error[i] = std::log10(abs_err);
+            
         }
         // WRONG! x includes end-points
         writeto_file(x, absolute_error, "absolute_error" + std::to_string(n_steps) + "steps");
