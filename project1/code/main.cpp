@@ -124,7 +124,7 @@ int main(){
 
     problem9(10);
     problem9(100);
-    problem9(1000);
+    problem9(1000); 
 
     problem8(10, true, false);
     problem8(100, true, false);
@@ -182,7 +182,7 @@ int problem7(int n_steps){
         g[i-1] = std::pow(h,2) * f(x[i]); 
     }
     g[0] += v0;
-    g[n_points-1] += v1;
+    g[m-1] += v1;
 
     std::vector<double> a(m, -1);
     std::vector<double> b(m, 2);
@@ -221,7 +221,7 @@ int problem9(int n_steps){
         g[i-1] = std::pow(h,2) * f(x[i]); 
     }
     g[0] += v0;
-    g[n_points-1] += v1;
+    g[m-1] += v1;
     
     std::vector<double> vstar = specialThomas(g);
     
@@ -253,7 +253,7 @@ double problem8(int n_steps, bool absolute_error, bool maximum_error){
         g[i-1] = std::pow(h,2) * f(x[i]); 
     }
     g[0] += v0;
-    g[n_points-1] += v1;
+    g[m-1] += v1;
 
     std::vector<double> a(m, -1);
     std::vector<double> b(m, 2);
@@ -270,42 +270,52 @@ double problem8(int n_steps, bool absolute_error, bool maximum_error){
         v[i] = vstar[i-1];
     }
     
-    std::vector<double> u_exact(n_points);
-    for(int i=0; i<=n_steps; i++){
-        u_exact[i] = u(x[i]);
-    }
+    //std::vector<double> u_exact(n_points);
+    //for(int i=0; i<=n_steps; i++){
+    //    u_exact[i] = u(x[i]);
+    //}
 
-    double return_val = 0;
+    
+
+    double return_val;
     if (absolute_error==true){
-        std::vector<double> absolute_error(n_points-2);
-        for(int i=0; i<n_steps-2; i++){
+        std::vector<double> absolute_error(m);
+        for(int i=0; i<m; i++){
             double abs_err = std::abs(u(x[i+1])-v[i+1]);
             absolute_error[i] = std::log10(abs_err);
         }
+        // WRONG! x includes end-points
         writeto_file(x, absolute_error, "absolute_error" + std::to_string(n_steps) + "steps");
+        return_val = 0;
     }
     else if (absolute_error==false){
-        std::vector<double> relative_error(n_points-2);
-        std::vector<double> log_relative_error(n_points-2);
-        for(int i=0; i<n_steps-2; i++){
+        std::vector<double> relative_error(m);
+        std::vector<double> log_relative_error(m);
+        for(int i=0; i<m; i++){
             double rel_err = std::abs((u(x[i+1])-v[i+1])/u(x[i+1]));
             relative_error[i] = rel_err;
             log_relative_error[i] = std::log10(rel_err);
         }
         if(maximum_error==true){
-            return_val = relative_error[0];
-            for(int i=1; i<= n_steps-2; i++){
+            double max_val = 0;
+            int index;
+            for(int i=0; i<m; i++){
                 double current = relative_error[i];
-                double prior = relative_error[i-1];
-                if(current>prior){
-                    return_val = current;
+                //double prior = relative_error[i-1];
+                if(current>max_val){
+                    index = i;
+                    max_val = current;
                 }
             }
+            //std::cout << index << ' ' << max_val << std::endl;
+            return_val = max_val;
         }
         else{
             writeto_file(x, log_relative_error, "relative_error" + std::to_string(n_steps) + "steps");
+            return_val = 0;
         }
     }
+    //std::cout << return_val << std::endl;
 
     return return_val;
 }
@@ -319,7 +329,9 @@ int problem8c(int number_of_n_steps){
     std::vector<double> max_error_per_step_number(number_of_n_steps);
     for(int i=1; i<=number_of_n_steps; i++){
         list_of_n_steps[i-1] = std::pow(10,i);
-        max_error_per_step_number[i-1] = problem8(list_of_n_steps[i-1], false, true);
+        int n_steps = std::pow(10,i);
+        max_error_per_step_number[i-1] = problem8(n_steps, false, true);
+        //std::cout << n_steps << "  " << max_error_per_step_number[i-1] << std::endl;
     }
     writeto_file(list_of_n_steps, max_error_per_step_number, "max_relative_error");
     return 0;

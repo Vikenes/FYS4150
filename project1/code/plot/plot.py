@@ -28,7 +28,7 @@ def save_push(fig, pdf_name, save=True, push=False, show=False):
         pdfname (string): Name of output pdf file 
         args (argparse)
     """
-    file = plot_path + pdf_name + ".pdf"
+    file = plot_path + pdf_name.replace('.pdf', '').strip() + ".pdf"
     if save:
         print(f'Saving plot: {file}')
         fig.savefig(file)
@@ -144,7 +144,7 @@ def plot_error(data_files, pdf_name='none', relative_error=False):
     set_ax_info(ax, xlabel, ylabel, legend=True)
     fig.tight_layout()
     if pdf_name=="none":
-        save_push(fig, pdf_name=pdf_name, show=True, push=False, save=False)
+        plt.show()
     else:
         save_push(fig, pdf_name=pdf_name, push=True, save=True)
     
@@ -153,14 +153,13 @@ def plot_max_error(data_file, pdf_name='none'):
     fig, ax = plt.subplots(figsize=(12,7))
     steps, error = np.loadtxt(data_path + data_file, unpack=True)
     ax.loglog(steps, error, 'o')
-    # xlabel= 'n steps'
-    # ylabel = 'max error'
-    # title = 'Maximum error'
-    # fig.suptitle(title, fontsize=20)
-    # set_ax_info(ax, xlabel, ylabel)
+    xlabel= r'$n_{\mathrm{steps}}$'
+    ylabel = r'$\mathrm{max}(\epsilon)$'
+    title = r'Maximum relative error $\epsilon$'
+    #set_ax_info(ax, xlabel, ylabel)#, title=title) # Need different style!
     fig.tight_layout()
     if pdf_name=="none":
-        save_push(fig, pdf_name=pdf_name, show=True, push=False, save=False)
+        plt.show()
     else:
         save_push(fig, pdf_name=pdf_name, push=True, save=True)
 
@@ -180,14 +179,7 @@ def plot_max_error(data_file, pdf_name='none'):
 
 # compare_plots_txt(files, "comparison_p7")
 
-
-# # Problem 9 - testing
-
-# files = ["x_u.txt"]
-# for n in [10, 100, 1000]:
-#     files.append(f"special_num_sol_{n}steps.txt")
-
-# compare_plots_txt(files)
+# Problem 8
 
 relative_error_files = []
 absolute_error_files = []
@@ -198,3 +190,13 @@ for n in [10, 100, 1000]:
 plot_error(absolute_error_files)
 plot_error(relative_error_files, relative_error=True)
 plot_max_error('max_relative_error.txt')
+
+
+# # Problem 9 - testing
+
+# files = ["x_u.txt"]
+# for n in [10, 100, 1000]:
+#     files.append(f"special_num_sol_{n}steps.txt")
+
+# compare_plots_txt(files)
+
