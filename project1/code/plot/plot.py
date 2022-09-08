@@ -166,18 +166,18 @@ def plot_max_error(data_file, pdf_name='none'):
 
 
 
-# # Problem 2
+# Problem 2
 
-# line_plot_txt(data_file="x_u.txt", pdf_name='ux')
+line_plot_txt(data_file="x_u.txt", pdf_name='ux')
 
 
-# # Problem 7
+# Problem 7
 
-# files = ["x_u.txt"]
-# for n in [10, 100, 1000]:
-#     files.append(f"num_sol_{n}steps.txt")
+files = ["x_u.txt"]
+for n in [10, 100, 1000]:
+    files.append(f"num_sol_{n}steps.txt")
 
-# compare_plots_txt(files, "comparison_p7")
+compare_plots_txt(files, "comparison_p7")
 
 # Problem 8
 
@@ -192,11 +192,11 @@ plot_error(relative_error_files, relative_error=True)
 plot_max_error('max_relative_error.txt')
 
 
-# # Problem 9 - testing
+# Problem 9 - testing
 
-# files = ["x_u.txt"]
-# for n in [10, 100, 1000]:
-#     files.append(f"special_num_sol_{n}steps.txt")
+files = ["x_u.txt"]
+for n in [10, 100, 1000]:
+    files.append(f"special_num_sol_{n}steps.txt")
 
-# compare_plots_txt(files)
+compare_plots_txt(files)
 
