@@ -130,16 +130,16 @@ def plot_error(data_files, pdf_name='none', relative_error=False):
     colors = ['red', 'magenta', 'darkorange']
     for file in data_files:
         x, error = np.loadtxt(data_path + file, unpack=True)
-        n = x.size-1
+        n = x.size+1
         ax.plot(x, error, 'o', markersize=10/n**(1/8), c=colors[i], label=r"$n_{\mathrm{steps}}=%i$"%n)
         i+=1
     xlabel = r"x"
     if relative_error:
         ylabel = r"$\log_{10}(\epsilon)$"
-        title = r'Logarithm of relative error $\epsilon$'
+        title = r'Logarithm of relative error $\epsilon$ (except end points)'
     else:
         ylabel = r"$\log_{10}(\Delta)$"
-        title = r'Logarithm of absolute error $\Delta$'
+        title = r'Logarithm of absolute error $\Delta$ (except end points)'
     fig.suptitle(title, fontsize=20)
     set_ax_info(ax, xlabel, ylabel, legend=True)
     fig.tight_layout()
@@ -152,11 +152,14 @@ def plot_error(data_files, pdf_name='none', relative_error=False):
 def plot_max_error(data_file, pdf_name='none'):
     fig, ax = plt.subplots(figsize=(12,7))
     steps, error = np.loadtxt(data_path + data_file, unpack=True)
-    ax.loglog(steps, error, 'o')
-    xlabel= r'$n_{\mathrm{steps}}$'
-    ylabel = r'$\mathrm{max}(\epsilon)$'
+    ax.loglog(steps, error, '--', color='pink', linewidth=2)
+    ax.loglog(steps, error, '.', markersize=15, color="red", label=r"$\mathrm{max}(\epsilon)$")
+    ax.set_xlabel(r'$n_{\mathrm{steps}}$', fontsize=20)
+    ax.set_ylabel(r'Relative error $\epsilon$', fontsize=20)
     title = r'Maximum relative error $\epsilon$'
-    #set_ax_info(ax, xlabel, ylabel)#, title=title) # Need different style!
+    fig.suptitle(title, fontsize=20)
+    ax.legend(fontsize=20)
+    # set_ax_info(ax, xlabel, ylabel) #, title=title) # Need different style!
     fig.tight_layout()
     if pdf_name=="none":
         plt.show()
@@ -187,9 +190,9 @@ for n in [10, 100, 1000]:
     relative_error_files.append(f'relative_error{n}steps.txt')
     absolute_error_files.append(f'absolute_error{n}steps.txt')
 
-plot_error(absolute_error_files)
-plot_error(relative_error_files, relative_error=True)
-plot_max_error('max_relative_error.txt')
+plot_error(absolute_error_files, pdf_name="absolute_error")
+plot_error(relative_error_files, pdf_name="relative_error", relative_error=True)
+plot_max_error('max_relative_error.txt', pdf_name="max_relative_error")
 
 
 # Problem 9 - testing

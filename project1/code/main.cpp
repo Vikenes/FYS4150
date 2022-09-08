@@ -280,39 +280,37 @@ double problem8(int n_steps, bool absolute_error, bool maximum_error){
     double return_val;
     if (absolute_error==true){
         std::vector<double> absolute_error(m);
+        std::vector<double> x_reduced(m);
         for(int i=0; i<m; i++){
+            x_reduced[i] = x[i+1];
             double abs_err = std::abs(u(x[i+1])-v[i+1]);
             absolute_error[i] = std::log10(abs_err);
             
         }
-        // WRONG! x includes end-points
-        writeto_file(x, absolute_error, "absolute_error" + std::to_string(n_steps) + "steps");
+        writeto_file(x_reduced, absolute_error, "absolute_error" + std::to_string(n_steps) + "steps");
         return_val = 0;
     }
     else if (absolute_error==false){
         std::vector<double> relative_error(m);
         std::vector<double> log_relative_error(m);
+        std::vector<double> x_reduced(m);
         for(int i=0; i<m; i++){
+            x_reduced[i] = x[i+1];
             double rel_err = std::abs((u(x[i+1])-v[i+1])/u(x[i+1]));
             relative_error[i] = rel_err;
             log_relative_error[i] = std::log10(rel_err);
         }
         if(maximum_error==true){
-            double max_val = 0;
-            int index;
-            for(int i=0; i<m; i++){
-                double current = relative_error[i];
-                //double prior = relative_error[i-1];
-                if(current>max_val){
-                    index = i;
-                    max_val = current;
+            double max_val = relative_error[0];
+            for(int i=1; i<m; i++){
+                if(relative_error[i]>max_val){
+                    max_val = relative_error[i];
                 }
             }
-            //std::cout << index << ' ' << max_val << std::endl;
             return_val = max_val;
         }
         else{
-            writeto_file(x, log_relative_error, "relative_error" + std::to_string(n_steps) + "steps");
+            writeto_file(x_reduced, log_relative_error, "relative_error" + std::to_string(n_steps) + "steps");
             return_val = 0;
         }
     }
