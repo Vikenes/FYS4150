@@ -166,7 +166,31 @@ def plot_max_error(data_file, pdf_name='none'):
     else:
         save_push(fig, pdf_name=pdf_name, push=True, save=True)
 
+def timed_algorithms(pdf_name='none'):
+    generalThomasfilename = 'general_Thomas_timed.txt'
+    specialThomasfilename = 'special_Thomas_timed.txt'
+    n_steps, timedGeneralThomas = np.loadtxt(data_path + generalThomasfilename, unpack=True)
+    dummy, timedSpecialThomas = np.loadtxt(data_path + specialThomasfilename, unpack=True)
+    
+    fig, ax = plt.subplots(figsize=(12,7))
+    
+    ax.loglog(n_steps, timedGeneralThomas, '.', markersize=15, color='red', label=r"General Thomas")
+    ax.loglog(n_steps, timedGeneralThomas, '--', color='pink', linewidth=2)
+    ax.loglog(n_steps, timedSpecialThomas, '.', markersize=15, color='blue', label=r"Special Thomas")
+    ax.loglog(n_steps, timedSpecialThomas, '--', color='lightblue', linewidth=2)
 
+    ax.set_xlabel(r'$n_{\mathrm{steps}}$', fontsize=20)
+    ax.set_ylabel(r'Time used per run [s]', fontsize=20)
+    title = r'Time spend per run (averaged over 250 runs)'
+    fig.suptitle(title, fontsize=20)
+    ax.legend(fontsize=20)
+    fig.tight_layout()
+    if pdf_name=="none":
+        plt.show()
+    else:
+        save_push(fig, pdf_name=pdf_name, push=True, save=True)
+
+    
 
 
 # Problem 2
@@ -202,4 +226,7 @@ for n in [10, 100, 1000]:
     files.append(f"special_num_sol_{n}steps.txt")
 
 compare_plots_txt(files)
+
+# Problem 10
+timed_algorithms(pdf_name="algorithms_timed")
 

@@ -111,6 +111,7 @@ int problem7(int n_steps);
 int problem9(int n_steps);
 double problem8(int n_steps, bool absolute_error, bool maximum_error);
 int problem8c(int number_of_n_steps);
+void problem10();
 
 int main(){
 
@@ -135,6 +136,8 @@ int main(){
     problem8(1000, false, false);
 
     problem8c(7);
+
+    problem10();
 
     auto stop_time = std::chrono::high_resolution_clock::now();
 
@@ -335,3 +338,64 @@ int problem8c(int number_of_n_steps){
     writeto_file(list_of_n_steps, max_error_per_step_number, "max_relative_error");
     return 0;
 }
+
+void problem10(){
+    
+    // Problem 10
+    int number_of_n_steps = 6;
+    int number_of_runs_per_step = 250;
+    std::vector<double> list_of_n_steps(number_of_n_steps); //should be int, but that messes with the writeto_file() function
+    std::vector<double> general_Thomas_timed(number_of_n_steps);
+    std::vector<double> special_Thomas_timed(number_of_n_steps);
+    for(int i=0; i<number_of_n_steps; i++){
+        list_of_n_steps[i] = std::pow(10,i+1);
+    }
+
+    for(int i=0; i<number_of_n_steps; i++){
+        int n_steps = int(list_of_n_steps[i]);
+        int n_points = n_steps+1;
+        double h = (x_max - x_min) / n_steps;
+        int m = n_points - 2;
+        std::vector<double> x(n_points);
+        x[0] = x_min;
+        x[n_points-1] = x_max;
+        std::vector<double> g(m);
+    
+        for(int i=1; i<=m; i++){
+            x[i] = x_min + i*h;
+            g[i-1] = std::pow(h,2) * f(x[i]); 
+        }
+        g[0] += v0;
+        g[m-1] += v1;
+
+        std::vector<double> a(m, -1);
+        std::vector<double> b(m, 2);
+        std::vector<double> c(m, -1);
+
+        auto t1_gt = std::chrono::high_resolution_clock::now();
+        for(int j=0; j<number_of_runs_per_step; j++){
+            std::vector<double> vstar_dummy_general = generalThomas(a, b, c, g);
+        }
+        auto t2_gt = std::chrono::high_resolution_clock::now();
+
+        auto t1_st = std::chrono::high_resolution_clock::now();
+        for(int j=0; j<number_of_runs_per_step; j++){
+            std::vector<double> vstar_dummy_special = specialThomas(g);
+        }
+        auto t2_st = std::chrono::high_resolution_clock::now();
+
+
+        double duration_seconds_general_thomas = std::chrono::duration<double>(t2_gt - t1_gt).count()/number_of_runs_per_step;
+        double duration_seconds_special_thomas = std::chrono::duration<double>(t2_st - t1_st).count()/number_of_runs_per_step;
+
+        general_Thomas_timed[i] = duration_seconds_general_thomas;
+        special_Thomas_timed[i] = duration_seconds_special_thomas;
+    }
+
+
+    writeto_file(list_of_n_steps, general_Thomas_timed, "general_Thomas_timed");
+    writeto_file(list_of_n_steps, special_Thomas_timed, "special_Thomas_timed");
+
+    return;
+}
+
