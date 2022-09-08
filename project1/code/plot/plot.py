@@ -149,6 +149,22 @@ def plot_error(data_files, pdf_name='none', relative_error=False):
         save_push(fig, pdf_name=pdf_name, push=True, save=True)
     
     
+def plot_max_error(data_file, pdf_name='none'):
+    fig, ax = plt.subplots(figsize=(12,7))
+    steps, error = np.loadtxt(data_path + data_file, unpack=True)
+    ax.loglog(steps, error, 'o')
+    # xlabel= 'n steps'
+    # ylabel = 'max error'
+    # title = 'Maximum error'
+    # fig.suptitle(title, fontsize=20)
+    # set_ax_info(ax, xlabel, ylabel)
+    fig.tight_layout()
+    if pdf_name=="none":
+        save_push(fig, pdf_name=pdf_name, show=True, push=False, save=False)
+    else:
+        save_push(fig, pdf_name=pdf_name, push=True, save=True)
+
+
 
 
 # # Problem 2
@@ -181,3 +197,4 @@ for n in [10, 100, 1000]:
 
 plot_error(absolute_error_files)
 plot_error(relative_error_files, relative_error=True)
+plot_max_error('max_relative_error.txt')

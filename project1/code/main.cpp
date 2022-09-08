@@ -278,7 +278,7 @@ double problem8(int n_steps, bool absolute_error, bool maximum_error){
     double return_val = 0;
     if (absolute_error==true){
         std::vector<double> absolute_error(n_points-2);
-        for(int i=0; i<n_steps-1; i++){
+        for(int i=0; i<n_steps-2; i++){
             double abs_err = std::abs(u(x[i+1])-v[i+1]);
             absolute_error[i] = std::log10(abs_err);
         }
@@ -287,14 +287,14 @@ double problem8(int n_steps, bool absolute_error, bool maximum_error){
     else if (absolute_error==false){
         std::vector<double> relative_error(n_points-2);
         std::vector<double> log_relative_error(n_points-2);
-        for(int i=0; i<n_steps-1; i++){
+        for(int i=0; i<n_steps-2; i++){
             double rel_err = std::abs((u(x[i+1])-v[i+1])/u(x[i+1]));
             relative_error[i] = rel_err;
             log_relative_error[i] = std::log10(rel_err);
         }
         if(maximum_error==true){
             return_val = relative_error[0];
-            for(int i=1; i<= n_steps; i++){
+            for(int i=1; i<= n_steps-2; i++){
                 double current = relative_error[i];
                 double prior = relative_error[i-1];
                 if(current>prior){
