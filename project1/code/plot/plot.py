@@ -168,21 +168,25 @@ def plot_max_error(data_file, pdf_name='none'):
         save_push(fig, pdf_name=pdf_name, push=True, save=True)
 
 def timed_algorithms(pdf_name='none'):
-    generalThomasfilename = 'general_Thomas_timed.txt'
-    specialThomasfilename = 'special_Thomas_timed.txt'
-    n_steps, timedGeneralThomas = np.loadtxt(data_path + generalThomasfilename, unpack=True)
-    dummy, timedSpecialThomas = np.loadtxt(data_path + specialThomasfilename, unpack=True)
-    
+    filename = "thomas_timed.txt"
+    n_steps, g_mean, s_mean, gstd, sstd = np.loadtxt(data_path + filename, unpack=True, delimiter=",")
+ 
+
     fig, ax = plt.subplots(figsize=(12,7))
     
-    ax.loglog(n_steps, timedGeneralThomas, '.', markersize=15, color='red', label=r"General Thomas")
-    ax.loglog(n_steps, timedGeneralThomas, '--', color='pink', linewidth=2)
-    ax.loglog(n_steps, timedSpecialThomas, '.', markersize=15, color='blue', label=r"Special Thomas")
-    ax.loglog(n_steps, timedSpecialThomas, '--', color='lightblue', linewidth=2)
+    # ax.plot(n_steps, g_mean, '.', markersize=15, color='red', label=r"General Thomas")
+    # ax.plot(n_steps, s_mean, '.', markersize=15, color='blue', label=r"Special Thomas")
+    ax.fill_between(n_steps, g_mean-gstd, g_mean+gstd, color="red", alpha=.2)
+    ax.fill_between(n_steps, s_mean-sstd, s_mean+sstd, color="blue", alpha=.2)
+
+    ax.errorbar(n_steps, g_mean, gstd, marker="o", color="red", label="General Thomas", linestyle="")
+    ax.errorbar(n_steps, s_mean, sstd, marker="o", color="blue", label="Special Thomas", linestyle="")
 
     ax.set_xlabel(r'$n_{\mathrm{steps}}$', fontsize=20)
     ax.set_ylabel(r'Time used per run [s]', fontsize=20)
-    title = r'Time spend per run (averaged over 250 runs)'
+    ax.set_yscale("log")
+    ax.set_xscale("log")
+    title = r'Time spend per run (averaged over 500 runs)'
     fig.suptitle(title, fontsize=20)
     ax.legend(fontsize=20)
     fig.tight_layout()
@@ -209,14 +213,14 @@ def timed_algorithms(pdf_name='none'):
 
 # Problem 8
 
-relative_error_files = []
-absolute_error_files = []
-for n in [10, 100, 1000]:
-    relative_error_files.append(f'relative_error{n}steps.txt')
-    absolute_error_files.append(f'absolute_error{n}steps.txt')
+# relative_error_files = []
+# absolute_error_files = []
+# for n in [10, 100, 1000]:
+#     relative_error_files.append(f'relative_error{n}steps.txt')
+#     absolute_error_files.append(f'absolute_error{n}steps.txt')
 
 # plot_error(absolute_error_files, pdf_name="absolute_error")
-plot_error(relative_error_files, pdf_name="relative_error", relative_error=True)
+# plot_error(relative_error_files, pdf_name="relative_error", relative_error=True)
 # plot_max_error('max_relative_error.txt', pdf_name="max_relative_error")
 
 
