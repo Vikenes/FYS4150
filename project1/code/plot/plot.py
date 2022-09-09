@@ -137,6 +137,7 @@ def plot_error(data_files, pdf_name='none', relative_error=False):
     if relative_error:
         ylabel = r"$\log_{10}(\epsilon)$"
         title = r'Logarithm of relative error $\epsilon$ (except end points)'
+        ax.set_ylim(-5.5, 0.5)
     else:
         ylabel = r"$\log_{10}(\Delta)$"
         title = r'Logarithm of absolute error $\Delta$ (except end points)'
@@ -195,16 +196,16 @@ def timed_algorithms(pdf_name='none'):
 
 # Problem 2
 
-line_plot_txt(data_file="x_u.txt", pdf_name='ux')
+# line_plot_txt(data_file="x_u.txt", pdf_name='ux')
 
 
 # Problem 7
 
-files = ["x_u.txt"]
-for n in [10, 100, 1000]:
-    files.append(f"num_sol_{n}steps.txt")
+# files = ["x_u.txt"]
+# for n in [10, 100, 1000]:
+    # files.append(f"num_sol_{n}steps.txt")
 
-compare_plots_txt(files, "comparison_p7")
+# compare_plots_txt(files, "comparison_p7")
 
 # Problem 8
 
@@ -214,19 +215,19 @@ for n in [10, 100, 1000]:
     relative_error_files.append(f'relative_error{n}steps.txt')
     absolute_error_files.append(f'absolute_error{n}steps.txt')
 
-plot_error(absolute_error_files, pdf_name="absolute_error")
+# plot_error(absolute_error_files, pdf_name="absolute_error")
 plot_error(relative_error_files, pdf_name="relative_error", relative_error=True)
-plot_max_error('max_relative_error.txt', pdf_name="max_relative_error")
+# plot_max_error('max_relative_error.txt', pdf_name="max_relative_error")
 
 
 # Problem 9 - testing
 
-files = ["x_u.txt"]
-for n in [10, 100, 1000]:
-    files.append(f"special_num_sol_{n}steps.txt")
+# files = ["x_u.txt"]
+# for n in [10, 100, 1000]:
+    # files.append(f"special_num_sol_{n}steps.txt")
 
-compare_plots_txt(files)
+# compare_plots_txt(files)
 
 # Problem 10
-timed_algorithms(pdf_name="algorithms_timed")
+# timed_algorithms(pdf_name="algorithms_timed")
 
