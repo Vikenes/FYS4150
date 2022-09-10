@@ -25,6 +25,12 @@
 %   NEW COMMANDS
 \renewcommand{\vec}{\mathbf}
 
+% Commands for consitent refernecing (Nanna's convention)
+\newcommand{\Table}[1]{Table \ref{table:#1}}
+\newcommand{\Fig}[1]{Figure \ref{fig:#1}}
+\newcommand{\Eq}[1]{eq. (\ref{eq:#1})}
+\newcommand{\Sec}[1]{section \ref{sec:#1}}
+\newcommand{\Algo}[1]{Algorithm \ref{algo:#1}}
 
 \usetikzlibrary{quantikz}
 % defines the color of hyperref objects
@@ -53,7 +59,7 @@ We will solve the one-dimensional Poisson equation
 \begin{align*}
     - \dv[2]{u}{x}=f(x)
 \end{align*}
-where the source function, $f(x)=100e^{-10x}$, is known. We will du this for $x\in[0,\,1]$ with boundary conditions $u(0)=u(1)=0$.
+where the source function, $f(x)=100e^{-10x}$, is known. We will du this for $x\in[0,\,1]$ with boundary conditions $u(0)=u(1)=0git$.
 
 \section*{Problem 1}
 
@@ -83,7 +89,7 @@ We find the double derivative of $u(x)$,
     \dv{u}{x} &= -(1-e^{-10}) - (-10)e^{-10x} \quad \Rightarrow \quad \dv[2]{u}{x} = -100e^{-10x},
 \end{align*}
 
-and see that this satisfies the differential eq. \ref{eq:poisson_eq}.
+and see that this satisfies the differential \Eq{poisson_eq}.
 
 
 \section*{Problem 2}
@@ -92,8 +98,8 @@ and see that this satisfies the differential eq. \ref{eq:poisson_eq}.
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.5\textwidth]{u_x.pdf}
-    \caption{CAPTION}
+    \includegraphics[width=0.9\textwidth]{ux.pdf}
+    \caption{The analytical solution in \Eq{p1_analytical_sol}.}
 \end{figure}
 
 \section*{Problem 3}
@@ -185,10 +191,10 @@ We now concern ourselves with the general solution of the matrix equation $A\vec
     \end{pmatrix}
     = \mathbf{g},
 \end{align*}
-In order to find a  general solution for $\vec{v}$ for such a tridiagonal matrix we use the method of Gaussian elimination. In the end, we end up with an algorithm called the Thomas algorithm \footnote{The complete derivation is given in appendix \ref{Apx:Thomas_algorithm}} 
+In order to find a  general solution for $\vec{v}$ for such a tridiagonal matrix we use the method of Gaussian elimination. In the end, we end up with an algorithm called the Thomas algorithm \footnote{The complete derivation is given in Appendix \ref{Apx:Thomas_algorithm}}.
 
 
-We summarize the algorithm 
+We summarize the algorithm as follows:
 
 \begin{algorithm}[H]
     \caption{General algorithm}\label{algo:p6_general_algorithm}
@@ -211,7 +217,48 @@ We summarize the algorithm
 
 \section*{Problem 7}
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{comparison_p7.pdf}
+    \caption{The numerical solution to the Poisson equation using \Algo{p6_general_algorithm} with different choices of $n_\text{steps}$, compared the the exact solution.}\label{fig:p7_num_sol}
+\end{figure}
+
 \section*{Problem 8}
+
+We ignore the end points in this problem.
+
+\subsection*{a)}
+
+For the same $n_\text{steps}$ used in \Fig{p7_num_sol} we find the absolute error $\Delta_i = \abs{u_i-v_i}$, where $u_i=u(x_i)$ from \Eq{p1_analytical_sol}. We plot $\log_{10}(\Delta_i(x_i))$ for different $n_\text{steps}$ in \Fig{p8_abs_err}. 
+
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{absolute_error.pdf}
+    \caption{The logarithm of the absolute error as function of $x$ in the solution computed using \Algo{p6_general_algorithm} for different $n_\text{steps}$.}\label{fig:p8_abs_err}
+\end{figure}
+
+\subsection*{b)}
+
+We make a similar visualisation of the relative error $\epsilon_i= \frac{\Delta_i}{\abs{u_i}}$ in \Fig{p8_rel_err}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{relative_error.pdf}
+    \caption{The logarithm of the relative error as function of $x$ in the solution computed using \Algo{p6_general_algorithm} for different $n_\text{steps}$.}\label{fig:p8_rel_err}
+\end{figure}
+
+\subsection*{c)}
+We compute solutions for $n_\text{steps}\in[10^1, 10^2, \dots, 10^7]$ and find the related maximum values of $\epsilon$. The results are plotted in \Fig{p8_max_rel_err}. In the base-10 logarithm space, we see a linear decrease in relative error as the number of steps reaches $10^5$. For $n_\text{steps}\geq 10^6$ there is as loss of significance as the computer deals with very small numbers.
+
+% Remember table
+% More discussion?
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{max_relative_error.pdf}
+    \caption{The logarithm of the maximum relative error plotted over the logarithm of number of steps used in \Algo{p6_general_algorithm}.}\label{fig:p8_max_rel_err}
+\end{figure}
 
 \section*{Problem 9}
 
@@ -233,13 +280,21 @@ We summarize the algorithm
 
 \section*{Problem 10}
 
+For both \Algo{p6_general_algorithm} and \Algo{p9_special_algorithm} we write a code that for $n_\text{steps}\in[10^{1}, 10^{2}, \dots, 10^{6}]$ computes the solution 500 times and times each run. We find the average duration of one algorithm run, as well as the root mean square error in the measurements. In \Fig{p10_timed} we present the result.
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{algorithms_timed.pdf}
+    \caption{ The plot shows timing results for running the general (blue) and special (green) Thomas algorithms. The average duration (dots), and corresponding RMS error in measurements (bars), of one run are plotted for different choices in number of steps.}\label{fig:p10_timed}
+\end{figure}
+
+Even though the special algorithm is generally quicker, we see that the significance of choosing the this one over the general algorithm is much larger for $n_\text{steps}\geq 10^4$ than for fewer steps. For many runs with $n_\text{steps}\leq10^3$, it will not matter which algorithm you choose, as seen from the error bars in \Fig{p10_timed}.
 
 \appendix
 
 \section{Derivation of the Thomas algorithm}\label{Apx:Thomas_algorithm}
 
-; performing row operations on the entire equation until we are left with the identity matrix, effectively row reducing the following matrix into $\mathbb{I}^n$ and then the solution will be the $n+1$ th column:
+; performing row operations on the entire equation until we are left with the identity matrix, effectively row reducing the following matrix into $\mathbb{I}^n$ and then the solution will be the ($n+1$)$^{th}$ column:
 
 
 \begin{align*}
