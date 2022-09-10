@@ -135,9 +135,9 @@ int main(){
     // problem8(100, false, false);
     // problem8(1000, false, false);
 
-    // problem8c(7);
+    problem8c(7);
 
-    problem10();
+    //problem10();
 
     auto stop_time = std::chrono::high_resolution_clock::now();
 
@@ -330,9 +330,11 @@ int problem8c(int number_of_n_steps){
     std::vector<double> list_of_n_steps(number_of_n_steps); //should be int, but that messes with the writeto_file() function
     std::vector<double> max_error_per_step_number(number_of_n_steps);
     for(int i=1; i<=number_of_n_steps; i++){
-        list_of_n_steps[i-1] = std::pow(10,i);
+        //list_of_n_steps[i-1] = std::pow(10,i);
+        list_of_n_steps[i-1] = i;
         int n_steps = std::pow(10,i);
-        max_error_per_step_number[i-1] = problem8(n_steps, false, true);
+        double max_error = problem8(n_steps, false, true);
+        max_error_per_step_number[i-1] = std::log10(max_error);
         //std::cout << n_steps << "  " << max_error_per_step_number[i-1] << std::endl;
     }
     writeto_file(list_of_n_steps, max_error_per_step_number, "max_relative_error");
