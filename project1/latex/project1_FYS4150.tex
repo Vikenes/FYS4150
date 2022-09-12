@@ -166,7 +166,7 @@ where the value of the original differential equation is obtained by $\mathbf{f}
 \section*{Problem 5}
 % Comment: Fix indices in the end 
 \subsection*{a)}
-We have two vectors of length $m$, $\mathbf{v}^*$ and $\mathbf{x}$, representing a complete solution to the discretized Poisson equation and corresponding $x$ values, respectively. With a matrix $A\in\mathbb{R}^{n\cross n}$ being the tridiagonal matrix from problem 4, we can find how $n$ relates to $m$. For all elements of $\mathbf{v}^*$ to be a complete solution, the derivative in equation \eqref{eq:p3_disc_poisson_eq} must be applicable, hence $\vec{v}^*=(v_1, v_2, ..., v_{n-2})$ lacks the boundaries and is therefore two elements "shorter" than $\vec{v}$, i.e. $m=n-2$. 
+We have two vectors of length $m$, $\mathbf{v}^*$ and $\mathbf{x}$, representing a complete solution to the discretized Poisson equation and corresponding $x$ values, respectively. With a matrix $A\in\mathbb{R}^{n\cross n}$ being the tridiagonal matrix from problem 4, we can find how $n$, relates to $m$. For all elements of $\mathbf{v}^*$ to be a complete solution, the derivative in equation \eqref{eq:p3_disc_poisson_eq} must be applicable, hence $\vec{v}^*=(v_1, v_2, ..., v_{n-2})$ lacks the boundaries and is therefore two elements "shorter" than $\vec{v}$, i.e. $m=n-2$. 
 
 \subsection*{b)}
 
@@ -237,7 +237,7 @@ We implement the general algorithm, \Algo{p6_general_algorithm}, in \CC\, and le
 
 \subsection*{b)}
 
-We run the code for $n_\text{steps}=10, 100 \text{ and } 1000$ and plot the numerical solutions up against the analytic solution in \Fig{p7_num_sol}. We see that $n_\text{steps}=10$ (red dots) gives the wrong solution, whereas $n_\text{steps}=100$ yields the correct solution, but with a too coarse grid on the $x$-axis to be able to get a continous curve for lower $x$. Choosing $n_\text{steps}=1000$, however, seems sufficient to reproduce the exact solution with an acceptable error.
+We run the code for $n_\text{steps}=10, 100 \text{ and } 1000$ and plot the numerical solutions up against the analytic solution in \Fig{p7_num_sol}. We see that $n_\text{steps}=10$ (red dots) gives the wrong solution, whereas $n_\text{steps}=100$ (pink dots) yields the correct solution, but with a too coarse grid on the $x$-axis to be able to get a continous curve for lower $x$. Choosing $n_\text{steps}=1000$ (orange dots), however, seems sufficient to reproduce the exact solution with an acceptable error.
 
 \begin{figure}[h!]
     \centering
@@ -271,7 +271,7 @@ We make a similar visualisation of the relative error $\epsilon_i= \frac{\Delta_
 \end{figure}
 
 \subsection*{c)}
-We compute solutions for $n_\text{steps}\in[10^1, 10^2, \dots, 10^7]$ and find the related maximum values of $\epsilon$. The results are plotted in \Fig{p8_max_rel_err}. In the base-10 logarithm space, we see a linear decrease in relative error as the number of steps reaches $10^5$. For $n_\text{steps}\geq 10^6$ there is as loss of significance as the computer deals with very small numbers.
+We compute solutions for $n_\text{steps}\in[10^1, 10^2, \dots, 10^7]$ and find the related maximum values of $\epsilon$. The results are plotted in \Fig{p8_max_rel_err}. In the base-10 logarithm space, we see a linear decrease in relative error as the number of steps reaches $10^5$. For $n_\text{steps}\geq 10^6$ there is a loss of significance as the computer deals with very small numbers.
 
 % Remember table
 % More discussion?
@@ -286,7 +286,7 @@ We compute solutions for $n_\text{steps}\in[10^1, 10^2, \dots, 10^7]$ and find t
 
 \subsection*{a)}
 
-We specialize the Thomas algorithm to the special case of the tridiagonal, symmetric Toeplitz matrix $A$ with signature (-1,2,-1). This special algorithm goes as follows: 
+We specialize the Thomas algorithm to the special case of the tridiagonal, symmetric Toeplitz matrix $A$ with signature $(-1,2,-1)$. This special algorithm goes as follows: 
 
 \begin{algorithm}[H]
     \caption{Special algorithm}\label{algo:p9_special_algorithm}
