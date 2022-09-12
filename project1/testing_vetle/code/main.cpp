@@ -60,16 +60,33 @@ std::vector<double> compute_generalThomas(int n_steps, bool write=false, int tim
     std::vector<double> g=g_array(n_steps);
 
     if (timing!=0){
-        std::vector<double> tot_time(1);
+        std::vector<double> time_mean_stddev(2);
+        std::vector<double> times(timing);
+        double mean = 0;
+        double variance = 0;
+        double stddev = 0;
 
-        auto t1 = std::chrono::high_resolution_clock::now();
         for(int j=0; j<timing; j++){
+            auto t1 = std::chrono::high_resolution_clock::now();
             std::vector<double> v_time = generalThomas(a, b, c, g);
+            auto t2 = std::chrono::high_resolution_clock::now();
+            times[j] = std::chrono::duration<double>(t2 - t1).count();
+            mean += times[j];
         }
-        auto t2 = std::chrono::high_resolution_clock::now();
+        mean /= timing; // finding the actual mean, not the sum.
         
-        tot_time[0] = std::chrono::duration<double>(t2 - t1).count();//number_of_runs_per_step;
-        return tot_time;
+        for(int j=0; j<timing; j++){
+            variance += std::pow((times[j] - mean), 2);
+        }
+
+        variance /= timing;
+
+        stddev = std::pow(variance, .5);
+
+        time_mean_stddev[0] = mean;
+        time_mean_stddev[1] = stddev;
+
+        return time_mean_stddev;
     }
 
     else{
@@ -88,16 +105,33 @@ std::vector<double> compute_specialThomas(int n_steps, bool write=false, int tim
     std::vector<double> g=g_array(n_steps);
 
     if (timing!=0){
-        std::vector<double> tot_time(1);
+        std::vector<double> time_mean_stddev(2);
+        std::vector<double> times(timing);
+        double mean = 0;
+        double variance = 0;
+        double stddev = 0;
 
-        auto t1 = std::chrono::high_resolution_clock::now();
         for(int j=0; j<timing; j++){
+            auto t1 = std::chrono::high_resolution_clock::now();
             std::vector<double> v_time = specialThomas(g);
+            auto t2 = std::chrono::high_resolution_clock::now();
+            times[j] = std::chrono::duration<double>(t2 - t1).count();
+            mean += times[j];
         }
-        auto t2 = std::chrono::high_resolution_clock::now();
+        mean /= timing; // finding the actual mean, not the sum.
         
-        tot_time[0] = std::chrono::duration<double>(t2 - t1).count();//number_of_runs_per_step;
-        return tot_time;
+        for(int j=0; j<timing; j++){
+            variance += std::pow((times[j] - mean), 2);
+        }
+
+        variance /= timing;
+
+        stddev = std::pow(variance, .5);
+
+        time_mean_stddev[0] = mean;
+        time_mean_stddev[1] = stddev;
+
+        return time_mean_stddev;
     }
 
     else{   
@@ -176,23 +210,49 @@ int max_rel_err(int number_of_n_steps){
 
 void timing(){
     int n_step_sizes = 6;
-    int n_simulations = 250;
+    int n_simulations = 500;
     std::vector<double> list_of_n_steps(n_step_sizes); // double for writing to file 
     std::vector<double> general_Thomas_timed(n_step_sizes);
     std::vector<double> special_Thomas_timed(n_step_sizes);
+    std::vector<double> general_Thomas_stddev(n_step_sizes);
+    std::vector<double> special_Thomas_stddev(n_step_sizes);
     for(int i=0; i<n_step_sizes; i++){
         list_of_n_steps[i] = std::pow(10,i+1);
     }
 
+    std::string filename = "thomas_timed";
+    int width=15;
+    int prec=5;
+    std::string path = "../output/data/"; // path for .txt files
+    std::string file = path + filename + ".txt";
+    std::ofstream ofile;
+    ofile.open(file.c_str());
+
     for(int i=0; i<n_step_sizes; i++){
         int n_steps = list_of_n_steps[i];
 
-        general_Thomas_timed[i] = compute_generalThomas(n_steps, false, n_simulations)[0]/n_simulations;
-        special_Thomas_timed[i] = compute_specialThomas(n_steps, false, n_simulations)[0]/n_simulations;
+        std::vector<double> general_mean_stddev = compute_generalThomas(n_steps, false, n_simulations);
+        std::vector<double> special_mean_stddev = compute_specialThomas(n_steps, false, n_simulations);
+
+        general_Thomas_timed[i] = general_mean_stddev[0];
+        special_Thomas_timed[i] = special_mean_stddev[0];
+        general_Thomas_stddev[i] = general_mean_stddev[1];
+        special_Thomas_stddev[i] = special_mean_stddev[1];
+
+        ofile << std::setw(width) << std::setprecision(prec) << std::scientific << n_steps << ","
+            << std::setw(width) << std::setprecision(prec) << std::scientific << general_Thomas_timed[i] << ","
+            << std::setw(width) << std::setprecision(prec) << std::scientific << special_Thomas_timed[i] << ","
+            << std::setw(width) << std::setprecision(prec) << std::scientific << general_Thomas_stddev[i] << ","
+            << std::setw(width) << std::setprecision(prec) << std::scientific << special_Thomas_stddev[i]
+            << std::endl;
     }
     
-    write_to_file(list_of_n_steps, general_Thomas_timed, "general_thomas_timed");
-    write_to_file(list_of_n_steps, special_Thomas_timed, "special_thomas_timed");
+    // write_to_file(list_of_n_steps, general_Thomas_timed, "general_thomas_timed");
+    // write_to_file(list_of_n_steps, special_Thomas_timed, "special_thomas_timed");
+    // write_to_file(list_of_n_steps, general_Thomas_stddev, "general_thomas_stddev");
+    // write_to_file(list_of_n_steps, special_Thomas_stddev, "special_thomas_stddev");
+
+    ofile.close();
 
     return;
 }
@@ -200,6 +260,7 @@ void timing(){
 
 int main(){
 
+    auto start_time = std::chrono::high_resolution_clock::now();
     
     // write_u(50, "analytical_xu_50");
 
@@ -214,7 +275,13 @@ int main(){
     // relative_error(1000);
 
     // max_rel_err(7);
-    // timing();
+    timing();
+
+    auto stop_time = std::chrono::high_resolution_clock::now();
+
+    double run_time = std::chrono::duration<double>(stop_time-start_time).count();
+
+    std::cout << "Running time: " << run_time << " s" << std::endl;
 
     return 0;
 
