@@ -183,12 +183,12 @@ def timed_algorithms(data_file, pdf_name='none', number_of_runs=500):
 
     xlabel = r'$n_{\mathrm{steps}}$'
     ylabel = r'$\delta t$ [s]'
-    ax.set_xscale('log')
-    ax.set_yscale('log')
 
     #ax.set_ylabel(r'Time used per run [s]', fontsize=20)
     title = r'Time spent per run $\delta t$ (averaged over %i runs)' %number_of_runs
     set_ax_info(ax, xlabel, ylabel, title=title)
+    ax.set_xscale('log')
+    ax.set_yscale('log')
     fig.tight_layout()
     if pdf_name=="none":
         plt.show()
@@ -213,15 +213,15 @@ def timed_algorithms(data_file, pdf_name='none', number_of_runs=500):
 
 # # Problem 8
 
-relative_error_files = []
-absolute_error_files = []
-for n in [10, 100, 1000]:
-    relative_error_files.append(f'relative_error{n}steps.txt')
-    absolute_error_files.append(f'absolute_error{n}steps.txt')
+# relative_error_files = []
+# absolute_error_files = []
+# for n in [10, 100, 1000]:
+#     relative_error_files.append(f'relative_error{n}steps.txt')
+#     absolute_error_files.append(f'absolute_error{n}steps.txt')
 
-plot_error(absolute_error_files, pdf_name="absolute_error")
-plot_error(relative_error_files, pdf_name="relative_error", relative_error=True)
-plot_max_error('max_relative_error.txt', pdf_name="max_relative_error")
+# plot_error(absolute_error_files, pdf_name="absolute_error")
+# plot_error(relative_error_files, pdf_name="relative_error", relative_error=True)
+# plot_max_error('max_relative_error.txt', pdf_name="max_relative_error")
 
 
 # Problem 10

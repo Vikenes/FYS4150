@@ -1,355 +1,222 @@
-#include <iostream>
-#include <string>
-#include <iomanip>
-#include <vector>
-#include <cmath>
-#include <fstream>
+#include <algorithm>
 #include <chrono>
 
+#include "utils.hpp"
+#include "algorithms.hpp"
 
 
-double u(double x){
-    // Analytical solution
-    return 1 - (1 - exp(-10))*x - exp(-10*x);
+const double x_min = 0;
+const double x_max = 1; 
+const double v_min = 0;
+const double v_max = 0;
+
+
+void write_u(int n_steps, std::string filename);
+
+
+double step_size(int n_steps){
+    double h=(x_max - x_min)/n_steps;
+    return h;
 }
 
-double f(double x){
-    // Right hand side of diff. eq.
-    return 100 * exp(-10*x);
-}
+std::vector<double> x_array(int n_steps){
+    // Create x_array with n_points=n_steps+1 between x_min and x_max
+    int n_points = n_steps + 1;
+    double h = step_size(n_steps);
 
-std::vector<double> generalThomas(std::vector<double> a, std::vector<double> b, std::vector<double> c, std::vector<double> g){
-    // Thomas algorithm (general)
-    int m = b.size();
-    std::vector<double> btilde(m);
-    std::vector<double> gtilde(m);
-
-    btilde[0] = b[0];
-    gtilde[0] = g[0];
-     
-    // Step 1 - Forward
-
-    for(int i=1; i<m; i++){
-        double K = a[i]/btilde[i-1];
-        btilde[i] = b[i] - K*c[i-1];
-        gtilde[i] = g[i] - K*gtilde[i-1];
-    }
-
-    // Step 2 - Backward
-
-    std::vector<double> vstar(m);
-    vstar[m-1] = gtilde[m-1]/btilde[m-1];
-
-    for(int i=m-2; i>=0; i--){
-        vstar[i] = (gtilde[i] - c[i]*vstar[i+1]) / btilde[i];
-    }
-
-    return vstar;
-}
-
-std::vector<double> specialThomas(std::vector<double> g){
-    // Thomas algorithm (general)
-    int m = g.size();
-    std::vector<double> btilde(m);
-    std::vector<double> gtilde(m);
-
-    btilde[0] = 2;
-    gtilde[0] = g[0];
-     
-    // Step 1 - Forward
-
-    for(int i=1; i<m; i++){
-        btilde[i] = (i+2.0)/(i+1);
-        gtilde[i] = g[i] + gtilde[i-1]/btilde[i-1];
-    }
-
-    // Step 2 - Backward
-
-    std::vector<double> vstar(m);
-    vstar[m-1] = gtilde[m-1]/btilde[m-1];
-
-    for(int i=m-2; i>=0; i--){
-        vstar[i] = (gtilde[i] + vstar[i+1]) / btilde[i];
-    }
-
-    return vstar;
-
-}
-
-int writeto_file(std::vector<double> x, std::vector<double> v, std::string filename){
-
-    int width=15;
-    int prec=5;
-    std::string path = "../output/data/"; // path for .txt files
-    std::string file = path + filename + ".txt";
-    std::ofstream ofile;
-    ofile.open(file.c_str());
-
-    int n = x.size();
-    for(int i=0; i<n; i++){
-        ofile << std::setw(width) << std::setprecision(prec) << std::scientific << x[i] 
-              << std::setw(width) << std::setprecision(prec) << std::scientific << v[i]
-              << std::endl;
-    }
-
-    ofile.close();
-
-    return 0;
-}
-
-
-// Defining global variables (don't know if this is OK...)
-const double x_min = 0; 
-const double x_max = 1;
-const double v0 = 0;
-const double v1 = 0;
-
-
-// declare functions
-int problem2(int n_steps);
-int problem7(int n_steps);
-int problem9(int n_steps);
-double problem8(int n_steps, bool absolute_error, bool maximum_error);
-int problem8c(int number_of_n_steps);
-void problem10();
-
-int main(){
-
-    auto start_time = std::chrono::high_resolution_clock::now();
- 
-    // problem2(100);
-
-    // problem7(10);
-    // problem7(100);
-    // problem7(1000);
-
-    // problem9(10);
-    // problem9(100);
-    // problem9(1000); 
-
-    // problem8(10, true, false);
-    // problem8(100, true, false);
-    // problem8(1000, true, false);
-
-    // problem8(10, false, false);
-    // problem8(100, false, false);
-    // problem8(1000, false, false);
-
-    problem8c(7);
-
-    //problem10();
-
-    auto stop_time = std::chrono::high_resolution_clock::now();
-
-    double run_time = std::chrono::duration<double>(stop_time-start_time).count();
-
-    std::cout << "Running time: " << run_time << " s" << std::endl;
-
-    return 0;
-
-}
-
-int problem2(int n_steps){
-    
-    // Problem 2
-
-    int n_points = n_steps+1;
-    double h = (x_max - x_min) / n_steps;
-
-    std::vector<double> x(n_points);
-    std::vector<double> v(n_points);
-
-    for(int i=0; i<=n_steps; i++){
-        x[i] = x_min + i*h;
-        v[i] = u(x[i]);
-    }
-    writeto_file(x, v, "x_u");
-    return 0;
-}
-
-int problem7(int n_steps){
-
-
-    // Problem 7
-
-    int n_points = n_steps+1;
-    double h = (x_max - x_min) / n_steps;
-    int m = n_points - 2;
     std::vector<double> x(n_points);
     x[0] = x_min;
-    x[n_points-1] = x_max;
-    std::vector<double> g(m);
-   
-    for(int i=1; i<=m; i++){
-        x[i] = x_min + i*h;
-        g[i-1] = std::pow(h,2) * f(x[i]); 
-    }
-    g[0] += v0;
-    g[m-1] += v1;
+    x[n_steps] = x_max;
 
+    for(int i=1; i<n_steps; i++){x[i] = x_min + i*h;}
+
+    return x;
+}
+
+
+std::vector<double> g_array(int n_steps){
+    int m = n_steps-1;
+    std::vector<double> g(m);
+    double h=step_size(n_steps);
+    std::vector<double> x=x_array(n_steps);
+    for (int i=1; i<=m; i++){
+        g[i-1] = std::pow(h,2) * f(x[i]);
+    }
+    g[0] += v_min;
+    g[m-1] += v_max;
+
+    return g;
+}
+
+
+
+std::vector<double> compute_generalThomas(int n_steps, bool write=false, int timing=0){
+    int m = n_steps - 1;
     std::vector<double> a(m, -1);
     std::vector<double> b(m, 2);
     std::vector<double> c(m, -1);
-    
-    std::vector<double> vstar = generalThomas(a, b, c, g);
-    
-    // Include endpoints
 
-    std::vector<double> v(n_points);
-    v[0] = v0;
-    v[n_points-1] = v1;
-    for(int i=1; i<=m; i++){
-        v[i] = vstar[i-1];
+    std::vector<double> x=x_array(n_steps);
+    std::vector<double> g=g_array(n_steps);
+
+    if (timing!=0){
+        std::vector<double> time_mean_stddev(2);
+        std::vector<double> times(timing);
+        double mean = 0;
+        double variance = 0;
+        double stddev = 0;
+
+        for(int j=0; j<timing; j++){
+            auto t1 = std::chrono::high_resolution_clock::now();
+            std::vector<double> v_time = generalThomas(a, b, c, g);
+            auto t2 = std::chrono::high_resolution_clock::now();
+            times[j] = std::chrono::duration<double>(t2 - t1).count();
+            mean += times[j];
+        }
+        mean /= timing; // finding the actual mean, not the sum.
+        
+        for(int j=0; j<timing; j++){
+            variance += std::pow((times[j] - mean), 2);
+        }
+
+        variance /= timing;
+
+        stddev = std::pow(variance, .5);
+
+        time_mean_stddev[0] = mean;
+        time_mean_stddev[1] = stddev;
+
+        return time_mean_stddev;
     }
 
-    writeto_file(x, v, "num_sol_" + std::to_string(n_steps) + "steps");
+    else{
+        std::vector<double> v = generalThomas(a, b, c, g);
+        if (write==true){
+            write_to_file(x, v, "GT_" + std::to_string(n_steps) + "steps");
+        }
+        return v;
+    }
 
-    return 0;
+} 
+
+
+std::vector<double> compute_specialThomas(int n_steps, bool write=false, int timing=0){
+    
+    std::vector<double> g=g_array(n_steps);
+
+    if (timing!=0){
+        std::vector<double> time_mean_stddev(2);
+        std::vector<double> times(timing);
+        double mean = 0;
+        double variance = 0;
+        double stddev = 0;
+
+        for(int j=0; j<timing; j++){
+            auto t1 = std::chrono::high_resolution_clock::now();
+            std::vector<double> v_time = specialThomas(g);
+            auto t2 = std::chrono::high_resolution_clock::now();
+            times[j] = std::chrono::duration<double>(t2 - t1).count();
+            mean += times[j];
+        }
+        mean /= timing; // finding the actual mean, not the sum.
+        
+        for(int j=0; j<timing; j++){
+            variance += std::pow((times[j] - mean), 2);
+        }
+
+        variance /= timing;
+
+        stddev = std::pow(variance, .5);
+
+        time_mean_stddev[0] = mean;
+        time_mean_stddev[1] = stddev;
+
+        return time_mean_stddev;
+    }
+
+    else{   
+    std::vector<double> v_star = specialThomas(g);
+    if (write==true){
+        std::vector<double> x=x_array(n_steps);
+        write_to_file(x, v_star, "ST_" + std::to_string(n_steps) + "steps");
+    }
+    return v_star;
+    
+    }
+
 }
 
-int problem9(int n_steps){
-    
-    // Problem 9
 
-    int n_points = n_steps+1;
-    double h = (x_max - x_min) / n_steps;
-    int m = n_points - 2;
-    std::vector<double> x(n_points);
-    x[0] = x_min;
-    x[n_points-1] = x_max;
-    std::vector<double> g(m);
-   
-    for(int i=1; i<=m; i++){
-        x[i] = x_min + i*h;
-        g[i-1] = std::pow(h,2) * f(x[i]); 
+
+
+void absolute_error(int n_steps){
+    // Make either utils or algorithms script for this computation?
+    int m = n_steps - 1;
+
+    std::vector<double> x=x_array(n_steps);
+    std::vector<double> v=compute_generalThomas(n_steps);
+
+
+    std::vector<double> abs_error(m);
+    std::vector<double> x_red = std::vector<double>(x.begin()+1, x.end()-1);
+    
+    for(int i=0; i<m; i++){
+        double abs_err = std::abs(u(x_red[i])-v[i+1]);
+        abs_error[i] = std::log10(abs_err);
+        
     }
-    g[0] += v0;
-    g[m-1] += v1;
-    
-    std::vector<double> vstar = specialThomas(g);
-    
-    // Include endpoints
-
-    std::vector<double> v(n_points);
-    v[0] = v0;
-    v[n_points-1] = v1;
-    for(int i=1; i<=m; i++){
-        v[i] = vstar[i-1];
-    }
-
-    writeto_file(x, v, "special_num_sol_" + std::to_string(n_steps) + "steps");
-
-    return 0;
+    write_to_file(x_red, abs_error, "abs_error_" + std::to_string(n_steps) + "steps");
 }
 
-double problem8(int n_steps, bool absolute_error, bool maximum_error){
-    int n_points = n_steps+1;
-    double h = (x_max - x_min) / n_steps;
-    int m = n_points - 2;
-    std::vector<double> x(n_points);
-    x[0] = x_min;
-    x[n_points-1] = x_max;
-    std::vector<double> g(m);
-   
-    for(int i=1; i<=m; i++){
-        x[i] = x_min + i*h;
-        g[i-1] = std::pow(h,2) * f(x[i]); 
+
+std::vector<double> relative_error(int n_steps, bool write=false){
+    int m = n_steps - 1;
+    double return_val; 
+
+    std::vector<double> x=x_array(n_steps);
+    std::vector<double> v=compute_generalThomas(n_steps);
+
+    std::vector<double> rel_error(m);
+    std::vector<double> log_rel_error(m);
+    std::vector<double> x_red = std::vector<double>(x.begin()+1, x.end()-1);
+
+    for(int i=0; i<m; i++){
+        // x_reduced[i] = x[i+1];
+        double rel_err = std::abs((u(x_red[i])-v[i+1])/u(x_red[i]));
+        rel_error[i] = rel_err;
+        log_rel_error[i] = std::log10(rel_err);
     }
-    g[0] += v0;
-    g[m-1] += v1;
 
-    std::vector<double> a(m, -1);
-    std::vector<double> b(m, 2);
-    std::vector<double> c(m, -1);
-    
-    std::vector<double> vstar = generalThomas(a, b, c, g);
-    
-    // Include endpoints
-
-    std::vector<double> v(n_points);
-    v[0] = v0;
-    v[n_points-1] = v1;
-    for(int i=1; i<=m; i++){
-        v[i] = vstar[i-1];
+    if(write==true){
+        write_to_file(x_red, log_rel_error, "rel_error_" + std::to_string(n_steps) + "steps", 20,15);
     }
-    
-    //std::vector<double> u_exact(n_points);
-    //for(int i=0; i<=n_steps; i++){
-    //    u_exact[i] = u(x[i]);
-    //}
 
-    
-
-    double return_val;
-    if (absolute_error==true){
-        std::vector<double> absolute_error(m);
-        std::vector<double> x_reduced(m);
-        for(int i=0; i<m; i++){
-            x_reduced[i] = x[i+1];
-            double abs_err = std::abs(u(x[i+1])-v[i+1]);
-            absolute_error[i] = std::log10(abs_err);
-            
-        }
-        writeto_file(x_reduced, absolute_error, "absolute_error" + std::to_string(n_steps) + "steps");
-        return_val = 0;
-    }
-    else if (absolute_error==false){
-        std::vector<double> relative_error(m);
-        std::vector<double> log_relative_error(m);
-        std::vector<double> x_reduced(m);
-        for(int i=0; i<m; i++){
-            x_reduced[i] = x[i+1];
-            double rel_err = std::abs((u(x[i+1])-v[i+1])/u(x[i+1]));
-            relative_error[i] = rel_err;
-            log_relative_error[i] = std::log10(rel_err);
-        }
-        if(maximum_error==true){
-            double max_val = relative_error[0];
-            for(int i=1; i<m; i++){
-                if(relative_error[i]>max_val){
-                    max_val = relative_error[i];
-                }
-            }
-            return_val = max_val;
-        }
-        else{
-            writeto_file(x_reduced, log_relative_error, "relative_error" + std::to_string(n_steps) + "steps");
-            return_val = 0;
-        }
-    }
-    //std::cout << return_val << std::endl;
-
-    return return_val;
+    return rel_error;
 }
 
-int problem8c(int number_of_n_steps){
-    //  problem 8c
-    // int n_step_max = 1e7;
-    // int n_step_min = 1e1;
-    // int step_difference = (n_step_max-n_step_min)/(number_of_n_steps-1);
-    std::vector<double> list_of_n_steps(number_of_n_steps); //should be int, but that messes with the writeto_file() function
-    std::vector<double> max_error_per_step_number(number_of_n_steps);
+int max_rel_err(int number_of_n_steps){
+    std::vector<double> n_steps_array(number_of_n_steps); //should be int, but that messes with the writeto_file() function
+    std::vector<double> max_error_n_step(number_of_n_steps);
     for(int i=1; i<=number_of_n_steps; i++){
-        //list_of_n_steps[i-1] = std::pow(10,i);
-        list_of_n_steps[i-1] = i;
+        n_steps_array[i-1] = std::pow(10,i);
         int n_steps = std::pow(10,i);
-        double max_error = problem8(n_steps, false, true);
-        max_error_per_step_number[i-1] = std::log10(max_error);
-        //std::cout << n_steps << "  " << max_error_per_step_number[i-1] << std::endl;
+        std::vector<double> rel_err = relative_error(n_steps);
+        max_error_n_step[i-1] = *std::max_element(rel_err.begin(), rel_err.end());
     }
-    writeto_file(list_of_n_steps, max_error_per_step_number, "max_relative_error");
+    write_to_file(n_steps_array, max_error_n_step, "max_rel_error");
     return 0;
 }
 
-void problem10(){
-    
-    // Problem 10
-    int number_of_n_steps = 6;
-    int number_of_runs_per_step = 500;
-    std::vector<double> list_of_n_steps(number_of_n_steps); //should be int, but that messes with the writeto_file() function
-    std::vector<double> general_Thomas_timed(number_of_n_steps);
-    std::vector<double> special_Thomas_timed(number_of_n_steps);
-    for(int i=0; i<number_of_n_steps; i++){
+
+void timing(){
+    int n_step_sizes = 6;
+    int n_simulations = 500;
+    std::vector<double> list_of_n_steps(n_step_sizes); // double for writing to file 
+    std::vector<double> general_Thomas_timed(n_step_sizes);
+    std::vector<double> special_Thomas_timed(n_step_sizes);
+    std::vector<double> general_Thomas_stddev(n_step_sizes);
+    std::vector<double> special_Thomas_stddev(n_step_sizes);
+    for(int i=0; i<n_step_sizes; i++){
         list_of_n_steps[i] = std::pow(10,i+1);
     }
 
@@ -361,81 +228,74 @@ void problem10(){
     std::ofstream ofile;
     ofile.open(file.c_str());
 
-    for(int i=0; i<number_of_n_steps; i++){
-        int n_steps = int(list_of_n_steps[i]);
-        int n_points = n_steps+1;
-        double h = (x_max - x_min) / n_steps;
-        int m = n_points - 2;
-        std::vector<double> x(n_points);
-        x[0] = x_min;
-        x[n_points-1] = x_max;
-        std::vector<double> g(m);
-    
-        for(int i=1; i<=m; i++){
-            x[i] = x_min + i*h;
-            g[i-1] = std::pow(h,2) * f(x[i]); 
-        }
-        g[0] += v0;
-        g[m-1] += v1;
+    for(int i=0; i<n_step_sizes; i++){
+        int n_steps = list_of_n_steps[i];
 
-        std::vector<double> a(m, -1);
-        std::vector<double> b(m, 2);
-        std::vector<double> c(m, -1);
+        std::vector<double> general_mean_stddev = compute_generalThomas(n_steps, false, n_simulations);
+        std::vector<double> special_mean_stddev = compute_specialThomas(n_steps, false, n_simulations);
 
-        std::vector<double> general_times(number_of_runs_per_step);
-        std::vector<double> special_times(number_of_runs_per_step);
-
-        double general_sample_mean = 0;
-        double special_sample_mean = 0;
-
-        for(int j=0; j<number_of_runs_per_step; j++){
-            auto t1_gt = std::chrono::high_resolution_clock::now();
-            std::vector<double> vstar_dummy_general = generalThomas(a, b, c, g);
-            auto t2_gt = std::chrono::high_resolution_clock::now();
-            general_times[j] = std::chrono::duration<double>(t2_gt - t1_gt).count();
-            general_sample_mean += general_times[j];
-
-            auto t1_st = std::chrono::high_resolution_clock::now();
-            std::vector<double> vstar_dummy_special = specialThomas(g);
-            auto t2_st = std::chrono::high_resolution_clock::now();
-            special_times[j] = std::chrono::duration<double>(t2_st - t1_st).count();
-            special_sample_mean += special_times[j];
-        }
-
-        general_sample_mean /= number_of_runs_per_step;
-        special_sample_mean /= number_of_runs_per_step;
-
-        double general_sample_variance = 0;
-        double special_sample_variance = 0;
-
-        double general_sample_std = 0;
-        double special_sample_std = 0;
-
-        for(int j=0; j<number_of_runs_per_step; j++){
-            general_sample_variance += std::pow((general_times[j] - general_sample_mean), 2);
-            special_sample_variance += std::pow((special_times[j] - special_sample_mean), 2);
-        }
-        general_sample_variance /= number_of_runs_per_step;
-        special_sample_variance /= number_of_runs_per_step;
-
-        general_sample_std = std::pow(general_sample_variance, .5);
-        special_sample_std = std::pow(special_sample_variance, .5);
-
-
-        // general_Thomas_timed[i] = duration_seconds_general_thomas;
-        // special_Thomas_timed[i] = duration_seconds_special_thomas;
+        general_Thomas_timed[i] = general_mean_stddev[0];
+        special_Thomas_timed[i] = special_mean_stddev[0];
+        general_Thomas_stddev[i] = general_mean_stddev[1];
+        special_Thomas_stddev[i] = special_mean_stddev[1];
 
         ofile << std::setw(width) << std::setprecision(prec) << std::scientific << n_steps << ","
-            << std::setw(width) << std::setprecision(prec) << std::scientific << general_sample_mean << ","
-            << std::setw(width) << std::setprecision(prec) << std::scientific << special_sample_mean << ","
-            << std::setw(width) << std::setprecision(prec) << std::scientific << general_sample_std << ","
-            << std::setw(width) << std::setprecision(prec) << std::scientific << special_sample_std
+            << std::setw(width) << std::setprecision(prec) << std::scientific << general_Thomas_timed[i] << ","
+            << std::setw(width) << std::setprecision(prec) << std::scientific << special_Thomas_timed[i] << ","
+            << std::setw(width) << std::setprecision(prec) << std::scientific << general_Thomas_stddev[i] << ","
+            << std::setw(width) << std::setprecision(prec) << std::scientific << special_Thomas_stddev[i]
             << std::endl;
-        
     }
+    
+    // write_to_file(list_of_n_steps, general_Thomas_timed, "general_thomas_timed");
+    // write_to_file(list_of_n_steps, special_Thomas_timed, "special_thomas_timed");
+    // write_to_file(list_of_n_steps, general_Thomas_stddev, "general_thomas_stddev");
+    // write_to_file(list_of_n_steps, special_Thomas_stddev, "special_thomas_stddev");
 
     ofile.close();
 
     return;
 }
 
+
+int main(){
+
+    auto start_time = std::chrono::high_resolution_clock::now();
+    
+    // write_u(50, "analytical_xu_50");
+
+    // std::vector<double> a()
+    // compute_generalThomas(50);
+    // compute_specialThomas(100);
+    // absolute_error(10);
+    // absolute_error(100);
+    // absolute_error(1000);
+    
+    // relative_error(100);
+    // relative_error(1000);
+
+    // max_rel_err(7);
+    timing();
+
+    auto stop_time = std::chrono::high_resolution_clock::now();
+
+    double run_time = std::chrono::duration<double>(stop_time-start_time).count();
+
+    std::cout << "Running time: " << run_time << " s" << std::endl;
+
+    return 0;
+
+}
+
+
+void write_u(int n_steps, std::string filename){
+    // Computes analytical u(x) for plotting  
+    int n_points = n_steps + 1; 
+
+    std::vector<double> x=x_array(n_steps);
+    std::vector<double> u_arr(n_points);
+
+    for(int i=0; i<n_points; i++){u_arr[i] = u(x[i]);}
+
+    write_to_file(x, u_arr, filename);
+}
