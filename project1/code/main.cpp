@@ -13,7 +13,6 @@ const double v_max = 0;
 
 void write_u(int n_steps, std::string filename);
 
-
 double step_size(int n_steps){
     double h=(x_max - x_min)/n_steps;
     return h;
@@ -33,7 +32,6 @@ std::vector<double> x_array(int n_steps){
     return x;
 }
 
-
 std::vector<double> g_array(int n_steps){
     int m = n_steps-1;
     std::vector<double> g(m);
@@ -47,8 +45,6 @@ std::vector<double> g_array(int n_steps){
 
     return g;
 }
-
-
 
 std::vector<double> compute_generalThomas(int n_steps, bool write=false, int timing=0){
     int m = n_steps - 1;
@@ -92,13 +88,12 @@ std::vector<double> compute_generalThomas(int n_steps, bool write=false, int tim
     else{
         std::vector<double> v = generalThomas(a, b, c, g);
         if (write==true){
-            write_to_file(x, v, "GT_" + std::to_string(n_steps) + "steps");
+            write_to_file(x, v, "generalThomas_" + std::to_string(n_steps) + "steps");
         }
         return v;
     }
 
 } 
-
 
 std::vector<double> compute_specialThomas(int n_steps, bool write=false, int timing=0){
     
@@ -146,9 +141,6 @@ std::vector<double> compute_specialThomas(int n_steps, bool write=false, int tim
 
 }
 
-
-
-
 void absolute_error(int n_steps){
     // Make either utils or algorithms script for this computation?
     int m = n_steps - 1;
@@ -167,7 +159,6 @@ void absolute_error(int n_steps){
     }
     write_to_file(x_red, abs_error, "abs_error_" + std::to_string(n_steps) + "steps");
 }
-
 
 std::vector<double> relative_error(int n_steps, bool write=false){
     int m = n_steps - 1;
@@ -206,7 +197,6 @@ int max_rel_err(int number_of_n_steps){
     write_to_file(n_steps_array, max_error_n_step, "max_rel_error");
     return 0;
 }
-
 
 void timing(){
     int n_step_sizes = 6;
@@ -257,24 +247,26 @@ void timing(){
     return;
 }
 
-
 int main(){
 
     auto start_time = std::chrono::high_resolution_clock::now();
     
-    // write_u(50, "analytical_xu_50");
+    // problem 2
+    write_u(1000, "analytical_x_u");
 
-    // std::vector<double> a()
-    // compute_generalThomas(50);
-    // compute_specialThomas(100);
-    // absolute_error(10);
-    // absolute_error(100);
-    // absolute_error(1000);
-    
-    // relative_error(100);
-    // relative_error(1000);
+    // problem 7, 8a) and 8b)
+    int max_order = 3;
+    for(int i=1; i<=max_order; i++){
+        int n = std::pow(10, i);
+        compute_generalThomas(n, true);
+        absolute_error(n);
+        relative_error(n, true);
+    }
 
-    // max_rel_err(7);
+    //  problem 8c)
+    max_rel_err(7);
+
+    //  problem10
     timing();
 
     auto stop_time = std::chrono::high_resolution_clock::now();
@@ -286,7 +278,6 @@ int main(){
     return 0;
 
 }
-
 
 void write_u(int n_steps, std::string filename){
     // Computes analytical u(x) for plotting  
