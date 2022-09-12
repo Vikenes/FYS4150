@@ -19,6 +19,7 @@ plt.rc('figure', figsize=(12,7))
 here = os.path.abspath(".")
 data_path = here + "/../../output/data/"
 plot_path = here + "/../../output/plots/"
+latex_path = here + "/../../latex/"
 
 
 def save_push(fig, pdf_name, save=True, push=False, show=False):
@@ -201,37 +202,49 @@ def timed_algorithms(data_file, pdf_name='none', number_of_runs=500):
         save_push(fig, pdf_name=pdf_name, push=True, save=True)
 
 
+def make_table(data_file="thomas_timed.txt"):
+    n_steps, g_mean, s_mean, g_std, s_std = np.loadtxt(data_path + data_file, unpack=True, delimiter=",")
+    table_info = pd.DataFrame(np.array([n_steps, g_mean, g_std, s_mean, s_std]).T,  columns=[r'$n_{mathrm{steps}}$', r'$\mu_{G}$', r'$\sigma_{G}$', r'$\mu_{S}$', r'$\sigma_{S}$'])
+    table_info.to_latex(latex_path + "thomas_timed_table.tex", index=False, escape=False)
 
 
-# Problem 2
 
-line_plot_txt(data_file="analytical_x_u.txt", pdf_name='ux')
+# # Problem 2
 
-
-# Problem 7
-
-files = ["analytical_x_u.txt"]
-for n in [10, 100, 1000]:
-    files.append(f"generalThomas_{n}steps.txt")
-
-compare_plots_txt(files, "comparison_p7")
-
-# Problem 8
-
-rel_error_files = []
-abs_error_files = []
-for n in [10, 100, 1000]:
-    rel_error_files.append(f'rel_error_{n}steps.txt')
-    abs_error_files.append(f'abs_error_{n}steps.txt')
-
-plot_error(abs_error_files, pdf_name="absolute_error")
-plot_error(rel_error_files, pdf_name="relative_error", relative_error=True)
-
-plot_max_error('max_rel_error.txt', pdf_name="max_relative_error")
+# line_plot_txt(data_file="analytical_x_u.txt", pdf_name='ux')
 
 
-# Problem 10
-timed_algorithms("thomas_timed.txt", pdf_name="algorithms_timed")
+# # Problem 7
+
+# files = ["analytical_x_u.txt"]
+# for n in [10, 100, 1000]:
+#     files.append(f"generalThomas_{n}steps.txt")
+
+# compare_plots_txt(files, "comparison_p7")
+
+# # Problem 8
+
+# rel_error_files = []
+# abs_error_files = []
+# for n in [10, 100, 1000]:
+#     rel_error_files.append(f'rel_error_{n}steps.txt')
+#     abs_error_files.append(f'abs_error_{n}steps.txt')
+
+# plot_error(abs_error_files, pdf_name="absolute_error")
+# plot_error(rel_error_files, pdf_name="relative_error", relative_error=True)
+
+# plot_max_error('max_rel_error.txt', pdf_name="max_relative_error")
+
+
+# # Problem 10
+# timed_algorithms("thomas_timed.txt", pdf_name="algorithms_timed")
+
+
+
+make_table()
+
+
+
 
 
 #   SHOW PLOTS ONLY
