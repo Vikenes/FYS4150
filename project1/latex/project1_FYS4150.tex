@@ -62,7 +62,7 @@ We will solve the one-dimensional Poisson equation
 \begin{align*}
     - \dv[2]{u}{x}=f(x)
 \end{align*}
-where the source function, $f(x)=100e^{-10x}$, is known. We will du this for $x\in[0,\,1]$ with boundary conditions $u(0)=u(1)=0git$.
+where the source function, $f(x)=100e^{-10x}$, is known. We will du this for $x\in[0,\,1]$ with boundary conditions $u(0)=u(1)=0$.
 
 \section*{Problem 1}
 
@@ -232,7 +232,7 @@ The first loop in \Algo{p6_general_algorithm} contains $1+2+2=5$ FLOPs and runs 
 
 \subsection*{a)}
 
-We implement the general algorithm, \Algo{p6_general_algorithm}, in \CC and let $A$ be the matrix from Problem 4, i.e. $a_i=c_i=-1$ and $b_i=2$. For a given number of discretization steps, $n_\text{steps}$, the code saves the solution as pairs $(x_i, v_i)$ to a file.
+We implement the general algorithm, \Algo{p6_general_algorithm}, in \CC\, and let $A$ be the matrix from Problem 4, i.e. $a_i=c_i=-1$ and $b_i=2$. For a given number of discretization steps, $n_\text{steps}$, the code saves the solution as pairs $(x_i, v_i)$ to a file.
 
 
 \subsection*{b)}
