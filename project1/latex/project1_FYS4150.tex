@@ -32,6 +32,9 @@
 \newcommand{\Sec}[1]{section \ref{sec:#1}}
 \newcommand{\Algo}[1]{Algorithm \ref{algo:#1}}
 
+%C++
+\newcommand{\CC}{C\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf +}\nolinebreak\hspace{-.10em}\raisebox{.4ex}{\tiny\bf +}}
+
 \usetikzlibrary{quantikz}
 % defines the color of hyperref objects
 % Blending two colors:  blue!80!black  =  80% blue and 20% black
@@ -41,7 +44,7 @@ linkcolor={red!50!black},
 citecolor={blue!50!black},
 urlcolor={blue!80!black}}
 
-\graphicspath{{../output/plots/old/}} % path for figures
+\graphicspath{{../output/plots/}} % path for figures
 
 \begin{document}
 
@@ -173,7 +176,7 @@ We have two vectors of length $m$, $\mathbf{v}^*$ and $\mathbf{x}$, representing
 \subsection*{a)}
 We now concern ourselves with the general solution of the matrix equation $A\vec{v} = \vec{g}$ where $A$ is a \textit{general} $n\cross n$ tridiagonal matrix. We thus have the following:
 
-\begin{align*}x
+\begin{align*}
     A\mathbf{v} = 
     \begin{pmatrix}
         b_1 & c_1 & & \\
@@ -228,7 +231,7 @@ The first loop in \Algo{p6_general_algorithm} contains $1+2+2=5$ FLOPs and runs 
 
 \subsection*{a)}
 
-We implement the general algorithm, \Algo{p6_general_algorithm}, in C++ and let $A$ be the matrix from Problem 4, i.e. $a_i=c_i=-1$ and $b_i=2$. For a given number of discretization steps, $n_\text{steps}$, the code saves the solution as pairs $(x_i, v_i)$ to a file.
+We implement the general algorithm, \Algo{p6_general_algorithm}, in \CC and let $A$ be the matrix from Problem 4, i.e. $a_i=c_i=-1$ and $b_i=2$. For a given number of discretization steps, $n_\text{steps}$, the code saves the solution as pairs $(x_i, v_i)$ to a file.
 
 
 \subsection*{b)}
@@ -275,10 +278,14 @@ We compute solutions for $n_\text{steps}\in[10^1, 10^2, \dots, 10^7]$ and find t
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.9\textwidth]{max_relative_error.pdf}
-    \caption{The logarithm of the maximum relative error plotted over the logarithm of number of steps used in \Algo{p6_general_algorithm}.}\label{fig:p8_max_rel_err}
+    \caption{The maximum relative error plotted over the number of steps used in \Algo{p6_general_algorithm}.}\label{fig:p8_max_rel_err}
 \end{figure}
 
 \section*{Problem 9}
+
+\subsection*{a)}
+
+We specialize the Thomas algorithm to the special case of the tridiagonal, symmetric Toeplitz matrix $A$ with signature (-1,2,-1). This special algorithm goes as follows: 
 
 \begin{algorithm}[H]
     \caption{Special algorithm}\label{algo:p9_special_algorithm}
@@ -295,6 +302,17 @@ We compute solutions for $n_\text{steps}\in[10^1, 10^2, \dots, 10^7]$ and find t
         \EndFor
     \end{algorithmic}
 \end{algorithm}
+
+Here we have simply substituted for $a_i, b_i$ and $c_i$ in \Algo{p6_general_algorithm} and recognized a pattern in the recursive forumula for $\tilde{b}_i$, giving an analytic expression for this parameter.
+
+
+\subsection*{b)}
+
+The \Algo{p9_special_algorithm} performs $(1+2)\cdot (m-2) = 3(m-2)$ FLOPs in the first loop, then $1$ FLOP before $2 \cdot (m-2)$ FLOPs in the second loop, yielding a total of $5(m-2)+1$ FLOPs in the special Thomas algorithm.
+
+\subsection*{c)}
+
+We implement \Algo{p9_special_algorithm} in our \CC\, script. 
 
 \section*{Problem 10}
 
