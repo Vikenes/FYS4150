@@ -163,9 +163,9 @@ def plot_max_error(data_file, pdf_name='none'):
     logsteps, logerror = np.loadtxt(data_path + data_file, unpack=True, delimiter=",")
     ax.plot(logsteps, logerror, '--', color='pink', linewidth=2)
     ax.plot(logsteps, logerror, '.', markersize=20, color="firebrick", label=r"$\mathrm{max}(\epsilon)$")
-    xlabel = r'$\log_{10}(n_{\mathrm{steps}})$'
-    ylabel = r'$\log_{10}(\epsilon)$'
-    title = r'Logarithm of maximum relative error $\epsilon$'
+    xlabel = r'$n_{\mathrm{steps}}$'
+    ylabel = r'$\epsilon$'
+    title = r'Maximum relative error $\epsilon$'
     set_ax_info(ax, xlabel, ylabel, title=title)
     ax.set_yscale("log")
     ax.set_xscale("log")
