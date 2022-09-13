@@ -335,9 +335,17 @@ In figure \ref{fig:p10_timed} we see that the special algorithm is quicker than 
 
 \section{Derivation of the Thomas algorithm}\label{Apx:Thomas_algorithm}
 
-; performing row operations on the entire equation until we are left with the identity matrix, effectively row reducing the following matrix into $\mathbb{I}^n$ and then the solution will be the ($n+1$)$^{th}$ column:
-
-
+In order to derive the Thomas algorithm, we monitor how a series of row operations can achieve the following relation:
+\begin{align*}
+    \begin{pmatrix}
+        A & \vec{g} 
+    \end{pmatrix}
+    \sim 
+    \begin{pmatrix}
+        \mathbb{I}^n & \vec{v}
+    \end{pmatrix}
+\end{align*}
+which is the same as:
 \begin{align*}
     \begin{pmatrix}
         b_1 & c_1 & &  & g_1 \\
@@ -350,7 +358,7 @@ In figure \ref{fig:p10_timed} we see that the special algorithm is quicker than 
         \mathbb{I}^n & \vec{v}
     \end{pmatrix}
 \end{align*}
-We have obtained $\mathbb{I}^n$ if all elements in $vec{a}$ are equal to 1, and all elements in $\vec{b}$ and $\vec{c}$ are equal to 0. We firs remove the $\vec{a}$ vector by forward substitution. The first row will remain unchanged, but we need to perform row operations on the remaining rows:
+We have obtained $\mathbb{I}^n$ if all elements in $\vec{a}$ are equal to 1, and all elements in $\vec{b}$ and $\vec{c}$ are equal to 0. We firs remove the $\vec{a}$ vector by forward substitution. The first row will remain unchanged, but we need to perform row operations on the remaining rows:
 
 \begin{align*}
     \tilde{R}_1 &= R_1 \\
