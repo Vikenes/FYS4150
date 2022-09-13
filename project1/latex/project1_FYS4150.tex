@@ -60,19 +60,12 @@ The code can be found on GitHub at \url{https://github.com/Vikenes/FYS4150}.
     
 \section*{Introduction}
 We will solve the one-dimensional Poisson equation 
-\begin{align*}
+\begin{align} \label{eq:poisson_eq}
     - \dv[2]{u}{x}=f(x)
-\end{align*}
-where the source function, $f(x)=100e^{-10x}$, is known. We will du this for $x\in[0,\,1]$ with boundary conditions $u(0)=u(1)=0$.
+\end{align}
+where the source function, $f(x)=100e^{-10x}$, is known. We will do this for $x\in[0,\,1]$ with boundary conditions $u(0)=u(1)=0$.
 
 \section*{Problem 1}
-
-We have the equation 
-
-\begin{align}\label{eq:poisson_eq}
-    -\dv[2]{u}{x} =  100e^{-10x}, \quad \text{where} \quad x\in [0,1], \quad u(0)=u(1)=0.
-\end{align}
-
 
 We want to check that 
 
@@ -80,7 +73,7 @@ We want to check that
     u(x) = 1 - (1-e^{-10})x - e^{-10x}
 \end{align}
 
-is the solution of eq. \ref{eq:poisson_eq}. We first control that eq. \ref{eq:p1_analytical_sol} satisfies the boundary conditions. 
+is the solution of eq. \eqref{eq:poisson_eq} given our source function, $f(x)$. We first control that eq. \eqref{eq:p1_analytical_sol} satisfies the boundary conditions. 
 
 \begin{align*}
     u(0) &= 1 - 0 - e^{0} = 0 \\
@@ -90,15 +83,15 @@ is the solution of eq. \ref{eq:poisson_eq}. We first control that eq. \ref{eq:p1
 We find the double derivative of $u(x)$,
 
 \begin{align*}
-    \dv{u}{x} &= -(1-e^{-10}) - (-10)e^{-10x} \quad \Rightarrow \quad \dv[2]{u}{x} = -100e^{-10x},
+    \dv{u}{x} &= -(1-e^{-10}) - (-10)e^{-10x} \quad \Rightarrow \quad \dv[2]{u}{x} = -100e^{-10x}=-f(x),
 \end{align*}
 
-and see that this satisfies the differential \Eq{poisson_eq}.
+and see that $u(x)$ in eq. \eqref{eq:p1_analytical_sol} satisfies equation \eqref{eq:poisson_eq}, with our given source function.
 
 
 \section*{Problem 2}
 
-We write a program in C++ that defines a vector of linearly spaced values of $x\in[0,1]$, evaluates the exact solution from \Eq{p1_analytical_sol} at these points and saves the information. We then use Python to plot the solution, see \Fig{p1_analytical_sol}.
+We write a program in \CC\ that defines a vector of linearly spaced values of $x\in[0,1]$, evaluates the exact solution from \Eq{p1_analytical_sol} at these points and saves the information. We then use Python to read the data and plot the solution, which is shown in figure \ref{fig:p1_analytical_sol}.
 
 % Add proper plot. Comment plot 
 
@@ -110,11 +103,11 @@ We write a program in C++ that defines a vector of linearly spaced values of $x\
 \end{figure}
 
 \section*{Problem 3}
-For the discrete value at point a $i$ we denote this as $x_i$, where the corresponding function value is defined as $u(x_i)\equiv u_i$. Similarly, the source function is defined as $f(x_i)\equiv f_i$. We now find the discretized version of the second order derivative of $u_i$
+For a discrete value of $x$ at a point $i$, we denote this as $x_i$, where the corresponding function value is defined as $u(x_i)\equiv u_i$. Similarly, the source function is defined as $f(x_i)\equiv f_i$. We now find the discretized version of the second order derivative of $u_i$
 \begin{align*}
     \dv[2]{u}{x}\bigg\rvert_{x_i} = u_i'' = \frac{u_{i-1}-2u_i+u_{i+1}}{h^2} + \mathcal{O}(h^2) \approx \frac{v_{i-1}-2v_i+v_{i+1}}{h^2} = v_i''
 \end{align*}
-where $v_i$ is the approximated value of $u_i$ obtained by neglecting the $\mathcal{O}(h^2)$ term, and $h=x_{i+1}-x_i$ is the step length. % Should define h differently
+where $v_i$ is the approximated value of $u_i$ obtained by neglecting the $\mathcal{O}(h^2)$ term, and $h=(x_{\mathrm{max}}-x_{\mathrm{min}})/n_{\mathrm{steps}}$ is the step length. % Should define h differently
 
 Inserting for $v_i$ into the Poisson equation yields 
 \begin{align}
@@ -126,7 +119,7 @@ which is a discretized version of the Poisson equation.
 
 \section*{Problem 4}
 % Should be rewritten to be "compatible" with P5 and P6 once those tasks are completed. 
-The computations performed in equation \eqref{eq:p3_disc_poisson_eq} to obtain a value for $f_i$ can be expressed in terms of vectors. If we have two column vectors, $\mathbf{a}$ and $\mathbf{\tilde{v}}$, defined as $a=(-1,\,2,\,-1)$ and $\mathbf{\tilde{v}}=(v_{i-1},\,v_i,\,v_{i+1})$, respectively, equation \eqref{eq:p3_disc_poisson_eq} can be written as  
+The computations performed in equation \eqref{eq:p3_disc_poisson_eq} to obtain a value for $f_i$ can be expressed in terms of vectors. If we have two column vectors, $\mathbf{a}$ and $\mathbf{\tilde{v}}$, defined as $\mathbf{a}=(-1,\,2,\,-1)$ and $\mathbf{\tilde{v}}=(v_{i-1},\,v_i,\,v_{i+1})$, respectively, equation \eqref{eq:p3_disc_poisson_eq} can be written as  
 \begin{align*}
     \mathbf{a}^T \, \mathbf{\tilde{v}} = \begin{pmatrix}
         -1 & 2 & -1 
@@ -138,8 +131,8 @@ The computations performed in equation \eqref{eq:p3_disc_poisson_eq} to obtain a
     \end{pmatrix}
     = -v_{i+1}+2v_i-v_{i-1} = h^2 f_i \equiv g_i.
 \end{align*}
-We can extend this to compute multiple elements of $\mathbf{g}=(g_0,\,\dots,\,g_n)$ by multiplying $\mathbf{v}=(v_0,\,\dots,\,v_n)$ with a tridiagonal matrix $A$ with $2$ on its main diagonal and $-1$ on its subdiagonal and superdiagonal. However, for $v_0$ and $v_n$ we are unable to compute the second derivative, since $v_{-1}$ and $v_{n+1}$ are not defined. From the boundary conditions we have $v_0=v_n=0$, so $v_1$, $v_{n-1}$ and all the elements in between can be computed. Omitting the end points, equation \eqref{eq:p3_disc_poisson_eq} can be written as a matrix equation by  
-\begin{align*}
+We can extend this to all $n$ values of $x_i$, computing $\mathbf{g}=(g_0,\,\dots,\,g_{n-1})$ by multiplying $\mathbf{v}=(v_0,\,\dots,\,v_{n-1})$ with a tridiagonal matrix $A$ with $2$ on its main diagonal and $-1$ on its subdiagonal and superdiagonal. However, for $v_0$ and $v_{n-1}$ we are unable to compute the second derivative, since $v_{-1}$ and $v_{n}$ are not defined. From the boundary conditions we have $v_0=v_{n-1}=0$, so $v_1$, $v_{n-2}$ and all the elements in between can be computed. Omitting the end points, equation \eqref{eq:p3_disc_poisson_eq} can be written as a matrix equation by  
+\begin{align} \label{eq:p4_matrix_eq}
     A\mathbf{v} = 
     \begin{pmatrix}
         2 & -1 & & \\
@@ -151,26 +144,26 @@ We can extend this to compute multiple elements of $\mathbf{g}=(g_0,\,\dots,\,g_
         v_1 \\
         v_2 \\
         \vdots \\ 
-        v_{n-1}
+        v_{n-2}
     \end{pmatrix} = 
     \begin{pmatrix}
         g_1 \\
         g_2 \\ 
         \vdots \\
-        g_{n-1}
+        g_{n-2}
     \end{pmatrix}
     = \mathbf{g},
-\end{align*}
-where the value of the original differential equation is obtained by $\mathbf{f}=\mathbf{g}/h^2$. For the end-points we actually have $2v_1-v_2=g_1+v_0$ and $-v_{n-2}+2v_{n-1}=g_{n-1}+v_n$, but we have ommited these additional terms as they both are zero. 
+\end{align}
+where the value of the original differential equation is obtained by $\mathbf{f}=\mathbf{g}/h^2$. For the end-points we actually have $2v_1-v_2=g_1+v_0$ and $-v_{n-3}+2v_{n-2}=g_{n-2}+v_{n-1}$, but we have ommited these additional terms as they both are zero. 
 
 
 \section*{Problem 5}
 % Comment: Fix indices in the end 
 \subsection*{a)}
-We have two vectors of length $m$, $\mathbf{v}^*$ and $\mathbf{x}$, representing a complete solution to the discretized Poisson equation and corresponding $x$ values, respectively. With a matrix $A\in\mathbb{R}^{n\cross n}$ being the tridiagonal matrix from problem 4, we can find how $n$, relates to $m$. For all elements of $\mathbf{v}^*$ to be a complete solution, the derivative in equation \eqref{eq:p3_disc_poisson_eq} must be applicable, hence $\vec{v}^*=(v_1, v_2, ..., v_{n-2})$ lacks the boundaries and is therefore two elements "shorter" than $\vec{v}$, i.e. $m=n-2$. 
+We have two vectors of length $m$, $\mathbf{v}^*$ and $\mathbf{x}$, representing a complete solution to the discretized Poisson equation and corresponding $x$ values, respectively. With a matrix $A$ being the tridiagonal matrix from problem 4, we can find how $n$, relates to $m$. For all elements of $\mathbf{v}^*$ to be a complete solution, the derivative in equation \eqref{eq:p3_disc_poisson_eq} must be applicable, hence $\vec{v}^*=(v_1, v_2, ..., v_{n-2})$ lacks the boundaries and is therefore two elements "shorter" than $\vec{v}$, i.e. $m=n-2$. 
 
 \subsection*{b)}
-
+When solving \eqref{eq:p4_matrix_eq} for $\mathbf{v}$, we get all the elements of $\vec{v}^*$. The remaining elements of $\mathbf{v}$ that are missing, are the end points, which is given by the boundary conditions, $v_0=v_{n-1}=0$.
 % Comment: Write 5b)
 
 
@@ -225,7 +218,7 @@ We summarize the algorithm as follows:
 
 \subsection*{b)}
 
-The first loop in \Algo{p6_general_algorithm} contains $1+2+2=5$ FLOPs and runs $m-2$ times. The second is as long, but performs $1+1+1=3$ FLOPs each time. Remembering the operation prior to the second loop gives a total of $5(m-2)+1+3(m-2)=8(m-2)+1$ FLOPs.
+The first loop in \Algo{p6_general_algorithm} contains $1+2+2=5$ FLOPs and runs $m-2$ times. In the second loop we perform $1+1+1=3$ FLOPs per iteration. Remembering the operation prior to the second loop gives a total of $5(m-2)+1+3(m-2)=8(m-2)+1$ FLOPs.
 
 % Comment: 6b) - Count FLOPs
 
@@ -238,7 +231,7 @@ We implement the general algorithm, \Algo{p6_general_algorithm}, in \CC\, and le
 
 \subsection*{b)}
 
-We run the code for $n_\text{steps}=10, 100 \text{ and } 1000$ and plot the numerical solutions up against the analytic solution in \Fig{p7_num_sol}. We see that $n_\text{steps}=10$ (red dots) gives the wrong solution, whereas $n_\text{steps}=100$ (pink dots) yields the correct solution, but with a too coarse grid on the $x$-axis to be able to get a continous curve for lower $x$. Choosing $n_\text{steps}=1000$ (orange dots), however, seems sufficient to reproduce the exact solution with an acceptable error.
+We compute $\mathbf{v}$ with the general algorithm for $n_\text{steps}=10,\, 100 \text{ and } 1000$ and plot the numerical solutions up against the analytic solution in \Fig{p7_num_sol}. We see that $n_\text{steps}=10$ produces a large deviation from the exact solution, whereas $n_\text{steps}=100$ yields a far smaller deviation. Choosing $n_\text{steps}=1000$ reproduces a good approximation to the exact solution, with no visible deviation. To quantify the validity of these results, we proceed by studying the errors from the different step sizes.
 
 \begin{figure}[h!]
     \centering
@@ -248,11 +241,11 @@ We run the code for $n_\text{steps}=10, 100 \text{ and } 1000$ and plot the nume
 
 \section*{Problem 8}
 
-We ignore the end points in this problem.
+We ommit the end points in this problem, since we have defined $v_i=u_i$ at these points.
 
 \subsection*{a)}
 
-For the same $n_\text{steps}$ used in \Fig{p7_num_sol} we find the absolute error $\Delta_i = \abs{u_i-v_i}$, where $u_i=u(x_i)$ from \Eq{p1_analytical_sol}. We plot $\log_{10}(\Delta_i(x_i))$ for different $n_\text{steps}$ in \Fig{p8_abs_err}. 
+For the same $n_\text{steps}$ used in \Fig{p7_num_sol} we find the absolute error $\Delta_i = \abs{u_i-v_i}$, where $u_i=u(x_i)$ from \Eq{p1_analytical_sol}. We plot $\log_{10}(\Delta_i(x_i))$ for different $n_\text{steps}$ in \Fig{p8_abs_err}. We see that the error reduces by a factor $\sim 10^{-2}$ as we increase the steps size by a factor $10$. This is consistent with the error we get from omitting the $\mathcal{O}(h^2)$ terms, since $h^2 \propto n_\mathrm{steps}^{-2}$. As seen from figure \ref{fig:p1_analytical_sol}, the analytical solution has its largest gradient at low $x$ values. Near the end-points, we get a small absolute error, since these points are approximated from the exact values at $x=0$ and $x=1$. With a lower gradient of $u(x)$ towards $x=1$, we see that the error desclines as $x$ increases.  
 
 
 \begin{figure}[h!]
@@ -263,7 +256,7 @@ For the same $n_\text{steps}$ used in \Fig{p7_num_sol} we find the absolute erro
 
 \subsection*{b)}
 
-We make a similar visualisation of the relative error $\epsilon_i= \frac{\Delta_i}{\abs{u_i}}$ in \Fig{p8_rel_err}.
+We now compute the relative error $\epsilon_i= \frac{\Delta_i}{\abs{u_i}}$, and plot $\log_{10}(\epsilon_i)$, shown in \Fig{p8_rel_err}. Since we're now scaling the error, the relative error is independent of $x$, and is determined solely by the value of $n_{\mathrm{steps}}$.
 
 \begin{figure}[h!]
     \centering
@@ -272,9 +265,9 @@ We make a similar visualisation of the relative error $\epsilon_i= \frac{\Delta_
 \end{figure}
 
 \subsection*{c)}
-We compute solutions for $n_\text{steps}\in[10^1, 10^2, \dots, 10^7]$ and find the related maximum values of $\epsilon$. The results are plotted in \Fig{p8_max_rel_err}. In the base-10 logarithm space, we see a linear decrease in relative error as the number of steps reaches $10^5$. For $n_\text{steps}\geq 10^6$ there is a loss of significance as the computer deals with very small numbers.
+We compute solutions for $n_\text{steps}\in[10^1, 10^2, \dots, 10^7]$ and find the related maximum values, $\max{(\epsilon_i)}$, for each value of $n_\mathrm{steps}$. The results are presented in table \ref{tab:max_rel_error} with a corresponding plot shown in \Fig{p8_max_rel_err}. In the base-10 logarithm space, we see a linear decrease in relative error as the number of steps reaches $10^5$. For $n_\text{steps}\geq 10^6$ there is an increase in error, as we're dealing with numbers close to machine precision.
 
-\begin{table}
+\begin{table}[h!]
     \caption{Maximum relative error per $n_{\mathrm{step}}$}
     \label{tab:max_rel_error}  
     \input{max_rel_error_table.tex}
@@ -291,7 +284,7 @@ We compute solutions for $n_\text{steps}\in[10^1, 10^2, \dots, 10^7]$ and find t
 
 \subsection*{a)}
 
-We specialize the Thomas algorithm to the special case of the tridiagonal, symmetric Toeplitz matrix $A$ with signature $(-1,2,-1)$. This special algorithm goes as follows: 
+We specialize the Thomas algorithm to the special case of the tridiagonal, symmetric Toeplitz matrix $A$ with signature $(-1,2,-1)$. This special algorithm is given in Algorithm \ref{algo:p9_special_algorithm} 
 
 \begin{algorithm}[H]
     \caption{Special algorithm}\label{algo:p9_special_algorithm}
@@ -309,12 +302,12 @@ We specialize the Thomas algorithm to the special case of the tridiagonal, symme
     \end{algorithmic}
 \end{algorithm}
 
-Here we have simply substituted for $a_i, b_i$ and $c_i$ in \Algo{p6_general_algorithm} and recognized a pattern in the recursive forumula for $\tilde{b}_i$, giving an analytic expression for this parameter.
+Here we have simply substituted for $a_i, b_i$ and $c_i$ in \Algo{p6_general_algorithm} and recognized that $(a_i/\tilde{b}_{i-1}) \cdot c_{i-1}=1/2$ for the first iteration, which yields the formula $\tilde{b}_i=(i+2)/(i+1)$. Similar considerations have been made to simplify the expressions for $\tilde{g}_i$ and $v_i$. 
 
 
 \subsection*{b)}
 
-The \Algo{p9_special_algorithm} performs $(1+2)\cdot (m-2) = 3(m-2)$ FLOPs in the first loop, then $1$ FLOP before $2 \cdot (m-2)$ FLOPs in the second loop, yielding a total of $5(m-2)+1$ FLOPs in the special Thomas algorithm.
+\Algo{p9_special_algorithm} performs $1$ and $2$ FLOPs for computing $\tilde{b}_i$ and $\tilde{g}_i$, respectively, yielding $3(m-2)$ FLOPs in the first loop. $1$ FLOP is performed before the second loop, and $2 \cdot (m-2)$ FLOPs are performed in the second loop, yielding a total of $5(m-2)+1$ FLOPs in the special Thomas algorithm.
 
 \subsection*{c)}
 
@@ -322,7 +315,7 @@ We implement \Algo{p9_special_algorithm} in our \CC\, script.
 
 \section*{Problem 10}
 
-For both \Algo{p6_general_algorithm} and \Algo{p9_special_algorithm} we write a code that for $n_\text{steps}\in[10^{1}, 10^{2}, \dots, 10^{6}]$ computes the solution 500 times and times each run. We find the average duration of one algorithm run, as well as the root mean square error in the measurements. In \Fig{p10_timed} we visualise the results that are listed in TABLE XXX.
+We write a code that for $n_\text{steps}\in[10^{1}, 10^{2}, \dots, 10^{6}]$ computes \Algo{p6_general_algorithm} and \Algo{p9_special_algorithm} 500 times, and finds the average duration of the two algorithms for each $n_\mathrm{steps}$. In addition, we find the root mean square error of the measurements. In \Fig{p10_timed} we visualise the results that are listed in table \ref{tab:thomas_algo}.
 
 \begin{table}
     \caption{The mean $\mu$ and standard deviation $\sigma$ of time spent to execute the general and special Thomas algorithms}
@@ -336,7 +329,7 @@ For both \Algo{p6_general_algorithm} and \Algo{p9_special_algorithm} we write a 
     \caption{ The plot shows timing results for running the general (blue) and special (green) Thomas algorithms. The average duration (dots), and corresponding RMS error in measurements (bars), of one run are plotted for different choices in number of steps.}\label{fig:p10_timed}
 \end{figure}
 
-Even though the special algorithm is generally quicker, we see that the significance of choosing the this one over the general algorithm is much larger for $n_\text{steps}\geq 10^4$ than for fewer steps. For many runs with $n_\text{steps}\leq10^3$, it will not matter which algorithm you choose, as seen from the error bars in \Fig{p10_timed}.
+In figure \ref{fig:p10_timed} we see that the special algorithm is quicker than the general one. The only noticeable feature is the standard deviation of the general algorithm for $n_\mathrm{steps}=10$. However, the standard deviations at small step sizes are on the order of micro seconds, where our result is relatively sensitive to hardware specifics. 
 
 \appendix
 
