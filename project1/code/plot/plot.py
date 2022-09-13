@@ -6,6 +6,12 @@ import seaborn as sns
 import pandas as pd
 from datetime import datetime
 
+"""
+Script used for plotting. 
+
+To show plots without saving: Execute the function "show_plots()" in the end 
+"""
+
 
 # The style we want
 plt.style.use('seaborn')
@@ -203,8 +209,15 @@ def timed_algorithms(data_file, pdf_name='none', number_of_runs=500):
 
 def make_table_max_error(data_file="max_rel_error.txt"):
     steps, error = np.loadtxt(data_path + data_file, unpack=True, delimiter=",")
-    table_info = pd.DataFrame(np.array([steps, error]).T, columns=[r'$n_{\mathrm{steps}}$', r'$\mathrm{max}(\epsilon)$'])
-    table_info.to_latex(latex_path + "max_rel_error_table.tex", index=False, escape=False, column_format="l|r")
+
+    steps_scientific = []
+    for i in range(7):
+        pow = int(np.log10(steps[i]))
+        steps_scientific.append(r"$10^" + str(pow) + r"$")
+
+
+    table_info = pd.DataFrame(np.array([steps_scientific, error]).T, columns=[r'$n_{\mathrm{steps}}$', r'$\mathrm{max}(\epsilon)$'])
+    table_info.to_latex(latex_path + "new_max_rel_error_table.tex", index=False, escape=False, column_format="l|r")
 
 
 def make_table_timing(data_file="thomas_timed.txt"):
@@ -212,7 +225,66 @@ def make_table_timing(data_file="thomas_timed.txt"):
     table_info = pd.DataFrame(np.array([n_steps, g_mean, g_std, s_mean, s_std]).T,  columns=[r'$n_{\mathrm{steps}}$', r'$\mu_{G} [s]$', r'$\sigma_{G}$ [s]', r'$\mu_{S}$ [s]', r'$\sigma_{S}$ [s]'])
     table_info.to_latex(latex_path + "thomas_timed_table.tex", index=False, escape=False, column_format="r|r|r|r|r")
 
+def make_table_time_diff(data_file="thomas_timed.txt"):
+    n_steps, g_mean, s_mean, g_std, s_std = np.loadtxt(data_path + data_file, unpack=True, delimiter=",")
+    
+    flops_g = 8*n_steps - 15 
+    flops_s = 5*n_steps - 9
 
+    rel_mean = s_mean/g_mean 
+    rel_flops = flops_s / flops_g
+
+    steps_scientific = []
+    flops = []
+    means = []
+    for i in range(len(n_steps)):
+        pow = int(np.log10(n_steps[i]))
+        steps_scientific.append(r"$10^" + str(pow) + r"$")
+        flops.append(f"{rel_flops[i]:.4f}")
+        means.append(f"{rel_mean[i]:.4f}")
+
+    table_info = pd.DataFrame(np.array([steps_scientific, flops, means]).T,  columns=[r'$n_{\mathrm{steps}}$', r'$S_{\mathrm{FLOPs}} / G_{\mathrm{FLOPs}}$', r'$\mu_{S} / \mu_{G}$ [s]'])
+    table_info.to_latex(latex_path + "rel_time_thomas_table.tex", index=False, escape=False, column_format="r|c|r")
+
+
+
+def show_plots():
+    """
+    Function for showing plots only. 
+        No saving or pushing to git.
+    """
+
+    # Problem 2
+    line_plot_txt(data_file="analytical_x_u.txt", pdf_name='none') 
+
+
+    # Problem 7
+    files = ["analytical_x_u.txt"]
+    for n in [10, 100, 1000]:
+        files.append(f"generalThomas_{n}steps.txt")
+
+    compare_plots_txt(files, pdf_name="none")
+
+
+    # Problem 8
+    rel_error_files = []
+    abs_error_files = []
+    for n in [10, 100, 1000]:
+        rel_error_files.append(f'rel_error_{n}steps.txt')
+        abs_error_files.append(f'abs_error_{n}steps.txt')
+
+    plot_error(abs_error_files, pdf_name="none")
+    plot_error(rel_error_files, pdf_name="none", relative_error=True)
+
+    plot_max_error('max_rel_error.txt', pdf_name="none")
+
+
+    # Problem 10
+    timed_algorithms("thomas_timed.txt", pdf_name="none")
+
+
+
+show_plots()
 
 # # Problem 2
 
@@ -246,40 +318,10 @@ def make_table_timing(data_file="thomas_timed.txt"):
 
 
 
-make_table_timing()
+# make_table_timing()
 
-make_table_max_error()
+# make_table_max_error()
 
-
-
-#   SHOW PLOTS ONLY
-
-# # Problem 2
-
-# line_plot_txt(data_file="analytical_x_u.txt")
+# make_table_time_diff()
 
 
-# # Problem 7
-
-# files = ["analytical_x_u.txt"]
-# for n in [10, 100, 1000]:
-#     files.append(f"generalThomas_{n}steps.txt")
-
-# compare_plots_txt(files)
-
-# # Problem 8
-
-# rel_error_files = []
-# abs_error_files = []
-# for n in [10, 100, 1000]:
-#     rel_error_files.append(f'rel_error_{n}steps.txt')
-#     abs_error_files.append(f'abs_error_{n}steps.txt')
-
-# plot_error(abs_error_files)
-# plot_error(rel_error_files, relative_error=True)
-
-# plot_max_error('max_rel_error.txt')
-
-
-# # Problem 10
-# timed_algorithms("thomas_timed.txt")

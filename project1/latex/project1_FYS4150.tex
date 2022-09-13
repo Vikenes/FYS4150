@@ -56,7 +56,7 @@ urlcolor={blue!80!black}}
 \noaffiliation       
 
 \maketitle 
-The code can be found on GitHub at \url{https://github.com/Vikenes/FYS4150}.
+The code can be found on GitHub at \url{https://github.com/Vikenes/FYS4150/tree/main/project1}.
     
 \section*{Introduction}
 We will solve the one-dimensional Poisson equation 
@@ -329,7 +329,13 @@ We write a code that for $n_\text{steps}\in[10^{1}, 10^{2}, \dots, 10^{6}]$ comp
     \caption{ The plot shows timing results for running the general (blue) and special (green) Thomas algorithms. The average duration (dots), and corresponding RMS error in measurements (bars), of one run are plotted for different choices in number of steps.}\label{fig:p10_timed}
 \end{figure}
 
-In figure \ref{fig:p10_timed} we see that the special algorithm is quicker than the general one. The only noticeable feature is the standard deviation of the general algorithm for $n_\mathrm{steps}=10$. However, the standard deviations at small step sizes are on the order of micro seconds, where our result is relatively sensitive to hardware specifics. 
+In figure \ref{fig:p10_timed} we see that the special algorithm is quicker than the general one. The only noticeable feature is the standard deviation of the general algorithm for $n_\mathrm{steps}=10$. However, the standard deviations at small step sizes are on the order of micro seconds, where our result is relatively sensitive to hardware specifics. To see how the time differences compare to the number of FLOPs in the two algorithms, we tabulate $\mu_S/\mu_G$ for each step, together with the ratio between the number of FLOPs from the general and special algorithm, which are $8(m-2)+1$ and $5(m-2)+1$, respectively. The result is given in table \ref{tab:rel_time_diff}. The general algorithm performs slightly better than what it would if FLOPs were the only governing factor. This is expected, since memory handling and various other processes affect the timing. However, there appear to be a reasonable correspondence between difference in FLOPs and difference in time for the two algorithms.    
+
+\begin{table}
+    \include{rel_time_thomas_table.tex}
+    \caption{The ratio of average times and ratio of FLOPs for the two algorithms for different number of steps.}
+    \label{tab:rel_time_diff}
+\end{table}
 
 \appendix
 
