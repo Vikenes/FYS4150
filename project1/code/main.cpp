@@ -11,9 +11,11 @@ const double v_min = 0;
 const double v_max = 0;
 
 
-void write_u(int n_steps, std::string filename);
+void write_u(int n_steps, std::string filename); // Writing analytical u to file
+
 
 double step_size(int n_steps){
+    // Return step size for a given number of steps 
     double h=(x_max - x_min)/n_steps;
     return h;
 }
@@ -33,6 +35,7 @@ std::vector<double> x_array(int n_steps){
 }
 
 std::vector<double> g_array(int n_steps){
+    // Returns array of g(x)=h^2 * f(x) for a given number of steps  
     int m = n_steps-1;
     std::vector<double> g(m);
     double h=step_size(n_steps);
@@ -47,6 +50,11 @@ std::vector<double> g_array(int n_steps){
 }
 
 std::vector<double> compute_generalThomas(int n_steps, bool write=false, int timing=0){
+    // Computes v, by solving the matrix equation A*v=g. 
+    //   Writes solution to file if write=true
+    //   If int timing provided:
+    //    - Computes the average time of the algorithm over "timing" iterations, with std. dev. 
+    
     int m = n_steps - 1;
     std::vector<double> a(m, -1);
     std::vector<double> b(m, 2);
@@ -96,6 +104,10 @@ std::vector<double> compute_generalThomas(int n_steps, bool write=false, int tim
 } 
 
 std::vector<double> compute_specialThomas(int n_steps, bool write=false, int timing=0){
+    // Computes v, by solving the matrix equation A*v=g. 
+    //   Writes solution to file if write=true
+    //   If int timing provided:
+    //    - Computes the average time of the algorithm over "timing" iterations, with std. dev. 
     
     std::vector<double> g=g_array(n_steps);
 
@@ -142,7 +154,7 @@ std::vector<double> compute_specialThomas(int n_steps, bool write=false, int tim
 }
 
 void absolute_error(int n_steps){
-    // Make either utils or algorithms script for this computation?
+    // computes abs(u_i - v_i), where v_i is the approximation of u_i. 
     int m = n_steps - 1;
 
     std::vector<double> x=x_array(n_steps);
@@ -161,6 +173,7 @@ void absolute_error(int n_steps){
 }
 
 std::vector<double> relative_error(int n_steps, bool write=false){
+    // Computes abs(u_i - v_i)/abs(u_i) with v_i as the approximated u_i
     int m = n_steps - 1;
     double return_val; 
 
@@ -186,7 +199,9 @@ std::vector<double> relative_error(int n_steps, bool write=false){
 }
 
 int max_rel_err(int number_of_n_steps){
-    std::vector<double> n_steps_array(number_of_n_steps); //should be int, but that messes with the writeto_file() function
+    // Find the maximum relative error for a given step length. 
+    // Iterates over multiple n_steps values. 
+    std::vector<double> n_steps_array(number_of_n_steps); 
     std::vector<double> max_error_n_step(number_of_n_steps);
     for(int i=1; i<=number_of_n_steps; i++){
         n_steps_array[i-1] = std::pow(10,i);
@@ -199,6 +214,9 @@ int max_rel_err(int number_of_n_steps){
 }
 
 void timing(){
+    // Compares the timing of special and general thomas. 
+    // For factor 10 increments of n_steps from 10^1 to 10^6
+    // Averaging of 500 runs. 
     int n_step_sizes = 6;
     int n_simulations = 500;
     std::vector<double> list_of_n_steps(n_step_sizes); // double for writing to file 
@@ -211,8 +229,6 @@ void timing(){
     }
 
     std::string filename = "thomas_timed";
-    int width=15;
-    int prec=5;
     std::string path = "../output/data/"; // path for .txt files
     std::string file = path + filename + ".txt";
     std::ofstream ofile;
@@ -229,19 +245,14 @@ void timing(){
         general_Thomas_stddev[i] = general_mean_stddev[1];
         special_Thomas_stddev[i] = special_mean_stddev[1];
 
-        ofile << std::setw(width) << std::setprecision(prec) << std::scientific << n_steps << ","
-            << std::setw(width) << std::setprecision(prec) << std::scientific << general_Thomas_timed[i] << ","
-            << std::setw(width) << std::setprecision(prec) << std::scientific << special_Thomas_timed[i] << ","
-            << std::setw(width) << std::setprecision(prec) << std::scientific << general_Thomas_stddev[i] << ","
-            << std::setw(width) << std::setprecision(prec) << std::scientific << special_Thomas_stddev[i]
+        ofile << scientific_format(n_steps, 15, 10) << ","
+            << scientific_format(general_Thomas_timed[i], 15, 10) << ","
+            << scientific_format(special_Thomas_timed[i], 15, 10) << ","
+            << scientific_format(general_Thomas_stddev[i], 15, 10) << ","
+            << scientific_format(special_Thomas_stddev[i], 15, 10)
             << std::endl;
     }
     
-    // write_to_file(list_of_n_steps, general_Thomas_timed, "general_thomas_timed");
-    // write_to_file(list_of_n_steps, special_Thomas_timed, "special_thomas_timed");
-    // write_to_file(list_of_n_steps, general_Thomas_stddev, "general_thomas_stddev");
-    // write_to_file(list_of_n_steps, special_Thomas_stddev, "special_thomas_stddev");
-
     ofile.close();
 
     return;
