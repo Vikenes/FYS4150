@@ -20,6 +20,9 @@
 \usepackage[noend]{algpseudocode}
 \usepackage{subfigure}
 \usepackage{tikz}
+\normalsize
+\usepackage{booktabs, siunitx}
+
 % \usepackage[toc,page]{appendix}
 
 %   NEW COMMANDS
@@ -271,7 +274,11 @@ We make a similar visualisation of the relative error $\epsilon_i= \frac{\Delta_
 \subsection*{c)}
 We compute solutions for $n_\text{steps}\in[10^1, 10^2, \dots, 10^7]$ and find the related maximum values of $\epsilon$. The results are plotted in \Fig{p8_max_rel_err}. In the base-10 logarithm space, we see a linear decrease in relative error as the number of steps reaches $10^5$. For $n_\text{steps}\geq 10^6$ there is a loss of significance as the computer deals with very small numbers.
 
-% Remember table
+\begin{table}
+    \caption{Maximum relative error per $n_{\mathrm{step}}$}
+    \label{tab:max_rel_error}  
+    \input{max_rel_error_table.tex}
+\end{table}
 % More discussion?
 
 \begin{figure}[h!]
@@ -317,9 +324,11 @@ We implement \Algo{p9_special_algorithm} in our \CC\, script.
 
 For both \Algo{p6_general_algorithm} and \Algo{p9_special_algorithm} we write a code that for $n_\text{steps}\in[10^{1}, 10^{2}, \dots, 10^{6}]$ computes the solution 500 times and times each run. We find the average duration of one algorithm run, as well as the root mean square error in the measurements. In \Fig{p10_timed} we visualise the results that are listed in TABLE XXX.
 
-\begin{center}
+\begin{table}
+    \caption{The mean $\mu$ and standard deviation $\sigma$ of time spent to execute the general and special Thomas algorithms}
+    \label{tab:thomas_algo}  
     \include{thomas_timed_table.tex}
-\end{center}
+\end{table}
 
 \begin{figure}[h!]
     \centering

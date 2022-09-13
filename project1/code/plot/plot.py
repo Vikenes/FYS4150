@@ -161,9 +161,9 @@ def plot_error(data_files, pdf_name='none', relative_error=False):
 
 def plot_max_error(data_file, pdf_name='none'):
     fig, ax = plt.subplots(figsize=(12,7))
-    logsteps, logerror = np.loadtxt(data_path + data_file, unpack=True, delimiter=",")
-    ax.plot(logsteps, logerror, '--', color='pink', linewidth=2)
-    ax.plot(logsteps, logerror, '.', markersize=20, color="firebrick", label=r"$\mathrm{max}(\epsilon)$")
+    steps, error = np.loadtxt(data_path + data_file, unpack=True, delimiter=",")
+    ax.plot(steps, error, '--', color='pink', linewidth=2)
+    ax.plot(steps, error, '.', markersize=20, color="firebrick", label=r"$\mathrm{max}(\epsilon)$")
     xlabel = r'$n_{\mathrm{steps}}$'
     ylabel = r'$\epsilon$'
     title = r'Maximum relative error $\epsilon$'
@@ -201,11 +201,16 @@ def timed_algorithms(data_file, pdf_name='none', number_of_runs=500):
     else:
         save_push(fig, pdf_name=pdf_name, push=True, save=True)
 
+def make_table_max_error(data_file="max_rel_error.txt"):
+    steps, error = np.loadtxt(data_path + data_file, unpack=True, delimiter=",")
+    table_info = pd.DataFrame(np.array([steps, error]).T, columns=[r'$n_{\mathrm{steps}}$', r'$\mathrm{max}(\epsilon)$'])
+    table_info.to_latex(latex_path + "max_rel_error_table.tex", index=False, escape=False, column_format="l|r")
 
-def make_table(data_file="thomas_timed.txt"):
+
+def make_table_timing(data_file="thomas_timed.txt"):
     n_steps, g_mean, s_mean, g_std, s_std = np.loadtxt(data_path + data_file, unpack=True, delimiter=",")
-    table_info = pd.DataFrame(np.array([n_steps, g_mean, g_std, s_mean, s_std]).T,  columns=[r'$n_{mathrm{steps}}$', r'$\mu_{G}$', r'$\sigma_{G}$', r'$\mu_{S}$', r'$\sigma_{S}$'])
-    table_info.to_latex(latex_path + "thomas_timed_table.tex", index=False, escape=False)
+    table_info = pd.DataFrame(np.array([n_steps, g_mean, g_std, s_mean, s_std]).T,  columns=[r'$n_{\mathrm{steps}}$', r'$\mu_{G} [s]$', r'$\sigma_{G}$ [s]', r'$\mu_{S}$ [s]', r'$\sigma_{S}$ [s]'])
+    table_info.to_latex(latex_path + "thomas_timed_table.tex", index=False, escape=False, column_format="r|r|r|r|r")
 
 
 
@@ -241,9 +246,9 @@ def make_table(data_file="thomas_timed.txt"):
 
 
 
-make_table()
+make_table_timing()
 
-
+make_table_max_error()
 
 
 
