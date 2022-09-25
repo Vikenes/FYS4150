@@ -76,7 +76,7 @@ arma::mat create_symmetric_tridiagonal(int N, double a, double d){
 
 
 double max_offdiag_symmetric(const arma::mat& A, int& k, int& l){
-    // Get size of the matrix A. Use e.g. A.n_rows, see the Armadillo documentation
+    // Get size of the matrix A.
     int N = A.n_rows;
 
     // Consistency checks:
@@ -133,6 +133,29 @@ int test_max_offdiag_symmetric(){
 }
 
 
+// Find eigenvalues and -vectors for a tridiagonal symmetric matrix A with signature (a,d,a)
+int analytical_eigenproblem(arma::mat A, arma::vec& eigval, arma::mat& eigvec){
+    int N = A.n_rows;
+    // Consistency checks:
+    assert(A.is_square());   
+    assert(A.is_symmetric()); 
+
+    // Get signature
+    double d = A(0,0);
+    double a = A(0,1);
+
+    for(int i=1; i<=N; i++){
+        eigval(i-1) = d + 2*a*std::cos(i*pi/(N+1));
+        arma::vec v = arma::vec(N);
+        for(int j=1; j<=N; j++){
+            v(j-1) = std::sin(j * i*pi/(N+1));
+        eigvec.col(i-1) = arma::normalise(v);
+        }
+    }
+
+    return 0;
+}
+
 // Check results for the 6x6 tridiagonal symmetric matrix A with signature (a,d,a)
 //      (Comparing computed eigenvalues and -vectors using Armadillo- and/or Jacobi-solver.)
 int check_for_babycase(std::string which="arma"){
@@ -147,14 +170,8 @@ int check_for_babycase(std::string which="arma"){
 
     // Eigenvectors, eigenvalues with analytical expressions
     arma::vec eigval = arma::vec(N);
-    arma::mat Eigvec = arma::mat(N, N);
-    for(int i=1; i<=N; i++){
-        eigval(i-1) = d + 2*a*std::cos(i*pi/(N+1));
-        for(int j=1; j<=N; j++){
-            Eigvec(j-1,i-1) = std::sin(j * i*pi/(N+1));
-        }
-    }
-    arma::mat eigvec = arma::normalise(Eigvec);
+    arma::mat eigvec = arma::mat(N, N);
+    analytical_eigenproblem(A, eigval, eigvec);
 
 
     arma::vec eigval_test; 
