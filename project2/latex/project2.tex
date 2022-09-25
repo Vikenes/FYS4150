@@ -36,43 +36,10 @@
     citecolor={blue!50!black},
     urlcolor={blue!80!black}}
 
-%% Defines the style of the programming listing
-%% This is actually my personal template, go ahead and change stuff if you want
-
-
-
-%% USEFUL LINKS:
-%%
-%%   UiO LaTeX guides:        https://www.mn.uio.no/ifi/tjenester/it/hjelp/latex/
-%%   mathematics:             https://en.wikibooks.org/wiki/LaTeX/Mathematics
-
-%%   PHYSICS !                https://mirror.hmc.edu/ctan/macros/latex/contrib/physics/physics.pdf
-
-%%   the basics of Tikz:       https://en.wikibooks.org/wiki/LaTeX/PGF/Tikz
-%%   all the colors!:          https://en.wikibooks.org/wiki/LaTeX/Colors
-%%   how to draw tables:       https://en.wikibooks.org/wiki/LaTeX/Tables
-%%   code listing styles:      https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
-%%   \includegraphics          https://en.wikibooks.org/wiki/LaTeX/Importing_Graphics
-%%   learn more about figures  https://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions
-%%   automagic bibliography:   https://en.wikibooks.org/wiki/LaTeX/Bibliography_Management  (this one is kinda difficult the first time)
-%%   REVTeX Guide:             http://www.physics.csbsju.edu/370/papers/Journal_Style_Manuals/auguide4-1.pdf
-%%
-%%   (this document is of class "revtex4-1", the REVTeX Guide explains how the class works)
-
-
-%% CREATING THE .pdf FILE USING LINUX IN THE TERMINAL
-%%
-%% [terminal]$ pdflatex template.tex
-%%
-%% Run the command twice, always.
-%% If you want to use \footnote, you need to run these commands (IN THIS SPECIFIC ORDER)
-%%
-%% [terminal]$ pdflatex template.tex
-%% [terminal]$ bibtex template
-%% [terminal]$ pdflatex template.tex
-%% [terminal]$ pdflatex template.tex
-%%
-%% Don't ask me why, I don't know.
+%C++
+\newcommand{\CC}{C\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf +}\nolinebreak\hspace{-.10em}\raisebox{.4ex}{\tiny\bf +}}
+%   NEW COMMANDS
+\renewcommand{\vec}{\mathbf}
 
 \begin{document}
 
@@ -115,6 +82,7 @@ Letting $\lambda \equiv FL^2/\gamma$ yields
 
 \section*{Problem 2}
 
+In order to make sure that we can set up the tridiagonal $N\cross N$ matrix $A$ correctly, we write a short program in \CC\, that (1) defines $A$ for $N=6$, (2) solves $A\vec{v} = \lambda \vec{v}$ using the Armadillo library and (3) compares the solution to the analyical result.
 
 \section*{Problem 3}
 
