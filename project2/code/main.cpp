@@ -40,20 +40,19 @@ arma::mat create_tridiagonal(const arma::vec& a, const arma::vec& d, const arma:
     arma::mat A = arma::mat(N, N, arma::fill::eye);
     
     // Fill first row (row index 0)
-    A(0,0) = d[0];
-    A(0,1) = e[0];
+    A(0,0) = d(0);
+    A(0,1) = e(0);
     
     // Loop that fills rows 2 to N-1 (row indices 1 to N-2)
     for(int i=1; i<N-1; i++){
-        A(i, i) = d[i];
-        A(i, i-1) = a[i];
-        A(i, i+1) = e[i];
+        A(i, i) = d(i);
+        A(i, i-1) = a(i);
+        A(i, i+1) = e(i);
     }
 
     // Fill last row (row index N-1)
-    A(N-1,N-1) = d[N-1];
-    A(N-1,N-2) = a[N-2];
-    
+    A(N-1,N-1) = d(N-1);
+    A(N-1,N-2) = a(N-2);
     return A;
 }
 
@@ -104,7 +103,7 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int& l){
             }
         }
     }
-
+    std::cout << "val:" << maxval << ", k:" << k << ", l:" << l << std::endl;
     // Return maxval 
     return maxval;
 }
@@ -215,23 +214,26 @@ void jacobi_rotate(arma::mat &A, arma::mat &R, int k, int l){
 // - Stops if it the number of iterations reaches "maxiter"
 // - Writes the number of iterations to the integer "iterations"
 // - Sets the bool reference "converged" to true if convergence was reached before hitting maxiter
-void jacobi_eigensolver(arma::mat A, double eps, arma::vec &eigenvalues, arma::mat &eigenvectors, const int maxiter, int &iterations, bool &converged){
+void jacobi_eigensolver(arma::mat &A, double eps, arma::vec &eigenvalues, arma::mat &eigenvectors, const int maxiter, int &iterations, bool &converged){
     int k;
     int l;
     int N = A.n_rows;
     arma::mat R = arma::mat(N, N, arma::fill::eye);
     int iter = 0;
-
+    double calc_maxval = 1;
     // loop
-    while (max_offdiag_symmetric(A, k, l) > eps){
+    while (calc_maxval > eps){
         if (iter >= maxiter){
             break;
         }
         else{
             jacobi_rotate(A, R, k, l);
         }
+        std::cout << iter << std::endl;
         iter++;
+        calc_maxval = max_offdiag_symmetric(A, k, l);
     }
+    std::cout << "out of loop" << std::endl;
     iterations = iter;
     // Check for convergens or iteration stop.
     if (iterations < maxiter){
@@ -240,12 +242,14 @@ void jacobi_eigensolver(arma::mat A, double eps, arma::vec &eigenvalues, arma::m
     else{
         converged = false;
     }
+    std::cout << "after bool" << std::endl;
+    // std::cout << "DEBUG: " << __FILE__ << ":" << __LINE__ << std::endl;
     for (int i = 0; i < N; i++){
-        eigenvalues(i) = A(i, i);
-        for (int j = 0; j < N; j++){
-            eigenvectors(i, j) = R(i, j);
-        }
+        // eigenvalues(i) = A(i, i);
+        std::cout << i << std::endl;
+        // eigenvectors.col(i) = R.col(i);
     }
+    std::cout << "after param set" << std::endl;
 }
 
 // Check results for the 6x6 tridiagonal symmetric matrix A with signature (a,d,a)
@@ -267,9 +271,9 @@ int check_for_babycase(std::string which="arma"){
     arma::mat eigvec = arma::mat(N, N);
     analytical_eigenproblem(A, eigval, eigvec);
 
-
-    arma::vec eigval_test; 
-    arma::mat eigvec_test;
+    // std::cout << "DEBUG: " << __FILE__ << ":" << __LINE__ << std::endl;
+    arma::vec eigval_test = arma::vec(N); 
+    arma::mat eigvec_test = arma::mat(N, N);
     // Check with Armadillo
     if(which == "arma"){
         arma::eig_sym(eigval_test, eigvec_test, A);   
@@ -277,7 +281,7 @@ int check_for_babycase(std::string which="arma"){
     }
     // Check with Jacobi algorithm
     else if(which == "jacobi"){
-        jacobi_eigensolver(A, 1e-8, eigval_test, eigvec_test, 1000, iterations, converged);
+        jacobi_eigensolver(A, 0.001, eigval_test, eigvec_test, 1000, iterations, converged);
         std::cout << "Checking if we implement Jacobi rotation method correctly." << std::endl;
     }
     else if(which == "both"){
@@ -287,6 +291,7 @@ int check_for_babycase(std::string which="arma"){
     else{
         std::cout << "Provide valid argument" << std::endl;
     }
+
 
     // Check if they are equal
     arma::vec vals = eigval_test/eigval;
@@ -310,6 +315,7 @@ int check_for_babycase(std::string which="arma"){
 int main(){
 
     // PROBLEM 2
+    // std::cout << "DEBUG: " << __FILE__ << ":" << __LINE__ << std::endl;
     check_for_babycase("arma");
 
     // PROBLEM 3
