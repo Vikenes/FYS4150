@@ -111,6 +111,65 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int& l){
     return maxval;
 }
 
+
+
+// Performs a single Jacobi rotation, to "rotate away"
+// the off-diagonal element at A(k,l).
+// - Assumes symmetric matrix, so we only consider k < l
+// - Modifies the input matrices A and R
+void jacobi_rotate(arma::mat& A, arma::mat& R, int k, int l){
+    double tau = (A(l,l)-A(k,k))/(2*A(k,l));
+    double t;
+    double c;
+    double s;
+    double rootoneplustausquared = std::pow(1+std::pow(tau,2),1/2);
+    if(tau>0){
+        t = 1/(tau + rootoneplustausquared);
+    }
+    else if(tau<0){
+        t = -1/(-tau + rootoneplustausquared);
+    }
+    //  Could assert tau=0 or something here. 
+    c = 1 / (std::pow(1+std::pow(t,2),1/2));
+    s = c*t;
+
+    //  Transform A-matrix
+    A(k,k) = A(k,k) * std::pow(c,2) - 2*A(k,l)*c*s + A(l,l) * std::pow(s,2);
+    A(l,l) = A(l,l) * std::pow(c,2) + 2*A(k,l)*c*s + A(k,k) * std::pow(s,2);
+    A(k,l) = 0;
+    A(l,k) = 0;
+
+    for(int i=0; i<A.n_rows; i++){
+        if(i!=k && i!= l){
+            double A_ik = A(i,k);
+            double A_il = A(i,l);
+            A(i,k) = A_ik * c - A_il*s;
+            A(k,i) = A(i,k);
+            A(i,l) = A_il * c + A_ik * s;
+            A(l,i) = A(i,l);
+        }
+        //  Transform R-matrix
+        double R_ik = R(i,k);
+        double R_il = R(i,l);
+        R(i,k) = R_ik * c - R_il * s;
+        R(i,l) = R_il * c - R_ik * s;
+    }
+}
+
+// Jacobi method eigensolver:
+// - Runs jacobo_rotate until max off-diagonal element < eps
+// - Writes the eigenvalues as entries in the vector "eigenvalues"
+// - Writes the eigenvectors as columns in the matrix "eigenvectors"
+//   (The returned eigenvalues and eigenvectors are sorted using arma::sort_index)
+// - Stops if it the number of iterations reaches "maxiter"
+// - Writes the number of iterations to the integer "iterations"
+// - Sets the bool reference "converged" to true if convergence was reached before hitting maxiter
+void jacobi_eigensolver(const arma::mat& A, double eps, arma::vec& eigenvalues, arma::mat& eigenvectors, const int maxiter, int& iterations, bool& converged);
+
+
+
+
+
 int main(){
 
     // PROBLEM 2
