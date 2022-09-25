@@ -64,6 +64,52 @@ arma::mat create_symmetric_tridiagonal(int N, double a, double d)
 }
 
 
+
+// A function that finds the max off-diag element of a symmetric matrix A.
+// - The matrix indices of the max element are returned by writing to the  
+//   int references k and l (row and column, respectively)
+// - The value of the max element A(k,l) is returned as the function
+//   return value
+double max_offdiag_symmetric(const arma::mat& A, int& k, int& l){
+    // Get size of the matrix A. Use e.g. A.n_rows, see the Armadillo documentation
+    int N = A.n_rows;
+    
+    // Possible consistency checks:
+    // Check that A is square and larger than 1x1. Here you can for instance use A.is_square(), 
+    // see the Armadillo documentation.
+    
+    //  
+    
+    // The standard function 'assert' from <assert.h> can be useful for quick checks like this
+    // during the code development phase. Use it like this: assert(some condition),
+    // e.g assert(a==b). If the condition evaluates to false, the program is killed with 
+    // an assertion error. More info: https://www.cplusplus.com/reference/cassert/assert/
+
+    // Initialize references k and l to the first off-diagonal element of A
+    k = 0;
+    l = 1;
+
+    // Initialize a double variable 'maxval' to A(k,l). We'll use this variable
+    // to keep track of the largest off-diag element.
+    double maxval = A(k, l);
+
+    // Loop through all elements in the upper triangle of A (not including the diagonal)
+    // When encountering a matrix element with larger absolute value than the current value of maxval
+    // update k, l and max accordingly.
+    for(int i=0; i<N-1; i++){
+        for(int j=i+1; j<N; j++){
+            if(A(i, j) > maxval){
+                maxval = A(i, j);
+                k = i;
+                l = j;
+            }
+        }
+    }
+
+    // Return maxval 
+    return maxval;
+}
+
 int main(){
 
     // PROBLEM 2
@@ -78,23 +124,23 @@ int main(){
 
 
     // print values a, d
-    std::cout << a << ' ' << d << std::endl;
+    //std::cout << a << ' ' << d << std::endl;
 
     // create A = triadiag(a,d,a)
     arma::mat A = create_symmetric_tridiagonal(N, a, d);
 
 
     // print to check
-    std::cout << A << std::endl;
+    //std::cout << A << std::endl;
 
     // find eigenvals, eigenvecs
     arma::vec eigval; 
     arma::mat eigvec;
     arma::eig_sym(eigval, eigvec, A);
-
+    arma::mat eigvecnorm = arma::normalise(eigvec);
     
-    std::cout << eigval << std::endl;
-    std::cout << eigvec << std::endl;
+    //std::cout << eigval << std::endl;
+    //std::cout << eigvecnorm << std::endl;
 
     // analytical solutions
 
@@ -109,9 +155,22 @@ int main(){
     }
     arma::mat vnorm =arma::normalise(v);
 
-    std::cout << lambda << std::endl;
-    std::cout << vnorm << std::endl;
+    //std::cout << lambda << std::endl;
+    //std::cout << vnorm << std::endl;
 
+    // PROBLEM 3
+
+
+    arma::mat A3 = arma::mat(4, 4, arma::fill::eye);
+    A3(0,3) = 0.5;
+    A3(1,2) = -0.7;
+    A3(2,1) = -0.7;
+    A3(3,0) = 0.5;
+    int k = 0;
+    int l = 1;
+    double maxval = max_offdiag_symmetric(A3, k, l);
+
+    std::cout << maxval << ' ' << k << ' ' << l << std::endl;
 
     return 0;
 
