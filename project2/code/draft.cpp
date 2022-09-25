@@ -101,8 +101,6 @@ int main(){
     arma::vec lambda = arma::vec(N);
     arma::mat v = arma::mat(N, N);
     
-
-
     for(int i=1; i<=N; i++){
         lambda(i-1) = d + 2*a*std::cos(i*pi/(N+1));
         for(int j=1; j<=N; j++){
