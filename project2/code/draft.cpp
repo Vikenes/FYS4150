@@ -98,8 +98,9 @@ double max_offdiag_symmetric(const arma::mat& A, int& k, int& l){
     // update k, l and max accordingly.
     for(int i=0; i<N-1; i++){
         for(int j=i+1; j<N; j++){
-            if(A(i, j) > maxval){
-                maxval = A(i, j);
+            double element = std::abs(A(i, j));
+            if(element > maxval){
+                maxval = element;
                 k = i;
                 l = j;
             }
