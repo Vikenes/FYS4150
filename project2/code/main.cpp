@@ -156,6 +156,98 @@ int analytical_eigenproblem(arma::mat A, arma::vec& eigval, arma::mat& eigvec){
     return 0;
 }
 
+// Performs a single Jacobi rotation, to "rotate away"
+// the off-diagonal element at A(k,l).
+// - Assumes symmetric matrix, so we only consider k < l
+// - Modifies the input matrices A and R
+void jacobi_rotate(arma::mat &A, arma::mat &R, int k, int l){
+    double tau;
+    double t;
+    double c;
+    double s;
+    if (A(k, l) == 0)    {
+        c = 1;
+        s = 0;
+        t = 0;
+    }
+    else{
+        tau = (A(l, l) - A(k, k)) / (2 * A(k, l));
+        double rootoneplustausquared = std::pow(1 + std::pow(tau, 2), 1 / 2);
+        if (tau > 0){
+            t = 1 / (tau + rootoneplustausquared);
+        }
+        else if (tau < 0){
+            t = -1 / (-tau + rootoneplustausquared);
+        }
+        //  Could assert tau=0 or something here.
+        c = 1 / (std::pow(1 + std::pow(t, 2), 1 / 2));
+        s = c * t;
+    }
+
+    //  Transform A-matrix
+    A(k, k) = A(k, k) * std::pow(c, 2) - 2 * A(k, l) * c * s + A(l, l) * std::pow(s, 2);
+    A(l, l) = A(l, l) * std::pow(c, 2) + 2 * A(k, l) * c * s + A(k, k) * std::pow(s, 2);
+    A(k, l) = 0;
+    A(l, k) = 0;
+
+    for (int i = 0; i < A.n_rows; i++){
+        if (i != k && i != l){
+            double A_ik = A(i, k);
+            double A_il = A(i, l);
+            A(i, k) = A_ik * c - A_il * s;
+            A(k, i) = A(i, k);
+            A(i, l) = A_il * c + A_ik * s;
+            A(l, i) = A(i, l);
+        }
+        //  Transform R-matrix
+        double R_ik = R(i, k);
+        double R_il = R(i, l);
+        R(i, k) = R_ik * c - R_il * s;
+        R(i, l) = R_il * c - R_ik * s;
+    }
+}
+
+// Jacobi method eigensolver:
+// - Runs jacobo_rotate until max off-diagonal element < eps
+// - Writes the eigenvalues as entries in the vector "eigenvalues"
+// - Writes the eigenvectors as columns in the matrix "eigenvectors"
+//   (The returned eigenvalues and eigenvectors are sorted using arma::sort_index)
+// - Stops if it the number of iterations reaches "maxiter"
+// - Writes the number of iterations to the integer "iterations"
+// - Sets the bool reference "converged" to true if convergence was reached before hitting maxiter
+void jacobi_eigensolver(arma::mat A, double eps, arma::vec &eigenvalues, arma::mat &eigenvectors, const int maxiter, int &iterations, bool &converged){
+    int k;
+    int l;
+    int N = A.n_rows;
+    arma::mat R = arma::mat(N, N, arma::fill::eye);
+    int iter = 0;
+
+    // loop
+    while (max_offdiag_symmetric(A, k, l) > eps){
+        if (iter >= maxiter){
+            break;
+        }
+        else{
+            jacobi_rotate(A, R, k, l);
+        }
+        iter++;
+    }
+    iterations = iter;
+    // Check for convergens or iteration stop.
+    if (iterations < maxiter){
+        converged = true;
+    }
+    else{
+        converged = false;
+    }
+    for (int i = 0; i < N; i++){
+        eigenvalues(i) = A(i, i);
+        for (int j = 0; j < N; j++){
+            eigenvectors(i, j) = R(i, j);
+        }
+    }
+}
+
 // Check results for the 6x6 tridiagonal symmetric matrix A with signature (a,d,a)
 //      (Comparing computed eigenvalues and -vectors using Armadillo- and/or Jacobi-solver.)
 int check_for_babycase(std::string which="arma"){
@@ -167,6 +259,8 @@ int check_for_babycase(std::string which="arma"){
     double a = -1/h2;
     double d = 2/h2;
     arma::mat A = create_symmetric_tridiagonal(N, a, d);
+    int iterations;
+    bool converged;
 
     // Eigenvectors, eigenvalues with analytical expressions
     arma::vec eigval = arma::vec(N);
@@ -183,7 +277,7 @@ int check_for_babycase(std::string which="arma"){
     }
     // Check with Jacobi algorithm
     else if(which == "jacobi"){
-        int p; // do something else
+        jacobi_eigensolver(A, 1e-8, eigval_test, eigvec_test, 1000, iterations, converged);
         std::cout << "Checking if we implement Jacobi rotation method correctly." << std::endl;
     }
     else if(which == "both"){
@@ -216,10 +310,10 @@ int check_for_babycase(std::string which="arma"){
 int main(){
 
     // PROBLEM 2
-    check_for_babycase();
+    check_for_babycase("arma");
 
     // PROBLEM 3
-    test_max_offdiag_symmetric();
+    // test_max_offdiag_symmetric();
 
     
 
