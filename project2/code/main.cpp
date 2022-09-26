@@ -264,8 +264,14 @@ void jacobi_eigensolver(arma::mat A, double eps, arma::vec &eigenvalues, arma::m
     for (int i = 0; i < N; i++){
         eigenvalues(i) = A(i, i);
         // std::cout << i << std::endl;
-        eigenvectors.col(i) = R.col(i);
+        // eigenvectors.col(i) = R.col(i);
     }
+    arma::uvec indecies = sort_index(eigenvalues);
+    eigenvalues = sort(eigenvalues);
+    for (int i =0; i < N; i++){
+        eigenvectors.col(i) = R.col(indecies(i));
+    }
+    // eigenvectors = eigenvectors.col(sort_index(eigenvalues));
 }
 
 // Check results for the 6x6 tridiagonal symmetric matrix A with signature (a,d,a)
@@ -300,7 +306,7 @@ int check_for_babycase(std::string which="arma"){
     // Check with Jacobi algorithm
     else if(which == "jacobi"){
         // std::cout << "DEBUG: " << __FILE__ << ":" << __LINE__ << std::endl;
-        jacobi_eigensolver(A, 1e-9, eigval_test, eigvec_test, 10000, iterations, converged);
+        jacobi_eigensolver(A, 1e-8, eigval_test, eigvec_test, 10000, iterations, converged);
         // std::cout << A << std::endl;
         std::cout << "Checking if we implement Jacobi rotation method correctly." << std::endl;
     }
@@ -313,12 +319,12 @@ int check_for_babycase(std::string which="arma"){
     }
     std::cout << "Using jacobi with iter: " << iterations << std::endl;
     // std::cout << A << std::endl;
-    std::cout << eigval_test << std::endl;
-    std::cout << eigvec_test << std::endl;
+    // std::cout << eigval_test << std::endl;
+    // std::cout << eigvec_test << std::endl;
 
-    std::cout << "Analytical:" << std::endl;
-    std::cout << eigval << std::endl;
-    std::cout << eigvec << std::endl;
+    // std::cout << "Analytical:" << std::endl;
+    // std::cout << eigval << std::endl;
+    // std::cout << eigvec << std::endl;
 
     // Check if they are equal
     arma::vec vals = eigval_test/eigval;
@@ -329,7 +335,7 @@ int check_for_babycase(std::string which="arma"){
     bool is_vecs = arma::approx_equal(vecs, arma::mat(N,N).fill(1.), "absdiff",  tol);
     bool is_vals = arma::approx_equal(vals, arma::vec(N).fill(1.),   "absdiff", tol);
 
-    // assert(is_vecs);
+    assert(is_vecs);
     assert(is_vals);
 
     return 0;
