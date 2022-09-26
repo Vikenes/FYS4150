@@ -114,7 +114,7 @@ int print_jacobi_information(arma::mat A, double eps, arma::vec &eigenvalues, ar
     return 0;
 }
 
-int problem5(int nrN){
+int problem5(int nrN, bool tridiag=true){
     std::vector<double> Ns(nrN);
     std::vector<double> n_it(nrN);
     for(int i=1; i<=nrN; i++){
@@ -123,7 +123,16 @@ int problem5(int nrN){
         double h2 = std::pow(h, 2);
         double a = -1/h2;
         double d = 2/h2;
-        arma::mat A = create_symmetric_tridiagonal(N, a, d);
+        arma::mat A = arma::mat(N,N);
+        if(tridiag==true){
+            std::cout << "tridiag" << std::endl;
+            A = create_symmetric_tridiagonal(N, a, d);
+        }
+        else{
+            std::cout << "dense" << std::endl;
+            A = arma::mat(N,N).randn();
+            A = arma::symmatu(A);
+        }
         int iterations;
         bool converged;
         double eps = 1e-8;
@@ -136,7 +145,12 @@ int problem5(int nrN){
         n_it[i] = iterations;
     }
     // print_jacobi_information(A, eps, eigval_j, eigvec_j, maxiter, iterations, converged);
-    write_to_file(Ns, n_it, "iterations_per_N_tridiag_matrix");
+    if(tridiag==true){
+        write_to_file(Ns, n_it, "iterations_per_N_tridiag_matrix");
+    }
+    else{
+        write_to_file(Ns, n_it, "iterations_per_dense_N_matrix");
+    }
     return 0;
 
 }
@@ -176,6 +190,7 @@ int main(){
 
     //  PROBLEM 5
     problem5(100);
+    problem5(100, false);
     // std::cout <<"testing makefile commands" << std::endl;
 
     return 0;
