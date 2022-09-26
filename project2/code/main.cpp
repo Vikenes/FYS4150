@@ -99,18 +99,49 @@ int check_for_babycase(std::string which="arma"){
 int print_jacobi_information(arma::mat A, double eps, arma::vec &eigenvalues, arma::mat &eigenvectors, const int maxiter, int &iterations, bool &converged){
     int N = A.n_rows;
     std::cout << "N: " << N << std::endl;
-    std::cout << "A: "<< std::endl;
-    std::cout << A << std::endl;
+
+    // std::cout << "A: "<< std::endl;
+    // std::cout << A << std::endl;
+
     std::cout << "eigval: "<< std::endl;
     std::cout << eigenvalues << std::endl;
-    std::cout << "eigvec: "<< std::endl;
-    std::cout << eigenvectors << std::endl;
+
+    // std::cout << "eigvec: "<< std::endl;
+    // std::cout << eigenvectors << std::endl;
+
     std::cout << "iterations: " << iterations << std::endl;
     std::cout << "converged: " << converged << std::endl;
     return 0;
 }
 
-int problem5(int N){
+int problem5(int nrN){
+    std::vector<double> Ns(nrN);
+    std::vector<double> n_it(nrN);
+    for(int i=1; i<=nrN; i++){
+        int N = i+1;
+        double h = step_size(N+1);
+        double h2 = std::pow(h, 2);
+        double a = -1/h2;
+        double d = 2/h2;
+        arma::mat A = create_symmetric_tridiagonal(N, a, d);
+        int iterations;
+        bool converged;
+        double eps = 1e-8;
+        int maxiter = int(1e6);
+        // std::cout << A << std::endl;
+        arma::vec eigval_j = arma::vec(N);
+        arma::mat eigvec_j = arma::mat(N,N);
+        jacobi_eigensolver(A, eps, eigval_j, eigvec_j, maxiter, iterations, converged);
+        Ns[i] = N;
+        n_it[i] = iterations;
+    }
+    // print_jacobi_information(A, eps, eigval_j, eigvec_j, maxiter, iterations, converged);
+    write_to_file(Ns, n_it, "iterations_per_N_tridiag_matrix");
+    return 0;
+
+}
+
+int problem5_dummy(int N){
     double h = step_size(N+1);
     double h2 = std::pow(h, 2);
     double a = -1/h2;
@@ -119,14 +150,14 @@ int problem5(int N){
     int iterations;
     bool converged;
     double eps = 1e-8;
-    int maxiter = 1000;
-
+    int maxiter = int(1e5);
+    // std::cout << A << std::endl;
     arma::vec eigval_j = arma::vec(N);
     arma::mat eigvec_j = arma::mat(N,N);
-
     jacobi_eigensolver(A, eps, eigval_j, eigvec_j, maxiter, iterations, converged);
-    print_jacobi_information(A, eps, eigval_j, eigvec_j, maxiter, iterations, converged);
 
+    print_jacobi_information(A, eps, eigval_j, eigvec_j, maxiter, iterations, converged);
+    // write_to_file(Ns, n_it, "iterations_per_N_tridiag_matrix");
     return 0;
 
 }
@@ -144,8 +175,8 @@ int main(){
     // check_for_babycase("jacobi");
 
     //  PROBLEM 5
-    // problem5(10);
-    std::cout <<"testing makefile commands" << std::endl;
+    problem5(100);
+    // std::cout <<"testing makefile commands" << std::endl;
 
     return 0;
 }
