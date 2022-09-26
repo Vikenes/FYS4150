@@ -6,10 +6,7 @@ std::string scientific_format(const double d, const int width, const int prec){
     return ss.str();
 }
 
-int write_to_file(std::vector<double> x, 
-                    std::vector<double> v, 
-                    std::string filename,
-                    int width, int prec){
+int write_to_file(std::vector<double> x, std::vector<double> v, std::string filename, int width, int prec){
                         
     std::string path = "../output/data/"; // path for .txt files
     std::string file = path + filename + ".txt";
