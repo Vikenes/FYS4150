@@ -161,20 +161,27 @@ int write_solution_to_file(std::string method, arma::vec x, arma::mat V){
     std::string file = path + filename + ".txt";
     std::ofstream ofile;
 
-    int w = 15;
-    int p = 10;
+    int w = 20;
+    int p = 15;
 
     ofile.open(file.c_str());
 
     std::stringstream ss;
     ss << std::setw(w) << std::setprecision(p) << std::scientific;
+    std::string deli = ", ";
 
     for(int i=0; i<npoints; i++){
-        ofile << scientific_format( x(i), w, p) << ", ";
+        ofile << scientific_format( x(i), w, p) << deli;
         for(int j=0; j<save_first; j++){
-            ofile << scientific_format( V(i, j), w, p) << ", ";
+            ofile << scientific_format( V(i, j), w, p);
+            if(j!=save_first-1){
+                ofile << deli;
+            }
+            else{
+                ofile << std::endl;
+            }
         }
-        ofile << std::endl;
+        
     }
 
     ofile.close();
@@ -184,7 +191,7 @@ int write_solution_to_file(std::string method, arma::vec x, arma::mat V){
 }
 
 
-int compute_solution(int n=10, int save_first=3, double eps=(1e-8), int maxiter=int(1e6)){
+int compute_solution(int n, int save_first=3, double eps=(1e-8), int maxiter=int(1e6)){
     // Initialise with boundary points
     arma::vec xhat = arma::vec(n+1);
     xhat(0) = xhat_min;
@@ -199,32 +206,41 @@ int compute_solution(int n=10, int save_first=3, double eps=(1e-8), int maxiter=
     int iterations;
     bool converged;
 
+    // Analytical solution
+    arma::vec eigval_a = arma::vec(N);
+    arma::mat eigvec_a = arma::mat(N, N);
+    analytical_eigenproblem(A, eigval_a, eigvec_a);
+
 
     // Jacobi solution
     arma::vec eigval_J = arma::vec(N);
     arma::mat eigvec_J = arma::mat(N,N);
     jacobi_eigensolver(A, eps, eigval_J, eigvec_J, maxiter, iterations, converged);
 
-    // Analytical solution
-    arma::vec eigval_a = arma::vec(N);
-    arma::mat eigvec_a = arma::mat(N, N);
-    analytical_eigenproblem(A, eigval_a, eigvec_a);
 
-    // Already sorted with increasing eigenvalues
+    // (Already sorted with increasing eigenvalues)
 
-
-
-
-    arma::mat V_J = arma::mat(n+1, save_first);
+    // Find first (3) eigenvectors and save them
     arma::mat V_a = arma::mat(n+1, save_first);
+    arma::mat V_J = arma::mat(n+1, save_first);
+
     
     for(int i=0; i<save_first; i++){
-        V_J( arma::span(1, N), i ) = eigvec_J.col(i);
         V_a( arma::span(1, N), i ) = eigvec_a.col(i);
+        V_J( arma::span(1, N), i ) = eigvec_J.col(i);
+
+        arma::vec r = V_a.col(i)/V_J.col(i);
+        r.shed_row(n);
+        r.shed_row(0);
+        bool opposite = arma::all(r<0);
+        if(opposite){
+            V_J.col(i) = - V_J.col(i);
+        }
+       
     }
 
-    write_solution_to_file("Jacobi", xhat, V_J);
     write_solution_to_file("analytical", xhat, V_a);
+    write_solution_to_file("Jacobi", xhat, V_J);
     
     return 0;
 }
@@ -232,20 +248,26 @@ int compute_solution(int n=10, int save_first=3, double eps=(1e-8), int maxiter=
 int main(){
 
     // PROBLEM 2
-    //check_for_babycase("arma");
+    check_for_babycase("arma");
 
     // PROBLEM 3
-    //test_max_offdiag_symmetric();
+    test_max_offdiag_symmetric();
 
     // PROBLEM 4
-    //check_for_babycase("jacobi");
+    check_for_babycase("jacobi");
 
     // PROBLEM 5
-    //run_jacobi_algorithms(100);
-    //run_jacobi_algorithms(100, false);
+    //  a)
+    run_jacobi_algorithms(100);
+    //  b)
+    run_jacobi_algorithms(100, false);
 
     // PROBLEM 6
-    compute_solution();
+    //  a)
+    compute_solution(10);
+    //  b)
+    compute_solution(100);
+
 
     return 0;
 }
