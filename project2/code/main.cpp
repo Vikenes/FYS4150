@@ -87,19 +87,24 @@ int check_for_babycase(std::string which="arma"){
         std::cout << "Provide valid argument" << std::endl;
     }
 
-    // Check if they are equal
-    arma::vec vals = eigval_test/eigval;
-    arma::mat vecs = eigvec_test/eigvec;
-    vecs = arma::abs(vecs);
+    // Check if they are equal 
+    //  - account for oppositely directed eigenvectors
+    arma::mat r = eigvec_test/eigvec;
 
+    for(int i=0; i<N; i++){
+        bool opposite = arma::all(r.col(i)<0);
+        if(opposite){
+            eigvec_test.col(i) = - eigvec_test.col(i);
+        }
+    }
 
-    bool is_vecs = arma::approx_equal(vecs, arma::mat(N,N).fill(1.), "absdiff", eps);
-    bool is_vals = arma::approx_equal(vals, arma::vec(N).fill(1.),   "absdiff", eps);
+    bool is_vecs = arma::approx_equal(eigvec_test, eigvec, "absdiff", eps);
+    bool is_vals = arma::approx_equal(eigval_test, eigval, "absdiff", eps);
 
     assert(is_vecs);
     assert(is_vals);
 
-    std::cout << "Check OK.\n" << std::endl;
+    std::cout << "Check OK." << std::endl;
 
     return 0;
 }
@@ -264,7 +269,7 @@ int main(){
     // PROBLEM 5
     //  a)
     run_jacobi_algorithms(100);
-    //  b) OBS - something wrong
+    //  b)
     run_jacobi_algorithms(100, false); 
 
     // PROBLEM 6

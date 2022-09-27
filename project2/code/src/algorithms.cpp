@@ -174,9 +174,14 @@ void jacobi_eigensolver(arma::mat A, double eps, arma::vec &eigenvalues, arma::m
             break;
         }
         else{
-            jacobi_rotate(A, R, k, l);
+            if(A(k,l)==0){
+                std::cout << "=0" << std::endl;
+            }
+            else{
+                jacobi_rotate(A, R, k, l);
+                iter++;
+            }
         }
-        iter++;
     }
     iterations = iter;
     // Check for convergens or iteration stop.
