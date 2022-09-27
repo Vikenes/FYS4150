@@ -102,9 +102,9 @@ To test we write a short program in \CC\, that first sets up the tridiagonal $A$
     A\vec{v} = \lambda \vec{v} \label{eq:eig_equation_general}
 \end{align} 
 where $\vec{v}$ and $\lambda$ are the eigenvectors and eigenvalues of $A$, respectively. Finally, we compare the eigenvectors and eigenvalues from Armadillo with the analytical result for $N=6$. The analytical solution to equation \eqref{eq:eig_equation_general} for a matrix of size $N\cross N$ is given by  
-\begin{align}
-    \lambda^{(i)} &= d + 2a \cos\closed{\frac{i\pi}{N+1}},\quad i=1,\,\dots,\,N \\
-    \vec{v}^{(i)} &= \bracket{ \sin\closed{\frac{i\pi}{N+1}},\,\dots,\,\sin\closed{\frac{Ni\pi}{N+1}} }^T ,\quad i=1,\,\dots,\,N
+\begin{align}  
+    \lambda^{(i)} &= d + 2a \cos\closed{\frac{i\pi}{N+1}},\quad i=1,\,\dots,\,N \label{eq:eigval}\\
+    \vec{v}^{(i)} &= \bracket{ \sin\closed{\frac{i\pi}{N+1}},\,\dots,\,\sin\closed{\frac{Ni\pi}{N+1}} }^T ,\quad i=1,\,\dots,\,N \label{eq:eigvec}
 \end{align} 
 The resulting eigenvectors of the two methods will be scaled before comparison. 
 % COMMENT: Write about test? Comment on our cheeky method of absing the vectors?   
@@ -191,9 +191,9 @@ Similar behaviour is seen for matrix $A^*$ which is not a tridiagonal matrix. We
 
 \subsection*{a)}
 
-For $n=10$ steps, i.e. $n+1=11$ points $\hat{x}_i$ and $A\in\mathbb{R}^{(n-1)\cross(n-1)} =\mathbb{R}^{9\cross 9}$, we solve the eigenvalue problem $A\vec{v} = \lambda \vec{v}$ using the Jacobi eigensolver. In addition, we solve the same problem with the analytic expressions for $\lambda^{(i)}$ and $\vec{v}^{(i)}$. This yields two versions of the normalised vectors $\vec{v}^{(i)}$, and for some $i$'s these are counter-oriented. When we encounter this situation, the issue is solved by forcing the result from the Jacobi algorithm $\vec{v}^{(i)} \rightarrow - \vec{v}^{(i)}$.
+For $n=10$ steps, i.e. $n+1=11$ points $\hat{x}_i$ and $A\in\mathbb{R}^{(n-1)\cross(n-1)} =\mathbb{R}^{9\cross 9}$, we solve the eigenvalue problem $A\vec{v} = \lambda \vec{v}$ using the Jacobi eigensolver. In addition, we solve the same problem with the analytic expressions for $\lambda^{(i)}$ and $\vec{v}^{(i)}$, found using equations \ref{eq:eigval} and \ref{eq:eigvec} respectively. This yields two versions of the normalised vectors $\vec{v}^{(i)}$, and for some $i$'s these are counter-oriented. When we encounter this situation, the issue is solved by forcing the result from the Jacobi algorithm $\vec{v}^{(i)} \rightarrow - \vec{v}^{(i)}$.
 
-The three resulting eigenvectors $\vec{v}^{(1)}$, $\vec{v}^{(2)}$ and $\vec{v}^{(3)}$ corresponding to eigenvalues $\lambda^{(1)}$, $\lambda^{(2)}$ and $\lambda^{(3)}$ s.t. $\lambda^{(i)}<\lambda^{(j)}$ for $i<j$, are plotted in Figure \ref{fig:p6_solution_10steps}. The vectors are extrented with the boundary points, i.e. $v_0^{(i)}=v_0 = 0$ and $v_n^{(i)}=v_n=0$ for all $i$.
+The three resulting eigenvectors $\vec{v}^{(1)}$, $\vec{v}^{(2)}$ and $\vec{v}^{(3)}$ corresponding to eigenvalues $\lambda^{(1)}$, $\lambda^{(2)}$ and $\lambda^{(3)}$ s.t. $\lambda^{(i)}<\lambda^{(j)}$ for $i<j$, are plotted in Figure \ref{fig:p6_solution_10steps}. The vectors are extended with the boundary points, i.e. $v_0^{(i)}=v_0 = 0$ and $v_n^{(i)}=v_n=0$ for all $i$.
 
 % figure or Figure?
 
