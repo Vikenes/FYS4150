@@ -153,12 +153,12 @@ In order to implement the Jacobi rotation algorithm we write two separate algori
 
 \subsection*{a)}
 
-Using our our symmetric, tridiagonal matrix $A \in \mathbb{R}^{N\cross N}$, for $N=2,3,\dots,100$ we run the Jacobi rotation algorithm (\hl{*} ?? change perhaps) and save the number of transformations (i.e. iterations in \hl{CHECK THIS} \hyperref[algo:jacobi_rotation]{Jacobi rotation}) needed for the matrix to be close enough\footnote{Choosing the number $\varepsilon=10^{-8}$ to be \textit{close enough} to zero.} to a diagonal matrix.
+Using our our symmetric, tridiagonal matrix $A \in \mathbb{R}^{N\cross N}$, for $N=2,3,\dots,100$ we run the Jacobi rotation algorithm (?? change perhaps) and save the number of transformations (i.e. iterations in (CHECK THIS) Jacobi rotation needed for the matrix to be close enough\footnote{Choosing the number $\varepsilon=10^{-8}$ to be \textit{close enough} to zero.} to a diagonal matrix.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.9\textwidth]{jacobi_comparison.pdf}
-    \caption{The number of transformations (or iterations) needed for the Jacobi rotation algorithm (ref?) to converge as function of matrix size $N$. NEED UPDATE IN PLOT.}\label{fig:p6_transformations_per_N}
+    \caption{The number of transformations (or iterations) needed for the Jacobi rotation algorithm (ref?) to converge as function of matrix size $N$. NEED UPDATE IN PLOT.}\label{fig:p5_transformations_per_N}
 \end{figure}
 
 
@@ -169,10 +169,18 @@ Using our our symmetric, tridiagonal matrix $A \in \mathbb{R}^{N\cross N}$, for 
 \subsection*{a)}
 We p
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{solution_10steps.pdf}
+    \caption{The first three eigenvectors $\vec{v}^{(i)}$ respectively corresponding to the three lowest eigenvalues $\lambda^{(i)}$ computed with the Jacobi eigensolver using $n=10$ steps. The white overplotted graphs are the predictions from the analytic expression.}\label{fig:p6_solution_10steps}
+\end{figure}
 
 \subsection*{b)}
-
-
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{solution_100steps.pdf}
+    \caption{CAPTION.}\label{fig:p6_solution100steps}
+\end{figure}
 
    
 \end{document}
