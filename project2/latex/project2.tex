@@ -110,17 +110,35 @@ The resulting eigenvectors of the two methods will be scaled before comparison.
 % COMMENT: Write about test? Comment on our cheeky method of absing the vectors?   
 
 \section*{Problem 3}
-
+The Jacobi algorithm relies on identifying the off-diagonal elements of a matrix with the largest absolute value, which is what we will consider now. 
 \subsection*{a)}
 
-In \CC, we write a function that identifies the largest off-diagonal element in absolute value in a symmetric Armadillo matrix and notes the matrix indices (in the upper tiangle) of this element.
+In \CC, we write a function that finds the off-diagonal element with the largest absolute value of an $N\cross N$ matrix $A$. It takes the reference to an Armadillo matrix as input, as well as references to two integers, $k$ and $l$. Algorithm \ref{algo:p3_max_off_diag} describes how the finds the desired off-diagonal element, and its corresponding indices, $k$ and $l$. The algorithm specializes to a symmetric matrix, so we consider the upper-right off-diagonal triangle of the matrix only.  
+
+\begin{algorithm}[H]
+\caption{Find max off-diagonal element}\label{algo:p3_max_off_diag}
+    \begin{algorithmic}
+        \Require $A$ symmetric
+        \State $k=0$
+        \State $l=1$
+        \State $max = |A_{kl}|$ 
+    
+        \For{$i\neq j$ in upper-right triangle of $A$}
+            \If{$|A_{ij}| > max$}
+                \State $max = |A_{ij}|$
+                \State $k=i$
+                \State $l=j$
+            \EndIf
+        \EndFor
+        \Return $max$
+    \end{algorithmic}
+\end{algorithm}
 
 \subsection*{b)}
 
-We test the function on the matrix
-
+We test algoritm \ref{algo:p3_max_off_diag} using the matrix 
 \begin{align*}
-    \begin{pmatrix}
+    A=\begin{pmatrix}
         1 & 0 & 0 & 0.5 \\
         0 & 1 & -0.7 & 0 \\
         0 & -0.7 & 1 & 0 \\
@@ -128,7 +146,7 @@ We test the function on the matrix
     \end{pmatrix}.
 \end{align*}
 
-In particular, we make sure that the \CC-function yields the maximum value 0.7 at row $k=1$ and column $l=2$.
+For the test to pass, the program should return $0.7$ as maximum value. The corresponding indices should then be row $k=1$ and column $l=2$, since we consider the upper-right triangle. 
 
 \section*{Problem 4}
 
@@ -173,21 +191,20 @@ In order to implement the Jacobi rotation algorithm we write two separate algori
 
 \section*{Problem 5}
 
-\subsection*{a)}
-
 Consider our symmetric, tridiagonal matrix $A \in \mathbb{R}^{N\cross N}$ with signature $(a,d,a)$. Let $M$ denote the number of transformations needed for a Jacobi rotation algorithm to converge. That is, $M$ represents the number of iterations in the Jacobi rotation algorithm needed for the transformed matrix $A'$ to be similar enough\footnote{Choosing the number $\varepsilon=10^{-8}$ to be \textit{close enough} to zero.} to a diagonal matrix.
 
-For $N=2,3,\dots,100$, we run the Jacobi eigensolver and save the corresponding integer $M$. The result is plotted in Figure \ref{fig:p5_transformations_per_N}.
+For $N=2,3,\dots,100$, we run the Jacobi eigensolver and save the corresponding integer $M$. We do this for both the tridiagonal matrix $A$ and an arbitrary symmetric square (dense) matrix $A^*$ of the same size as $A$. The result is plotted in Figure \ref{fig:p5_transformations_per_N}. From the graph in the figure we deduce that the number of transformations scales approximately exponential with matrix size $N$ for the tridiagonal matrix $A$. 
 
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.9\textwidth]{jacobi_comparison.pdf}
-    \caption{The number of iterations $M$ as function of the matrix size $N$. NEED UPDATE IN PLOT.}\label{fig:p5_transformations_per_N}
+    \caption{The number of transformations $M$ as function of the matrix size $N$.}\label{fig:p5_transformations_per_N}
 \end{figure}
 
+Similar behaviour is seen for matrix $A^*$ which is not a tridiagonal matrix. We would perhaps expect a tridiagonal matrix like $A$ to converge with fewer transformations, since most of its entries are already zero. However, by running the Jacobi rotation algorithm on a tridiagonal matrix you might end up replacing zero (or close to zero) values with non-zero value in the attempt of rotating once. This mean you might have to put the same element to zero more than once and thus do more transformation that we initially would think. This is emphasized in figure Figure \ref{fig:p5_transformations_per_N} where the $M$-dependency of $A$ and $A^*$ are approximately the same.   
 
-\subsection*{b)}
+
 \section*{Problem 6}
 
 \subsection*{a)}
