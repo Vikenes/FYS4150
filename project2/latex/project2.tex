@@ -41,6 +41,10 @@
 %   NEW COMMANDS
 \renewcommand{\vec}{\mathbf}
 \newcommand{\transpose}{^\intercal} % transpose
+\newcommand{\hx}{\hat{x}}
+\newcommand{\closed}[1]{\left( #1 \right)}
+\newcommand{\bracket}[1]{\left[ #1 \right]}
+
 
 \graphicspath{{../output/plots/}} % path for figures
 
@@ -88,9 +92,16 @@ Dividing by $L$ on both sides, we arrive at the scaled version of equation equat
     \dv[2]{u(\hat{x})}{\hat{x}} = -\lambda u(\hat{x}).
 \end{align}
 
-\section*{Problem 2}
+% COMMENT: As mentioned in the project description, we should mention that u_x(x)=u_\hat{x}(\hat{x})
 
-In order to make sure that we can set up the tridiagonal $N\cross N$ matrix $A$ correctly, we write a short program in \CC\, that (1) defines $A$ for $N=6$, (2) solves $A\vec{v} = \lambda \vec{v}$ using the Armadillo library and (3) compares the solution to the analyical result.
+\section*{Problem 2}
+Before implementing the Jacobi algorithm, we create a test that checks whether we set up our tridiagonal matrix $A$ of size $N\cross N$ correctly. $A$ is defined by the signature $(a,\,d,\,a)$, where $a=-1/h^2$ and $d=2/h^2$ with $h$ being the step size $h \equiv(\hx_\mathrm{max}-\hx_\mathrm{min})/n$, where $n=N-1$. 
+
+To test we write a short program in \CC\, that first sets up the tridiagonal $A$ for $N=6$, then solves $A\vec{v} = \lambda \vec{v}$ using the Armadillo library, where $\vec{v}$ and $\lambda$ are the eigenvectors and eigenvalues of $A$, respectively. Finally, we compare the eigenvectors and eigenvalues from Armadillo with the analytical result for $N=6$. The analytical solution we compare with is 
+\begin{align*}
+    \lambda^{(i)} &= d + 2a \cos\closed{\frac{i\pi}{N+1}},\quad i=1,\,\dots,\,N \\
+    \vec{v}^{(i)} &= \bracket{ \sin\closed{\frac{i\pi}{N+1}},\,\dots,\,\sin\closed{\frac{Ni\pi}{N+1}} }^T ,\quad i=1,\,\dots,\,N
+\end{align*} 
 
 
 \section*{Problem 3}
