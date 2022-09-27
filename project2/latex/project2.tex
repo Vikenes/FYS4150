@@ -40,6 +40,7 @@
 \newcommand{\CC}{C\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf +}\nolinebreak\hspace{-.10em}\raisebox{.4ex}{\tiny\bf +}}
 %   NEW COMMANDS
 \renewcommand{\vec}{\mathbf}
+\newcommand{\transpose}{^\intercal} % transpose
 
 \graphicspath{{../output/plots/}} % path for figures
 
@@ -153,7 +154,7 @@ In order to implement the Jacobi rotation algorithm we write two separate algori
 
 \subsection*{a)}
 
-Consider our symmetric, tridiagonal matrix $A \in \mathbb{R}^{N\cross N}$ with signature $(a,d,a)$. Let $M$ denote the number of transformations needed for a Jacobi rotation algorithm to converge. That is, $M$ represents the number of iterations in the Jacobi rotation algorithm needed for the matrix $A$ to be similar enough\footnote{Choosing the number $\varepsilon=10^{-8}$ to be \textit{close enough} to zero.} to a diagonal matrix.
+Consider our symmetric, tridiagonal matrix $A \in \mathbb{R}^{N\cross N}$ with signature $(a,d,a)$. Let $M$ denote the number of transformations needed for a Jacobi rotation algorithm to converge. That is, $M$ represents the number of iterations in the Jacobi rotation algorithm needed for the transformed matrix $A'$ to be similar enough\footnote{Choosing the number $\varepsilon=10^{-8}$ to be \textit{close enough} to zero.} to a diagonal matrix.
 
 For $N=2,3,\dots,100$, we run the Jacobi eigensolver and save the corresponding integer $M$. The result is plotted in Figure \ref{fig:p5_transformations_per_N}.
 
