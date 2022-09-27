@@ -77,14 +77,14 @@ def set_ax_info(ax, xlabel, ylabel, style='plain', title=None, legend=True):
         ax.legend(fontsize=15)
 
 def pt5a(infiles, pdf_name="none"):
-    N_t, it_t = np.loadtxt(data_path + infiles[0], unpack=True, delimiter=",")
-    N_d, it_d = np.loadtxt(data_path + infiles[1], unpack=True, delimiter=",")
+    N_t, M_t = np.loadtxt(data_path + infiles[0], unpack=True, delimiter=",")
+    N_d, M_d = np.loadtxt(data_path + infiles[1], unpack=True, delimiter=",")
     fig, ax = plt.subplots()
-    ax.plot(N_t, it_t, lw=1, ls="-", color="blue", label=r"Tridiagonal matrix $A$")
-    ax.plot(N_d, it_d, lw=1, ls="-", color="red", label=r"Dense matrix $A$")
+    ax.plot(N_t, M_t, lw=1, ls="-", color="blue", label=r"tridiagonal matrix $A$")
+    ax.plot(N_d, M_d, lw=1, ls="-", color="red", label=r"dense matrix $A$")
     title = r"Jacobi rotation method comparison"
-    xlabel = r"Size of matrix $A$: $N$"
-    ylabel = r"Number of transformations needed for convergence"
+    xlabel = r"$N$"
+    ylabel = r"$M$"
     set_ax_info(ax, xlabel, ylabel, title=title, legend=True)
     # Option to save, push and show resulting plot
     if pdf_name=="none":
