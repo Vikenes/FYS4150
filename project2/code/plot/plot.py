@@ -28,7 +28,7 @@ plot_path = here + "/../../output/plots/"
 latex_path = here + "/../../latex/"
 
 
-def save_push(fig, pdf_name, save=True, push=False, show=False):
+def save_push(fig, pdf_name, save=True, push=False, show=False, tight=True):
     """
     This function handles wether you want to show,
     save and/or push the file to git.
@@ -38,6 +38,8 @@ def save_push(fig, pdf_name, save=True, push=False, show=False):
         pdfname (string): Name of output pdf file
         args (argparse)
     """
+    if tight:
+        fig.tight_layout()
     file = plot_path + pdf_name.replace('.pdf', '').strip() + ".pdf"
     if save:
         print(f'Saving plot: {file}')
@@ -100,14 +102,20 @@ def pt6(infiles, pdf_name="none"):
     
     c = ["b", "r", "g"]
     fig, ax = plt.subplots()
-    
+
+    n = len(xhat)-1
+    ms = 25 * n**(-1/3)
+    lw = 1.8
     for i, vi in enumerate(v_J):
-        ax.plot(xhat, vi, lw=2.5, ls="-", color=c[i], label=r"$\mathbf{v}^{(%i)}$"%(i+1))
+        ax.plot(xhat, vi, 'o-', lw=lw, markersize=ms, color=c[i], label=r"$\mathbf{v}^{(%i)}$"%(i+1))
 
     for i, vi in enumerate(v_a):
-        ax.plot(xhat, vi, lw=0.8, ls="--", color='white')
+        ax.plot(xhat, vi, 'o--', lw=lw/2, markersize=ms/2, color='white')
 
-    title = r"First three eigenvectors ($n=%i$)"%(len(xhat)-1)
+    
+    ax.plot(xhat[0]-xhat[-1], 0, 'o-', lw=0.5, markersize=ms/2, color='white', label='analytic')
+    ax.set_xlim(xhat[0], xhat[-1])  
+    title = r"First three eigenvectors ($n=%i$)"%(n)
     xlabel = r"$\hat{x}$"
     ylabel = r"$v(\hat{x})$"
     set_ax_info(ax, xlabel, ylabel, title=title, legend=True)
@@ -122,10 +130,10 @@ if __name__=="__main__":
     #infiles = ["transformations_per_tridiag_N_matrix.txt", "transformations_per_dense_N_matrix.txt"]
     #pt5a(infiles, pdf_name="jacobi_comparison")
 
-    infiles = ["analytical_solution_10steps.txt", "Jacobi_solution_10steps.txt"]
 
-    pt6(infiles)
+
+    infiles = ["analytical_solution_10steps.txt", "Jacobi_solution_10steps.txt"]
+    pt6(infiles, "solution_10steps")
 
     infiles = ["analytical_solution_100steps.txt", "Jacobi_solution_100steps.txt"]
-
-    pt6(infiles)
+    pt6(infiles, "solution_100steps")
