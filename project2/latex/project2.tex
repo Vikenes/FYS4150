@@ -97,12 +97,17 @@ Dividing by $L$ on both sides, we arrive at the scaled version of equation equat
 \section*{Problem 2}
 Before implementing the Jacobi algorithm, we create a test that checks whether we set up our tridiagonal matrix $A$ of size $N\cross N$ correctly. $A$ is defined by the signature $(a,\,d,\,a)$, where $a=-1/h^2$ and $d=2/h^2$ with $h$ being the step size $h \equiv(\hx_\mathrm{max}-\hx_\mathrm{min})/n$, where $n=N-1$. 
 
-To test we write a short program in \CC\, that first sets up the tridiagonal $A$ for $N=6$, then solves $A\vec{v} = \lambda \vec{v}$ using the Armadillo library, where $\vec{v}$ and $\lambda$ are the eigenvectors and eigenvalues of $A$, respectively. Finally, we compare the eigenvectors and eigenvalues from Armadillo with the analytical result for $N=6$. The analytical solution we compare with is 
-\begin{align*}
+To test we write a short program in \CC\, that first sets up the tridiagonal $A$ for $N=6$, then uses the Armadillo library to solve the equation
+\begin{align}
+    A\vec{v} = \lambda \vec{v} \label{eq:eig_equation_general}
+\end{align} 
+where $\vec{v}$ and $\lambda$ are the eigenvectors and eigenvalues of $A$, respectively. Finally, we compare the eigenvectors and eigenvalues from Armadillo with the analytical result for $N=6$. The analytical solution to equation \eqref{eq:eig_equation_general} for a matrix of size $N\cross N$ is given by  
+\begin{align}
     \lambda^{(i)} &= d + 2a \cos\closed{\frac{i\pi}{N+1}},\quad i=1,\,\dots,\,N \\
     \vec{v}^{(i)} &= \bracket{ \sin\closed{\frac{i\pi}{N+1}},\,\dots,\,\sin\closed{\frac{Ni\pi}{N+1}} }^T ,\quad i=1,\,\dots,\,N
-\end{align*} 
-
+\end{align} 
+The resulting eigenvectors of the two methods will be scaled before comparison. 
+% COMMENT: Write about test? Comment on our cheeky method of absing the vectors?   
 
 \section*{Problem 3}
 
