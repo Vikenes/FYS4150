@@ -177,17 +177,20 @@ In order to implement the Jacobi rotation algorithm we write two separate algori
 
 Consider our symmetric, tridiagonal matrix $A \in \mathbb{R}^{N\cross N}$ with signature $(a,d,a)$. Let $M$ denote the number of transformations needed for a Jacobi rotation algorithm to converge. That is, $M$ represents the number of iterations in the Jacobi rotation algorithm needed for the transformed matrix $A'$ to be similar enough\footnote{Choosing the number $\varepsilon=10^{-8}$ to be \textit{close enough} to zero.} to a diagonal matrix.
 
-For $N=2,3,\dots,100$, we run the Jacobi eigensolver and save the corresponding integer $M$. The result is plotted in Figure \ref{fig:p5_transformations_per_N}.
+For $N=2,3,\dots,100$, we run the Jacobi eigensolver and save the corresponding integer $M$. We do this for both the tridiagonal matrix $A$ and an arbitrary symmetric square (dense) matrix of the same size as $A$. The result is plotted in Figure \ref{fig:p5_transformations_per_N}. From the graph in the figure we deduce that the number of transformations scales approximately exponential with matrix size $N$. 
 
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.9\textwidth]{jacobi_comparison.pdf}
-    \caption{The number of iterations $M$ as function of the matrix size $N$. NEED UPDATE IN PLOT.}\label{fig:p5_transformations_per_N}
+    \caption{The number of transformations $M$ as function of the matrix size $N$.}\label{fig:p5_transformations_per_N}
 \end{figure}
 
 
 \subsection*{b)}
+By running the Jacobi rotation algorithm on a tridiagonal matrix you might end up replacing zero (or close to zero) values with non-zero value in the attempt of rotating one plane. This mean you might have to put the same element to zero more than once. We would therefore think that number of transformations would scale with the matrix size $N$ in approximately the same way as for a dense matrix. Thus the two matrices would require approximately the same amount of transformations in order to converge. This is emphasized in figure Figure \ref{fig:p5_transformations_per_N} where we may compare the number of transformations needed for the tridiagional matrix $A$ and an arbitrary dense square symmetrc of same size.  
+
+
 \section*{Problem 6}
 
 \subsection*{a)}
