@@ -91,6 +91,41 @@ def pt5a(infiles, pdf_name="none"):
         save_push(fig, pdf_name=pdf_name, push=True, save=True)
 
 
+def pt6(infiles, pdf_name="none"):
+    # infiles: (analytic), (Jacobi)
+    xhat, v1, v2, v3 = np.loadtxt(data_path + infiles[0], unpack=True, delimiter=",")
+    v_a = [v1, v2, v3]
+    xhat, v1, v2, v3 = np.loadtxt(data_path + infiles[1], unpack=True, delimiter=",")
+    v_J = [v1, v2, v3]
+    
+    c = ["b", "r", "g"]
+    fig, ax = plt.subplots()
+    
+    for i, vi in enumerate(v_J):
+        ax.plot(xhat, vi, lw=2.5, ls="-", color=c[i], label=r"$\mathbf{v}^{(%i)}$"%(i+1))
+
+    for i, vi in enumerate(v_a):
+        ax.plot(xhat, vi, lw=0.8, ls="--", color='white')
+
+    title = r"First three eigenvectors ($n=%i$)"%(len(xhat)-1)
+    xlabel = r"$\hat{x}$"
+    ylabel = r"$v(\hat{x})$"
+    set_ax_info(ax, xlabel, ylabel, title=title, legend=True)
+    # Option to save, push and show resulting plot
+    if pdf_name=="none":
+        plt.show()
+    else:
+        save_push(fig, pdf_name=pdf_name, push=True, save=True)
+
+
 if __name__=="__main__":
-    infiles = ["transformations_per_tridiag_N_matrix.txt", "transformations_per_dense_N_matrix.txt"]
-    pt5a(infiles, pdf_name="jacobi_comparison")
+    #infiles = ["transformations_per_tridiag_N_matrix.txt", "transformations_per_dense_N_matrix.txt"]
+    #pt5a(infiles, pdf_name="jacobi_comparison")
+
+    infiles = ["analytical_solution_10steps.txt", "Jacobi_solution_10steps.txt"]
+
+    pt6(infiles)
+
+    infiles = ["analytical_solution_100steps.txt", "Jacobi_solution_100steps.txt"]
+
+    pt6(infiles)
