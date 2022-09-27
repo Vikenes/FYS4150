@@ -127,10 +127,9 @@ def pt6(infiles, pdf_name="none"):
 
 
 if __name__=="__main__":
-    #infiles = ["transformations_per_tridiag_N_matrix.txt", "transformations_per_dense_N_matrix.txt"]
-    #pt5a(infiles, pdf_name="jacobi_comparison")
 
-
+    infiles = ["transformations_per_tridiag_N_matrix.txt", "transformations_per_dense_N_matrix.txt"]
+    pt5a(infiles, "jacobi_comparison")
 
     infiles = ["analytical_solution_10steps.txt", "Jacobi_solution_10steps.txt"]
     pt6(infiles, "solution_10steps")
