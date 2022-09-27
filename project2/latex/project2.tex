@@ -148,10 +148,12 @@ We test algoritm \ref{algo:p3_max_off_diag} using the matrix
 
 For the test to pass, the program should return $0.7$ as maximum value. The corresponding indices should then be row $k=1$ and column $l=2$, since we consider the upper-right triangle. 
 
+% Note: Include result?
+
 \section*{Problem 4}
 
 \subsection*{a)}
-In order to implement the Jacobi rotation algorithm we write two separate algorithms: Jacobi rotate, and Jacobi eigensolver:
+We write a code that solves equation \eqref{eq:eig_equation_general} using Jacobi's rotation algorithm. We begin by finding the largest off-diagonal element of $A$ using algorithm \ref{algo:p3_max_off_diag}. Using that result, we apply Jacobi's rotation algorithm, presented in Algorithm \ref{algo:p4_jacobi_rotation}. This process is repeated until Algorithm \ref{algo:p3_max_off_diag} returns an off-diagonal element $max < \epsilon$, where $\epsilon=10^{-8}$ is the chosen tolerance. 
 \begin{algorithm}[H]
     \caption{Jacobi rotation}\label{algo:p4_jacobi_rotation}
     \begin{algorithmic}
@@ -186,7 +188,7 @@ In order to implement the Jacobi rotation algorithm we write two separate algori
     \end{algorithmic}
 \end{algorithm}
 \subsection*{b)}
-
+To test the rotation algorithm, we compare its resulting eigenvalues and eigenvectors with the analytical solutions in equations 
 
 
 \section*{Problem 5}
