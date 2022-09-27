@@ -265,7 +265,7 @@ int main(){
     //  a)
     run_jacobi_algorithms(100);
     //  b) OBS - something wrong
-    //run_jacobi_algorithms(100, false); 
+    run_jacobi_algorithms(100, false); 
 
     // PROBLEM 6
     //  a)
