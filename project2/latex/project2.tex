@@ -84,6 +84,7 @@ Letting $\lambda \equiv FL^2/\gamma$ yields
 
 In order to make sure that we can set up the tridiagonal $N\cross N$ matrix $A$ correctly, we write a short program in \CC\, that (1) defines $A$ for $N=6$, (2) solves $A\vec{v} = \lambda \vec{v}$ using the Armadillo library and (3) compares the solution to the analyical result.
 
+
 \section*{Problem 3}
 
 \subsection*{a)}
@@ -108,6 +109,40 @@ We test the function on the matrix
 \section*{Problem 4}
 
 \subsection*{a)}
+In order to implement the Jacobi rotation algorithm we write two separate algorithms: Jacobi rotate, and Jacobi eigensolver:
+\begin{algorithm}[H]
+    \caption{Jacobi rotation}\label{algo:jacobi_rotation}
+    \begin{algorithmic}
+        \If{$A_{kl}^m = 0$}
+            \State $c=1$
+            \State $s=0$
+            \State $t=0$
+        \Else 
+            \State $\tau = (A_{ll}^m-A_{kk}^m) / (2A_{kl}^m)$
+            \If{$\tau > 0$}
+                \State $t= 1/(\tau + \sqrt{1+\tau^2})$
+            \Else
+                \State $t = -1/(-\tau + \sqrt{1+\tau^2})$
+            \EndIf
+            \State $c=1/(\sqrt{1+t^2})$
+            \State $s=ct$
+        \EndIf
+        \State $A_{kk}^{m+1} = c^2A_{kk}^m - 2csA_{kl}^m + s^2A_{ll}^m$
+        \State $A_{ll}^{m+1} = c^2A_{ll}^m + 2csA_{kl}^m + s^2A_{kk}^m$
+        \State $A_{kl}^{m+1} = 0$
+        \State $A_{lk}^{m+1} = 0$
+        \For{$i=0,1,2,\dots,N-1$}
+            \If{$i\neq k \wedge i \neq l$}
+                \State $A_{ik}^{m+1} = cA_{ik}^m -sA_{il} $
+                \State $A_{ki}^{m+1} = A_{ik}^{m+1}$
+                \State $A_{il}^{m+1} = cA_{il}^m + sA_{ik}^m$
+                \State $A_{li}^{m+1} = A_{il}^{m+1}$
+            \EndIf
+            \State $R_{ik}^{m+1} = cR_{ik} - sR_{il}$
+            \State $R_{il}^{m+1} = cR_{il} + sR_{ik}$
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
 \subsection*{b)}
 
 
