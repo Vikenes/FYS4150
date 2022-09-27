@@ -82,7 +82,7 @@ def pt5a(infiles, pdf_name="none"):
     ax.plot(N_d, it_d, lw=1, ls="-", color="red", label=r"Dense matrix $A$")
     title = r"Jacobi rotation method comparison"
     xlabel = r"Size of matrix $A$: $N$"
-    ylabel = r"Nr. iterations needed for convergence"
+    ylabel = r"Number of transformations needed for convergence"
     set_ax_info(ax, xlabel, ylabel, title=title, legend=True)
     # Option to save, push and show resulting plot
     if pdf_name=="none":
@@ -92,5 +92,5 @@ def pt5a(infiles, pdf_name="none"):
 
 
 if __name__=="__main__":
-    infiles = ["iterations_per_N_tridiag_matrix.txt", "iterations_per_dense_N_matrix.txt"]
+    infiles = ["transformations_per_tridiag_N_matrix.txt", "transformations_per_dense_N_matrix.txt"]
     pt5a(infiles, pdf_name="jacobi_comparison")
