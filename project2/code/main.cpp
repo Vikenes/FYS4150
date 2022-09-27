@@ -304,19 +304,19 @@ int compute_solution(int n, int save_first=3){
 int main(){
 
     // PROBLEM 2
-    //check_for_babycase("arma");
+    check_for_babycase("arma");
 
     // PROBLEM 3
-    //test_max_offdiag_symmetric();
+    test_max_offdiag_symmetric();
 
     // PROBLEM 4
-    //check_for_babycase("jacobi");
+    check_for_babycase("jacobi");
 
     // PROBLEM 5
     //  a)
-    //run_jacobi_algorithms(100);
+    run_jacobi_algorithms(100);
     //  b)
-    //run_jacobi_algorithms(100, false); 
+    run_jacobi_algorithms(100, false); 
 
     // PROBLEM 6
     //  a)
