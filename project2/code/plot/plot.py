@@ -81,7 +81,7 @@ def pt5(infiles, pdf_name="none"):
     N_d, M_d = np.loadtxt(data_path + infiles[1], unpack=True, delimiter=",")
     fig, ax = plt.subplots()
     ax.plot(N_t, M_t, 'o', markersize=5, color="b", label=r"tridiagonal matrix $A$")
-    ax.plot(N_d[::5], M_d[::5], '^', markersize=9, color="r", label=r"dense matrix $A$")
+    ax.plot(N_d[::5], M_d[::5], '^', markersize=9, color="r", label=r"dense matrix $A^*$")
     title = r"Jacobi rotation method comparison"
     xlabel = r"$N$"
     ylabel = r"$M$"
