@@ -106,7 +106,7 @@ We test the function on the matrix
     \end{pmatrix}.
 \end{align*}
 
-That is, we make sure that the \CC-function yields the maximum value 0.7 at row $k=1$ and column $l=2$.
+In particular, we make sure that the \CC-function yields the maximum value 0.7 at row $k=1$ and column $l=2$.
 
 \section*{Problem 4}
 
@@ -153,37 +153,71 @@ In order to implement the Jacobi rotation algorithm we write two separate algori
 
 \subsection*{a)}
 
-Using our our symmetric, tridiagonal matrix $A \in \mathbb{R}^{N\cross N}$, for $N=2,3,\dots,100$ we run the Jacobi rotation algorithm (?? change perhaps) and save the number of transformations (i.e. iterations in (CHECK THIS) Jacobi rotation needed for the matrix to be close enough\footnote{Choosing the number $\varepsilon=10^{-8}$ to be \textit{close enough} to zero.} to a diagonal matrix.
+Consider our symmetric, tridiagonal matrix $A \in \mathbb{R}^{N\cross N}$ with signature $(a,d,a)$. Let $M$ denote the number of transformations needed for a Jacobi rotation algorithm to converge. That is, $M$ represents the number of iterations in the Jacobi rotation algorithm needed for the matrix $A$ to be similar enough\footnote{Choosing the number $\varepsilon=10^{-8}$ to be \textit{close enough} to zero.} to a diagonal matrix.
+
+For $N=2,3,\dots,100$, we run the Jacobi eigensolver and save the corresponding integer $M$. The result is plotted in Figure \ref{fig:p5_transformations_per_N}.
+
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.9\textwidth]{jacobi_comparison.pdf}
-    \caption{The number of transformations (or iterations) needed for the Jacobi rotation algorithm (ref?) to converge as function of matrix size $N$. NEED UPDATE IN PLOT.}\label{fig:p5_transformations_per_N}
+    \caption{The number of iterations $M$ as function of the matrix size $N$. NEED UPDATE IN PLOT.}\label{fig:p5_transformations_per_N}
 \end{figure}
 
 
 \subsection*{b)}
 \section*{Problem 6}
 
-
 \subsection*{a)}
-We p
+
+For $n=10$ steps, i.e. $n+1=11$ points $\hat{x}_i$ and $A\in\mathbb{R}^{(n-1)\cross(n-1)} =\mathbb{R}^{9\cross 9}$, we solve the eigenvalue problem $A\vec{v} = \lambda \vec{v}$ using the Jacobi eigensolver. In addition, we solve the same problem with the analytic expressions for $\lambda^{(i)}$ and $\vec{v}^{(i)}$. This yields two versions of the normalised vectors $\vec{v}^{(i)}$, and for some $i$'s these are counter-oriented. When we encounter this situation, the issue is solved by forcing the result from the Jacobi algorithm $\vec{v}^{(i)} \rightarrow - \vec{v}^{(i)}$.
+
+The three resulting eigenvectors $\vec{v}^{(1)}$, $\vec{v}^{(2)}$ and $\vec{v}^{(3)}$ corresponding to eigenvalues $\lambda^{(1)}$, $\lambda^{(2)}$ and $\lambda^{(3)}$ s.t. $\lambda^{(i)}<\lambda^{(j)}$ for $i<j$, are plotted in Figure \ref{fig:p6_solution_10steps}. The vectors are extrented with the boundary points, i.e. $v_0^{(i)}=v_0 = 0$ and $v_n^{(i)}=v_n=0$ for all $i$.
+
+% figure or Figure?
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.9\textwidth]{solution_10steps.pdf}
-    \caption{The first three eigenvectors $\vec{v}^{(i)}$ respectively corresponding to the three lowest eigenvalues $\lambda^{(i)}$ computed with the Jacobi eigensolver using $n=10$ steps. The white overplotted graphs are the predictions from the analytic expression.}\label{fig:p6_solution_10steps}
+    \caption{The first three eigenvectors $\vec{v}^{(i)}$ respectively corresponding to the three lowest eigenvalues $\lambda^{(i)}$ computed with the Jacobi eigensolver using $n=10$ discretisation steps. The white overplotted graphs are the predictions from the analytic expression.}\label{fig:p6_solution_10steps}
 \end{figure}
 
 \subsection*{b)}
+
+We do exactly the same as in \textbf{a)}, only now we use $n=100$ discretisation steps. The resulting plot is presented in Figure \ref{fig:p6_solution100steps}.
+
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.9\textwidth]{solution_100steps.pdf}
-    \caption{CAPTION.}\label{fig:p6_solution100steps}
+    \caption{The first three eigenvectors $\vec{v}^{(i)}$ respectively corresponding to the three lowest eigenvalues $\lambda^{(i)}$ computed with the Jacobi eigensolver using $n=100$ discretisation steps. The white overplotted graphs are the predictions from the analytic expression.}\label{fig:p6_solution100steps}
 \end{figure}
 
    
 \end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section*{Problem 2}
 We write equations using the LaTeX \texttt{equation} (or \texttt{align}) environments. Here is an equation with numbering
