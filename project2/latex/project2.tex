@@ -146,9 +146,7 @@ We test algoritm \ref{algo:p3_max_off_diag} using the matrix
     \end{pmatrix}.
 \end{align*}
 
-For the test to pass, the program should return $0.7$ as maximum value. The corresponding indices should then be row $k=1$ and column $l=2$, since we consider the upper-right triangle. 
-
-% Note: Include result?
+For the test to pass, the program should return $0.7$ as maximum value. The corresponding indices should then be row $k=1$ and column $l=2$, since we consider the upper-right triangle. Due to fine coding, the test passed.
 
 \section*{Problem 4}
 
@@ -188,7 +186,7 @@ We write a code that solves equation \eqref{eq:eig_equation_general} using Jacob
     \end{algorithmic}
 \end{algorithm}
 \subsection*{b)}
-To test the rotation algorithm, we compare its resulting eigenvalues and eigenvectors with the analytical solutions in equations 
+To test the rotation algorithm, we compare its resulting eigenvalues and eigenvectors with the analytical solutions in equations \eqref{eq:eigval} and \eqref{eq:eigvec}, respectively. $N=6$ is our choice of matrix size for comparison, with $(-1/h^2,\,2/h^2,\,-1/h^2)$ as the signature for the triangular matrix. It worked brilliantly, as expected.
 
 
 \section*{Problem 5}
@@ -238,7 +236,11 @@ the results in a very good way!\\
     \caption{The first three eigenvectors $\vec{v}^{(i)}$ respectively corresponding to the three lowest eigenvalues $\lambda^{(i)}$ computed with the Jacobi eigensolver using $n=100$ discretisation steps. The white overplotted graphs are the predictions from the analytic expression.}\label{fig:p6_solution100steps}
 \end{figure}
 
-   
+
+\section*{Acknowledgments}
+We want to express our most sincere gratitudes to our code for passing all the tests we have presented to it. This work could not have completed without the funding of Group teacher salaries, and its subsequent investment in Ringnes\footnote{Org. nr. 989 668 137 - RINGNES NORGE AS}.
+
+
 \end{document}
 
 
