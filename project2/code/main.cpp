@@ -9,6 +9,10 @@ const double xhat_max = 1;
 const double v_min = 0;
 const double v_max = 0;
 
+// For algorithm
+const double eps = 1e-8;
+const int M_max = int(1e6);
+
 double step_size(int n){
     // Return step size for a given number of steps 
     double h=(xhat_max - xhat_min)/n;
@@ -56,9 +60,7 @@ int check_for_babycase(std::string which="arma"){
     // Matrix A for N = 6
     int N = 6;
     arma::mat A = create_tridiag(N); 
-    int iterations;
-    bool converged;
-
+   
 
     // Eigenvectors, eigenvalues with analytical expressions
     arma::vec eigval = arma::vec(N);
@@ -75,7 +77,10 @@ int check_for_babycase(std::string which="arma"){
     }
     // Check with Jacobi algorithm
     else if(which == "jacobi"){
-        jacobi_eigensolver(A, 1e-8, eigval_test, eigvec_test, 10000, iterations, converged);
+        int M; // no of iteations
+        bool converged;
+
+        jacobi_eigensolver(A, 1e-8, eigval_test, eigvec_test, 10000, M, converged);
         std::cout << "\nChecking if we implement Jacobi rotation method correctly." << std::endl;
     }
     else{
@@ -87,9 +92,9 @@ int check_for_babycase(std::string which="arma"){
     arma::mat vecs = eigvec_test/eigvec;
     vecs = arma::abs(vecs);
 
-    double tol = 0.0000001;
-    bool is_vecs = arma::approx_equal(vecs, arma::mat(N,N).fill(1.), "absdiff",  tol);
-    bool is_vals = arma::approx_equal(vals, arma::vec(N).fill(1.),   "absdiff", tol);
+
+    bool is_vecs = arma::approx_equal(vecs, arma::mat(N,N).fill(1.), "absdiff", eps);
+    bool is_vals = arma::approx_equal(vals, arma::vec(N).fill(1.),   "absdiff", eps);
 
     assert(is_vecs);
     assert(is_vals);
@@ -100,7 +105,7 @@ int check_for_babycase(std::string which="arma"){
 }
 
 
-int run_jacobi_algorithms(int N_max, bool tridiag=true, int N_min=2, double eps=(1e-8), int maxiter=int(1e6)){
+int run_jacobi_algorithms(int N_max, bool tridiag=true, int N_min=2){
 
     std::string type;
 
@@ -116,7 +121,7 @@ int run_jacobi_algorithms(int N_max, bool tridiag=true, int N_min=2, double eps=
 
     int L = N_max - N_min + 1;
     std::vector<double> Ns(L); // choices of N (N_min, N_min+1, ..., N_max-1, N_max)
-    std::vector<double> n_transf(L);  // number of transformations needed
+    std::vector<double> Ms(L);  // number of transformations needed
     
     
     for(int i=0; i<L; i++){
@@ -130,18 +135,18 @@ int run_jacobi_algorithms(int N_max, bool tridiag=true, int N_min=2, double eps=
             A = arma::mat(N,N).randn();
             A = arma::symmatu(A);
         }
-        int iterations;
+        int M;
         bool converged;
 
         arma::vec eigval_j = arma::vec(N);
         arma::mat eigvec_j = arma::mat(N,N);
-        jacobi_eigensolver(A, eps, eigval_j, eigvec_j, maxiter, iterations, converged);
+        jacobi_eigensolver(A, eps, eigval_j, eigvec_j, M_max, M, converged);
         Ns[i] = N;
-        n_transf[i] = iterations;
+        Ms[i] = M;
         //assert(converged) //?
     }
 
-    write_to_file(Ns, n_transf, filename);
+    write_to_file(Ns, Ms, filename);
     std::cout << "\nWrote result to '" << filename << ".txt'.\n\n"  << std::endl;
 
     return 0;
@@ -191,7 +196,7 @@ int write_solution_to_file(std::string method, arma::vec x, arma::mat V){
 }
 
 
-int compute_solution(int n, int save_first=3, double eps=(1e-8), int maxiter=int(1e6)){
+int compute_solution(int n, int save_first=3){
     // Initialise with boundary points
     arma::vec xhat = arma::vec(n+1);
     xhat(0) = xhat_min;
@@ -203,7 +208,7 @@ int compute_solution(int n, int save_first=3, double eps=(1e-8), int maxiter=int
 
     int N = n-1;
     arma::mat A = create_tridiag(N);
-    int iterations;
+    int M;
     bool converged;
 
     // Analytical solution
@@ -215,7 +220,7 @@ int compute_solution(int n, int save_first=3, double eps=(1e-8), int maxiter=int
     // Jacobi solution
     arma::vec eigval_J = arma::vec(N);
     arma::mat eigvec_J = arma::mat(N,N);
-    jacobi_eigensolver(A, eps, eigval_J, eigvec_J, maxiter, iterations, converged);
+    jacobi_eigensolver(A, eps, eigval_J, eigvec_J, M_max, M, converged);
 
 
     // (Already sorted with increasing eigenvalues)
@@ -259,8 +264,8 @@ int main(){
     // PROBLEM 5
     //  a)
     run_jacobi_algorithms(100);
-    //  b)
-    run_jacobi_algorithms(100, false);
+    //  b) OBS - something wrong
+    //run_jacobi_algorithms(100, false); 
 
     // PROBLEM 6
     //  a)
