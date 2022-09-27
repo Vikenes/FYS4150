@@ -1,6 +1,6 @@
 
 
-\documentclass[english,notitlepage]{revtex4-1}  % defines the basic parameters of the document
+\documentclass[english,notitlepage,nofootinbib]{revtex4-1}  % defines the basic parameters of the document
 %For preview: skriv i terminal: latexmk -pdf -pvc filnavn
 
 
@@ -40,6 +40,8 @@
 \newcommand{\CC}{C\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf +}\nolinebreak\hspace{-.10em}\raisebox{.4ex}{\tiny\bf +}}
 %   NEW COMMANDS
 \renewcommand{\vec}{\mathbf}
+
+\graphicspath{{../output/plots/}} % path for figures
 
 \begin{document}
 
@@ -104,14 +106,14 @@ We test the function on the matrix
     \end{pmatrix}.
 \end{align*}
 
-
+That is, we make sure that the \CC-function yields the maximum value 0.7 at row $k=1$ and column $l=2$.
 
 \section*{Problem 4}
 
 \subsection*{a)}
 In order to implement the Jacobi rotation algorithm we write two separate algorithms: Jacobi rotate, and Jacobi eigensolver:
 \begin{algorithm}[H]
-    \caption{Jacobi rotation}\label{algo:jacobi_rotation}
+    \caption{Jacobi rotation}\label{algo:p4_jacobi_rotation}
     \begin{algorithmic}
         \If{$A_{kl}^m = 0$}
             \State $c=1$
@@ -150,11 +152,24 @@ In order to implement the Jacobi rotation algorithm we write two separate algori
 \section*{Problem 5}
 
 \subsection*{a)}
+
+Using our our symmetric, tridiagonal matrix $A \in \mathbb{R}^{N\cross N}$, for $N=2,3,\dots,100$ we run the Jacobi rotation algorithm (\hl{*} ?? change perhaps) and save the number of transformations (i.e. iterations in \hl{CHECK THIS} \hyperref[algo:jacobi_rotation]{Jacobi rotation}) needed for the matrix to be close enough\footnote{Choosing the number $\varepsilon=10^{-8}$ to be \textit{close enough} to zero.} to a diagonal matrix.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{jacobi_comparison.pdf}
+    \caption{The number of transformations (or iterations) needed for the Jacobi rotation algorithm (ref?) to converge as function of matrix size $N$. NEED UPDATE IN PLOT.}\label{fig:p6_transformations_per_N}
+\end{figure}
+
+
 \subsection*{b)}
 \section*{Problem 6}
 
 
 \subsection*{a)}
+We p
+
+
 \subsection*{b)}
 
 
