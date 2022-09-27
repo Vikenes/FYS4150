@@ -61,10 +61,9 @@ The code is available on GitHUb at \url{https://github.com/Vikenes/FYS4150}.
 To describe a one-dimensional buckling beam, we have the second order differential equation 
 
 \begin{align}\label{eq:unscaled_eq}
-    \gamma \dv{u}{x} = -F u(x), \quad x\in [0,L]
+    \gamma \dv[2]{u}{x} = -F u(x), \quad x\in [0,L]
 \end{align}
-
-with $u(0)=u(L)=0$. \dots
+where $L$ is the length of the horizontal beam, $F$ is the applied force at the end point $x=L$. $u(x)$ is the vertical displacement of the beam at the horizontal position $x$ and $\gamma$ is a constant determined by the properties of the material. We consider the endpoints to be pinned down, so that $u(0)=u(L)=0$. The endpoints are allowed to rotate, so $u'(x)\neq0$.
 
 \section*{Problem 1}
 
