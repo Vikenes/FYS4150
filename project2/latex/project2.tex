@@ -67,18 +67,24 @@ where $L$ is the length of the horizontal beam, $F$ is the applied force at the 
 
 \section*{Problem 1}
 
-We define $\hat{x}\equiv x/L$. Now $\dv*[2]{\hat{x}}{x}=L^{-2}$ and we can rewrite eq. \eqref{eq:unscaled_eq}.
-
+We want to recast equation \eqref{eq:unscaled_eq} into a dimensionless equation, and we begin by defining the dimensionless length $\hat{x}\equiv x/L$, so that $\hat{x}\in[0,\,1]$. The second derivative with respect to $x$ is then 
 \begin{align*}
-    \gamma \dv[2]{u}{\hat{x}} \dv{\hat{x}}{x} & = -Fu(x) \\
-    \frac{\gamma}{L^2} \dv[2]{u}{\hat{x}} &= -Fu(\hat{x}) \\
-    \dv[2]{u}{\hat{x}} &= - \frac{FL^2}{\gamma}
-\end{align*}
+    \dv[2]{x} = \dv[2]{\hat{x}}{x}\dv[2]{\hat{x}}=\frac{1}{L^2} \dv[2]{\hat{x}}
+\end{align*}  
 
-Letting $\lambda \equiv FL^2/\gamma$ yields
+Equation \eqref{eq:unscaled_eq} can therefore be written as 
+\begin{align*}
+    \gamma \dv[2]{u(x)}{x} &= \frac{\gamma}{L^2}\dv[2]{u(x)}{\hat{x}} = -F u(x) \\ 
+    \dv[2]{u(x)}{\hat{x}} &= - \frac{FL^2}{\gamma} u(x) \equiv -\lambda u(x)
+\end{align*}
+where we defined $\lambda\equiv F L ^2 / \gamma$. Inserting for $x=L\hat{x}$ yields 
+\begin{align*}
+    L \dv[2]{u(\hat{x})}{\hat{x}} &= -L \lambda u(\hat{x}) 
+\end{align*}
+Dividing by $L$ on both sides, we arrive at the scaled version of equation equation \eqref{eq:unscaled_eq}
 
 \begin{align}\label{p1_scaled_eq}
-    \dv[2]{u}{\hat{x}} = -\lambda u(\hat{x}).
+    \dv[2]{u(\hat{x})}{\hat{x}} = -\lambda u(\hat{x}).
 \end{align}
 
 \section*{Problem 2}
