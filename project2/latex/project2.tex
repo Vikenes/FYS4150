@@ -110,17 +110,35 @@ The resulting eigenvectors of the two methods will be scaled before comparison.
 % COMMENT: Write about test? Comment on our cheeky method of absing the vectors?   
 
 \section*{Problem 3}
-
+The Jacobi algorithm relies on identifying the off-diagonal elements of a matrix with the largest absolute value, which is what we will consider now. 
 \subsection*{a)}
 
-In \CC, we write a function that identifies the largest off-diagonal element in absolute value in a symmetric Armadillo matrix and notes the matrix indices (in the upper tiangle) of this element.
+In \CC, we write a function that finds the off-diagonal element with the largest absolute value of an $N\cross N$ matrix $A$. It takes the reference to an Armadillo matrix as input, as well as references to two integers, $k$ and $l$. Algorithm \ref{algo:p3_max_off_diag} describes how the finds the desired off-diagonal element, and its corresponding indices, $k$ and $l$. The algorithm specializes to a symmetric matrix, so we consider the upper-right off-diagonal triangle of the matrix only.  
+
+\begin{algorithm}[H]
+\caption{Find max off-diagonal element}\label{algo:p3_max_off_diag}
+    \begin{algorithmic}
+        \Require $A$ symmetric
+        \State $k=0$
+        \State $l=1$
+        \State $max = |A_{kl}|$ 
+    
+        \For{$i\neq j$ in upper-right triangle of $A$}
+            \If{$|A_{ij}| > max$}
+                \State $max = |A_{ij}|$
+                \State $k=i$
+                \State $l=j$
+            \EndIf
+        \EndFor
+        \Return $max$
+    \end{algorithmic}
+\end{algorithm}
 
 \subsection*{b)}
 
-We test the function on the matrix
-
+We test algoritm \ref{algo:p3_max_off_diag} using the matrix 
 \begin{align*}
-    \begin{pmatrix}
+    A=\begin{pmatrix}
         1 & 0 & 0 & 0.5 \\
         0 & 1 & -0.7 & 0 \\
         0 & -0.7 & 1 & 0 \\
@@ -128,7 +146,7 @@ We test the function on the matrix
     \end{pmatrix}.
 \end{align*}
 
-In particular, we make sure that the \CC-function yields the maximum value 0.7 at row $k=1$ and column $l=2$.
+For the test to pass, the program should return $0.7$ as maximum value. The corresponding indices should then be row $k=1$ and column $l=2$, since we consider the upper-right triangle. 
 
 \section*{Problem 4}
 
