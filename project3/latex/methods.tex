@@ -1,0 +1,28 @@
+\section{Methods}\label{sec:methods}
+%
+
+% ===========================================
+\subsection*{The algorithm}
+%
+use equation~\cite{midpoint_rule}
+\begin{figure}
+% NOTE: We only need \begin{figure} ... \end{figure} here because of a compatability issue between the 'revtex4-1' document class and the 'algorithm' environment.
+    \begin{algorithm}[H]
+    \caption{Midpoint rule for integration}
+    \label{algo:midpointrule}
+        \begin{algorithmic}
+            \Procedure{Midpoint rule}{$f, a, b, n$}
+            \State $I \leftarrow 0$        \Comment{Initialize the integral variable}
+            \State $h \leftarrow (b-a)/n$  \Comment{Compute the interval length}
+            \For{$i = 1, 2, \ldots, n$}
+            \State $x \leftarrow a + (i-1/2)h$  \Comment{Assign $x$ to the midpoint}  %This means x is assigned the value x + ih/2.
+            \State $I \leftarrow I + f(x)$  \Comment{Add contribution to integral} %Assign I to I + f(x)
+            \EndFor
+            \State $I \leftarrow Ih$  \Comment{Finalize the computation}
+            \EndProcedure
+        \end{algorithmic}
+    \end{algorithm}
+\end{figure}
+
+
+% ===========================================

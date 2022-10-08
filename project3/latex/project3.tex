@@ -1,47 +1,4 @@
-\documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-1}  % defines the basic parameters of the document
-% For preview: skriv i terminal: latexmk -pdf -pvc filnavn
-% If you want a single-column, remove "reprint"
-
-% Allows special characters (including æøå)
-\usepackage[utf8]{inputenc}
-% \usepackage[english]{babel}
-
-
-\usepackage{physics,amssymb}  % mathematical symbols (physics imports amsmath)
-\include{amsmath}
-\usepackage{graphicx}         % include graphics such as plots
-\usepackage{xcolor}           % set colors
-\usepackage{hyperref}         % automagic cross-referencing
-\usepackage{listings}         % display code
-\usepackage{subfigure}        % imports a lot of cool and useful figure commands
-% \usepackage{float}
-%\usepackage[section]{placeins}
-\usepackage{algorithm}
-\usepackage[noend]{algpseudocode}
-\usepackage{subfigure}
-\usepackage{tikz}
-\usetikzlibrary{quantikz}
-% defines the color of hyperref objects
-% Blending two colors:  blue!80!black  =  80% blue and 20% black
-\hypersetup{ % this is just my personal choice, feel free to change things
-    colorlinks,
-    linkcolor={red!50!black},
-    citecolor={blue!50!black},
-    urlcolor={blue!80!black}}
-
-
-% ===========================================
-% New commands here:
-\newcommand{\closed}[1]{\left( #1 \right)}
-\newcommand{\bracket}[1]{\left[ #1 \right]}
-\newcommand{\eps}{\epsilon}
-\renewcommand{\vec}{\mathbf}
-
-
-% ===========================================
-
-\graphicspath{{../output/plots/}}
-
+\input{preamble.tex}
 
 \begin{document}
 
@@ -58,119 +15,15 @@
 
 
 % ===========================================
-\section{Introduction}
-%
-Write scientific introduction here 
+\input{introduction.tex}
 
-\subsection*{Equations (temporary title)}
-We will consider an ideal Penning trap, where the electric field is defined by the electric potential 
-\begin{equation}
-    V(x,y,z) = \frac{V_0}{2d^2}(2z^2 - x^2 - y^2), \label{eq:penning_potential}
-\end{equation}
-where $V_0$ is the potential applied to the electrodes, $d$ is the characteristic dimension. And ... Define equation more appropriately. 
+\input{methods.tex}
 
-For a single particle, the electric field is given by the negative gradient of the potential in equation \eqref{eq:penning_potential}
-\begin{equation}
-    \vec{E} = -\nabla V = \frac{V_0}{d^2} (x,\,y,\,-2z) \label{eq:p1_E_field_pot_gradient}
-\end{equation}
+\input{results.tex}
 
-A homogeneous magnetic field is imposed in the $z$-direction 
-\begin{equation}
-    \mathbf{B}= B_0 \hat{e}_z = (0,0,B_0). \label{eq:homogeneous_B_field}
-\end{equation}
+\input{discussion.tex}
 
-The force $\mathbf{F}$ on a single particle with charge $q$, is given by the Lorentz Force 
-\begin{equation}
-    \vec{F} = q \vec{E} + q \vec{v} \cross \vec{B}. \label{eq:em_force}
-\end{equation}
-Inserting the expressions for $\vec{E}$ and computing the cross product $\vec{v}\cross \vec{B}$ the resulting Lorentz force on the particle is 
-\begin{equation} \label{eq:p1_lorentz_force_penning}
-    \begin{split}
-        \vec{F} &= \frac{q V_0}{d^2}(x,\,y,\,-2z) + q B_0 (\dot{y},\,-\dot{x},\,0) \\
-        &= \frac{m}{2}\omega_z^2 (x,\,y,\,-2z) + m \omega_0 (\dot{y},\,-\dot{x},\,0),
-    \end{split}
-\end{equation} 
-where we defined $\omega_0\equiv \frac{qB_0}{m}$ and $\omega_z^2 \equiv \frac{2qV_0}{m d^2}$. From Newton's second law, we have $\ddot{\vec{r}}=\vec{F}/m$. Dividing equation \eqref{eq:p1_lorentz_force_penning} by $m$, we get three equations of motion, one for each spatial component. These differential equations are 
-\begin{align}
-    \ddot{x} - \omega_0 \dot{y} - \frac{1}{2} \omega_z^2 x &= 0, \label{eq:p1_eom_x} \\ 
-    \ddot{y} + \omega_0 \dot{x} - \frac{1}{2} \omega_z^2 y &= 0, \label{eq:p1_eom_y} \\ 
-    \ddot{z} + \omega_z^2 z &= 0. \label{eq:p1_eom_z}
-\end{align}
-Equation \eqref{eq:p1_eom_z} has the general solution   
-\begin{equation}
-    z(t) = c_1 \cos(\omega_z t) + c_2 \sin(\omega_z t). \label{eq:p1_diffeq_solution_z}
-\end{equation}
-For this project, we will assume $q>0$. (Move this?)
-
-Equations \eqref{eq:p1_eom_x} and \eqref{eq:p1_eom_y} are coupled. We therefore introduce a complex function $f(t)=x(t)+i y(t)$. Explaining maths. 
-
-The single differential equation is therefore 
-\begin{equation}
-    \ddot{f} + i\omega_0 \dot{f} - \frac{1}{2}\omega_z^2 f = 0. \label{eq:p2_f_complex_equation}
-\end{equation}
-The general solution to equation \eqref{eq:p2_f_complex_equation} is 
-\begin{equation}
-    f(t) = A_+ e^{-i(\omega_+ t + \phi_+)} + A_- e^{-i(\omega_- t + \phi_-)}, \label{eq:p3_f_general_solution}
-\end{equation}
-where $\phi_+$ and $\phi_-$ are constant phases, $A_+$ and $A_-$ are positive amplitudes and 
-\begin{equation}
-    \omega_\pm = \frac{\omega_0 \pm \sqrt{\omega_0^2 - 2\omega_z^2}}{2}. \label{eq:p3_omega_pm}
-\end{equation}
-
-
-
-
-\begin{align}
-    \ddot{x}_i - \omega_{0,i} \dot{y}_i - \frac{1}{2}\omega_{z,i}^2 x_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{x_i - x_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_x} \\
-    \ddot{y}_i + \omega_{0,i} \dot{x}_i - \frac{1}{2}\omega_{z,i}^2 y_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{y_i - y_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_y} \\ 
-    \ddot{z}_i + \omega_{z,i}^2 z_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{z_i - z_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_z}
-\end{align}
-
-
-
-% ===========================================
-\section{Methods}\label{sec:methods}
-%
-
-% ===========================================
-\subsection*{The algorithm}
-%
-use equation~\cite{midpoint_rule}
-\begin{figure}
-% NOTE: We only need \begin{figure} ... \end{figure} here because of a compatability issue between the 'revtex4-1' document class and the 'algorithm' environment.
-    \begin{algorithm}[H]
-    \caption{Midpoint rule for integration}
-    \label{algo:midpointrule}
-        \begin{algorithmic}
-            \Procedure{Midpoint rule}{$f, a, b, n$}
-            \State $I \leftarrow 0$        \Comment{Initialize the integral variable}
-            \State $h \leftarrow (b-a)/n$  \Comment{Compute the interval length}
-            \For{$i = 1, 2, \ldots, n$}
-            \State $x \leftarrow a + (i-1/2)h$  \Comment{Assign $x$ to the midpoint}  %This means x is assigned the value x + ih/2.
-            \State $I \leftarrow I + f(x)$  \Comment{Add contribution to integral} %Assign I to I + f(x)
-            \EndFor
-            \State $I \leftarrow Ih$  \Comment{Finalize the computation}
-            \EndProcedure
-        \end{algorithmic}
-    \end{algorithm}
-\end{figure}
-
-
-% ===========================================
-\section{Results}\label{sec:results}
-%
-
-% ===========================================
-\section{Discussion}\label{sec:discussion}
-%
-
-
-
-
-% ===========================================
-\section{Conclusion}\label{sec:conclusion}
-\textit{In this section we state three things in a concise manner: what we have done, what we have found, and what should or could be done in the future.}
-
+\input{conclusion.tex}
 
 \onecolumngrid
 
