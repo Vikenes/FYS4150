@@ -15,3 +15,11 @@ double Particle::q(){
 double Particle::m(){
     return m_;
 }
+
+arma::vec Particle::r(){
+    return r_;
+}
+
+arma::vec Particle::v(){
+    return v_;
+}

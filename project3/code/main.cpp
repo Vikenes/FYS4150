@@ -17,13 +17,20 @@ double V0 = 10 * V;
 double d = std::pow(10,4);
 double Vdr = 9.65;
 
-int main(){
-    arma::vec r = arma::vec(3, arma::fill::ones) * 2;
-    arma::vec v = arma::vec(3, arma::fill::ones) * 4;
-    
-    Particle calcium(1, 20, r, v);
+int main(){    
+    Particle calcium(0, 20, arma::vec(3).randu(), arma::vec(3).randu());
+    Particle calcium_ion(1,20, arma::vec(3).randu(), arma::vec(3).randu());
 
-    std::cout << "Testing" << std::endl;
-    std::cout << "Particle mass: " << calcium.m() << std::endl;
+    std::cout << "Neutral calcium:" << std::endl;
+    std::cout << "charge: " << calcium.q() << std::endl;
+    std::cout << "mass: " << calcium.m() << std::endl;
+    std::cout << "calcium position: " << calcium.r() << std::endl;
+    std::cout << "velocity: " << calcium.v() << std::endl;
+
+    std::cout << "Singly ionised calcium:" << std::endl;
+    std::cout << "charge: " << calcium_ion.q() << std::endl;
+    std::cout << "mass: " << calcium_ion.m() << std::endl;
+    std::cout << "calcium position: " << calcium_ion.r() << std::endl;
+    std::cout << "velocity: " << calcium_ion.v() << std::endl;
     return 0;
 }
