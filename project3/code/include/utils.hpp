@@ -16,12 +16,12 @@ int write_to_file(std::vector<double> a, std::vector<double> b, std::string file
 
 //  Constans for this project in units of micrometer, microseconds, atomic mass unit and elementary charge
 
-double k_e; //  Coulomb constant
-double T;   //  Tesla
-double V;   //  Volt
-double B0;  //  Magnetic field configuration in Penning Trap
-double V0;  //  Electric potential configuration in Penning Trap
-double d;   //  Size measure of Penning Trap
-double Vdr;    //  Ratio of V0/d^2
+// double k_e; //  Coulomb constant
+// double T;   //  Tesla
+// double V;   //  Volt
+// double B0;  //  Magnetic field configuration in Penning Trap
+// double V0;  //  Electric potential configuration in Penning Trap
+// double d;   //  Size measure of Penning Trap
+// double Vdr;    //  Ratio of V0/d^2
 
 #endif

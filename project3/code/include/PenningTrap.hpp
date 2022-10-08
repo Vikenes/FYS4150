@@ -6,6 +6,7 @@
 #include <iostream>
 #include <armadillo>
 #include <assert.h>
+#include <Particle.hpp>
 
 class PenningTrap{
     // Constructor
@@ -37,3 +38,5 @@ class PenningTrap{
   // The total force on particle_i from both external fields and other particles
   arma::vec total_force(int i);
 };
+
+#endif

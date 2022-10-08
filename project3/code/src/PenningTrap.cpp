@@ -8,5 +8,5 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in){
 }
 
 void PenningTrap::add_particle(Particle p_in){
-    particles.push_bakc(p_in);
+    particles.push_back(p_in);
 }

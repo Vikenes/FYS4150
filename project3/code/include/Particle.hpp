@@ -21,9 +21,14 @@ class Particle{
 
     public:
     //  Constructor
-    Particle(int q, int m, arma::vec r, arma::vec  v);
+    Particle(double q, double m, arma::vec r, arma::vec  v);
 
-
+    //  Functions for returning member  variables. 
+    double q();
+    double m();
+    arma::vec r();
+    arma::vec v();
 };
+
 
 #endif 
