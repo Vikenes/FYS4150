@@ -47,3 +47,13 @@ int write_to_file(std::vector<double> a, std::vector<double> b, std::string file
 
     return 0;
 }
+
+//  Is it allowed to write it like this:?
+
+k_e = 1.38935333 * 10 ** 5;
+T = 9.64852558 * 10 ** 1;
+V = 9.64852558* 10 ** 7;
+B0 = 1 * T;
+V0 = 10 * V;
+d = 10 ** 4;
+Vdr = 9.65
