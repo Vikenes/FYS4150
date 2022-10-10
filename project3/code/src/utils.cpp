@@ -48,12 +48,10 @@ int write_to_file(std::vector<double> a, std::vector<double> b, std::string file
     return 0;
 }
 
-//  Is it allowed to write it like this:?
-
-// double k_e = 1.38935333 * 10 ** 5;
-// double T = 9.64852558 * 10 ** 1;
-// double V = 9.64852558* 10 ** 7;
-// double B0 = 1 * T;
-// double V0 = 10 * V;
-// double d = 10 ** 4;
-// double Vdr = 9.65;
+double k_e = 1.38935333 * std::pow(10,5);
+double T = 9.64852558 * 10;
+double V = 9.64852558 * std::pow(10,7);
+double B0 = 1 * T;
+double V0 = 10 * V;
+double d = std::pow(10,4);
+double Vdr = 9.65;
