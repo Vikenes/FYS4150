@@ -17,25 +17,43 @@
 // double d = std::pow(10,4);
 // double Vdr = 9.65;
 
+void test_single_part(double x0, double y0, double z0, 
+                     double vx0, double vy0, double vz0){
+
+    arma::vec r0 = arma::vec({x0, y0, z0});
+    arma::vec v0 = arma::vec({vx0, vy0, vz0});
+
+    Particle test = Particle(1, 20, r0, v0);
+    PenningTrap Trap = PenningTrap(B0, V0, d);
+
+    int T = 1; // simulation duration 
+    double dt = 0.05; // time step 
+
+    Trap.add_particle(test);
+
+    Trap.simulate(T, dt, "FE");
+
+}
+
 int main(){    
-    Particle calcium(0, 20, arma::vec(3).randu(), arma::vec(3).randu());
-    Particle calcium_ion(1,20, arma::vec(3).randu(), arma::vec(3).randu());
+    Particle calcium = Particle(0, 20, arma::vec(3).randu(), arma::vec(3).randu());
+    Particle calcium_ion = Particle(1,20, arma::vec(3).randu(), arma::vec(3).randu());
 
 
 
-    std::cout << "Neutral calcium:" << std::endl;
-    std::cout << "charge: " << calcium.q() << std::endl;
-    std::cout << "mass: " << calcium.m() << std::endl;
-    std::cout << "calcium position: " << calcium.r() << std::endl;
-    std::cout << "velocity: " << calcium.v() << std::endl;
+    // std::cout << "Neutral calcium:" << std::endl;
+    // std::cout << "charge: " << calcium.q() << std::endl;
+    // std::cout << "mass: " << calcium.m() << std::endl;
+    // std::cout << "calcium position: " << calcium.r() << std::endl;
+    // std::cout << "velocity: " << calcium.v() << std::endl;
 
-    std::cout << "Singly ionised calcium:" << std::endl;
-    std::cout << "charge: " << calcium_ion.q() << std::endl;
-    std::cout << "mass: " << calcium_ion.m() << std::endl;
-    std::cout << "calcium position: " << calcium_ion.r() << std::endl;
-    std::cout << "velocity: " << calcium_ion.v() << std::endl;
+    // std::cout << "Singly ionised calcium:" << std::endl;
+    // std::cout << "charge: " << calcium_ion.q() << std::endl;
+    // std::cout << "mass: " << calcium_ion.m() << std::endl;
+    // std::cout << "calcium position: " << calcium_ion.r() << std::endl;
+    // std::cout << "velocity: " << calcium_ion.v() << std::endl;
 
-
+    test_single_part(1, 0, 1, 0, 1, 0);
 
     // //  Armadillo vector testing
     // arma::vec A = arma::vec(3).fill(2.);

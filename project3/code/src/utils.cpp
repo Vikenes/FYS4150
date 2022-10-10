@@ -27,6 +27,26 @@ int write_to_file_scientific(std::vector<double> x, std::vector<double> v, std::
     return 0;
 }
 
+int write_arma_to_file_scientific(arma::vec x, arma::vec v, std::string filename, int width, int prec){
+                        
+    std::string path = "../output/data/"; // path for .txt files
+    std::string file = path + filename + ".txt";
+    std::ofstream ofile;
+
+    ofile.open(file.c_str());
+    std::cout << x << std::endl;
+
+    // int n = x.n_cols;
+    // for(int i=0; i<n; i++){
+        // ofile << scientific_format(x.col(i), width, prec) << ", "
+            //   << scientific_format(v(i), width, prec)
+            //   << std::endl;
+    // }
+
+    ofile.close();
+
+    return 0;
+}
 
 int write_to_file(std::vector<double> a, std::vector<double> b, std::string filename, int width){
                         

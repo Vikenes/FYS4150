@@ -8,6 +8,7 @@ Particle::Particle(double q, double m, arma::vec r, arma::vec v){
     v_ = v;
 }
 
+
 double Particle::q(){
     return q_;
 }
