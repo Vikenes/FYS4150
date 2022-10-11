@@ -126,6 +126,16 @@ def pt6(infiles, pdf_name="none"):
         save_push(fig, pdf_name=pdf_name, push=True, save=True)
 
 
+t, x, y, z = np.loadtxt(data_path + "test_z.txt", unpack=True, delimiter=",", skiprows=1)
+
+omega_z = np.sqrt(2*1/40 * 9.65)
+z_anal = np.cos(omega_z * t)
+
+plt.plot(t, z_anal)
+plt.plot(t, z, '--')
+plt.show()
+
+"""
 if __name__=="__main__":
 
     infiles = ["transformations_per_tridiag_N_matrix.txt", "transformations_per_dense_N_matrix.txt"]
@@ -136,3 +146,4 @@ if __name__=="__main__":
 
     infiles = ["analytical_solution_100steps.txt", "Jacobi_solution_100steps.txt"]
     pt6(infiles, "solution_100steps")
+"""
