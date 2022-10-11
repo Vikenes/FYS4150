@@ -51,10 +51,10 @@ arma::vec PenningTrap::external_B_field(arma::vec r){
 // Force on particle_i from particle_j
 arma::vec PenningTrap::force_particle(int i, int j){
     //  Detailed
-    double qi = particles[i].q();
-    double qj = particles[j].q();
-    arma::vec ri = particles[i].r();
-    arma::vec rj = particles[j].r();
+    double qi = particles[i].q_;
+    double qj = particles[j].q_;
+    arma::vec ri = particles[i].r_;
+    arma::vec rj = particles[j].r_;
     double norm = arma::norm(ri-rj);
     return k_e * qi * qj * (ri-rj) / std::pow(norm, 3);
 
@@ -65,9 +65,10 @@ arma::vec PenningTrap::force_particle(int i, int j){
 // The total force on particle_i from the external fields
 arma::vec PenningTrap::total_force_external(int i){
         //  F = qE + qv X B
-        double qi = particles[i].q();
-        arma::vec ri = particles[i].r();
-        arma::vec vi = particles[i].v();
+        double qi = particles[i].q_;
+        arma::vec ri = particles[i].r_;
+        arma::vec vi = particles[i].v_;
+
         return qi*external_E_field(ri) + qi*arma::cross(vi, external_B_field(ri));
     }
 
@@ -90,31 +91,27 @@ arma::vec PenningTrap::total_force(int i){
 
 
 void PenningTrap::simulate(double T, double dt, std::string method){
-    int Nt = int(T/dt) + 1;
-    Particle p1 = particles[0];
+    // Temporary, performs forward euler on a single particle and writes to file 
+    int Nt = int(T/dt) + 1; // Number of time steps 
+
+    Particle p1 = particles[0]; // Previous method, doesn't work... 
 
     arma::vec t = arma::linspace(0, T, Nt);
-    // std::vector<double> t(Nt);
-    // std::vector<double> Rz(Nt);
+
     arma::cube R = arma::cube(3, Nt, N).fill(0.);
     arma::cube U = arma::cube(3, Nt, N).fill(0.);
 
 
     for(int i=0; i<Nt; i++){
-        R.slice(0).rows(0,2).col(i) = p1.r_;
-        U.slice(0).rows(0,2).col(i) = p1.v_;
+        R.slice(0).rows(0,2).col(i) = particles[0].r_;
+        U.slice(0).rows(0,2).col(i) = particles[0].v_;
 
-        p1.v_ += total_force(0) * dt / p1.m_;
-        p1.r_ += p1.v_ * dt;  
-        // t[i] = i * dt;
-        // std::cout << R.slice(0).row(2).col(i) << std::endl;
+        particles[0].v_ += total_force(0) * dt / particles[0].m_;
+        particles[0].r_ += particles[0].v_ * dt;  
 
     }
-    // std::cout << R.slice(0).row(2).n_cols << std::endl;
-    arma::vec rz = R.slice(0).row(2);
-    std::cout << rz << std::endl;
-    // write_arma_to_file_scientific(rz, t, "test_z");
 
+    write_arma_to_file_scientific(R, t, "test_z");
 
 }
 

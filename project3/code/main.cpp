@@ -23,15 +23,23 @@ void test_single_part(double x0, double y0, double z0,
     arma::vec r0 = arma::vec({x0, y0, z0});
     arma::vec v0 = arma::vec({vx0, vy0, vz0});
 
-    Particle test = Particle(1, 20, r0, v0);
+    Particle test = Particle(1, 40, r0, v0);
     PenningTrap Trap = PenningTrap(B0, V0, d);
 
-    int T = 1; // simulation duration 
-    double dt = 0.05; // time step 
+    double T = 10; // simulation duration 
+    double dt = 0.01; // time step 
 
     Trap.add_particle(test);
 
+    // Check if the particle 'test' is advanced by solver. It is not... 
+    // std::cout << test.r() << std::endl;
+    // std::cout << Trap.particles[0].r() << std::endl;
+
     Trap.simulate(T, dt, "FE");
+
+    // std::cout << test.r() << std::endl;
+    // std::cout << Trap.particles[0].r() << std::endl;
+
 
 }
 
@@ -53,7 +61,7 @@ int main(){
     // std::cout << "calcium position: " << calcium_ion.r() << std::endl;
     // std::cout << "velocity: " << calcium_ion.v() << std::endl;
 
-    test_single_part(1, 0, 1, 0, 1, 0);
+    test_single_part(0.1, 0, 1, 0, 0.1, 0);
 
     // //  Armadillo vector testing
     // arma::vec A = arma::vec(3).fill(2.);

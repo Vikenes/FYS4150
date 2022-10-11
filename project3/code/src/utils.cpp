@@ -6,6 +6,11 @@ std::string scientific_format(const double d, const int width, const int prec){
     return ss.str();
 }
 
+// std::string scientific_format(double d, const int width, const int prec){
+    // std::stringstream ss;
+    // ss << std::setw(width) << std::setprecision(prec) << std::scientific << d; 
+    // return ss.str();
+// }
 
 int write_to_file_scientific(std::vector<double> x, std::vector<double> v, std::string filename, int width, int prec){
                         
@@ -27,21 +32,28 @@ int write_to_file_scientific(std::vector<double> x, std::vector<double> v, std::
     return 0;
 }
 
-int write_arma_to_file_scientific(arma::vec x, arma::vec v, std::string filename, int width, int prec){
-                        
+int write_arma_to_file_scientific(arma::cube R, arma::vec t, std::string filename, int width, int prec){
+    // Write armadillo cube to file                         
     std::string path = "../output/data/"; // path for .txt files
     std::string file = path + filename + ".txt";
     std::ofstream ofile;
 
     ofile.open(file.c_str());
-    std::cout << x << std::endl;
+    std::string header = "t, x, y, z";
+    ofile << header;
+    // std::cout << "test:" << std::endl;
 
-    // int n = x.n_cols;
-    // for(int i=0; i<n; i++){
-        // ofile << scientific_format(x.col(i), width, prec) << ", "
-            //   << scientific_format(v(i), width, prec)
-            //   << std::endl;
-    // }
+    for(int i=0; i<R.n_slices; i++){
+        // std::cout << "sl" << std::endl;
+        for(int j=0; j<R.n_cols; j++){
+            ofile << t(j);
+
+            for(int k=0; k<R.n_rows; k++){
+                ofile << ", " << scientific_format(R(k,j,i));
+            }
+            ofile << std::endl;
+        }
+    }
 
     ofile.close();
 
