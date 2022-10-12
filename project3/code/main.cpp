@@ -26,8 +26,8 @@ void test_single_part(){
     Particle test = Particle(1, 40, r0, v0);
     PenningTrap Trap = PenningTrap(B0, V0, d);
 
-    double T = 50; // simulation duration 
-    double dt = 0.01; // time step 
+    double T = 30; // simulation duration 
+    double dt = 0.001; // time step 
 
     Trap.add_particle(test);
 

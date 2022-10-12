@@ -101,6 +101,8 @@ void PenningTrap::simulate(double T, double dt, std::string method){
     arma::cube R = arma::cube(3, Nt, N).fill(0.);
     arma::cube U = arma::cube(3, Nt, N).fill(0.);
 
+    // 
+
     for(int i=0; i<N; i++){
         // Initialize all particles
         R.slice(i).rows(0,2).col(0) = particles.at(i)->r();
@@ -141,29 +143,32 @@ void PenningTrap::simulate(double T, double dt, std::string method){
         arma::mat K4v(3, N); 
 
         for(int i=0; i<Nt-1; i++){
+            
+            double dt_m = dt / particles.at(0)->m();  //  total_force(particle_no) / m * dt
+            arma::vec R0 = R.slice(0).col(i);
+            
             K1r = U.col(i) * dt;
-            K1v = total_force(0) / particles.at(0)->m() * dt;
+            K1v = total_force(0) * dt_m;
 
-            R_.col(i) += K1r/2;
-            U_.col(i) += K1v/2;
+            R_.col(i) = R.slice(0).col(i) + K1r/2;
+            U_.col(i) = U.slice(0).col(i) + K1v/2;
 
             K2r = U_.col(i) * dt;
-            K2v = total_force(0) / particles.at(0)->m() * dt;
+            K2v = total_force(0) * dt_m;
 
-            R_.col(i) += K2r/2;
-            U_.col(i) += K2v/2;
+            R_.col(i) = R.slice(0).col(i) + K2r/2;
+            U_.col(i) = U.slice(0).col(i) + K2v/2;
+
 
             K3r = U_.col(i) * dt;
-            K3v = total_force(0) / particles.at(0)->m() * dt;
+            K3v = total_force(0) * dt_m;
 
-            R_.col(i) += K3r/2;
-            U_.col(i) += K3v/2;
+            R_.col(i) = R.slice(0).col(i) + K3r/2;
+            U_.col(i) = U.slice(0).col(i) + K3v/2;
 
             K4r = U_.col(i) * dt;
-            K4v = total_force(0) / particles.at(0)->m() * dt;
+            K4v = total_force(0) * dt_m;
 
-            R_.col(i) += K4r;
-            U_.col(i) += K4v;
 
             particles.at(0)->superpose_position((K1r + 2*K2r + 2*K3r + K4r)/6);
             particles.at(0)->superpose_velocity((K1v + 2*K2v + 2*K3v + K4v)/6);
