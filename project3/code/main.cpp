@@ -17,16 +17,16 @@
 // double d = std::pow(10,4);
 // double Vdr = 9.65;
 
-void test_single_part(double x0, double y0, double z0, 
-                     double vx0, double vy0, double vz0){
+void test_single_part(){
 
-    arma::vec r0 = arma::vec({x0, y0, z0});
-    arma::vec v0 = arma::vec({vx0, vy0, vz0});
+    // Use provided initial conditions 
+    arma::vec r0 = arma::vec({20, 0, 20});
+    arma::vec v0 = arma::vec({0, 25, 0});
 
     Particle test = Particle(1, 40, r0, v0);
     PenningTrap Trap = PenningTrap(B0, V0, d);
 
-    double T = 10; // simulation duration 
+    double T = 50; // simulation duration 
     double dt = 0.01; // time step 
 
     Trap.add_particle(test);
@@ -35,7 +35,7 @@ void test_single_part(double x0, double y0, double z0,
     // std::cout << test.r() << std::endl;
     // std::cout << Trap.particles[0].r() << std::endl;
 
-    Trap.simulate(T, dt, "FE");
+    Trap.simulate(T, dt, "RK4");
 
     // std::cout << test.r() << std::endl;
     // std::cout << Trap.particles[0].r() << std::endl;
@@ -60,8 +60,7 @@ int main(){
     // std::cout << "mass: " << calcium_ion.m() << std::endl;
     // std::cout << "calcium position: " << calcium_ion.r() << std::endl;
     // std::cout << "velocity: " << calcium_ion.v() << std::endl;
-
-    test_single_part(0.1, 0, 1, 0, 0.1, 0);
+    test_single_part();
 
     // //  Armadillo vector testing
     // arma::vec A = arma::vec(3).fill(2.);

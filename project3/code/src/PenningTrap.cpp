@@ -94,24 +94,94 @@ void PenningTrap::simulate(double T, double dt, std::string method){
     // Temporary, performs forward euler on a single particle and writes to file 
     int Nt = int(T/dt) + 1; // Number of time steps 
 
-    Particle p1 = particles[0]; // Previous method, doesn't work... 
+    // Particle p1 = particles[0]; // Previous method, doesn't work... 
 
-    arma::vec t = arma::linspace(0, T, Nt);
+    std::vector<double> t (Nt, 0);
 
     arma::cube R = arma::cube(3, Nt, N).fill(0.);
     arma::cube U = arma::cube(3, Nt, N).fill(0.);
 
+    for(int i=0; i<N; i++){
+        // Initialize all particles
+        R.slice(i).rows(0,2).col(0) = particles[i].r_;
+        U.slice(i).rows(0,2).col(0) = particles[i].v_;
+    }
 
-    for(int i=0; i<Nt; i++){
-        R.slice(0).rows(0,2).col(i) = particles[0].r_;
-        U.slice(0).rows(0,2).col(i) = particles[0].v_;
 
-        particles[0].v_ += total_force(0) * dt / particles[0].m_;
-        particles[0].r_ += particles[0].v_ * dt;  
+    
+    
+    if(method=="Euler"){
+        for(int i=1; i<Nt; i++){
+    
+            // evolve_forward_Euler(dt);
+            particles[0].v_ += total_force(0) * dt / particles[0].m_;
+            particles[0].r_ += particles[0].v_ * dt;  
+            
+            R.col(i) = particles[0].r_;
+            U.col(i) = particles[0].v_;
+
+            t[i] = t[i-1] + dt;
+            }
+        }
+
+
+
+    if(method=="RK4"){
+        arma::cube R_ = R; 
+        arma::cube U_ = U;
+
+        arma::mat K1r(3, N);
+        arma::mat K2r(3, N); 
+        arma::mat K3r(3, N); 
+        arma::mat K4r(3, N); 
+
+        arma::mat K1v(3, N); 
+        arma::mat K2v(3, N); 
+        arma::mat K3v(3, N); 
+        arma::mat K4v(3, N); 
+
+        for(int i=0; i<Nt-1; i++){
+            K1r = U.col(i) * dt;
+            K1v = total_force(0) / particles[0].m_ * dt;
+
+            R_.col(i) += K1r/2;
+            U_.col(i) += K1v/2;
+
+            K2r = U_.col(i) * dt;
+            K2v = total_force(0) / particles[0].m_ * dt;
+
+            R_.col(i) += K2r/2;
+            U_.col(i) += K2v/2;
+
+            K3r = U_.col(i) * dt;
+            K3v = total_force(0) / particles[0].m_ * dt;
+
+            R_.col(i) += K3r/2;
+            U_.col(i) += K3v/2;
+
+            K4r = U_.col(i) * dt;
+            K4v = total_force(0) / particles[0].m_ * dt;
+
+            R_.col(i) += K4r;
+            U_.col(i) += K4v;
+
+
+
+            particles[0].r_ += (K1r + 2*K2r + 2*K3r + K4r)/6;
+            particles[0].v_ += (K1v + 2*K2v + 2*K3v + K4v)/6;
+
+            R.col(i+1) = particles[0].r_;
+            U.col(i+1) = particles[0].v_;
+
+            t[i+1] = t[i] + dt;
+
+        }
 
     }
 
-    write_arma_to_file_scientific(R, t, "test_z");
+    std::string fname="test_z" + method;
+
+    write_arma_to_file_scientific(R, t, fname);
 
 }
 
