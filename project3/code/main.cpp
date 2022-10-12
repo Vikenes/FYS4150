@@ -32,13 +32,13 @@ void test_single_part(double x0, double y0, double z0,
     Trap.add_particle(test);
 
     // Check if the particle 'test' is advanced by solver. It is not... 
-    // std::cout << test.r() << std::endl;
-    // std::cout << Trap.particles[0].r() << std::endl;
+    std::cout << test.r() << std::endl;
+    std::cout << Trap.particles.at(0)->r() << std::endl;
 
     Trap.simulate(T, dt, "FE");
 
-    // std::cout << test.r() << std::endl;
-    // std::cout << Trap.particles[0].r() << std::endl;
+    std::cout << test.r() << std::endl;
+    std::cout << Trap.particles.at(0)->r() << std::endl;
 
 
 }
