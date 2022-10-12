@@ -10,8 +10,6 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in){
 }
 
 std::vector<Particle*> particles;
-//particle1 = Particle(1, 40, r0, v0);
-//particles.push_back(particle1)
 
 //  Add a particle to the the trap
 void PenningTrap::add_particle(Particle &p_in){
@@ -95,10 +93,7 @@ arma::vec PenningTrap::total_force(int i){
 void PenningTrap::simulate(double T, double dt, std::string method){
     // Temporary, performs forward euler on a single particle and writes to file 
     int Nt = int(T/dt) + 1; // Number of time steps     
-    arma::vec old_r = particles.at(0)->r();//particles.at(0)->r();
     
-    //Particle p1 = particles.at(0); // Previous method, doesn't work... 
-
     arma::vec t = arma::linspace(0, T, Nt);
 
     arma::cube R = arma::cube(3, Nt, N).fill(0.);
@@ -109,8 +104,8 @@ void PenningTrap::simulate(double T, double dt, std::string method){
         R.slice(0).rows(0,2).col(i) = particles.at(0)->r();
         U.slice(0).rows(0,2).col(i) = particles.at(0)->v();
 
-        particles.at(0)->v() += total_force(0) * dt / particles.at(0)->m();
-        particles.at(0)->new_position(particles.at(0)->v() * dt);
+        particles.at(0)->superpose_velocity(total_force(0) * dt / particles.at(0)->m());
+        particles.at(0)->superpose_position(particles.at(0)->v() * dt);
         
 
     }

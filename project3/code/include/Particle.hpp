@@ -29,7 +29,8 @@ class Particle{
         arma::vec r();
         arma::vec v();
 
-        void new_position(arma::vec new_r);
+        void superpose_position(arma::vec add_r);
+        void superpose_velocity(arma::vec add_v);
 
 };
 

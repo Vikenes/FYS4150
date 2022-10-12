@@ -9,13 +9,6 @@
  *      By: Johan Mylius Kroken, Vetle Vikenes and Nanna Bryne
  */
 
-// double k_e = 1.38935333 * std::pow(10,5);
-// double T = 9.64852558 * 10;
-// double V = 9.64852558 * std::pow(10,7);
-// double B0 = 1 * T;
-// double V0 = 10 * V;
-// double d = std::pow(10,4);
-// double Vdr = 9.65;
 
 void test_single_part(double x0, double y0, double z0, 
                      double vx0, double vy0, double vz0){
@@ -31,14 +24,14 @@ void test_single_part(double x0, double y0, double z0,
 
     Trap.add_particle(test);
 
-    // Check if the particle 'test' is advanced by solver. It is not... 
-    std::cout << test.r() << std::endl;
-    std::cout << Trap.particles.at(0)->r() << std::endl;
+    // Check if the particle 'test' is advanced by solver. It is:)))
+    //std::cout << test.r() << std::endl;
+    //std::cout << Trap.particles.at(0)->r() << std::endl;
 
     Trap.simulate(T, dt, "FE");
 
-    std::cout << test.r() << std::endl;
-    std::cout << Trap.particles.at(0)->r() << std::endl;
+    //std::cout << test.r() << std::endl;
+    //std::cout << Trap.particles.at(0)->r() << std::endl;
 
 
 }
