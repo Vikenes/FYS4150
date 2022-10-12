@@ -24,3 +24,11 @@ arma::vec Particle::r(){
 arma::vec Particle::v(){
     return v_;
 }
+
+void Particle::superpose_position(arma::vec add_r){
+    r_ += add_r;
+}
+
+void Particle::superpose_velocity(arma::vec add_v){
+    v_ += add_v;
+}

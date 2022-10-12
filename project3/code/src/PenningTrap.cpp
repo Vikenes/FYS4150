@@ -9,11 +9,11 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in){
     d = d_in;
 }
 
-std::vector<Particle> particles;
+std::vector<Particle*> particles;
 
 //  Add a particle to the the trap
-void PenningTrap::add_particle(Particle p_in){
-    particles.push_back(p_in);
+void PenningTrap::add_particle(Particle &p_in){
+    particles.push_back(&p_in);
     N++;
 }
 
@@ -51,10 +51,10 @@ arma::vec PenningTrap::external_B_field(arma::vec r){
 // Force on particle_i from particle_j
 arma::vec PenningTrap::force_particle(int i, int j){
     //  Detailed
-    double qi = particles[i].q_;
-    double qj = particles[j].q_;
-    arma::vec ri = particles[i].r_;
-    arma::vec rj = particles[j].r_;
+    double qi = particles.at(i)->q();
+    double qj = particles.at(j)->q();
+    arma::vec ri = particles.at(i)->r();
+    arma::vec rj = particles.at(j)->r();
     double norm = arma::norm(ri-rj);
     return k_e * qi * qj * (ri-rj) / std::pow(norm, 3);
 
@@ -65,9 +65,9 @@ arma::vec PenningTrap::force_particle(int i, int j){
 // The total force on particle_i from the external fields
 arma::vec PenningTrap::total_force_external(int i){
         //  F = qE + qv X B
-        double qi = particles[i].q_;
-        arma::vec ri = particles[i].r_;
-        arma::vec vi = particles[i].v_;
+        double qi = particles.at(i)->q();
+        arma::vec ri = particles.at(i)->r();
+        arma::vec vi = particles.at(i)->v();
 
         return qi*external_E_field(ri) + qi*arma::cross(vi, external_B_field(ri));
     }
@@ -103,8 +103,8 @@ void PenningTrap::simulate(double T, double dt, std::string method){
 
     for(int i=0; i<N; i++){
         // Initialize all particles
-        R.slice(i).rows(0,2).col(0) = particles[i].r_;
-        U.slice(i).rows(0,2).col(0) = particles[i].v_;
+        R.slice(i).rows(0,2).col(0) = particles.at(i)->r();
+        U.slice(i).rows(0,2).col(0) = particles.at(i)->v();
     }
 
 
@@ -114,11 +114,11 @@ void PenningTrap::simulate(double T, double dt, std::string method){
         for(int i=1; i<Nt; i++){
     
             // evolve_forward_Euler(dt);
-            particles[0].v_ += total_force(0) * dt / particles[0].m_;
-            particles[0].r_ += particles[0].v_ * dt;  
+            particles.at(0)->superpose_velocity(total_force(0) * dt / particles.at(0)->m());
+            particles.at(0)->superpose_position(particles.at(0)->v() * dt);
             
-            R.col(i) = particles[0].r_;
-            U.col(i) = particles[0].v_;
+            R.col(i) = particles.at(0)->r();
+            U.col(i) = particles.at(0)->v();
 
             t[i] = t[i-1] + dt;
             }
@@ -142,36 +142,35 @@ void PenningTrap::simulate(double T, double dt, std::string method){
 
         for(int i=0; i<Nt-1; i++){
             K1r = U.col(i) * dt;
-            K1v = total_force(0) / particles[0].m_ * dt;
+            K1v = total_force(0) / particles.at(0)->m() * dt;
 
             R_.col(i) += K1r/2;
             U_.col(i) += K1v/2;
 
             K2r = U_.col(i) * dt;
-            K2v = total_force(0) / particles[0].m_ * dt;
+            K2v = total_force(0) / particles.at(0)->m() * dt;
 
             R_.col(i) += K2r/2;
             U_.col(i) += K2v/2;
 
             K3r = U_.col(i) * dt;
-            K3v = total_force(0) / particles[0].m_ * dt;
+            K3v = total_force(0) / particles.at(0)->m() * dt;
 
             R_.col(i) += K3r/2;
             U_.col(i) += K3v/2;
 
             K4r = U_.col(i) * dt;
-            K4v = total_force(0) / particles[0].m_ * dt;
+            K4v = total_force(0) / particles.at(0)->m() * dt;
 
             R_.col(i) += K4r;
             U_.col(i) += K4v;
 
+            particles.at(0)->superpose_position((K1r + 2*K2r + 2*K3r + K4r)/6);
+            particles.at(0)->superpose_velocity((K1v + 2*K2v + 2*K3v + K4v)/6);
 
 
-            particles[0].r_ += (K1r + 2*K2r + 2*K3r + K4r)/6;
-            particles[0].v_ += (K1v + 2*K2v + 2*K3v + K4v)/6;
-
-            R.col(i+1) = particles[0].r_;
-            U.col(i+1) = particles[0].v_;
+            R.col(i+1) = particles.at(0)->r();
+            U.col(i+1) = particles.at(0)->v();
 
             t[i+1] = t[i] + dt;
 

@@ -28,6 +28,10 @@ class Particle{
         double m();
         arma::vec r();
         arma::vec v();
+        
+        //  Functions for adding to position and velocity vector
+        void superpose_position(arma::vec add_r);
+        void superpose_velocity(arma::vec add_v);
 
 };
 
