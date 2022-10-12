@@ -35,7 +35,9 @@ void test_single_part(){
     // std::cout << test.r() << std::endl;
     // std::cout << Trap.particles[0].r() << std::endl;
 
-    Trap.simulate(T, dt, "RK4");
+    Trap.simulate(T, dt, "Euler");
+    // Trap.simulate(T, dt, "RK4");
+
 
     // std::cout << test.r() << std::endl;
     // std::cout << Trap.particles[0].r() << std::endl;

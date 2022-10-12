@@ -128,14 +128,15 @@ def pt6(infiles, pdf_name="none"):
 
 t, x, y, z = np.loadtxt(data_path + "test_z.txt", unpack=True, delimiter=",", skiprows=1)
 t2, x2, y2, z2 = np.loadtxt(data_path + "test_zRK4.txt", unpack=True, delimiter=",", skiprows=1)
-# print(z2);exit()
+t3, x3, y3, z3 = np.loadtxt(data_path + "test_zEuler.txt", unpack=True, delimiter=",", skiprows=1)
+
 
 omega_z = np.sqrt(2*1/40 * 9.65)
 z_anal = 20*np.cos(omega_z * t)
 
 # plt.plot(t, z_anal, lw=6, alpha=0.5)
+plt.plot(t3, z3)
 plt.plot(t, z, '--', color='red')
-plt.plot(t2, z2)
 plt.show()
 
 """
