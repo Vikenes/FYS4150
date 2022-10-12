@@ -26,8 +26,8 @@ void test_single_part(){
     Particle test = Particle(1, 40, r0, v0);
     PenningTrap Trap = PenningTrap(B0, V0, d);
 
-    double T = 30; // simulation duration 
-    double dt = 0.001; // time step 
+    double T = 50; // simulation duration 
+    double dt = 0.1; // time step 
 
     Trap.add_particle(test);
 
@@ -35,8 +35,8 @@ void test_single_part(){
     // std::cout << test.r() << std::endl;
     // std::cout << Trap.particles[0].r() << std::endl;
 
-    Trap.simulate(T, dt, "Euler");
-    // Trap.simulate(T, dt, "RK4");
+    // Trap.simulate(T, dt, "Euler");
+    Trap.simulate(T, dt, "RK4");
 
 
     // std::cout << test.r() << std::endl;

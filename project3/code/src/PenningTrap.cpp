@@ -163,8 +163,8 @@ void PenningTrap::simulate(double T, double dt, std::string method){
             K3r = U_.col(i) * dt;
             K3v = total_force(0) * dt_m;
 
-            R_.col(i) = R.slice(0).col(i) + K3r/2;
-            U_.col(i) = U.slice(0).col(i) + K3v/2;
+            R_.col(i) = R.slice(0).col(i) + K3r;
+            U_.col(i) = U.slice(0).col(i) + K3v;
 
             K4r = U_.col(i) * dt;
             K4v = total_force(0) * dt_m;
