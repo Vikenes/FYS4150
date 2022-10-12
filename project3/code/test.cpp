@@ -60,7 +60,7 @@ int main()  {
     p2_list.push_back(&p2); // Her legger vi til en peker som peker på p2
     cout << "p2: " << &p2 << " == p2_list.at(i): " << p2_list.at(0) << endl;
     p2_list.at(0)->new_position(r_new); // p2.new_position(r_new); vil gjøre det samme
-    p2.new_position(r_new);
+    //p2.new_position(r_new);
     cout << "Etter" << endl;
     p2.print(); // p2_list.at(0)->print(); vil gjøre det samme 
 
