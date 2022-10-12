@@ -16,7 +16,7 @@ std::string scientific_format(const double d, const int width=15, const int prec
 
 
 int write_to_file_scientific(std::vector<double> x, std::vector<double> v, std::string filename, int width=15, int prec=10);
-int write_arma_to_file_scientific(arma::cube R, arma::vec t, std::string filename, int width=15, int prec=10);
+int write_arma_to_file_scientific(arma::cube R, std::vector<double> t, std::string filename, int width=15, int prec=10);
 
 int write_to_file(std::vector<double> a, std::vector<double> b, std::string filename, int width=15);
 
