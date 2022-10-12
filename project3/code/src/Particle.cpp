@@ -24,3 +24,7 @@ arma::vec Particle::r(){
 arma::vec Particle::v(){
     return v_;
 }
+
+void Particle::new_position(arma::vec new_r){
+    r_ += new_r;
+}

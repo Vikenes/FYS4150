@@ -29,6 +29,8 @@ class Particle{
         arma::vec r();
         arma::vec v();
 
+        void new_position(arma::vec new_r);
+
 };
 
 

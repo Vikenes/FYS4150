@@ -9,11 +9,13 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in){
     d = d_in;
 }
 
-std::vector<Particle> particles;
+std::vector<Particle*> particles;
+//particle1 = Particle(1, 40, r0, v0);
+//particles.push_back(particle1)
 
 //  Add a particle to the the trap
-void PenningTrap::add_particle(Particle p_in){
-    particles.push_back(p_in);
+void PenningTrap::add_particle(Particle &p_in){
+    particles.push_back(&p_in);
     N++;
 }
 
@@ -51,10 +53,10 @@ arma::vec PenningTrap::external_B_field(arma::vec r){
 // Force on particle_i from particle_j
 arma::vec PenningTrap::force_particle(int i, int j){
     //  Detailed
-    double qi = particles[i].q_;
-    double qj = particles[j].q_;
-    arma::vec ri = particles[i].r_;
-    arma::vec rj = particles[j].r_;
+    double qi = particles.at(i)->q();
+    double qj = particles.at(j)->q();
+    arma::vec ri = particles.at(i)->r();
+    arma::vec rj = particles.at(j)->r();
     double norm = arma::norm(ri-rj);
     return k_e * qi * qj * (ri-rj) / std::pow(norm, 3);
 
@@ -65,9 +67,9 @@ arma::vec PenningTrap::force_particle(int i, int j){
 // The total force on particle_i from the external fields
 arma::vec PenningTrap::total_force_external(int i){
         //  F = qE + qv X B
-        double qi = particles[i].q_;
-        arma::vec ri = particles[i].r_;
-        arma::vec vi = particles[i].v_;
+        double qi = particles.at(i)->q();
+        arma::vec ri = particles.at(i)->r();
+        arma::vec vi = particles.at(i)->v();
 
         return qi*external_E_field(ri) + qi*arma::cross(vi, external_B_field(ri));
     }
@@ -92,9 +94,10 @@ arma::vec PenningTrap::total_force(int i){
 
 void PenningTrap::simulate(double T, double dt, std::string method){
     // Temporary, performs forward euler on a single particle and writes to file 
-    int Nt = int(T/dt) + 1; // Number of time steps 
-
-    Particle p1 = particles[0]; // Previous method, doesn't work... 
+    int Nt = int(T/dt) + 1; // Number of time steps     
+    arma::vec old_r = particles.at(0)->r();//particles.at(0)->r();
+    
+    //Particle p1 = particles.at(0); // Previous method, doesn't work... 
 
     arma::vec t = arma::linspace(0, T, Nt);
 
@@ -103,11 +106,12 @@ void PenningTrap::simulate(double T, double dt, std::string method){
 
 
     for(int i=0; i<Nt; i++){
-        R.slice(0).rows(0,2).col(i) = particles[0].r_;
-        U.slice(0).rows(0,2).col(i) = particles[0].v_;
+        R.slice(0).rows(0,2).col(i) = particles.at(0)->r();
+        U.slice(0).rows(0,2).col(i) = particles.at(0)->v();
 
-        particles[0].v_ += total_force(0) * dt / particles[0].m_;
-        particles[0].r_ += particles[0].v_ * dt;  
+        particles.at(0)->v() += total_force(0) * dt / particles.at(0)->m();
+        particles.at(0)->new_position(particles.at(0)->v() * dt);
+        
 
     }
 

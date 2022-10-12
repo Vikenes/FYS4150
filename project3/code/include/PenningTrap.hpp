@@ -20,11 +20,11 @@ class PenningTrap{
 
     int N=0; // Number of particles
 
-    std::vector<Particle> particles;    //  Vector to contain all the particle objects. 
+    std::vector<Particle*> particles;    //  Vector to contain all the particle objects. 
 
 
     // Add a particle to the trap
-    void add_particle(Particle p_in);
+    void add_particle(Particle &p_in);
 
     // External electric field at point r=(x,y,z)
     arma::vec external_E_field(arma::vec r);  
