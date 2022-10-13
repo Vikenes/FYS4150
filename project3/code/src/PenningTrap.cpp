@@ -119,17 +119,16 @@ void PenningTrap::simulate(double T, double dt, std::string method){
     
     if(method=="Euler"){
 
+        arma::vec dv(3);
         for(int i=1; i<Nt; i++){
-            arma::vec r_ = R.slice(0).col(i-1);
-            // arma::vec u_ = U.slice(0).col(i-1);
-    
-            // evolve_forward_Euler(dt);
-            particles.at(0)->superpose_velocity(total_force(0, r_) * dt / particles.at(0)->m());
+
+            dv = total_force(0, R.slice(0).col(i-1)) * dt / particles.at(0) -> m(); 
+
+            particles.at(0)->superpose_velocity(dv);
             particles.at(0)->superpose_position(particles.at(0)->v() * dt);
             
             R.slice(0).rows(0,2).col(i) = particles.at(0)->r();
             R.slice(0).rows(3,5).col(i) = particles.at(0)->v();
-            // U.col(i) = particles.at(0)->v();
 
             t[i] = t[i-1] + dt;
             }
