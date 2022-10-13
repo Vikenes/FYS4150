@@ -66,8 +66,6 @@ arma::vec PenningTrap::force_particle(int i, int j){
 arma::vec PenningTrap::total_force_external(int i, arma::vec ri){
         //  F = qE + qv X B
         double qi = particles.at(i)->q();
-        // arma::vec ri = particles.at(i)->r();
-        // arma::vec vi = particles.at(i)->v();
 
         return qi*external_E_field(ri.rows(0,2)) + qi*arma::cross(ri.rows(3,5), external_B_field(ri.rows(0,2)));
     }
@@ -99,11 +97,16 @@ arma::vec PenningTrap::RK4_K_val(int i, arma::vec ri){
 
 void PenningTrap::simulate(double T, double dt, std::string method){
     // Temporary, performs forward euler on a single particle and writes to file 
+
     int Nt = int(T/dt) + 1; // Number of time steps 
-
-    // Particle p1 = particles[0]; // Previous method, doesn't work... 
-
     std::vector<double> t (Nt, 0);
+
+    /* R cube:
+     * rows (0,2): particle position x,y,z
+     * rows (3,5): particle velocities vx,vy,vz
+     * Nt columns: phase coordinates at each timestep
+     * N slices: One slice corresponds to one particle     
+    */ 
 
     arma::cube R = arma::cube(6, Nt, N).fill(0.);
 
@@ -174,7 +177,7 @@ void PenningTrap::simulate(double T, double dt, std::string method){
 
     }
 
-    std::string fname="test_z" + method;
+    std::string fname = method + "_N" + std::to_string(N);
 
     write_arma_to_file_scientific(R, t, fname);
 

@@ -78,8 +78,8 @@ def set_ax_info(ax, xlabel, ylabel, style='plain', title=None, legend=True):
 
 
 def test_single_particle():
-    Euler = np.loadtxt(data_path + "test_zEuler.txt", unpack=True, delimiter=",", skiprows=1)
-    RK4   = np.loadtxt(data_path + "test_zRK4.txt", unpack=True, delimiter=",", skiprows=1)
+    Euler = np.loadtxt(data_path + "Euler_N1.txt", unpack=True, delimiter=",", skiprows=1)
+    RK4   = np.loadtxt(data_path + "RK4_N1.txt", unpack=True, delimiter=",", skiprows=1)
 
     t = Euler[0]
     zE = Euler[3]
