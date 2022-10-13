@@ -17,7 +17,7 @@
 // double d = std::pow(10,4);
 // double Vdr = 9.65;
 
-void test_single_part(){
+void test_single_part(double T, double dt){
 
     // Use provided initial conditions 
     arma::vec r0 = arma::vec({20, 0, 20});
@@ -26,24 +26,26 @@ void test_single_part(){
     Particle test = Particle(1, 40, r0, v0);
     PenningTrap Trap = PenningTrap(B0, V0, d);
 
-    double T = 50; // simulation duration 
-    double dt = 0.1; // time step 
+    // double T = 50; // simulation duration 
+    // double dt = 0.1; // time step 
 
     Trap.add_particle(test);
-
-    // Check if the particle 'test' is advanced by solver. It is not... 
-    // std::cout << test.r() << std::endl;
-    // std::cout << Trap.particles[0].r() << std::endl;
-
-    // Trap.simulate(T, dt, "Euler");
     Trap.simulate(T, dt, "RK4");
 
-
-    // std::cout << test.r() << std::endl;
-    // std::cout << Trap.particles[0].r() << std::endl;
-
-
 }
+
+void test_two_particles(){
+
+    PenningTrap Trap = PenningTrap(B0,V0,d);
+
+    Particle p1 = Particle(1, 40, arma::vec({20,0,20}), arma::vec({0,25,0}));
+    Particle p2 = Particle(1, 40, arma::vec({25,25,0}), arma::vec({0,40,5}));
+    Trap.add_particle(p1);
+    Trap.add_particle(p2);
+
+    
+}
+
 
 int main(){    
     Particle calcium = Particle(0, 20, arma::vec(3).randu(), arma::vec(3).randu());
@@ -62,7 +64,7 @@ int main(){
     // std::cout << "mass: " << calcium_ion.m() << std::endl;
     // std::cout << "calcium position: " << calcium_ion.r() << std::endl;
     // std::cout << "velocity: " << calcium_ion.v() << std::endl;
-    test_single_part();
+    test_single_part(50, 0.1);
 
     // //  Armadillo vector testing
     // arma::vec A = arma::vec(3).fill(2.);

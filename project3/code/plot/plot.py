@@ -128,7 +128,7 @@ def pt6(infiles, pdf_name="none"):
 
 t, x, y, z = np.loadtxt(data_path + "test_zEuler_vetle.txt", unpack=True, delimiter=",", skiprows=1)
 t2, x2, y2, z2 = np.loadtxt(data_path + "test_zRK4_vetle.txt", unpack=True, delimiter=",", skiprows=1)
-# t3, x3, y3, z3 = np.loadtxt(data_path + "test_zEuler_vetle.txt", unpack=True, delimiter=",", skiprows=1)
+t3, x3, y3, z3 = np.loadtxt(data_path + "test_zRK4_vetle_3.txt", unpack=True, delimiter=",", skiprows=1)[0:4]
 
 
 omega_z = np.sqrt(2*1/40 * 9.65)
@@ -136,13 +136,14 @@ z_anal = 20*np.cos(omega_z * t)
 
 
 plt.plot(t, z_anal, lw=6, alpha=0.5)
-plt.plot(t, z, '--', color='red', label='Euler')
-plt.plot(t, z2, ':', color='blue', label='RK4')
+# plt.plot(t, z, '--', color='red', label='Euler')
+plt.plot(t, z2, '--', color='blue', label='RK4')
+plt.plot(t, z3, ':', color='blue', label='RK4 new')
 plt.legend()
 plt.show()
 
 
-plt.plot(t, np.abs(z_anal - z), '--', color='red', label='Euler')
+plt.plot(t, np.abs(z_anal - z3), '--', color='red', label='Euler new')
 plt.plot(t, np.abs(z_anal - z2), ':', color='blue', label='RK4')
 plt.legend()
 plt.show()
