@@ -81,6 +81,8 @@ def test_single_particle():
     Euler = np.loadtxt(data_path + "Euler_N1.txt", unpack=True, delimiter=",", skiprows=1)
     RK4   = np.loadtxt(data_path + "RK4_N1.txt", unpack=True, delimiter=",", skiprows=1)
 
+    
+
     t = Euler[0]
     zE = Euler[3]
     zR = RK4[3]
@@ -101,7 +103,45 @@ def test_single_particle():
     plt.legend()
     plt.show()
 
+def test_double_particle():
+    Euler = np.loadtxt(data_path + "Euler_N2.txt", unpack=True, delimiter=",", skiprows=1)
+    RK4   = np.loadtxt(data_path + "RK4_N2.txt", unpack=True, delimiter=",", skiprows=1)
+
+
+    Nt = int(len(Euler[0])/2)
+    t = Euler[0,:Nt]
+    rE = np.zeros((Nt,3,2))
+    rE[:,:,0] = Euler[1:4, :Nt].T
+    rE[:,:,1] = Euler[1:4, Nt:].T
+    rR = np.zeros((Nt,3,2))
+    rR[:,:,0] = RK4[1:4, :Nt].T
+    rR[:,:,1] = RK4[1:4, Nt:].T
+
+    vE = np.zeros((Nt,3,2))
+    vE[:,:,0] = Euler[4:7, :Nt].T
+    vE[:,:,1] = Euler[4:7, Nt:].T
+    vR = np.zeros((Nt,3,2))
+    vR[:,:,0] = RK4[4:7, :Nt].T
+    vR[:,:,1] = RK4[4:7, Nt:].T
+
+
+    fig, axes = plt.subplots(ncols=2)
+    ax1, ax2 = axes.flat
+
+    ax1.plot(rE[:,0], vE[:,0], color='red', label='Euler', alpha=.6)
+    ax1.plot(rR[:,0], vR[:,0], color='blue', label='RK4')
+    ax1.set_xlabel(r'$x$')
+    ax1.set_ylabel(r'$v_x$')
+
+    ax2.plot(rE[:,2], vE[:,2], color='red', label='Euler', alpha=.6)
+    ax2.plot(rR[:,2], vR[:,2], color='blue', label='RK4')
+    ax2.set_xlabel(r'$z$')
+    ax2.set_ylabel(r'$v_z$')
+
+
+    plt.show()
+
 
 if __name__=="__main__":
 
-    test_single_particle()
+    test_double_particle()

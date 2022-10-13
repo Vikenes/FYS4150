@@ -24,16 +24,16 @@ void test_single_part(double T, double dt, std::string method){
 
 }
 
-void test_two_particles(){
+void test_two_particles(double T, double dt, std::string method){
 
-    PenningTrap Trap = PenningTrap(B0,V0,d);
+    PenningTrap Trap = PenningTrap(B0,V0,d,true);
 
     Particle p1 = Particle(1, 40, arma::vec({20,0,20}), arma::vec({0,25,0}));
     Particle p2 = Particle(1, 40, arma::vec({25,25,0}), arma::vec({0,40,5}));
     Trap.add_particle(p1);
     Trap.add_particle(p2);
+    Trap.simulate(T, dt, method);
 
-    
 }
 
 
@@ -41,8 +41,12 @@ int main(){
     Particle calcium = Particle(0, 20, arma::vec(3).randu(), arma::vec(3).randu());
     Particle calcium_ion = Particle(1,20, arma::vec(3).randu(), arma::vec(3).randu());
 
-    test_single_part(50, 0.1, "Euler");
-    test_single_part(50, 0.1, "RK4");
+    //test_single_part(50, 0.1, "Euler");
+    //test_single_part(50, 0.1, "RK4");
+    test_two_particles(50, 0.01, "Euler");
+    test_two_particles(50, 0.01, "RK4");
+
+
 
     return 0;
 }

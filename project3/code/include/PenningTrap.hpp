@@ -13,10 +13,11 @@ class PenningTrap{
     double B0;    //  Magnetic field strength
     double V0;    //  Applied potential
     double d;     //  Characteristic dimension
+    bool interactions; // whether to include (true) interactions between particles or not (false)
 
   public:
     // Constructor
-    PenningTrap(double B0_in, double V0_in, double d_in);
+    PenningTrap(double B0_in, double V0_in, double d_in, bool interactions_in=true);
 
     int N=0; // Number of particles
 
@@ -25,6 +26,9 @@ class PenningTrap{
 
     // Add a particle to the trap
     void add_particle(Particle &p_in);
+
+    // Turn on/off interactions
+    //void set_interactions(bool interactions_in);
 
     // External electric field at point r=(x,y,z)
     arma::vec external_E_field(arma::vec r);  
