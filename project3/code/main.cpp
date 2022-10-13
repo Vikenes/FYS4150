@@ -17,7 +17,7 @@
 // double d = std::pow(10,4);
 // double Vdr = 9.65;
 
-void test_single_part(double T, double dt){
+void test_single_part(double T, double dt, std::string method){
 
     // Use provided initial conditions 
     arma::vec r0 = arma::vec({20, 0, 20});
@@ -30,7 +30,7 @@ void test_single_part(double T, double dt){
     // double dt = 0.1; // time step 
 
     Trap.add_particle(test);
-    Trap.simulate(T, dt, "RK4");
+    Trap.simulate(T, dt, method);
 
 }
 
@@ -64,7 +64,9 @@ int main(){
     // std::cout << "mass: " << calcium_ion.m() << std::endl;
     // std::cout << "calcium position: " << calcium_ion.r() << std::endl;
     // std::cout << "velocity: " << calcium_ion.v() << std::endl;
-    test_single_part(50, 0.1);
+    test_single_part(50, 0.1, "Euler");
+    test_single_part(50, 0.1, "RK4");
+
 
     // //  Armadillo vector testing
     // arma::vec A = arma::vec(3).fill(2.);

@@ -76,87 +76,32 @@ def set_ax_info(ax, xlabel, ylabel, style='plain', title=None, legend=True):
     if legend:
         ax.legend(fontsize=15)
 
-def pt5(infiles, pdf_name="none"):
-    N_t, M_t = np.loadtxt(data_path + infiles[0], unpack=True, delimiter=",")
-    N_d, M_d = np.loadtxt(data_path + infiles[1], unpack=True, delimiter=",")
-    fig, ax = plt.subplots()
-    ax.plot(N_t, M_t, 'o', markersize=5, color="b", label=r"tridiagonal matrix $A$")
-    ax.plot(N_d[::5], M_d[::5], '^', markersize=9, color="r", label=r"dense matrix $A^*$")
-    title = r"Jacobi rotation method comparison"
-    xlabel = r"$N$"
-    ylabel = r"$M$"
-    set_ax_info(ax, xlabel, ylabel, title=title, legend=True)
-    # Option to save, push and show resulting plot
-    if pdf_name=="none":
-        plt.show()
-    else:
-        save_push(fig, pdf_name=pdf_name, push=True, save=True)
+
+def test_single_particle():
+    Euler = np.loadtxt(data_path + "test_zEuler.txt", unpack=True, delimiter=",", skiprows=1)
+    RK4   = np.loadtxt(data_path + "test_zRK4.txt", unpack=True, delimiter=",", skiprows=1)
+
+    t = Euler[0]
+    zE = Euler[3]
+    zR = RK4[3]
+
+    omega_z = np.sqrt(2*1/40 * 9.65)
+    z_anal = 20*np.cos(omega_z * t)
 
 
-def pt6(infiles, pdf_name="none"):
-    # infiles: (analytic), (Jacobi)
-    xhat, v1, v2, v3 = np.loadtxt(data_path + infiles[0], unpack=True, delimiter=",")
-    v_a = [v1, v2, v3]
-    xhat, v1, v2, v3 = np.loadtxt(data_path + infiles[1], unpack=True, delimiter=",")
-    v_J = [v1, v2, v3]
-    
-    c = ["b", "r", "g"]
-    fig, ax = plt.subplots()
+    plt.plot(t, z_anal, lw=10, alpha=0.3, color='green', label='analytical')
+    plt.plot(t, zE, lw=2, color='red', label='Euler')
+    plt.plot(t, zR, '--', color='blue', label='RK4')
+    plt.legend()
+    plt.show()
 
-    n = len(xhat)-1
-    ms = 25 * n**(-1/3)
-    lw = 1.8
-    for i, vi in enumerate(v_J):
-        ax.plot(xhat, vi, 'o-', lw=lw, markersize=ms, color=c[i], label=r"$\mathbf{v}^{(%i)}$"%(i+1))
-
-    for i, vi in enumerate(v_a):
-        ax.plot(xhat, vi, 'o--', lw=lw/2, markersize=ms/2, color='white')
-
-    
-    ax.plot(xhat[0]-xhat[-1], 0, 'o-', lw=0.5, markersize=ms/2, color='white', label='analytic')
-    ax.set_xlim(xhat[0], xhat[-1])  
-    title = r"First three eigenvectors ($n=%i$)"%(n)
-    xlabel = r"$\hat{x}$"
-    ylabel = r"$v(\hat{x})$"
-    set_ax_info(ax, xlabel, ylabel, title=title, legend=True)
-    # Option to save, push and show resulting plot
-    if pdf_name=="none":
-        plt.show()
-    else:
-        save_push(fig, pdf_name=pdf_name, push=True, save=True)
+    plt.title('abs difference')
+    plt.plot(t, np.abs(z_anal - zE), '--', color='red', label='Euler')
+    plt.plot(t, np.abs(z_anal - zR), ':', color='blue', label='RK4')
+    plt.legend()
+    plt.show()
 
 
-t, x, y, z = np.loadtxt(data_path + "test_zEuler_vetle.txt", unpack=True, delimiter=",", skiprows=1)
-t2, x2, y2, z2 = np.loadtxt(data_path + "test_zRK4_vetle.txt", unpack=True, delimiter=",", skiprows=1)
-t3, x3, y3, z3 = np.loadtxt(data_path + "test_zRK4_vetle_3.txt", unpack=True, delimiter=",", skiprows=1)[0:4]
-
-
-omega_z = np.sqrt(2*1/40 * 9.65)
-z_anal = 20*np.cos(omega_z * t)
-
-
-plt.plot(t, z_anal, lw=6, alpha=0.5)
-# plt.plot(t, z, '--', color='red', label='Euler')
-plt.plot(t, z2, '--', color='blue', label='RK4')
-plt.plot(t, z3, ':', color='blue', label='RK4 new')
-plt.legend()
-plt.show()
-
-
-plt.plot(t, np.abs(z_anal - z3), '--', color='red', label='Euler new')
-plt.plot(t, np.abs(z_anal - z2), ':', color='blue', label='RK4')
-plt.legend()
-plt.show()
-
-"""
 if __name__=="__main__":
 
-    infiles = ["transformations_per_tridiag_N_matrix.txt", "transformations_per_dense_N_matrix.txt"]
-    pt5(infiles, "jacobi_comparison")
-
-    infiles = ["analytical_solution_10steps.txt", "Jacobi_solution_10steps.txt"]
-    pt6(infiles, "solution_10steps")
-
-    infiles = ["analytical_solution_100steps.txt", "Jacobi_solution_100steps.txt"]
-    pt6(infiles, "solution_100steps")
-"""
+    test_single_particle()

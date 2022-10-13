@@ -39,7 +39,7 @@ int write_arma_to_file_scientific(arma::cube R, std::vector<double> t, std::stri
     std::ofstream ofile;
 
     ofile.open(file.c_str());
-    std::string header = "t, x, y, z";
+    std::string header = "t, x, y, z, vx, vy, vz";
     ofile << header;
     // std::cout << "test:" << std::endl;
 

@@ -174,7 +174,7 @@ void PenningTrap::simulate(double T, double dt, std::string method){
 
     }
 
-    std::string fname="test_z" + method + "_vetle_3";
+    std::string fname="test_z" + method;
 
     write_arma_to_file_scientific(R, t, fname);
 
