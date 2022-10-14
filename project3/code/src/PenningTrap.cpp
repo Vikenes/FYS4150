@@ -50,17 +50,15 @@ arma::vec PenningTrap::external_B_field(arma::vec r){
 
 
 // Force on particle_i from particle_j
-arma::vec PenningTrap::force_particle(int i, int j){
+arma::vec PenningTrap::force_particle(int i, int j, arma::vec ri, arma::vec rj){
     //  Detailed
     double qi = particles.at(i)->q();
     double qj = particles.at(j)->q();
-    arma::vec ri = particles.at(i)->r();
-    arma::vec rj = particles.at(j)->r();
     double norm = arma::norm(ri-rj);
     return k_e * qi * qj * (ri-rj) / std::pow(norm, 3);
 
     //  Memory effecient
-    // return k_e * particles[i].q() * particles[j].q() * (particles[i].r() - particles[j].r()) / std::pow(arma::norm(particles[i].r() - particles[j].r()), 3);
+    // return k_e * particles[i].q() * particles[j].q() * (particl es[i].r() - particles[j].r()) / std::pow(arma::norm(particles[i].r() - particles[j].r()), 3);
   }
 
 // The total force on particle_i from the external fields
@@ -72,32 +70,32 @@ arma::vec PenningTrap::total_force_external(int i, arma::vec ri){
     }
 
 // The total force on particle_i from the other particles
-arma::vec PenningTrap::total_force_particles(int i){
+arma::vec PenningTrap::total_force_particles(int i, arma::cube Rk){
     // Perhaps include some length tests or something. 
     arma::vec particle_force = arma::vec(3).fill(0.);
     for(int j=0; j<N; j++){
         if(j!=i){
-            particle_force += force_particle(i,j);
+            particle_force += force_particle(i, j, Rk.slice(i).col(0).rows(0,2), Rk.slice(j).col(0).rows(0,2));
         }
     }
     return particle_force;
 }
 
 // The total force on particle_i from both external fields and other particles
-arma::vec PenningTrap::total_force(int i, arma::vec ri){
+arma::vec PenningTrap::total_force(int i, arma::cube Rk){
     if(interactions){
-        return total_force_external(i, ri) + total_force_particles(i);
+        return total_force_external(i, Rk.slice(i).col(0)) + total_force_particles(i, Rk);
     }
     else{
-        return total_force_external(i, ri);
+        return total_force_external(i, Rk.slice(i).col(0));
     }
 }
 
 
-arma::vec PenningTrap::RK4_K_val(int i, arma::vec ri){
+arma::vec PenningTrap::RK4_K_val(int i, arma::cube Rk){
     arma::vec K(6);
-    K.rows(0,2) = ri.rows(3,5);
-    K.rows(3,5) = total_force(i, ri) / particles.at(i)->m();
+    K.rows(0,2) = Rk.slice(i).rows(3,5);
+    K.rows(3,5) = total_force(i, Rk) / particles.at(i)->m();
     return K;
 }
 
@@ -118,12 +116,11 @@ void PenningTrap::simulate(double T, double dt, std::string method){
 
 
     for(int i=0; i<N; i++){
-        // Initialize all particles
+        // Initialise all particles
         R.slice(i).rows(0,2).col(0) = particles.at(i)->r();
         R.slice(i).rows(3,5).col(0) = particles.at(i)->v();
+
     }
-
-
     
     
     if(method=="Euler"){
@@ -131,17 +128,19 @@ void PenningTrap::simulate(double T, double dt, std::string method){
         for(int k=0; k<Nt-1; k++){
             // time loop
             arma::cube dR(6, 1, N);
+            arma::cube Rk(6,1,N);
+            Rk.col(0) = R.col(k);
+
             for(int i=0; i<N; i++){
                 // particle loop
-                
-                dR.slice(i).rows(3,5) = total_force(i, R.slice(i).col(k)) * dt / particles.at(i) -> m(); 
-                particles.at(i) -> superpose_velocity(dR.slice(i).rows(3,5));
-
-                dR.slice(i).rows(0,2) = particles.at(i) -> v() * dt;
-                particles.at(i) -> superpose_position(dR.slice(i).rows(0,2));
+                dR.slice(i).rows(3,5) = total_force(i, Rk) * dt / particles.at(i) -> m(); 
+                dR.slice(i).rows(0,2) = (Rk.slice(i).rows(3,5) + dR.slice(i).rows(3,5)) * dt;
             }
             R.col(k+1) = R.col(k) + dR;
-            
+            for(int i=0; i<N; i++){
+                particles.at(i) -> superpose_position(dR.slice(i).rows(0,2));
+                particles.at(i) -> superpose_velocity(dR.slice(i).rows(3,5));
+            }
             t[k+1] = t[k] + dt;
             }
         }
@@ -153,23 +152,30 @@ void PenningTrap::simulate(double T, double dt, std::string method){
         for(int k=0; k<Nt-1; k++){
             // time loop
             arma::cube dR(6, 1, N);
+            arma::cube K1(6, 1, N);
+            arma::cube K2(6, 1, N);
+            arma::cube K3(6, 1, N);
+            arma::cube K4(6, 1, N);
+
+            arma::cube Rk(6,1,N);
+            Rk.col(0) = R.col(k);
 
             for(int i=0; i<N; i++){
                 // find dR for all particles
-                arma::vec R_ik = R.slice(i).col(k);
-
-                arma::vec K1(6);
-                arma::vec K2(6); 
-                arma::vec K3(6); 
-                arma::vec K4(6); 
-
-                K1 = RK4_K_val(i, R_ik) * dt;
-                K2 = RK4_K_val(i, R_ik + K1/2) * dt;
-                K3 = RK4_K_val(i, R_ik + K2/2) * dt;
-                K4 = RK4_K_val(i, R_ik + K3) * dt;
-
-                dR.slice(i).col(0) = (K1 + 2*K2 + 2*K3 + K4)/6;
+                K1.slice(i).col(0) = RK4_K_val(i, Rk) * dt;
             }
+            for(int i=0; i<N; i++){
+                K2.slice(i).col(0) = RK4_K_val(i, Rk + K1/2) * dt;
+            }
+            for(int i=0; i<N; i++){
+                K3.slice(i).col(0) = RK4_K_val(i, Rk + K2/2) * dt;
+            }
+            for(int i=0; i<N; i++){
+                K4.slice(i).col(0) = RK4_K_val(i, Rk + K3) * dt;
+            }
+
+            dR.col(0) = (K1 + 2*K2 + 2*K3 + K4)/6;
+            
             // update position and velocity vectors
             R.col(k+1) = R.col(k) + dR;
 
