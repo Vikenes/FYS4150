@@ -3,26 +3,94 @@
 
 % ===========================================
 \subsection*{The algorithm}
-%
-use equation~\cite{midpoint_rule}
+
+
+% Started drafting:
+% Kinda lost track of what i am trying to do
+
 \begin{figure}
-% NOTE: We only need \begin{figure} ... \end{figure} here because of a compatability issue between the 'revtex4-1' document class and the 'algorithm' environment.
     \begin{algorithm}[H]
-    \caption{Midpoint rule for integration}
-    \label{algo:midpointrule}
+    \scriptsize
+    \caption{Forward Euler (FE)}
+    \label{algo:FE}
         \begin{algorithmic}
-            \Procedure{Midpoint rule}{$f, a, b, n$}
-            \State $I \leftarrow 0$        \Comment{Initialize the integral variable}
-            \State $h \leftarrow (b-a)/n$  \Comment{Compute the interval length}
-            \For{$i = 1, 2, \ldots, n$}
-            \State $x \leftarrow a + (i-1/2)h$  \Comment{Assign $x$ to the midpoint}  %This means x is assigned the value x + ih/2.
-            \State $I \leftarrow I + f(x)$  \Comment{Add contribution to integral} %Assign I to I + f(x)
+            %\Procedure{FE differentiation}{$f, a, b, n$}
+            \State $U_0 \leftarrow \dots$        \Comment{Initialise velocities in cube} % matrix of row vectors v_0
+            \State $R_0 \leftarrow \dots$        \Comment{Initialise positions in cube}
+            \State $h \leftarrow (t_n-t_0)/n$  \Comment{Compute the time step length}
+            \For{$i = 0, 1, \ldots, n-1$}
+            \For{each particle}
+            \State $\vec{v} \leftarrow U_{i,\text{particle}}$
+            \State $\vec{r} \leftarrow R_{i,\text{particle}}$
+            \State $\text{d}U_{i, \text{particle}} \leftarrow h \vec{F}(\vec{r}, \vec{v})/m$
+            \State $\text{d}R_{i, \text{particle}} \leftarrow h (\vec{v} + \text{d}U_{i, \text{particle}})$ 
             \EndFor
-            \State $I \leftarrow Ih$  \Comment{Finalize the computation}
-            \EndProcedure
+
+            \State $U_{i+1} \leftarrow U_{i} + \text{d}U_{i}$ \Comment{Update velocities}
+            \State $R_{i+1} \leftarrow R_{i} + \text{d}R_{i}$ \Comment{Update positions}
+            \EndFor
+            %\EndProcedure
         \end{algorithmic}
     \end{algorithm}
 \end{figure}
+
+\begin{figure}
+    \begin{algorithm}[H]
+    \scriptsize
+    \caption{4$^\text{th}$ order Runge-Kutta (RK4)}
+    \label{algo:RK4}
+        \begin{algorithmic}
+            %\Procedure{RK4 differentiation}{$\vec{F}, t_n, t_0, n$}
+            \State $U_0 \leftarrow \dots$        \Comment{Initialise velocities in cube} % matrix of row vectors v_0
+            \State $R_0 \leftarrow \dots$        \Comment{Initialise positions in cube}
+            \State $h \leftarrow (t_n-t_0)/n$  \Comment{Compute the time step length}
+            \For{$i = 0, 1, \ldots, n-1$}
+            \For{each particle}
+            \State $\vec{v} \leftarrow U_{i,\text{particle}}$
+            \State $\vec{r} \leftarrow R_{i,\text{particle}}$
+            \State $\vec{k}_{\vec{v},1} \leftarrow h \vec{F}(\vec{r}, \vec{v})/m$ \Comment{...}
+            \State $\vec{k}_{\vec{r},1} \leftarrow h \vec{v}$
+            \State $\vec{k}_{\vec{v},2} \leftarrow h \vec{F}(\vec{r}+1/2\vec{k}_{\vec{r},1}, \vec{v}+1/2\vec{k}_{\vec{v},1})/m$ \Comment{...}
+            \State $\vec{k}_{\vec{r},2} \leftarrow h \vec{v}+1/2\vec{k}_{\vec{v},1}$ 
+            \State $\vec{k}_{\vec{v},3} \leftarrow h \vec{F}(\vec{r}+1/2\vec{k}_{\vec{r},2}, \vec{v}+1/2\vec{k}_{\vec{v},2})/m$ \Comment{...}
+            \State $\vec{k}_{\vec{r},3} \leftarrow h \vec{v}+1/2\vec{k}_{\vec{v},2}$ 
+            \State $\vec{k}_{\vec{v},4} \leftarrow h \vec{F}(\vec{r}+\vec{k}_{\vec{r},3}, \vec{v}+\vec{k}_{\vec{v},3})/m$ \Comment{...}
+            \State $\vec{k}_{\vec{r},4} \leftarrow h \vec{v}+\vec{k}_{\vec{v},3}$ 
+            \
+            \State $\text{d}U_{i, \text{particle}} \leftarrow (\vec{k}_{\vec{v},1} + 2\vec{k}_{\vec{v},2} + 2\vec{k}_{\vec{v},3} + \vec{k}_{\vec{v},4})/6$
+            \State $\text{d}R_{i, \text{particle}} \leftarrow (\vec{k}_{\vec{r},1} + 2\vec{k}_{\vec{r},2} + 2\vec{k}_{\vec{r},3} + \vec{k}_{\vec{r},4})/6$
+            \EndFor
+
+            \State $U_{i+1} \leftarrow U_{i} + \text{d}U_{i}$ \Comment{Update velocities}
+            \State $R_{i+1} \leftarrow R_{i} + \text{d}R_{i}$ \Comment{Update positions}
+            \EndFor
+            \State $...$  \Comment{...}
+            %\EndProcedure
+        \end{algorithmic}
+    \end{algorithm}
+\end{figure}
+    
+
+%
+%use equation~\cite{midpoint_rule}
+%\begin{figure}
+%% NOTE: We only need \begin{figure} ... \end{figure} here because of a compatability issue between the 'revtex4-1' document class and the 'algorithm' environment.
+    %\begin{algorithm}[H]
+    %\caption{Midpoint rule for integration}
+    %\label{algo:midpointrule}
+        %\begin{algorithmic}
+            %\Procedure{Midpoint rule}{$f, a, b, n$}
+            %\State $I \leftarrow 0$        \Comment{Initialize the integral variable}
+            %\State $h \leftarrow (b-a)/n$  \Comment{Compute the interval length}
+            %\For{$i = 1, 2, \ldots, n$}
+            %\State $x \leftarrow a + (i-1/2)h$  \Comment{Assign $x$ to the midpoint}  %This means x is assigned the value x + ih/2.
+            %\State $I \leftarrow I + f(x)$  \Comment{Add contribution to integral} %Assign I to I + f(x)
+            %\EndFor
+            %\State $I \leftarrow Ih$  \Comment{Finalize the computation}
+            %\EndProcedure
+        %\end{algorithmic}
+    %\end{algorithm}
+%\end{figure}
 
 
 % ===========================================
