@@ -61,6 +61,17 @@ arma::vec PenningTrap::force_particle(int i, int j, arma::vec ri, arma::vec rj){
     // return k_e * particles[i].q() * particles[j].q() * (particl es[i].r() - particles[j].r()) / std::pow(arma::norm(particles[i].r() - particles[j].r()), 3);
   }
 
+// // Force on particle_i from particle_j
+// arma::vec PenningTrap::force_particle(double qi, double qj, arma::vec ri, arma::vec rj){
+//     //  Detailed this is only q and r dependant
+//     // double qi = particles.at(i)->q();
+//     // double qj = particles.at(j)->q();
+//     // arma::vec ri = particles.at(i)->r();
+//     // arma::vec rj = particles.at(j)->r();
+//     double norm = arma::norm(ri-rj);
+//     return k_e * qi * qj * (ri-rj) / std::pow(norm, 3);
+//   }
+
 // The total force on particle_i from the external fields
 arma::vec PenningTrap::total_force_external(int i, arma::vec ri){
         //  F = qE + qv X B
