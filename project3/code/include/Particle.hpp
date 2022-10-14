@@ -10,28 +10,28 @@
 
 class Particle{
     private:
-        //  Gives PenningTrap acces to Particle
+        //  give PenningTrap access to Particle:
         friend class PenningTrap;
         
-        //  Define member variables
-        double q_;   //  Charge
-        double m_;   //  Mass
-        arma::vec r_; //  Position vector
-        arma::vec v_; //  Velocity vector
+        //  define member variables:
+        double q_;      //  charge
+        double m_;      //  mass
+        arma::vec r_;   //  position vector
+        arma::vec v_;   //  velocity vector
 
     public:
         //  Constructor
         Particle(double q, double m, arma::vec r, arma::vec  v);
 
         //  Functions for returning member  variables. 
-        double q();
-        double m();
-        arma::vec r();
-        arma::vec v();
+        double charge();
+        double mass();
+        arma::vec position();
+        arma::vec velocity();
         
-        //  Functions for adding to position and velocity vector
-        void superpose_position(arma::vec add_r);
-        void superpose_velocity(arma::vec add_v);
+        //  Functions for updating to position and velocity vector
+        void position(arma::vec r);
+        void velocity(arma::vec v);
 
 };
 

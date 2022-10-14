@@ -10,23 +10,23 @@
  */
 
 
-void test_single_part(double T, double dt, std::string method){
+void test_single_part(double T, double dt, std::string method, bool interactions=true){
 
     // Use provided initial conditions 
     arma::vec r0 = arma::vec({20, 0, 20});
     arma::vec v0 = arma::vec({0, 25, 0});
 
     Particle test = Particle(1, 40, r0, v0);
-    PenningTrap Trap = PenningTrap(B0, V0, d);
+    PenningTrap Trap = PenningTrap(B0, V0, d, interactions);
 
     Trap.add_particle(test);
     Trap.simulate(T, dt, method);
 
 }
 
-void test_two_particles(double T, double dt, std::string method){
+void test_two_particles(double T, double dt, std::string method, bool interactions=true){
 
-    PenningTrap Trap = PenningTrap(B0,V0,d,true);
+    PenningTrap Trap = PenningTrap(B0,V0,d,interactions);
 
     Particle p1 = Particle(1, 40, arma::vec({20,0,20}), arma::vec({0,25,0}));
     Particle p2 = Particle(1, 40, arma::vec({25,25,0}), arma::vec({0,40,5}));
@@ -43,8 +43,8 @@ int main(){
 
     //test_single_part(50, 0.1, "Euler");
     //test_single_part(50, 0.1, "RK4");
-    test_two_particles(50, 0.01, "Euler");
-    test_two_particles(50, 0.01, "RK4");
+    test_two_particles(50, 0.01, "FE", false);
+    test_two_particles(50, 0.01, "RK4", false);
 
 
 
