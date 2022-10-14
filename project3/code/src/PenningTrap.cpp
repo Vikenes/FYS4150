@@ -51,17 +51,25 @@ arma::vec PenningTrap::external_B_field(arma::vec r){
 
 // Force on particle_i from particle_j
 arma::vec PenningTrap::force_particle(int i, int j){
-    //  Detailed
+    //  Detailed this is only q and r dependant
     double qi = particles.at(i)->q();
     double qj = particles.at(j)->q();
     arma::vec ri = particles.at(i)->r();
     arma::vec rj = particles.at(j)->r();
     double norm = arma::norm(ri-rj);
     return k_e * qi * qj * (ri-rj) / std::pow(norm, 3);
-
-    //  Memory effecient
-    // return k_e * particles[i].q() * particles[j].q() * (particles[i].r() - particles[j].r()) / std::pow(arma::norm(particles[i].r() - particles[j].r()), 3);
   }
+
+// // Force on particle_i from particle_j
+// arma::vec PenningTrap::force_particle(double qi, double qj, arma::vec ri, arma::vec rj){
+//     //  Detailed this is only q and r dependant
+//     // double qi = particles.at(i)->q();
+//     // double qj = particles.at(j)->q();
+//     // arma::vec ri = particles.at(i)->r();
+//     // arma::vec rj = particles.at(j)->r();
+//     double norm = arma::norm(ri-rj);
+//     return k_e * qi * qj * (ri-rj) / std::pow(norm, 3);
+//   }
 
 // The total force on particle_i from the external fields
 arma::vec PenningTrap::total_force_external(int i, arma::vec ri){
@@ -123,8 +131,6 @@ void PenningTrap::simulate(double T, double dt, std::string method){
         R.slice(i).rows(3,5).col(0) = particles.at(i)->v();
     }
 
-
-    
     
     if(method=="Euler"){
 
@@ -138,10 +144,11 @@ void PenningTrap::simulate(double T, double dt, std::string method){
                 particles.at(i) -> superpose_velocity(dR.slice(i).rows(3,5));
 
                 dR.slice(i).rows(0,2) = particles.at(i) -> v() * dt;
-                particles.at(i) -> superpose_position(dR.slice(i).rows(0,2));
             }
             R.col(k+1) = R.col(k) + dR;
-            
+            for(int i=0; i<N; i++){
+                particles.at(i) -> superpose_position(dR.slice(i).rows(0,2));
+            }
             t[k+1] = t[k] + dt;
             }
         }
