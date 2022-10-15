@@ -30,8 +30,8 @@ class Particle{
         arma::vec velocity();
         
         //  Functions for updating to position and velocity vector
-        void position(arma::vec r);
-        void velocity(arma::vec v);
+        void new_position(arma::vec r);
+        void new_velocity(arma::vec v);
 
 };
 

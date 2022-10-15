@@ -32,7 +32,7 @@ int write_to_file_scientific(std::vector<double> x, std::vector<double> v, std::
     return 0;
 }
 
-int write_arma_to_file_scientific(arma::cube R, std::vector<double> t, std::string filename, int width, int prec){
+int write_arma_to_file_scientific(arma::cube R, std::string filename, int width, int prec){
     // Write armadillo cube to file                         
     std::string path = "../output/data/"; // path for .txt files
     std::string file = path + filename + ".txt";
@@ -42,14 +42,14 @@ int write_arma_to_file_scientific(arma::cube R, std::vector<double> t, std::stri
     std::string header = "t, x, y, z, vx, vy, vz \n";
     ofile << header;
     // std::cout << "test:" << std::endl;
-
-    for(int i=0; i<R.n_slices; i++){
+    for(int p=0; p<R.n_cols; p++){
         // std::cout << "sl" << std::endl;
-        for(int j=0; j<R.n_cols; j++){
-            ofile << t[j];
-
-            for(int k=0; k<R.n_rows; k++){
-                ofile << ", " << scientific_format(R(k,j,i));
+        
+        for(int i=0; i<R.n_slices; i++){
+            ofile << scientific_format(R(0,p,i));
+            for(int j=1; j<R.n_rows; j++){
+                //x = R.slice(i).col(p).row(j);
+                ofile << ", " << scientific_format(R(j,p,i)); // position, velocity
             }
             ofile << std::endl;
         }
@@ -87,3 +87,7 @@ double B0 = 1 * T;
 double V0 = 25*std::pow(10,-3) * V;
 double d = 500;
 double Vdr = 9.65;
+
+// Calcium ion
+double q_Ca = 1;
+double m_Ca = 40.078;

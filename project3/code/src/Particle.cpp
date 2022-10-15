@@ -24,10 +24,10 @@ arma::vec Particle::velocity(){
     return v_;
 }
 
-void Particle::position(arma::vec r){
+void Particle::new_position(arma::vec r){
     r_ = r;
 }
 
-void Particle::velocity(arma::vec v){
+void Particle::new_velocity(arma::vec v){
     v_ += v;
 }

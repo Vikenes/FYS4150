@@ -78,70 +78,117 @@ def set_ax_info(ax, xlabel, ylabel, style='plain', title=None, legend=True):
 
 
 def test_single_particle():
-    Euler = np.loadtxt(data_path + "Euler_N1.txt", unpack=True, delimiter=",", skiprows=1)
-    RK4   = np.loadtxt(data_path + "RK4_N1.txt", unpack=True, delimiter=",", skiprows=1)
+    # FIXME
 
+    fig0, ax0 = plt.subplots(layout='constrained')
+    fig1, ax1 = plt.subplots(layout='constrained')
+    fig2, ax2 = plt.subplots(layout='constrained')
+
+    colors = ['dodgerblue', 'olive', 'darkorange', 'navy']
+    for k in range(1, 5):
+        FE = np.loadtxt(data_path + f"tests/FE/single_n{k}.txt", unpack=True, delimiter=",", skiprows=1)
+        RK4 = np.loadtxt(data_path + f"tests/RK4/single_n{k}.txt", unpack=True, delimiter=",", skiprows=1)
+
+        t = FE[0] # times
+        zE = FE[3]
+        zR = RK4[3]
+
+        omega_z = np.sqrt(2*1/40.078 * 9.65)
+        z_anal = 20*np.cos(omega_z * t)
+
+        errE = np.abs(z_anal - zE)/np.abs(z_anal)
+        errR = np.abs(z_anal - zR)/np.abs(z_anal)
+       
+        ax0.plot(t, zE, c=colors[k-1], lw=2, ls='--')
+        ax0.plot(t, zR, c=colors[k-1], lw=2, ls=':')
+        if k == 4:
+            ax0.plot(t, z_anal, lw=10, alpha=0.3, color='green', label='analytical')
+
+        ax1.plot(t, errE, c=colors[k-1], lw=2, ls='-', label=r'$n=%i$'%(len(t)-1))
+        ax2.plot(t, errR, c=colors[k-1], lw=2, ls='-', label=r'$n=%i$'%(len(t)-1))
     
+    
+    ax0.plot(-1, 0, lw=2, ls='--', c='grey', alpha=0.6, label='Forward-Euler')
+    ax0.plot(-1, 0, lw=2, ls=':', c='grey', alpha=0.6, label='Runge-Kutta 4')
+    ax0.set_xlim(t[0], t[-1])
 
-    t = Euler[0]
-    zE = Euler[3]
-    zR = RK4[3]
+    set_ax_info(ax0, r"$t$ [$\mu$s]", r"$z$ [$\mu$m]")
+    set_ax_info(ax1, r"$t$ [$\mu$s]", r"$\mathbf{r}$", title="Forward-Euler")
+    set_ax_info(ax2, r"$t$ [$\mu$s]", r"$\mathbf{r}$", title="Runge-Kutta 4")
 
-    omega_z = np.sqrt(2*1/40 * 9.65)
-    z_anal = 20*np.cos(omega_z * t)
-
-
-    plt.plot(t, z_anal, lw=10, alpha=0.3, color='green', label='analytical')
-    plt.plot(t, zE, lw=2, color='red', label='Euler')
-    plt.plot(t, zR, '--', color='blue', label='RK4')
-    plt.legend()
     plt.show()
 
-    plt.title('abs difference')
-    plt.plot(t, np.abs(z_anal - zE), '--', color='red', label='Euler')
-    plt.plot(t, np.abs(z_anal - zR), ':', color='blue', label='RK4')
-    plt.legend()
-    plt.show()
+
 
 def test_double_particle():
-    Euler = np.loadtxt(data_path + "Euler_N2.txt", unpack=True, delimiter=",", skiprows=1)
-    RK4   = np.loadtxt(data_path + "RK4_N2.txt", unpack=True, delimiter=",", skiprows=1)
 
+    # FIXME
+    FE = np.loadtxt(data_path + "tests/FE/double_with.txt", unpack=True, delimiter=",", skiprows=1)
+    RK4 = np.loadtxt(data_path + "tests/RK4/double_with.txt", unpack=True, delimiter=",", skiprows=1)
 
-    Nt = int(len(Euler[0])/2)
-    t = Euler[0,:Nt]
+    Nt = int(len(FE[0])/2)
+    t = FE[0,:Nt]
     rE = np.zeros((Nt,3,2))
-    rE[:,:,0] = Euler[1:4, :Nt].T
-    rE[:,:,1] = Euler[1:4, Nt:].T
+    rE[:,:,0] = FE[1:4, :Nt].T
+    rE[:,:,1] = FE[1:4, Nt:].T
     rR = np.zeros((Nt,3,2))
     rR[:,:,0] = RK4[1:4, :Nt].T
     rR[:,:,1] = RK4[1:4, Nt:].T
 
     vE = np.zeros((Nt,3,2))
-    vE[:,:,0] = Euler[4:7, :Nt].T
-    vE[:,:,1] = Euler[4:7, Nt:].T
+    vE[:,:,0] = FE[4:7, :Nt].T
+    vE[:,:,1] = FE[4:7, Nt:].T
     vR = np.zeros((Nt,3,2))
     vR[:,:,0] = RK4[4:7, :Nt].T
     vR[:,:,1] = RK4[4:7, Nt:].T
 
+    cmap = ['copper', 'bone']
+    c = ['navy', 'darkorange']
+    cp = ['yellow', 'red'] 
+    fig, axes = plt.subplots(ncols=2, layout='constrained')
+    ax1, ax2 = axes.flat
+    p= 0
+    ax1.plot(rR[:,coord,p], rR[:,coord,p], lw=.7, c=c[p], ls='-',  alpha=.5)
+    ax1.scatter(rR[:,coord,p], rR[:,coord,p], s=3, marker='o', c=t, cmap=cmap[p], alpha=.7)
 
-    fig, axes = plt.subplots(ncols=2)
+
+    set_ax_info(ax1, r'$x$ [$\mu$m]', r'$y$ [$\mu$m]', title="Without interactions", legend=False)
+    set_ax_info(ax2, r'$y$ [$\mu$m]', r'$y$ [$\mu$m]', title="With interactions",    legend=False)
+
+
+    plt.show()
+
+
+
+
+
+    fig, axes = plt.subplots(ncols=2, layout='constrained')
     ax1, ax2 = axes.flat
 
-    ax1.plot(rE[:,0], vE[:,0], color='red', label='Euler', alpha=.6)
-    ax1.plot(rR[:,0], vR[:,0], color='blue', label='RK4')
-    ax1.set_xlabel(r'$x$')
-    ax1.set_ylabel(r'$v_x$')
+    
 
-    ax2.plot(rE[:,2], vE[:,2], color='red', label='Euler', alpha=.6)
-    ax2.plot(rR[:,2], vR[:,2], color='blue', label='RK4')
-    ax2.set_xlabel(r'$z$')
-    ax2.set_ylabel(r'$v_z$')
+    for j, coord in enumerate([0, 2]):
+        ax = axes.flat[j]
+        for p in [0,1]:
+            #ax.plot(rE[:,coord,p], vE[:,coord,p], lw=0.9, c=c[p], ls='--', alpha=.5)
+            #ax.scatter(rE[:,coord,p], vE[:,coord,p], s=3, marker='¨', c=t, cmap=cmap[p], alpha=.7)
+            ax.plot(rR[:,coord,p], vR[:,coord,p], lw=.7, c=c[p], ls='-',  alpha=.5)
+            ax.scatter(rR[:,coord,p], vR[:,coord,p], s=3, marker='o', c=t, cmap=cmap[p], alpha=.7)
+
+        for p in [0,1]:
+            ax.plot(rR[0,coord,p],  vR[0,coord,p],  marker="P", ms=12, c=cp[p], alpha=1)
+            ax.plot(rR[-1,coord,p], vR[-1,coord,p], marker="*", ms=12, c=cp[p], alpha=1)
+            # show start and stop pos!
+
+    #units ={"position":" [μm]", "velocity":" [μm/s]"}
+    set_ax_info(ax1, r'$x$ [$\mu$m]', r'$v_x$ [$\mu$m/s]', legend=False)
+    set_ax_info(ax2, r'$z$ [$\mu$m]', r'$v_z$ [$\mu$m/s]', legend=False)
 
 
     plt.show()
 
 
 if __name__=="__main__":
+    test_single_particle()
 
     test_double_particle()
