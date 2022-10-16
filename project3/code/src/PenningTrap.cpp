@@ -4,18 +4,20 @@
 
 
 
+// Planning to add time dependence
+
 PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool interactions_in){
     B0 = B0_in;
     V0 = V0_in;
     d = d_in;
     Vd2r = V0/std::pow(d, 2);  
     interactions = interactions_in;
-
+    
+    f = 0;
+    omega_V = 0;
     filename = "untitled.txt";
     isready = false;
 }
-
-
 
 
 void PenningTrap::add_particle(Particle &p_in){
@@ -24,13 +26,21 @@ void PenningTrap::add_particle(Particle &p_in){
 }
 
 arma::mat PenningTrap::compute_external_Efield(arma::mat R){
-    E_ext = Vd2r * R; // GENERALISE!!
+    E_ext = Vd2r * R;
     E_ext.row(2) *= -2;
+    E_ext.elem(arma::find(Pnorm(R) > d)).zeros();
+    return E_ext;
+}
+
+arma::mat PenningTrap::compute_external_Efield(double t, arma::mat R){
+    E_ext = compute_external_Efield(R);
+    E_ext *= (1 + f*cos(omega_V*t));
     return E_ext;
 }
 
 arma::mat PenningTrap::compute_external_Bfield(arma::mat R){
     B_ext.row(2).fill(B0);
+    B_ext.elem(arma::find(Pnorm(R) > d)).zeros();
     return B_ext;
 }
 
@@ -38,7 +48,7 @@ arma::mat PenningTrap::compute_interaction_field(arma::mat R){
     for(int p=0; p<Np; p++){
         norm3.fill(0.);
         dist = R; dist.each_col() -= R.col(p);
-        norm3.each_row() += arma::sqrt(arma::sum(arma::square(dist), 0));
+        norm3 = arma::pow(Pnorm(dist), 3);
         norm3.col(p).fill(1.);                                  //  avoid dividing by zero
         E_int.col(p) = k_e * arma::sum(Q%dist/norm3, 1);        //  sum over all particles
     }
@@ -87,6 +97,8 @@ void PenningTrap::ready(){
 
     //  misc:
     K = arma::zeros(6, Np);
+    Rnorm = arma::mat(3, Np);
+
 
     isready = true;
 
@@ -172,7 +184,6 @@ arma::mat PenningTrap::evolve_RK4(double dt, arma::mat RU){
 }
 
 arma::mat PenningTrap::K_val(arma::mat RU){
-    //arma::mat K = arma::zeros(6, Np);
     K.rows(0,2) = RU.rows(3,5);
     external_forces(RU);
     if(interactions){
@@ -180,5 +191,11 @@ arma::mat PenningTrap::K_val(arma::mat RU){
     }
     K.rows(3,5) = (F_ext + F_int) / M;
     return K;
+}
+
+arma::mat PenningTrap::Pnorm(arma::mat R){
+    Rnorm.fill(0.);
+    Rnorm.each_row() += arma::sqrt(arma::sum(arma::square(R), 0));
+    return Rnorm; 
 }
 
