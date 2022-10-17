@@ -55,7 +55,7 @@ def save_push(fig, pdf_name, save=True, push=False, show=False, tight=True):
     else:
         plt.clf()
 
-def set_ax_info(ax, xlabel, ylabel, style='plain', title=None, legend=True):
+def set_ax_info(ax, xlabel, ylabel, zlabel='none', style='plain', title=None, legend=True):
     """Write title and labels on an axis with the correct fontsizes.
 
     Args:
@@ -66,6 +66,8 @@ def set_ax_info(ax, xlabel, ylabel, style='plain', title=None, legend=True):
     """
     ax.set_xlabel(xlabel, fontsize=20)
     ax.set_ylabel(ylabel, fontsize=20)
+    if zlabel != 'none':
+        ax.set_zlabel(ylabel, fontsize=20)
     ax.set_title(title, fontsize=20)
     ax.tick_params(axis='both', which='major', labelsize=15)
     ax.yaxis.get_offset_text().set_fontsize(15)
@@ -77,71 +79,258 @@ def set_ax_info(ax, xlabel, ylabel, style='plain', title=None, legend=True):
         ax.legend(fontsize=15)
 
 
+
 def test_single_particle():
-    Euler = np.loadtxt(data_path + "Euler_N1.txt", unpack=True, delimiter=",", skiprows=1)
-    RK4   = np.loadtxt(data_path + "RK4_N1.txt", unpack=True, delimiter=",", skiprows=1)
+    # FIXME
+
+    fig0, ax0 = plt.subplots(layout='constrained')
+    fig1, ax1 = plt.subplots(layout='constrained')
+    fig2, ax2 = plt.subplots(layout='constrained')
+
+    colors = ['dodgerblue', 'olive', 'darkorange', 'navy']
+    markersizes = [16, 13, 9, 4]
+    for k in range(1, 5):
+        FE = np.loadtxt(data_path + f"tests/FE/single_n{k}.txt", unpack=True, delimiter=",", skiprows=1)
+        RK4 = np.loadtxt(data_path + f"tests/RK4/single_n{k}.txt", unpack=True, delimiter=",", skiprows=1)
+
+        t = FE[0] # times
+        n = len(t)-1
+        zE = FE[3]
+        zR = RK4[3]
+
+        omega_z = np.sqrt(2*1/40.078 * 9.65)
+        z_anal = 20*np.cos(omega_z * t)
+
+
+        abserrR = np.abs(z_anal - zR)
+        
+        errE = np.abs(z_anal - zE)/np.abs(z_anal)
+        errR = abserrR/np.abs(z_anal)
+
+
+
+        ax0.plot(t, zE, c=colors[k-1], lw=2, ls='--')
+        ax0.plot(t, zR, c=colors[k-1], lw=2, ls=':')
+        if k == 4:
+            ax0.plot(t, z_anal, lw=10, alpha=0.3, color='green', label='analytical')
+            
+            zero_points = []
+            K = int(n/11)
+            for j in range(11):
+                kj = int(j*K)
+                t_vals = t[kj:kj+K+1]
+                z_vals = z_anal[kj:kj+K+1]
+                idx = np.argmin(np.abs(z_vals))
+                zero_points.append(t_vals[idx])
+
+        ax1.plot(t, errE, 'o-', c=colors[k-1], lw=1.5, ms=markersizes[k-1], label=r'$n=%i$'%(n), alpha=.7)
+        ax2.plot(t, errR, 'o-', c=colors[k-1], lw=1.5, ms=markersizes[k-1], label=r'$n=%i$'%(n), alpha=.7)
+    
+    
+    ax0.plot(-1, 0, lw=2, ls='--', c='grey', alpha=0.6, label='Forward-Euler')
+    ax0.plot(-1, 0, lw=2, ls=':', c='grey', alpha=0.6, label='Runge-Kutta 4')
+    ax0.set_xlim(t[0], t[-1])
+
+    for ax in [ax1, ax2]:
+        for t0 in zero_points:
+            ax.axvline(t0, ls=':', lw=.7, color='r', alpha=.6)
+        ax.set_yscale('log')
+
+
+    set_ax_info(ax0, r"$t$ [$\mu$s]", r"$z$ [$\mu$m]")
+    set_ax_info(ax1, r"$t$ [$\mu$s]", r"$\mathbf{r}$", title="Forward-Euler")
+    set_ax_info(ax2, r"$t$ [$\mu$s]", r"$\mathbf{r}$", title="Runge-Kutta 4")
+
+    plt.show()
+
+
+
+def test_double_particle(scheme="RK4"):
+
+    tRUa = np.loadtxt(data_path + f"tests/{scheme}/double_without.txt", unpack=True, delimiter=",", skiprows=1)
+    tRUb = np.loadtxt(data_path + f"tests/{scheme}/double_with.txt", unpack=True, delimiter=",", skiprows=1)
+
+    Nt = int(len(tRUa[0])/2)
+    t = tRUa[0,:Nt]
+    # without interactions:
+    Ra = np.zeros((Nt,3,2))
+    Ra[:,:,0] = tRUa[1:4, :Nt].T
+    Ra[:,:,1] = tRUa[1:4, Nt:].T
+    Ua = np.zeros((Nt,3,2))
+    Ua[:,:,0] = tRUa[4:7, :Nt].T
+    Ua[:,:,1] = tRUa[4:7, Nt:].T
+    # with interactions
+    Rb = np.zeros((Nt,3,2))
+    Rb[:,:,0] = tRUb[1:4, :Nt].T
+    Rb[:,:,1] = tRUb[1:4, Nt:].T
+    Ub = np.zeros((Nt,3,2))
+    Ub[:,:,0] = tRUb[4:7, :Nt].T
+    Ub[:,:,1] = tRUb[4:7, Nt:].T
+
+    # defining some colours for consistency (fix):
+    cmap = ['copper', 'bone'] 
+    colourline = ['navy', 'darkorange']
+    colourpoint = ['yellow', 'red']
+
+    RR = [Ra, Rb]
+    UU = [Ua, Ub] 
+    titles = ['Without interactions', 'With interactions']
+    
+    
+    '''Plot in xy plane'''
+
+    def trajectory_plane(axes, coords):
+        ii, jj = coords
+        if ii == 0:
+            x = 'x'
+        elif ii == 1:
+            x = 'y'
+        else:
+            x = 'z'
+        
+        if jj == 0:
+            y = 'x'
+        elif jj == 1:
+            y = 'y'
+        else:
+            y = 'z'
+
+
+        for k, ax in enumerate(axes):
+            R = RR[k]; U = UU[k]
+            for p in [0,1]: 
+                ax.scatter(R[:,ii,p], R[:,jj,p], s=3, marker='o', c=t, cmap=cmap[p], alpha=.7)
+
+            for p in [0,1]:
+                ax.plot(R[0,ii,p],  R[0,jj,p],  marker="P", ms=12, c=colourpoint[p], alpha=1)
+                ax.plot(R[-1,ii,p], R[-1,jj,p], marker="*", ms=12, c=colourpoint[p], alpha=1)
+            
+            ax.set_aspect('equal')
+            set_ax_info(ax, r'$%s$ [$\mu$m]'%x, r'$%s$ [$\mu$m]'%y, title=titles[k], legend=False)
+
+        return axes
+
+
+    fig, axes = plt.subplots(ncols=2, layout='constrained', sharey=True)
+    ax1, ax2 = axes.flat
+    axes = trajectory_plane([ax1, ax2], (0,1))
+
+    plt.show() # savepush
+
+
+    '''Make phase plots'''
+
+    
+    def phase_plot(axes, coord):
+        if coord == 0:
+            x = 'x'
+        elif coord == 1:
+            x = 'y'
+        else:
+            x = 'z'
+        
+        for k, ax in enumerate(axes):
+            R = RR[k]; U = UU[k]
+            for p in [0,1]:
+                #ax.plot(R[:,coord,p], U[:,coord,p], lw=.7, c=colourline[p], ls='-',  alpha=.5)
+                ax.scatter(R[:,coord,p], U[:,coord,p], s=3, marker='o', c=t, cmap=cmap[p], alpha=.7)
+
+            for p in [0,1]:
+                ax.plot(R[0,coord,p],  U[0,coord,p],  marker="P", ms=12, c=colourpoint[p], alpha=1)
+                ax.plot(R[-1,coord,p], U[-1,coord,p], marker="*", ms=12, c=colourpoint[p], alpha=1)
+            
+            set_ax_info(ax, r'$%s$ [$\mu$m]'%x, r'$v_{%s}$ [$\mu$m/s]'%x, title=titles[k], legend=False)
+        return axes
+
+
+    fig, axes = plt.subplots(ncols=2, layout='constrained', sharey=True)
+    axes = phase_plot(axes.flat, 0)
+    plt.show()
+
+    fig, axes = plt.subplots(ncols=2, layout='constrained', sharey=True)
+    axes = phase_plot(axes.flat, 2)
+    plt.show()
+
+
+    '''3D trajectories'''
+
+    fig, axes = plt.subplots(ncols=2, layout='constrained', subplot_kw={'projection':'3d'})
+    ax1, ax2 = axes.flat
+    axes = [ax1, ax2]
+
+    for k, ax in enumerate(axes):
+        R = RR[k]
+        for p in [0, 1]:
+            ax.scatter(R[:,0,p], R[:,1,p], R[:,2,p], s=3, marker='o', c=t, cmap=cmap[p], alpha=.7)
+
+        for p in [0,1]:
+            ax.plot(R[ 0,0,p], R[ 0,1,p], R[ 0,2,p], marker="P", ms=12, c=colourpoint[p], alpha=1)
+            ax.plot(R[-1,0,p], R[-1,1,p], R[-1,2,p], marker="*", ms=12, c=colourpoint[p], alpha=1)
+        
+        #ax.set_aspect('equal')
+        # maybe set xlims etc.
+        set_ax_info(ax, xlabel=r'$x$ [$\mu$m]', ylabel=r'$y$ [$\mu$m]', zlabel=r'$z$ [$\mu$m]', title=titles[k], legend=False)
+    
+    plt.show()
+
+
+
+def first_with_timedep():
+    # just for testing
+
+    tRU = np.loadtxt(data_path + f"RK4/first.txt", unpack=True, delimiter=",", skiprows=1)
+
+    t_ = tRU[0]
+    for i in range(len(t_)):
+        if np.abs(t_[i+1]-0)<1e-8:
+            idx_stop = i
+            break
+    
+    t = t_[:idx_stop+1]
+    Nt = len(t)
+    Np = int(len(t_)/Nt)
+
+    R = np.zeros((Nt,3,Np))
+    U = np.zeros((Nt,3,Np))
+    for p in range(Np):
+        j = int(Nt*p)
+        j_next = int(Nt*(p+1))
+        if p == Np-1:
+            R[:,:,p] = tRU[1:4, j:].T
+            U[:,:,p] = tRU[4:7, j:].T
+        else:
+            R[:,:,p] = tRU[1:4, j:j_next].T
+            U[:,:,p] = tRU[4:7, j:j_next].T
+
+
+    cmaps = ['Purples', 'Blues', 'Greens', 'Oranges', 'Reds', 'YlOrBr', 'YlOrRd', 'OrRd', 'PuRd', 'RdPu', 'BuPu', 'GnBu', 'PuBu', 'YlGnBu', 'PuBuGn', 'BuGn', 'YlGn']
+    cps = ['purple', 'b', 'g', 'darkorange', 'r', 'orange', 'orangered', 'yellow', 'm', 'pink', 'firebrick']
+    fig, ax = plt.subplots(layout='constrained', subplot_kw={'projection':'3d'})
+    j = 0
+    for p in range(0,Np,Np//3):
+        ax.scatter(R[:,0,p], R[:,1,p], R[:,2,p], s=3, marker='o', c=t, cmap=cmaps[j], alpha=.7)
+        j+=1
+    j=0
+    for p in range(0,Np,Np//3):
+        ax.plot(R[ 0,0,p], R[ 0,1,p], R[ 0,2,p], marker="P", ms=12, c=cps[j], alpha=1)
+        ax.plot(R[-1,0,p], R[-1,1,p], R[-1,2,p], marker="*", ms=12, c=cps[j], alpha=1)
+        j+=1
+        
+    set_ax_info(ax, xlabel=r'$x$ [$\mu$m]', ylabel=r'$y$ [$\mu$m]', zlabel=r'$z$ [$\mu$m]', title="Without interactions", legend=False)
+    
+    plt.show()
+
 
     
 
-    t = Euler[0]
-    zE = Euler[3]
-    zR = RK4[3]
-
-    omega_z = np.sqrt(2*1/40 * 9.65)
-    z_anal = 20*np.cos(omega_z * t)
 
 
-    plt.plot(t, z_anal, lw=10, alpha=0.3, color='green', label='analytical')
-    plt.plot(t, zE, lw=2, color='red', label='Euler')
-    plt.plot(t, zR, '--', color='blue', label='RK4')
-    plt.legend()
-    plt.show()
 
-    plt.title('abs difference')
-    plt.plot(t, np.abs(z_anal - zE), '--', color='red', label='Euler')
-    plt.plot(t, np.abs(z_anal - zR), ':', color='blue', label='RK4')
-    plt.legend()
-    plt.show()
-
-def test_double_particle():
-    Euler = np.loadtxt(data_path + "Euler_N2.txt", unpack=True, delimiter=",", skiprows=1)
-    RK4   = np.loadtxt(data_path + "RK4_N2.txt", unpack=True, delimiter=",", skiprows=1)
-
-
-    Nt = int(len(Euler[0])/2)
-    t = Euler[0,:Nt]
-    rE = np.zeros((Nt,3,2))
-    rE[:,:,0] = Euler[1:4, :Nt].T
-    rE[:,:,1] = Euler[1:4, Nt:].T
-    rR = np.zeros((Nt,3,2))
-    rR[:,:,0] = RK4[1:4, :Nt].T
-    rR[:,:,1] = RK4[1:4, Nt:].T
-
-    vE = np.zeros((Nt,3,2))
-    vE[:,:,0] = Euler[4:7, :Nt].T
-    vE[:,:,1] = Euler[4:7, Nt:].T
-    vR = np.zeros((Nt,3,2))
-    vR[:,:,0] = RK4[4:7, :Nt].T
-    vR[:,:,1] = RK4[4:7, Nt:].T
-
-
-    fig, axes = plt.subplots(ncols=2)
-    ax1, ax2 = axes.flat
-
-    ax1.plot(rE[:,0], vE[:,0], color='red', label='Euler', alpha=.6)
-    ax1.plot(rR[:,0], vR[:,0], color='blue', label='RK4')
-    ax1.set_xlabel(r'$x$')
-    ax1.set_ylabel(r'$v_x$')
-
-    ax2.plot(rE[:,2], vE[:,2], color='red', label='Euler', alpha=.6)
-    ax2.plot(rR[:,2], vR[:,2], color='blue', label='RK4')
-    ax2.set_xlabel(r'$z$')
-    ax2.set_ylabel(r'$v_z$')
-
-
-    plt.show()
 
 
 if __name__=="__main__":
+    #test_single_particle()
 
-    test_double_particle()
+    #test_double_particle()
+
+    first_with_timedep()

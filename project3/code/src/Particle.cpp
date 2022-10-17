@@ -1,6 +1,5 @@
 #include "Particle.hpp"
 
-//  Definitions of constructor
 Particle::Particle(double q, double m, arma::vec r, arma::vec v){
     q_ = q;
     m_ = m;
@@ -9,26 +8,26 @@ Particle::Particle(double q, double m, arma::vec r, arma::vec v){
 }
 
 
-double Particle::q(){
+double Particle::charge(){
     return q_;
 }
 
-double Particle::m(){
+double Particle::mass(){
     return m_;
 }
 
-arma::vec Particle::r(){
+arma::vec Particle::position(){
     return r_;
 }
 
-arma::vec Particle::v(){
+arma::vec Particle::velocity(){
     return v_;
 }
 
-void Particle::superpose_position(arma::vec add_r){
-    r_ += add_r;
+void Particle::new_position(arma::vec r){
+    r_ = r;
 }
 
-void Particle::superpose_velocity(arma::vec add_v){
-    v_ += add_v;
+void Particle::new_velocity(arma::vec v){
+    v_ = v;
 }

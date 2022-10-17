@@ -10,10 +10,10 @@ run:
 	./main.exe 
 
 debug_valgrind:
-	g++ -g main.cpp src/*.cpp -I include -o  main.exe -larmadillo && valgrind ./main.exe 
+	g++ -g -std=c++11 main.cpp src/*.cpp -I include -o  main.exe -larmadillo && valgrind ./main.exe 
 
 debug_gdb:
-	g++ -g main.cpp src/*.cpp -I include -o  main.exe -larmadillo && gdb --args ./main.exe
+	g++ -g -std=c++11 main.cpp src/*.cpp -I include -o  main.exe -larmadillo && gdb --args ./main.exe
 
 plots:
 	cd plot && python3 plot.py && cd ..
