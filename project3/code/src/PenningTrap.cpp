@@ -13,22 +13,65 @@ PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool interacti
     Vd2r = V0/std::pow(d, 2);  
     interactions = interactions_in;
     
-    f = 0;
-    omega_V = 0;
-    filename = "untitled.txt";
-    isready = false;
 }
 
 
-void PenningTrap::add_particle(Particle &p_in){
-    particles.push_back(&p_in);
+void PenningTrap::add_particle(Particle &particle){
+    particles.push_back(&particle);
     Np++;
 }
+
+void PenningTrap::generate_random_identical_particles(double charge, double mass, int Np_in){
+    //arma::arma_rng::set_seed(2); // OBS! does not work. want to have this in utils
+    arma::vec rr;
+    arma::vec vv;
+    std::vector<Particle> dummy; 
+    for(int p=0; p<Np_in; p++){
+        rr = arma::vec(3).randn() * 0.1 * d;                //  random initial position
+        vv = arma::vec(3).randn() * 0.1 * d;                //  random initial velocity 
+        dummy.push_back(Particle(charge, mass, rr, vv));    //  wrap in Particle 
+        add_particle(dummy.at(p));
+    }
+    for(int p=0;p<Np; p++){
+        std::cout << particles.at(p)->position() << std::endl;
+        std::cout << particles.at(p)->mass() << std::endl;
+        std::cout << particles.at(p)->charge() << std::endl;
+    }
+}
+
+void PenningTrap::apply_time_dependence(double amplitude, double frequency){
+    f = amplitude;
+    omega_V = frequency;
+    time_dep = true;
+}
+
+void PenningTrap::switch_interactions(){
+    if(interactions){interactions = false;}
+    else{interactions = true;}
+}
+
+void PenningTrap::switch_interactions(std::string switch_in){
+    if(switch_in=="off" or switch_in=="OFF"){interactions = false;}
+    else if(switch_in=="on" or switch_in=="ON"){interactions = true;}
+    else{
+        std::cout << "Arguments ON/on and OFF/off are the only valid ones." << std::endl;      
+        assert(false);}
+}
+
+int PenningTrap::count_particles(){
+    int Np_trapped = 0;
+    for(int p=0; p<Np; p++){
+        arma::vec r = particles.at(p) -> position();
+        if(arma::norm(r)<d){Np_trapped++;}
+    }
+    return Np_trapped;
+}
+
 
 arma::mat PenningTrap::compute_external_Efield(arma::mat R){
     E_ext = Vd2r * R;
     E_ext.row(2) *= -2;
-    E_ext.elem(arma::find(Pnorm(R) > d)).zeros();
+    E_ext.elem(arma::find(Pnorm(R) > d)).zeros();   //  zero outside of trap
     return E_ext;
 }
 
@@ -40,7 +83,7 @@ arma::mat PenningTrap::compute_external_Efield(double t, arma::mat R){
 
 arma::mat PenningTrap::compute_external_Bfield(arma::mat R){
     B_ext.row(2).fill(B0);
-    B_ext.elem(arma::find(Pnorm(R) > d)).zeros();
+    B_ext.elem(arma::find(Pnorm(R) > d)).zeros();   //  zero outside of trap 
     return B_ext;
 }
 
@@ -63,10 +106,24 @@ arma::mat PenningTrap::external_forces(arma::mat RU){
     arma::mat UxB(3,Np);    //  cross products
     UxB.row(0) = U.row(1)%B_ext.row(2) - U.row(2)%B_ext.row(1);
     UxB.row(1) = U.row(2)%B_ext.row(0) - U.row(0)%B_ext.row(2);
-    UxB.row(2) = U.row(0)%B_ext.row(1) - U.row(1)%B_ext.row(0);
+    UxB.row(2) = U.row(0)%B_ext.row(1) - U.row(1)%B_ext.row(0);     //  always zero...
     F_ext = Q % (E_ext + UxB);
     return F_ext;
 }
+
+arma::mat PenningTrap::external_forces(double t, arma::mat RU){
+    compute_external_Efield(t, RU.rows(0,2));
+    compute_external_Bfield(RU.rows(0,2));
+   
+    arma::mat U(3,Np); U.rows(0,2) = RU.rows(3,5);
+    arma::mat UxB(3,Np);    //  cross products
+    UxB.row(0) = U.row(1)%B_ext.row(2) - U.row(2)%B_ext.row(1);
+    UxB.row(1) = U.row(2)%B_ext.row(0) - U.row(0)%B_ext.row(2);
+    UxB.row(2) = U.row(0)%B_ext.row(1) - U.row(1)%B_ext.row(0);     //  always zero...
+    F_ext = Q % (E_ext + UxB);
+    return F_ext;
+}
+
 
 arma::mat PenningTrap::internal_forces(arma::mat RU){
     compute_interaction_field(RU.rows(0,2));
@@ -99,37 +156,46 @@ void PenningTrap::ready(){
     K = arma::zeros(6, Np);
     Rnorm = arma::mat(3, Np);
 
-
     isready = true;
 
 }
 
 void PenningTrap::simulate(double T, double dt, std::string scheme, bool point){
-    int Nt = int(T/dt) + 1;                 //  number of time points 
+    int Nt = int(T/dt) + 1;         //  number of time points 
     
 
     //  prepare if not already prepared:
     if(not isready){ready();}
-    
+
     system = arma::cube(7, Np, Nt);
     //  initialise system:
     for(int p=0; p<Np; p++){
+        
         for(int j=0; j<3; j++){
             Q.col(p).row(j) = particles.at(p) -> charge();
             M.col(p).row(j) = particles.at(p) -> mass();
+            std::cout << particles.at(p)->charge() << std::endl;
+
         }
+        std::cout << "here" << std::endl;
+        std::cout << particles.at(p)->position() << std::endl;
         system.slice(0).col(p).rows(1,3) = particles.at(p) -> position();
         system.slice(0).col(p).rows(4,6) = particles.at(p) -> velocity();
+        
     }
+    
 
     //  run simulation:
     for(int i=0; i<Nt-1; i++){
         RU = system.slice(i).rows(1,6);
-        if(scheme=="RK4"){
-            dRU = evolve_RK4(dt, RU);
+        t = system(0,0,i);
+        if(scheme=="RK4"){ // FIXME (want less if/else)
+            if(time_dep){dRU = evolve_RK4(dt, t, RU);}
+            else{dRU = evolve_RK4(dt, RU);}
         }
         else if(scheme=="FE"){
-            dRU = evolve_FE(dt, RU);
+            if(time_dep){dRU = evolve_FE(dt, t, RU);}
+            else{dRU = evolve_FE(dt, RU);}
         }
         else{
             std::cout << "Arguments FE and RK4 are the only valid ones." << std::endl;
@@ -137,7 +203,7 @@ void PenningTrap::simulate(double T, double dt, std::string scheme, bool point){
         }
 
         system.slice(i+1).rows(1,6) = RU + dRU;
-        system.slice(i+1).row(0).fill(system(0,0,i) + dt);
+        system.slice(i+1).row(0).fill(t + dt);
 
 
         if(point){
@@ -155,7 +221,7 @@ void PenningTrap::simulate(double T, double dt, std::string scheme, bool point){
         } 
 
     write_arma_to_file_scientific(system, filename);  
-    std::cout << "\n    Written solution to ../output/data/" << filename << ".\n" << std::endl;
+    std::cout << "\n    Written solution to ../output/data/" << filename << ".txt.\n" << std::endl;
 }
 
 void PenningTrap::set_solution_filename(std::string filename_in){
@@ -173,6 +239,16 @@ arma::mat PenningTrap::evolve_FE(double dt, arma::mat RU){
     return dRU;
 }
 
+arma::mat PenningTrap::evolve_FE(double dt, double t, arma::mat RU){
+    external_forces(t, RU);
+    if(interactions){
+        internal_forces(RU);
+    }
+    dRU.rows(3,5) = (F_ext + F_int) / M * dt;
+    dRU.rows(0,2) = (RU.rows(3,5) + dRU.rows(3,5)) * dt;
+    return dRU;
+}
+
 arma::mat PenningTrap::evolve_RK4(double dt, arma::mat RU){
     K1 = K_val(RU) * dt;
     K2 = K_val(RU+K1/2) * dt;
@@ -181,6 +257,27 @@ arma::mat PenningTrap::evolve_RK4(double dt, arma::mat RU){
 
     dRU = (K1+2*K2+2*K3+K4)/6;
     return dRU;
+}
+
+arma::mat PenningTrap::evolve_RK4(double dt, double t, arma::mat RU){
+    K1 = K_val(t, RU) * dt;
+    K2 = K_val(t+dt/2, RU+K1/2) * dt;
+    K3 = K_val(t+dt/2, RU+K2/2) * dt;
+    K4 = K_val(t+dt, RU+K3) * dt; 
+
+    dRU = (K1+2*K2+2*K3+K4)/6;
+    return dRU;
+}
+
+
+arma::mat PenningTrap::K_val(double t, arma::mat RU){
+    K.rows(0,2) = RU.rows(3,5);
+    external_forces(t, RU);
+    if(interactions){
+        internal_forces(RU);
+    }
+    K.rows(3,5) = (F_ext + F_int) / M;
+    return K;
 }
 
 arma::mat PenningTrap::K_val(arma::mat RU){

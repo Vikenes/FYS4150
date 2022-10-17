@@ -55,7 +55,7 @@ def save_push(fig, pdf_name, save=True, push=False, show=False, tight=True):
     else:
         plt.clf()
 
-def set_ax_info(ax, xlabel, ylabel, style='plain', title=None, legend=True):
+def set_ax_info(ax, xlabel, ylabel, zlabel='none', style='plain', title=None, legend=True):
     """Write title and labels on an axis with the correct fontsizes.
 
     Args:
@@ -66,6 +66,8 @@ def set_ax_info(ax, xlabel, ylabel, style='plain', title=None, legend=True):
     """
     ax.set_xlabel(xlabel, fontsize=20)
     ax.set_ylabel(ylabel, fontsize=20)
+    if zlabel != 'none':
+        ax.set_zlabel(ylabel, fontsize=20)
     ax.set_title(title, fontsize=20)
     ax.tick_params(axis='both', which='major', labelsize=15)
     ax.yaxis.get_offset_text().set_fontsize(15)
@@ -75,6 +77,7 @@ def set_ax_info(ax, xlabel, ylabel, style='plain', title=None, legend=True):
         pass
     if legend:
         ax.legend(fontsize=15)
+
 
 
 def test_single_particle():
@@ -142,76 +145,143 @@ def test_single_particle():
 
 
 
-def test_double_particle():
+def test_double_particle(scheme="RK4"):
 
-    # FIXME
-    FE = np.loadtxt(data_path + "tests/FE/double_with.txt", unpack=True, delimiter=",", skiprows=1)
-    RK4 = np.loadtxt(data_path + "tests/RK4/double_with.txt", unpack=True, delimiter=",", skiprows=1)
+    tRUa = np.loadtxt(data_path + f"tests/{scheme}/double_without.txt", unpack=True, delimiter=",", skiprows=1)
+    tRUb = np.loadtxt(data_path + f"tests/{scheme}/double_with.txt", unpack=True, delimiter=",", skiprows=1)
 
-    Nt = int(len(FE[0])/2)
-    t = FE[0,:Nt]
-    rE = np.zeros((Nt,3,2))
-    rE[:,:,0] = FE[1:4, :Nt].T
-    rE[:,:,1] = FE[1:4, Nt:].T
-    rR = np.zeros((Nt,3,2))
-    rR[:,:,0] = RK4[1:4, :Nt].T
-    rR[:,:,1] = RK4[1:4, Nt:].T
+    Nt = int(len(tRUa[0])/2)
+    t = tRUa[0,:Nt]
+    # without interactions:
+    Ra = np.zeros((Nt,3,2))
+    Ra[:,:,0] = tRUa[1:4, :Nt].T
+    Ra[:,:,1] = tRUa[1:4, Nt:].T
+    Ua = np.zeros((Nt,3,2))
+    Ua[:,:,0] = tRUa[4:7, :Nt].T
+    Ua[:,:,1] = tRUa[4:7, Nt:].T
+    # with interactions
+    Rb = np.zeros((Nt,3,2))
+    Rb[:,:,0] = tRUb[1:4, :Nt].T
+    Rb[:,:,1] = tRUb[1:4, Nt:].T
+    Ub = np.zeros((Nt,3,2))
+    Ub[:,:,0] = tRUb[4:7, :Nt].T
+    Ub[:,:,1] = tRUb[4:7, Nt:].T
 
-    vE = np.zeros((Nt,3,2))
-    vE[:,:,0] = FE[4:7, :Nt].T
-    vE[:,:,1] = FE[4:7, Nt:].T
-    vR = np.zeros((Nt,3,2))
-    vR[:,:,0] = RK4[4:7, :Nt].T
-    vR[:,:,1] = RK4[4:7, Nt:].T
+    # defining some colours for consistency (fix):
+    cmap = ['copper', 'bone'] 
+    colourline = ['navy', 'darkorange']
+    colourpoint = ['yellow', 'red']
 
-    cmap = ['copper', 'bone']
-    c = ['navy', 'darkorange']
-    cp = ['yellow', 'red'] 
-    fig, axes = plt.subplots(ncols=2, layout='constrained')
+    RR = [Ra, Rb]
+    UU = [Ua, Ub] 
+    titles = ['Without interactions', 'With interactions']
+    
+    
+    '''Plot in xy plane'''
+
+    def trajectory_plane(axes, coords):
+        ii, jj = coords
+        if ii == 0:
+            x = 'x'
+        elif ii == 1:
+            x = 'y'
+        else:
+            x = 'z'
+        
+        if jj == 0:
+            y = 'x'
+        elif jj == 1:
+            y = 'y'
+        else:
+            y = 'z'
+
+
+        for k, ax in enumerate(axes):
+            R = RR[k]; U = UU[k]
+            for p in [0,1]: 
+                ax.scatter(R[:,ii,p], R[:,jj,p], s=3, marker='o', c=t, cmap=cmap[p], alpha=.7)
+
+            for p in [0,1]:
+                ax.plot(R[0,ii,p],  R[0,jj,p],  marker="P", ms=12, c=colourpoint[p], alpha=1)
+                ax.plot(R[-1,ii,p], R[-1,jj,p], marker="*", ms=12, c=colourpoint[p], alpha=1)
+            
+            ax.set_aspect('equal')
+            set_ax_info(ax, r'$%s$ [$\mu$m]'%x, r'$%s$ [$\mu$m]'%y, title=titles[k], legend=False)
+
+        return axes
+
+
+    fig, axes = plt.subplots(ncols=2, layout='constrained', sharey=True)
     ax1, ax2 = axes.flat
-    p = 0
-    coord = 0
-    ax1.plot(rR[:,coord,p], rR[:,coord,p], lw=.7, c=c[p], ls='-',  alpha=.5)
-    ax1.scatter(rR[:,coord,p], rR[:,coord,p], s=3, marker='o', c=t, cmap=cmap[p], alpha=.7)
+    axes = trajectory_plane([ax1, ax2], (0,1))
+
+    plt.show() # savepush
 
 
-    set_ax_info(ax1, r'$x$ [$\mu$m]', r'$y$ [$\mu$m]', title="Without interactions", legend=False)
-    set_ax_info(ax2, r'$y$ [$\mu$m]', r'$y$ [$\mu$m]', title="With interactions",    legend=False)
-
-
-    plt.show()
-
-
-
-
-
-    fig, axes = plt.subplots(ncols=2, layout='constrained')
-    ax1, ax2 = axes.flat
+    '''Make phase plots'''
 
     
+    def phase_plot(axes, coord):
+        if coord == 0:
+            x = 'x'
+        elif coord == 1:
+            x = 'y'
+        else:
+            x = 'z'
+        
+        for k, ax in enumerate(axes):
+            R = RR[k]; U = UU[k]
+            for p in [0,1]:
+                #ax.plot(R[:,coord,p], U[:,coord,p], lw=.7, c=colourline[p], ls='-',  alpha=.5)
+                ax.scatter(R[:,coord,p], U[:,coord,p], s=3, marker='o', c=t, cmap=cmap[p], alpha=.7)
 
-    for j, coord in enumerate([0, 2]):
-        ax = axes.flat[j]
-        for p in [0,1]:
-            #ax.plot(rE[:,coord,p], vE[:,coord,p], lw=0.9, c=c[p], ls='--', alpha=.5)
-            #ax.scatter(rE[:,coord,p], vE[:,coord,p], s=3, marker='¨', c=t, cmap=cmap[p], alpha=.7)
-            ax.plot(rR[:,coord,p], vR[:,coord,p], lw=.7, c=c[p], ls='-',  alpha=.5)
-            ax.scatter(rR[:,coord,p], vR[:,coord,p], s=3, marker='o', c=t, cmap=cmap[p], alpha=.7)
-
-        for p in [0,1]:
-            ax.plot(rR[0,coord,p],  vR[0,coord,p],  marker="P", ms=12, c=cp[p], alpha=1)
-            ax.plot(rR[-1,coord,p], vR[-1,coord,p], marker="*", ms=12, c=cp[p], alpha=1)
-            # show start and stop pos!
-
-    #units ={"position":" [μm]", "velocity":" [μm/s]"}
-    set_ax_info(ax1, r'$x$ [$\mu$m]', r'$v_x$ [$\mu$m/s]', legend=False)
-    set_ax_info(ax2, r'$z$ [$\mu$m]', r'$v_z$ [$\mu$m/s]', legend=False)
+            for p in [0,1]:
+                ax.plot(R[0,coord,p],  U[0,coord,p],  marker="P", ms=12, c=colourpoint[p], alpha=1)
+                ax.plot(R[-1,coord,p], U[-1,coord,p], marker="*", ms=12, c=colourpoint[p], alpha=1)
+            
+            set_ax_info(ax, r'$%s$ [$\mu$m]'%x, r'$v_{%s}$ [$\mu$m/s]'%x, title=titles[k], legend=False)
+        return axes
 
 
+    fig, axes = plt.subplots(ncols=2, layout='constrained', sharey=True)
+    axes = phase_plot(axes.flat, 0)
     plt.show()
+
+    fig, axes = plt.subplots(ncols=2, layout='constrained', sharey=True)
+    axes = phase_plot(axes.flat, 2)
+    plt.show()
+
+
+    '''3D trajectories'''
+
+    fig, axes = plt.subplots(ncols=2, layout='constrained', subplot_kw={'projection':'3d'})
+    ax1, ax2 = axes.flat
+    axes = [ax1, ax2]
+
+    for k, ax in enumerate(axes):
+        R = RR[k]
+        for p in [0, 1]:
+            ax.scatter(R[:,0,p], R[:,1,p], R[:,2,p], s=3, marker='o', c=t, cmap=cmap[p], alpha=.7)
+
+        for p in [0,1]:
+            ax.plot(R[ 0,0,p], R[ 0,1,p], R[ 0,2,p], marker="P", ms=12, c=colourpoint[p], alpha=1)
+            ax.plot(R[-1,0,p], R[-1,1,p], R[-1,2,p], marker="*", ms=12, c=colourpoint[p], alpha=1)
+        
+        #ax.set_aspect('equal')
+        # maybe set xlims etc.
+        set_ax_info(ax, xlabel=r'$x$ [$\mu$m]', ylabel=r'$y$ [$\mu$m]', zlabel=r'$z$ [$\mu$m]', title=titles[k], legend=False)
+    
+    plt.show()
+
+
+
+def first_with_timedep():
+    # just for testing
+
+
 
 
 if __name__=="__main__":
-    test_single_particle()
+    #test_single_particle()
 
     test_double_particle()

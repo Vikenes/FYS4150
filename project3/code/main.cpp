@@ -10,11 +10,25 @@
  */
 
 
+
+
+int test_single_particle(std::string scheme){
+
+    return 0;
+}
+
+int test_double_particle(std::string scheme){
+
+    return 0;
+}
+
+
+
 int run_tests(std::string scheme){
     assert(scheme=="RK4" or scheme=="FE");
     std::string folder = "tests/" + scheme + "/";
     /**
-     * Function for silently running all tests we have created
+     * Function for running all tests we have created
      */
     PenningTrap Trap = PenningTrap(B0, V0, d);
     //  initialise the two test particles:
@@ -78,13 +92,53 @@ int run_tests(std::string scheme){
 }
 
 
+
+int time_dependent_potential(double amplitude, double frequency, std::string scheme="RK4"){
+    // or some other name ....  
+    assert(scheme=="RK4" or scheme=="FE");
+    std::string folder = scheme + "/";
+    
+    double sim_duration = 500;
+    double h = sim_duration/8000;
+
+    PenningTrap Trap = PenningTrap(B0, V0, d); 
+    Trap.switch_interactions("off");
+    Trap.set_solution_filename(folder + "first");
+    Trap.apply_time_dependence(amplitude, frequency);
+    arma::vec rr;
+    arma::vec vv;
+
+    std::vector<Particle> dummy;
+    // make list of references [p1, p2, p3, ...]
+    for(int p=0; p<10; p++){
+        rr = arma::vec(3).randn() * 0.1 * d;                //  random initial position
+        vv = arma::vec(3).randn() * 0.1 * d;                //  random initial velocity 
+        dummy.push_back(Particle(q_Ca, m_Ca, rr, vv));    //  wrap in Particle 
+        Trap.add_particle(dummy.at(p));
+    }
+
+    //Trap.generate_random_identical_particles(q_Ca, m_Ca, 10);
+    Trap.simulate(sim_duration, h, scheme);
+
+    return 0;
+}
+
+
+
 int main(){   
 
     auto start_time = std::chrono::high_resolution_clock::now();
 
 
-    run_tests("FE");
-    run_tests("RK4");
+    //run_tests("FE");
+    //run_tests("RK4");
+
+    arma::vec f = arma::vec({0.1,0.4,0.7});
+    arma::vec omega_V = arma::linspace(0.2, 2.5, 4); // [ MHz ] 
+
+    time_dependent_potential(f(0), omega_V(2));
+
+    
 
     auto stop_time = std::chrono::high_resolution_clock::now();
 
