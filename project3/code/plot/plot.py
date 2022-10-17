@@ -306,12 +306,15 @@ def first_with_timedep():
     cmaps = ['Purples', 'Blues', 'Greens', 'Oranges', 'Reds', 'YlOrBr', 'YlOrRd', 'OrRd', 'PuRd', 'RdPu', 'BuPu', 'GnBu', 'PuBu', 'YlGnBu', 'PuBuGn', 'BuGn', 'YlGn']
     cps = ['purple', 'b', 'g', 'darkorange', 'r', 'orange', 'orangered', 'yellow', 'm', 'pink', 'firebrick']
     fig, ax = plt.subplots(layout='constrained', subplot_kw={'projection':'3d'})
-    for p in range(0,Np,3):
-        ax.scatter(R[:,0,p], R[:,1,p], R[:,2,p], s=3, marker='o', c=t, cmap=cmaps[p], alpha=.7)
-
-    for p in range(0,Np,3):
-        ax.plot(R[ 0,0,p], R[ 0,1,p], R[ 0,2,p], marker="P", ms=12, c=cps[p], alpha=1)
-        ax.plot(R[-1,0,p], R[-1,1,p], R[-1,2,p], marker="*", ms=12, c=cps[p], alpha=1)
+    j = 0
+    for p in range(0,Np,Np//3):
+        ax.scatter(R[:,0,p], R[:,1,p], R[:,2,p], s=3, marker='o', c=t, cmap=cmaps[j], alpha=.7)
+        j+=1
+    j=0
+    for p in range(0,Np,Np//3):
+        ax.plot(R[ 0,0,p], R[ 0,1,p], R[ 0,2,p], marker="P", ms=12, c=cps[j], alpha=1)
+        ax.plot(R[-1,0,p], R[-1,1,p], R[-1,2,p], marker="*", ms=12, c=cps[j], alpha=1)
+        j+=1
         
     set_ax_info(ax, xlabel=r'$x$ [$\mu$m]', ylabel=r'$y$ [$\mu$m]', zlabel=r'$z$ [$\mu$m]', title="Without interactions", legend=False)
     
@@ -328,6 +331,6 @@ def first_with_timedep():
 if __name__=="__main__":
     #test_single_particle()
 
-    test_double_particle()
+    #test_double_particle()
 
     first_with_timedep()
