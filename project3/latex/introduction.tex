@@ -42,9 +42,17 @@ Equation \eqref{eq:p1_eom_z} has the general solution
 \end{equation}
 For this project, we will assume $q>0$. (Move this?)
 
-Equations \eqref{eq:p1_eom_x} and \eqref{eq:p1_eom_y} are coupled. We therefore introduce a complex function $f(t)=x(t)+i y(t)$. Explaining maths. 
-
-The single differential equation is therefore 
+Equations \eqref{eq:p1_eom_x} and \eqref{eq:p1_eom_y} are coupled. We therefore introduce a complex function $f(t)=x(t)+i y(t)$ whose time derivatives are:
+\begin{align}
+    \dot{f} &= \dot{x}+i\dot{y} \\
+    \ddot{f} &= \ddot{x} + i\ddot{y}.
+\end{align}
+We then multiply equation \ref{eq:p1_eom_y} with $i$ and add to equation \ref{eq:p1_eom_x} to obtain:
+\begin{align}
+    \ddot{x} + i\ddot{y} + \omega_0(i\dot{x} - \dot{y}) -\frac{1}{2}\omega_z^2(x+iy) &= 0 \nonumber \\
+    (\ddot{x} + i\ddot{y}) + i\omega_0(\dot{x} +i \dot{y}) -\frac{1}{2}\omega_z^2(x+iy) &= 0. \label{eq:p2_eom_rewritten}
+\end{align}
+The single differential equation in terms of the complex function $f(t)$ is therefore: 
 \begin{equation}
     \ddot{f} + i\omega_0 \dot{f} - \frac{1}{2}\omega_z^2 f = 0. \label{eq:p2_f_complex_equation}
 \end{equation}
@@ -56,6 +64,33 @@ where $\phi_+$ and $\phi_-$ are constant phases, $A_+$ and $A_-$ are positive am
 \begin{equation}
     \omega_\pm = \frac{\omega_0 \pm \sqrt{\omega_0^2 - 2\omega_z^2}}{2}. \label{eq:p3_omega_pm}
 \end{equation}
+We see from equation  \ref{eq:p3_f_general_solution} that if $\omega_\pm$ is real, then $\abs{f(t)} < \infty$ for $t\to\infty$ and we have a bounded solution in the $xy$-plane. For $\omega_\pm$ to be real we see from equation \ref{eq:p3_omega_pm} that the following must hold:
+\begin{align}
+    \omega_0^2 &\geq 2\omega_z^2  \\
+    \implies \frac{q}{m} &\geq \frac{4V_0}{(B_0d)^2}.
+\end{align} 
+We may regard equation \ref{eq:p3_f_general_solution} as a sum of vectors $\vec{r}_\pm$ with amplitudes $r_\pm=A_\pm$ and directions given by the angles $\alpha_\pm = \omega_\pm t + \phi_\pm$ in the complex plane (representing the $xy$-plane). The magnitude $\abs{f(t)} = \abs{f}$ for this sum of vectors is then given by:
+\begin{align}
+    \abs{f} = \sqrt{\abs{\vec{r}_+}^2 + \abs{\vec{r}_-}^2 + 2\abs{\vec{r}_+}\abs{\vec{r_-}}\cos{(\abs{\alpha_+-\alpha_-})}}.
+\end{align}
+
+
+
+
+
+
+
+
+The maximum distance from the origin, $R_+$, occurs when the two vectors are pointing in the same direction, i.e. $\abs{\alpha_+-\alpha_-} = 0 \implies \cos0=1$, which yields:
+\begin{align}
+    R_+ &= \sqrt{A_+^2 + A_-^2 + 2A_+A_-} = \sqrt{(A_+ + A_-)^2} \nonumber \\
+    &= A_+ + A_-
+\end{align}
+Similarily, the minimum distance, $R_-$, from the origin occurs when the vectors are pointing in opposite directions, i.e. $\abs{\alpha_+-\alpha_-} = \pi \implies \cos\pi=-1$, which yields:
+\begin{align}
+    R_- &= \sqrt{A_+^2 + A_-^2 - 2A_+A_-} = \sqrt{(A_+ - A_-)^2} \nonumber \\
+    &= \abs{A_+ - A_-}
+\end{align}
 
 
 
