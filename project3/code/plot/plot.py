@@ -278,6 +278,50 @@ def test_double_particle(scheme="RK4"):
 def first_with_timedep():
     # just for testing
 
+    tRU = np.loadtxt(data_path + f"RK4/first.txt", unpack=True, delimiter=",", skiprows=1)
+
+    t_ = tRU[0]
+    for i in range(len(t_)):
+        if np.abs(t_[i+1]-0)<1e-8:
+            idx_stop = i
+            break
+    
+    t = t_[:idx_stop+1]
+    Nt = len(t)
+    Np = int(len(t_)/Nt)
+
+    R = np.zeros((Nt,3,Np))
+    U = np.zeros((Nt,3,Np))
+    for p in range(Np):
+        j = int(Nt*p)
+        j_next = int(Nt*(p+1))
+        if p == Np-1:
+            R[:,:,p] = tRU[1:4, j:].T
+            U[:,:,p] = tRU[4:7, j:].T
+        else:
+            R[:,:,p] = tRU[1:4, j:j_next].T
+            U[:,:,p] = tRU[4:7, j:j_next].T
+
+
+    cmaps = ['Purples', 'Blues', 'Greens', 'Oranges', 'Reds', 'YlOrBr', 'YlOrRd', 'OrRd', 'PuRd', 'RdPu', 'BuPu', 'GnBu', 'PuBu', 'YlGnBu', 'PuBuGn', 'BuGn', 'YlGn']
+    cps = ['purple', 'b', 'g', 'darkorange', 'r', 'orange', 'orangered', 'yellow', 'm', 'pink', 'firebrick']
+    fig, ax = plt.subplots(layout='constrained', subplot_kw={'projection':'3d'})
+    for p in range(0,Np,3):
+        ax.scatter(R[:,0,p], R[:,1,p], R[:,2,p], s=3, marker='o', c=t, cmap=cmaps[p], alpha=.7)
+
+    for p in range(0,Np,3):
+        ax.plot(R[ 0,0,p], R[ 0,1,p], R[ 0,2,p], marker="P", ms=12, c=cps[p], alpha=1)
+        ax.plot(R[-1,0,p], R[-1,1,p], R[-1,2,p], marker="*", ms=12, c=cps[p], alpha=1)
+        
+    set_ax_info(ax, xlabel=r'$x$ [$\mu$m]', ylabel=r'$y$ [$\mu$m]', zlabel=r'$z$ [$\mu$m]', title="Without interactions", legend=False)
+    
+    plt.show()
+
+
+    
+
+
+
 
 
 
@@ -285,3 +329,5 @@ if __name__=="__main__":
     #test_single_particle()
 
     test_double_particle()
+
+    first_with_timedep()

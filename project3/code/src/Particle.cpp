@@ -29,5 +29,5 @@ void Particle::new_position(arma::vec r){
 }
 
 void Particle::new_velocity(arma::vec v){
-    v_ += v;
+    v_ = v;
 }

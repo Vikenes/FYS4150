@@ -14,6 +14,8 @@ class PenningTrap{
     // Private parameters
     double Vd2r; // ratio V/d^2
     std::vector<Particle*> particles;   //  vector to contain pointers all the particle objects
+    std::vector<Particle> particles_tmp; // temporary emergency solution
+    bool tmp = false;
     
     /**
      * Declaration of a set of matrices that we use in the calculations.
@@ -98,7 +100,7 @@ class PenningTrap{
     void simulate(double T, double dt, std::string scheme="RK4", bool point=false);   //  simulate for T μs using time step dt μs using scheme
     void set_solution_filename(std::string filename);   //  define filename of soliution file
     int count_particles();    //  count the particles still left in the drap
-    void generate_random_identical_particles(double charge, double mass, int Np_in);    // Np_in particles with random positions and velocities
+    void generate_random_identical_particles(double charge, double mass, int no_of_particles);    // Np_in particles with random positions and velocities
     
 };
 

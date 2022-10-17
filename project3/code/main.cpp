@@ -105,23 +105,13 @@ int time_dependent_potential(double amplitude, double frequency, std::string sch
     Trap.switch_interactions("off");
     Trap.set_solution_filename(folder + "first");
     Trap.apply_time_dependence(amplitude, frequency);
-    arma::vec rr;
-    arma::vec vv;
-
-    std::vector<Particle> dummy;
-    // make list of references [p1, p2, p3, ...]
-    for(int p=0; p<10; p++){
-        rr = arma::vec(3).randn() * 0.1 * d;                //  random initial position
-        vv = arma::vec(3).randn() * 0.1 * d;                //  random initial velocity 
-        dummy.push_back(Particle(q_Ca, m_Ca, rr, vv));    //  wrap in Particle 
-        Trap.add_particle(dummy.at(p));
-    }
-
-    //Trap.generate_random_identical_particles(q_Ca, m_Ca, 10);
+    Trap.generate_random_identical_particles(q_Ca, m_Ca, 10);
     Trap.simulate(sim_duration, h, scheme);
 
     return 0;
 }
+
+
 
 
 
@@ -134,11 +124,9 @@ int main(){
     //run_tests("RK4");
 
     arma::vec f = arma::vec({0.1,0.4,0.7});
-    arma::vec omega_V = arma::linspace(0.2, 2.5, 4); // [ MHz ] 
+    arma::vec omega_V = arma::linspace(0.2, 2.5, 100); // [ MHz ] 
 
-    time_dependent_potential(f(0), omega_V(2));
-
-    
+    time_dependent_potential(f(2), omega_V(70));
 
     auto stop_time = std::chrono::high_resolution_clock::now();
 
