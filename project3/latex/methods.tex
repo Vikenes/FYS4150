@@ -1,5 +1,26 @@
 \section{Methods}\label{sec:methods}
-%
+
+
+We aim to create a program in \CC\, that simulates a set of $N_\mathrm{p}$ particles inside a Penning trap. An object-oriented code is befitting this task and we present in the following descriptions of the classes \verb|Particle| and \verb|PenningTrap|.
+
+The purpose of \texttt{Particle} is to hold the parameters, such as the position, of a particle. We let an object of this class be initialised with a charge $q$, a mass $m$, a position $\vec{r} = (x,y,z)$ and a velocity $\vec{v} = (v_x, v_y, v_z)$. We add functions to update the latter two. 
+
+The \texttt{PenningTrap}-class imitates the physical system that is the Penning trap of magnetic field $\vec{B}=B_0\hat{e}_z$, electric potential $V = \frac{V_0}{2d^2} (2z^2-x^2-y^2)$ and characteristic dimension $d$. It is friend with the \texttt{Particle}-class and, in order to resemble the physical situation as much as possible, accepts only input particles of this type. When filled with $N_\mathrm{p}\geq 1$, an object of \texttt{PenningTrap} is ready to simulate the evolution of the \texttt{Particle} object(s) for a given period of time and time step with either a Forward-Euler or a \nth{4} order Runge-Kutta numerical scheme. 
+
+\dots
+
+
+\verb|PenningTrap| offers several additional functionalites. Amongst other things, the class
+
+\begin{itemize}
+    \item offers the choice between \nth{4} order Runge-Kutta or Forward-Euler as integration method %idk
+    \item provides the option to include or exclude Coloumb interactions in the simulation, as they are computationally greedy
+    \item includes a method for adding a time-dependent perturbation to the external electric potential, $V_0\rightarrow V_0 (1+ f(1+\cos{(\omega_V t)}))$
+    \item has the ability to count the number of particles still trapped, that is the number particles whose position $\vec{r}$ is such that $\abs{\vec{r}} \leq d$
+    \item can generate a set of identical particles with positions and velocities that are normally distrubuted within the trap's dimensions
+\end{itemize}
+
+
 
 % ===========================================
 \subsection*{The algorithm}
@@ -51,11 +72,11 @@
             \State $\vec{k}_{\vec{v},1} \leftarrow h \vec{F}(\vec{r}, \vec{v})/m$ \Comment{...}
             \State $\vec{k}_{\vec{r},1} \leftarrow h \vec{v}$
             \State $\vec{k}_{\vec{v},2} \leftarrow h \vec{F}(\vec{r}+1/2\vec{k}_{\vec{r},1}, \vec{v}+1/2\vec{k}_{\vec{v},1})/m$ \Comment{...}
-            \State $\vec{k}_{\vec{r},2} \leftarrow h \vec{v}+1/2\vec{k}_{\vec{v},1}$ 
+            \State $\vec{k}_{\vec{r},2} \leftarrow h (\vec{v}+1/2\vec{k}_{\vec{v},1})$ 
             \State $\vec{k}_{\vec{v},3} \leftarrow h \vec{F}(\vec{r}+1/2\vec{k}_{\vec{r},2}, \vec{v}+1/2\vec{k}_{\vec{v},2})/m$ \Comment{...}
-            \State $\vec{k}_{\vec{r},3} \leftarrow h \vec{v}+1/2\vec{k}_{\vec{v},2}$ 
+            \State $\vec{k}_{\vec{r},3} \leftarrow h (\vec{v}+1/2\vec{k}_{\vec{v},2})$ 
             \State $\vec{k}_{\vec{v},4} \leftarrow h \vec{F}(\vec{r}+\vec{k}_{\vec{r},3}, \vec{v}+\vec{k}_{\vec{v},3})/m$ \Comment{...}
-            \State $\vec{k}_{\vec{r},4} \leftarrow h \vec{v}+\vec{k}_{\vec{v},3}$ 
+            \State $\vec{k}_{\vec{r},4} \leftarrow h (\vec{v}+\vec{k}_{\vec{v},3})$ 
             \
             \State $\text{d}U_{i, \text{particle}} \leftarrow (\vec{k}_{\vec{v},1} + 2\vec{k}_{\vec{v},2} + 2\vec{k}_{\vec{v},3} + \vec{k}_{\vec{v},4})/6$
             \State $\text{d}R_{i, \text{particle}} \leftarrow (\vec{k}_{\vec{r},1} + 2\vec{k}_{\vec{r},2} + 2\vec{k}_{\vec{r},3} + \vec{k}_{\vec{r},4})/6$
