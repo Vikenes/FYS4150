@@ -2,19 +2,13 @@
 #include "Particle.hpp"
 #include "utils.hpp"
 
-
-
-// Planning to add time dependence
-
 PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool interactions_in){
     B0 = B0_in;
     V0 = V0_in;
     d = d_in;
     Vd2r = V0/std::pow(d, 2);  
     interactions = interactions_in;
-    
 }
-
 
 void PenningTrap::add_particle(Particle &particle){
     particles.push_back(&particle);
@@ -33,24 +27,15 @@ void PenningTrap::print_particles(){
     }
 }
 
-void PenningTrap::generate_particle(std::vector<Particle*> &list, arma::vec r, arma::vec v){
-    Particle* new_particle = new Particle(q_Ca, m_Ca, r, v);
-    list.push_back(new_particle);
-    Np++;
-}
-
-
 void PenningTrap::generate_random_identical_particles(double charge, double mass, int no_of_particles, int seed){
     arma::arma_rng::set_seed(seed);
-    arma::vec rr;
-    arma::vec vv;
+    arma::vec rr, vv;
 
     for(int p=0; p<no_of_particles; p++){
-        rr = arma::vec(3).randn() * 0.1 * d;                //  random initial position
-        vv = arma::vec(3).randn() * 0.1 * d;                //  random initial velocity 
+        rr = arma::vec(3).randn() * 0.1 * d;    //  random initial position
+        vv = arma::vec(3).randn() * 0.1 * d;    //  random initial velocity 
         generate_particle(particles, rr, vv);
     }
-
 }
 
 void PenningTrap::apply_time_dependence(double amplitude, double frequency){
@@ -79,99 +64,6 @@ int PenningTrap::count_particles(){
         if(arma::norm(r)<d){Np_trapped++;}
     }
     return Np_trapped;
-}
-
-
-arma::mat PenningTrap::compute_external_Efield(arma::mat R){
-    E_ext = Vd2r * R;
-    E_ext.row(2) *= -2;
-    E_ext.elem(arma::find(Pnorm(R) > d)).zeros();   //  zero outside of trap
-    return E_ext;
-}
-
-arma::mat PenningTrap::compute_external_Efield(double t, arma::mat R){
-    E_ext = compute_external_Efield(R);
-    E_ext *= (1 + f*cos(omega_V*t));
-    return E_ext;
-}
-
-arma::mat PenningTrap::compute_external_Bfield(arma::mat R){
-    B_ext.row(2).fill(B0);
-    B_ext.elem(arma::find(Pnorm(R) > d)).zeros();   //  zero outside of trap 
-    return B_ext;
-}
-
-arma::mat PenningTrap::compute_interaction_field(arma::mat R){
-    for(int p=0; p<Np; p++){
-        norm3.fill(0.);
-        dist = R; dist.each_col() -= R.col(p);
-        norm3 = arma::pow(Pnorm(dist), 3);
-        norm3.col(p).fill(1.);                                  //  avoid dividing by zero
-        E_int.col(p) = k_e * arma::sum(Q%dist/norm3, 1);        //  sum over all particles
-    }
-    return E_int;
-}
-
-arma::mat PenningTrap::external_forces(arma::mat RU){
-    compute_external_Efield(RU.rows(0,2));
-    compute_external_Bfield(RU.rows(0,2));
-   
-    arma::mat U(3,Np); U.rows(0,2) = RU.rows(3,5);
-    arma::mat UxB(3,Np);    //  cross products
-    UxB.row(0) = U.row(1)%B_ext.row(2) - U.row(2)%B_ext.row(1);
-    UxB.row(1) = U.row(2)%B_ext.row(0) - U.row(0)%B_ext.row(2);
-    UxB.row(2) = U.row(0)%B_ext.row(1) - U.row(1)%B_ext.row(0);     //  always zero...
-    F_ext = Q % (E_ext + UxB);
-    return F_ext;
-}
-
-arma::mat PenningTrap::external_forces(double t, arma::mat RU){
-    compute_external_Efield(t, RU.rows(0,2));
-    compute_external_Bfield(RU.rows(0,2));
-   
-    arma::mat U(3,Np); U.rows(0,2) = RU.rows(3,5);
-    arma::mat UxB(3,Np);    //  cross products
-    UxB.row(0) = U.row(1)%B_ext.row(2) - U.row(2)%B_ext.row(1);
-    UxB.row(1) = U.row(2)%B_ext.row(0) - U.row(0)%B_ext.row(2);
-    UxB.row(2) = U.row(0)%B_ext.row(1) - U.row(1)%B_ext.row(0);     //  always zero...
-    F_ext = Q % (E_ext + UxB);
-    return F_ext;
-}
-
-
-arma::mat PenningTrap::internal_forces(arma::mat RU){
-    compute_interaction_field(RU.rows(0,2));
-    F_int = Q % E_int;
-    return F_int;
-}
-
-void PenningTrap::ready(){
-
-    if(Np==1){interactions = false;}
-
-    Q = arma::mat(3, Np).fill(0.);     //  charges
-    M = arma::mat(3, Np).fill(0.);     //  masses
-
-    RU = arma::zeros(6, Np);      //   r,  v at a given time for all particles
-    dRU = arma::zeros(6, Np);     //  dr, dv at a given time for all particles
-
-    //  fields and forces:
-    E_ext = arma::zeros(3, Np);
-    B_ext = arma::zeros(3, Np);
-    E_int = arma::zeros(3, Np);
-    F_ext = arma::zeros(3, Np);
-    F_int = arma::zeros(3, Np);
-
-    //  for interactions:
-    dist = arma::mat(3,Np);
-    norm3 = arma::mat(3,Np);
-
-    //  misc:
-    K = arma::zeros(6, Np);
-    Rnorm = arma::mat(3, Np);
-
-    isready = true;
-
 }
 
 void PenningTrap::simulate(double T, double dt, std::string scheme, bool point){
@@ -230,12 +122,61 @@ void PenningTrap::simulate(double T, double dt, std::string scheme, bool point){
 
 }
 
-
 void PenningTrap::save_solution(std::string filename){
     write_arma_to_file_scientific(system, filename);  
     std::cout << "\n    Written solution to ../output/data/" << filename << ".txt.\n" << std::endl;
 }
 
+void PenningTrap::ready(){
+
+    if(Np==1){interactions = false;}
+
+    Q = arma::mat(3, Np).fill(0.); M = arma::mat(3, Np).fill(0.);  
+    RU = arma::zeros(6, Np); dRU = arma::zeros(6, Np); 
+
+    E_ext = arma::zeros(3, Np); B_ext = arma::zeros(3, Np); E_int = arma::zeros(3, Np);
+    F_ext = arma::zeros(3, Np); F_int = arma::zeros(3, Np);
+
+    dist = arma::mat(3, Np);
+    norm3 = arma::mat(3, Np);
+    K = arma::zeros(6, Np);
+    Rnorm = arma::mat(3, Np);
+
+    isready = true;
+
+}
+
+arma::mat PenningTrap::external_forces(arma::mat RU){
+    compute_external_Efield(RU.rows(0,2));
+    compute_external_Bfield(RU.rows(0,2));
+   
+    arma::mat U(3,Np); U.rows(0,2) = RU.rows(3,5);
+    arma::mat UxB(3,Np);    //  cross products
+    UxB.row(0) = U.row(1)%B_ext.row(2) - U.row(2)%B_ext.row(1);
+    UxB.row(1) = U.row(2)%B_ext.row(0) - U.row(0)%B_ext.row(2);
+    UxB.row(2) = U.row(0)%B_ext.row(1) - U.row(1)%B_ext.row(0);     //  always zero...
+    F_ext = Q % (E_ext + UxB);
+    return F_ext;
+}
+
+arma::mat PenningTrap::external_forces(double t, arma::mat RU){
+    compute_external_Efield(t, RU.rows(0,2));
+    compute_external_Bfield(RU.rows(0,2));
+   
+    arma::mat U(3,Np); U.rows(0,2) = RU.rows(3,5);
+    arma::mat UxB(3,Np);    //  cross products
+    UxB.row(0) = U.row(1)%B_ext.row(2) - U.row(2)%B_ext.row(1);
+    UxB.row(1) = U.row(2)%B_ext.row(0) - U.row(0)%B_ext.row(2);
+    UxB.row(2) = U.row(0)%B_ext.row(1) - U.row(1)%B_ext.row(0);     //  always zero...
+    F_ext = Q % (E_ext + UxB);
+    return F_ext;
+}
+
+arma::mat PenningTrap::internal_forces(arma::mat RU){
+    compute_interaction_field(RU.rows(0,2));
+    F_int = Q % E_int;
+    return F_int;
+}
 
 arma::mat PenningTrap::evolve_FE(double dt, arma::mat RU){
     external_forces(RU);
@@ -277,10 +218,45 @@ arma::mat PenningTrap::evolve_RK4(double dt, double t, arma::mat RU){
     return dRU;
 }
 
+arma::mat PenningTrap::compute_external_Efield(arma::mat R){
+    E_ext = Vd2r * R;
+    E_ext.row(2) *= -2;
+    E_ext.elem(arma::find(Pnorm(R) > d)).zeros();   //  zero outside of trap
+    return E_ext;
+}
 
-arma::mat PenningTrap::K_val(double t, arma::mat RU){
+arma::mat PenningTrap::compute_external_Efield(double t, arma::mat R){
+    E_ext = compute_external_Efield(R);
+    E_ext *= (1 + f*cos(omega_V*t));
+    return E_ext;
+}
+
+arma::mat PenningTrap::compute_external_Bfield(arma::mat R){
+    B_ext.row(2).fill(B0);
+    B_ext.elem(arma::find(Pnorm(R) > d)).zeros();   //  zero outside of trap 
+    return B_ext;
+}
+
+arma::mat PenningTrap::compute_interaction_field(arma::mat R){
+    for(int p=0; p<Np; p++){
+        norm3.fill(0.);
+        dist = R; dist.each_col() -= R.col(p);
+        norm3 = arma::pow(Pnorm(dist), 3);
+        norm3.col(p).fill(1.);                                  //  avoid dividing by zero
+        E_int.col(p) = k_e * arma::sum(Q%dist/norm3, 1);        //  sum over all particles
+    }
+    return E_int;
+}
+
+void PenningTrap::generate_particle(std::vector<Particle*> &list, arma::vec r, arma::vec v){
+    Particle* new_particle = new Particle(q_Ca, m_Ca, r, v);
+    list.push_back(new_particle);  // maybe try calling 'add_particle(new_particle)'? or maybe not ...
+    Np++;
+}
+
+arma::mat PenningTrap::K_val(arma::mat RU){
     K.rows(0,2) = RU.rows(3,5);
-    external_forces(t, RU);
+    external_forces(RU);
     if(interactions){
         internal_forces(RU);
     }
@@ -288,9 +264,9 @@ arma::mat PenningTrap::K_val(double t, arma::mat RU){
     return K;
 }
 
-arma::mat PenningTrap::K_val(arma::mat RU){
+arma::mat PenningTrap::K_val(double t, arma::mat RU){
     K.rows(0,2) = RU.rows(3,5);
-    external_forces(RU);
+    external_forces(t, RU);
     if(interactions){
         internal_forces(RU);
     }

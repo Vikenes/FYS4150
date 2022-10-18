@@ -323,14 +323,32 @@ def first_with_timedep():
 
     
 
+def trapped_particles(amplitudes={1:0.1, 2:0.4, 3:0.7}, scheme="RK4"):
+    # f1, f2, f3 = 0.1, 0.4, 0.7
+    # simulation duration T = 500 micro seconds
+    # n_steps = 8000
+
+
+    fig, ax = plt.subplots(layout="constrained")
+    for f_no in amplitudes:
+        f = amplitudes[f_no]
+        omega, Ntrapped = np.loadtxt(data_path + f"{scheme}/trapped_f{f_no}.txt", unpack=True, delimiter=",", skiprows=1)
+        ax.plot(omega, Ntrapped, 'o-', lw=2, alpha=.7, label=r"$f_{%i} = %.1f$"%(f_no, f))
+
+    set_ax_info(ax, xlabel=r'$\omega_V$ [MHz]', ylabel=r"$N_\mathrm{trapped}$")
+
+    plt.show()
+
 
 
 
 
 
 if __name__=="__main__":
-    test_single_particle()
+    #test_single_particle()
 
-    test_double_particle()
+    #test_double_particle()
 
     #first_with_timedep()
+
+    trapped_particles()
