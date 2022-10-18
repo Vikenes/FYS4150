@@ -14,8 +14,6 @@ class PenningTrap{
     // Private parameters
     double Vd2r; // ratio V/d^2
     std::vector<Particle*> particles;   //  vector to contain pointers all the particle objects
-    std::vector<Particle> particles_tmp; // temporary emergency solution
-    bool tmp = false;
     
     /**
      * Declaration of a set of matrices that we use in the calculations.
@@ -61,6 +59,7 @@ class PenningTrap{
     arma::mat evolve_RK4(double dt, double t, arma::mat RU);  //  evolve system for one step in time using the Runge-Kutta 4 scheme
     arma::mat K_val(double t, arma::mat RU);    //  helper function for RK4 
 
+    void generate_particle(std::vector<Particle*> &list, arma::vec r, arma::vec v);
 
 
 

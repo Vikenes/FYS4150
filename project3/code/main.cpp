@@ -114,25 +114,10 @@ int time_dependent_potential(double amplitude, double frequency, std::string sch
     Trap.switch_interactions("off");
     
     Trap.apply_time_dependence(amplitude, frequency);
-    std::vector<Particle*> list;
-    arma::arma_rng::set_seed(69); // OBS! want to have this in utils
-    arma::vec rr;
-    arma::vec vv;
+    Trap.generate_random_identical_particles(q_Ca, m_Ca, 10);
 
-    for(int p=0; p<100; p++){
-        rr = arma::vec(3).randn() * 0.1 * d;                //  random initial position
-        vv = arma::vec(3).randn() * 0.1 * d;                //  random initial velocity 
-        generate_particle(list, rr, vv);
-    }
-
-    
-    for(int i=0; i<10; i++){
-        std::cout << list.at(i) -> position() << std::endl;
-    }
-    
-
-    //Trap.generate_random_identical_particles(q_Ca, m_Ca, 100);
     Trap.simulate(sim_duration, h, scheme);
+    std::cout<< Trap.count_particles() << std::endl;
     Trap.save_solution(folder + "first");
 
     return 0;
@@ -176,15 +161,15 @@ int main(){
     auto start_time = std::chrono::high_resolution_clock::now();
 
 
-    run_tests("FE");
-    run_tests("RK4");
+    //run_tests("FE");
+    //run_tests("RK4");
 
 
 
     arma::vec f = arma::vec({0.1,0.4,0.7});
     arma::vec omega_V = arma::linspace(0.2, 2.5, 100); // [ MHz ] 
 
-    //time_dependent_potential(f(2), omega_V(70));
+    time_dependent_potential(f(2), omega_V(70));
     //particles_left(f(0), omega_V);
 
     auto stop_time = std::chrono::high_resolution_clock::now();

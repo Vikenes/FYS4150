@@ -21,35 +21,27 @@ void PenningTrap::add_particle(Particle &particle){
     Np++;
 }
 
+void PenningTrap::generate_particle(std::vector<Particle*> &list, arma::vec r, arma::vec v){
+    Particle* new_particle = new Particle(q_Ca, m_Ca, r, v);
+    list.push_back(new_particle);
+    Np++;
+}
+
+
 void PenningTrap::generate_random_identical_particles(double charge, double mass, int no_of_particles){
     arma::arma_rng::set_seed(69); // OBS! want to have this in utils
     arma::vec rr;
     arma::vec vv;
 
-    std::vector<Particle> dummy;
-    Particle p0(charge, mass, arma::vec({0,0,0}), arma::vec({0,0,0}));
-    dummy.push_back(p0);
-
-
-    Np = 0;
-
     for(int p=0; p<no_of_particles; p++){
-        Particle pp = dummy.at(p);
         rr = arma::vec(3).randn() * 0.1 * d;                //  random initial position
         vv = arma::vec(3).randn() * 0.1 * d;                //  random initial velocity 
-        //Particle& pp = dummy.at(p);
-        pp.new_position(rr);
-        pp.new_velocity(vv);
-        //add_particle(dummy.at(p));
-        dummy.push_back(pp);
-        particles_tmp.push_back(dummy.at(p+1));
-        Np++;
-        //add_particle(dummy.at(p+1));
-        //particles.at(p) -> new_position(rr);
-        //particles.at(p) -> new_velocity(vv);
-        //std::cout << particles.at(p)->position() << std::endl;
+        generate_particle(particles, rr, vv);
     }
-    tmp = true;
+
+    for(int p=0; p<Np; p++){ // delete me
+        std::cout << particles.at(p)-> position() <<std::endl;
+    }
 }
 
 void PenningTrap::apply_time_dependence(double amplitude, double frequency){
@@ -182,25 +174,13 @@ void PenningTrap::simulate(double T, double dt, std::string scheme, bool point){
 
     system = arma::cube(7, Np, Nt);
     //  initialise system:
-    if(tmp){
-        for(int p=0; p<Np; p++){
-            for(int j=0; j<3; j++){
-                Q.col(p).row(j) = particles_tmp.at(p).charge();
-                M.col(p).row(j) = particles_tmp.at(p).mass();
-            }
-            system.slice(0).col(p).rows(1,3) = particles_tmp.at(p).position();
-            system.slice(0).col(p).rows(4,6) = particles_tmp.at(p).velocity();
+    for(int p=0; p<Np; p++){
+        for(int j=0; j<3; j++){
+            Q.col(p).row(j) = particles.at(p) -> charge();
+            M.col(p).row(j) = particles.at(p) -> mass();
         }
-    }
-    else{
-        for(int p=0; p<Np; p++){
-            for(int j=0; j<3; j++){
-                Q.col(p).row(j) = particles.at(p) -> charge();
-                M.col(p).row(j) = particles.at(p) -> mass();
-            }
-            system.slice(0).col(p).rows(1,3) = particles.at(p) -> position();
-            system.slice(0).col(p).rows(4,6) = particles.at(p) -> velocity();   
-        }
+        system.slice(0).col(p).rows(1,3) = particles.at(p) -> position();
+        system.slice(0).col(p).rows(4,6) = particles.at(p) -> velocity();   
     }
 
     std::cout << system.slice(0) << std::endl;
@@ -227,7 +207,7 @@ void PenningTrap::simulate(double T, double dt, std::string scheme, bool point){
         system.slice(i+1).row(0).fill(t + dt);
 
 
-        if(point and not tmp){ // fixme
+        if(point){ // fixme
             for(int p=0; p<Np; Np++){
                 particles.at(p) -> new_position(system.slice(i).col(p).rows(1,3));
                 particles.at(p) -> new_velocity(system.slice(i).col(p).rows(4,6));
@@ -235,18 +215,10 @@ void PenningTrap::simulate(double T, double dt, std::string scheme, bool point){
         }
     }
 
-    if(tmp){
-        for(int p=0; p<Np; p++){
-                particles_tmp.at(p).new_position(system.slice(Nt-1).col(p).rows(1,3));
-                particles_tmp.at(p).new_velocity(system.slice(Nt-1).col(p).rows(4,6));
-            } 
-    }
-    else{
-        for(int p=0; p<Np; p++){
-                particles.at(p) -> new_position(system.slice(Nt-1).col(p).rows(1,3));
-                particles.at(p) -> new_velocity(system.slice(Nt-1).col(p).rows(4,6));
-            } 
-    }
+    for(int p=0; p<Np; p++){
+            particles.at(p) -> new_position(system.slice(Nt-1).col(p).rows(1,3));
+            particles.at(p) -> new_velocity(system.slice(Nt-1).col(p).rows(4,6));
+        } 
 
 }
 
