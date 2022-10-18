@@ -125,7 +125,7 @@ int main(){
     //particles_left(f3, omega_V, "trapped_f3");      // Running time: 747.507 s
 
     arma::vec omega_V_fine = arma::linspace(1.35, 1.45, 40);
-    particles_left(f1, omega_V_fine, "trapped_f1_with", "on");
+    particles_left(f1, omega_V_fine, "trapped_f1_with", "RK4", "on");
 
     
     auto stop_time = std::chrono::high_resolution_clock::now();
