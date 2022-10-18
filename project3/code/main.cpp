@@ -176,15 +176,15 @@ int main(){
     auto start_time = std::chrono::high_resolution_clock::now();
 
 
-    //run_tests("FE");
-    //run_tests("RK4");
+    run_tests("FE");
+    run_tests("RK4");
 
 
 
     arma::vec f = arma::vec({0.1,0.4,0.7});
     arma::vec omega_V = arma::linspace(0.2, 2.5, 100); // [ MHz ] 
 
-    time_dependent_potential(f(2), omega_V(70));
+    //time_dependent_potential(f(2), omega_V(70));
     //particles_left(f(0), omega_V);
 
     auto stop_time = std::chrono::high_resolution_clock::now();
