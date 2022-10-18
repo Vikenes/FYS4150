@@ -19,6 +19,7 @@ int write_to_file_scientific(std::vector<double> x, std::vector<double> v, std::
 int write_arma_to_file_scientific(arma::cube R, std::string filename, int width=15, int prec=10);
 
 int write_to_file(std::vector<double> a, std::vector<double> b, std::string filename, int width=15);
+int write_to_file(std::vector<double> a, std::vector<int> b, std::string filename, int width=15);
 
 
 //  Constans for this project in units of micrometer, microseconds, atomic mass unit and elementary charge

@@ -21,6 +21,18 @@ void PenningTrap::add_particle(Particle &particle){
     Np++;
 }
 
+void PenningTrap::print_particles(){
+    std::cout << "\nParticles at time t = " << t << std::endl;
+    std::cout << "_____________________________________________________" << std::endl;
+    for(int p=0; p<Np; p++){
+        arma::vec r = particles.at(p) -> position();
+        arma::vec v = particles.at(p) -> velocity();
+        std::cout << "r = (" << r(0) << ", " << r(1) << ", " << r(2) << ")    " << "|r| = " << arma::norm(r) << std::endl;
+        std::cout << "v = (" << v(0) << ", " << v(1) << ", " << v(2) << ")    " << "|v| = " << arma::norm(v) << std::endl;
+        std::cout << "-----------------------------------------------------" << std::endl;
+    }
+}
+
 void PenningTrap::generate_particle(std::vector<Particle*> &list, arma::vec r, arma::vec v){
     Particle* new_particle = new Particle(q_Ca, m_Ca, r, v);
     list.push_back(new_particle);
@@ -28,8 +40,8 @@ void PenningTrap::generate_particle(std::vector<Particle*> &list, arma::vec r, a
 }
 
 
-void PenningTrap::generate_random_identical_particles(double charge, double mass, int no_of_particles){
-    arma::arma_rng::set_seed(69); // OBS! want to have this in utils
+void PenningTrap::generate_random_identical_particles(double charge, double mass, int no_of_particles, int seed){
+    arma::arma_rng::set_seed(seed);
     arma::vec rr;
     arma::vec vv;
 
@@ -39,9 +51,6 @@ void PenningTrap::generate_random_identical_particles(double charge, double mass
         generate_particle(particles, rr, vv);
     }
 
-    for(int p=0; p<Np; p++){ // delete me
-        std::cout << particles.at(p)-> position() <<std::endl;
-    }
 }
 
 void PenningTrap::apply_time_dependence(double amplitude, double frequency){
@@ -183,7 +192,6 @@ void PenningTrap::simulate(double T, double dt, std::string scheme, bool point){
         system.slice(0).col(p).rows(4,6) = particles.at(p) -> velocity();   
     }
 
-    std::cout << system.slice(0) << std::endl;
     
 
     //  run simulation:
@@ -214,7 +222,7 @@ void PenningTrap::simulate(double T, double dt, std::string scheme, bool point){
             }
         }
     }
-
+    t = system(0, 0, Nt-1);
     for(int p=0; p<Np; p++){
             particles.at(p) -> new_position(system.slice(Nt-1).col(p).rows(1,3));
             particles.at(p) -> new_velocity(system.slice(Nt-1).col(p).rows(4,6));

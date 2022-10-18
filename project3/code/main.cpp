@@ -94,16 +94,9 @@ int run_tests(std::string scheme){
 
 
 
-int generate_particle(std::vector<Particle*> &list, arma::vec r, arma::vec v){
-    Particle* new_particle = new Particle(q_Ca, m_Ca, r, v);
-    list.push_back(new_particle);
-
-    return 0;
-}
-
-
 int time_dependent_potential(double amplitude, double frequency, std::string scheme="RK4"){
     // or some other name ....  
+    // experimenting:
     assert(scheme=="RK4" or scheme=="FE");
     std::string folder = scheme + "/";
     
@@ -114,42 +107,42 @@ int time_dependent_potential(double amplitude, double frequency, std::string sch
     Trap.switch_interactions("off");
     
     Trap.apply_time_dependence(amplitude, frequency);
-    Trap.generate_random_identical_particles(q_Ca, m_Ca, 10);
+    Trap.generate_random_identical_particles(q_Ca, m_Ca, 12);
 
+    Trap.print_particles();
     Trap.simulate(sim_duration, h, scheme);
+    Trap.print_particles();
     std::cout<< Trap.count_particles() << std::endl;
-    Trap.save_solution(folder + "first");
+    //Trap.save_solution(folder + "first");
 
     return 0;
 }
 
 
-int particles_left(PenningTrap trap, int sim_dur, double amplitude, double frequency, std::string scheme="RK4"){
-    PenningTrap Trap = trap; // copy
-    //Trap.switch_interactions("off");
+int particles_left(int sim_dur, double h, double amplitude, double frequency, std::string scheme="RK4"){
+    PenningTrap Trap = PenningTrap(B0, V0, d);
+    Trap.generate_random_identical_particles(q_Ca, m_Ca, 100);
+    Trap.switch_interactions("off");
     Trap.apply_time_dependence(amplitude, frequency);
-    std::cout << Trap.Np << std::endl;
-    Trap.simulate(sim_dur, sim_dur/1000, scheme);
-    std::cout << Trap.Np << std::endl;
+    Trap.simulate(sim_dur, h, scheme);
+
     return Trap.count_particles();
 }
 
-int particles_left(double amplitude, arma::vec frequency, std::string scheme="RK4"){
+int particles_left(double amplitude, arma::vec frequency, std::string filename, std::string scheme="RK4"){
     double sim_duration = 500;
-    double h = sim_duration/1000;
-
-    PenningTrap Trap = PenningTrap(B0, V0, d);
-    //Trap.generate_random_identical_particles(q_Ca, m_Ca, 10);
-    Trap.switch_interactions("off");
-    std::cout << Trap.Np << std::endl;
-
+    double h = sim_duration/8000;
 
     int Nomega = frequency.size();
     std::vector<int> trapped(Nomega);
+    std::vector<double> omega(Nomega);
     for(int j=0; j<Nomega; j++){
-        //trapped[j] = particles_left(Trap, sim_duration, amplitude, frequency(j));
-        std::cout << particles_left(Trap, sim_duration, amplitude, frequency(j)) << std::endl;
+        std::cout << "(" << j+1 << "/" << Nomega << ")" << std::endl;
+        omega[j] = frequency(j);
+        trapped[j] = particles_left(sim_duration, h, amplitude, frequency(j), scheme);
     }
+
+    write_to_file(omega, trapped, filename);
     
     return 0;
 }
@@ -165,12 +158,17 @@ int main(){
     //run_tests("RK4");
 
 
+    double f1, f2, f3; // amplitudes
+    f1 = 0.1; f2 = 0.4; f3 = 0.7;
 
     arma::vec f = arma::vec({0.1,0.4,0.7});
-    arma::vec omega_V = arma::linspace(0.2, 2.5, 100); // [ MHz ] 
+    arma::vec omega_V = arma::linspace(0.2, 2.5, 300); // [ MHz ] 
+    std::cout << omega_V(1)-omega_V(0) << std::endl;
 
-    time_dependent_potential(f(2), omega_V(70));
-    //particles_left(f(0), omega_V);
+    //time_dependent_potential(f(0), omega_V(70));
+    particles_left(f1, omega_V, "trapped_f1");
+    //particles_left(f2, omega_V, "trapped_f2");
+    //particles_left(f3, omega_V, "trapped_f3");
 
     auto stop_time = std::chrono::high_resolution_clock::now();
 

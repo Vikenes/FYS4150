@@ -80,6 +80,30 @@ int write_to_file(std::vector<double> a, std::vector<double> b, std::string file
     return 0;
 }
 
+int write_to_file(std::vector<double> a, std::vector<int> b, std::string filename, int width){
+                        
+    std::string path = "../output/data/"; // path for .txt files
+    std::string file = path + filename + ".txt";
+    std::ofstream ofile;
+
+    ofile.open(file.c_str());
+
+    int n = a.size();
+    for(int i=0; i<n; i++){
+        ofile << std::setw(width) << a[i] << ", "
+              << std::setw(width) << b[i]
+              << std::endl;
+    }
+
+    ofile.close();
+
+    return 0;
+}
+
+
+
+
+
 double k_e = 1.38935333 * std::pow(10,5);
 double T = 9.64852558 * 10;
 double V = 9.64852558 * std::pow(10,7);

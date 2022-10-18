@@ -34,7 +34,7 @@ class PenningTrap{
      *  cols -> particle number 
      */
     arma::mat RU; arma::mat dRU;      //  positions and velocities, change in positions and velocities
-    double t;                         //  current time
+    double t=0;                       //  current time
 
 
     // Member functions
@@ -59,7 +59,7 @@ class PenningTrap{
     arma::mat evolve_RK4(double dt, double t, arma::mat RU);  //  evolve system for one step in time using the Runge-Kutta 4 scheme
     arma::mat K_val(double t, arma::mat RU);    //  helper function for RK4 
 
-    void generate_particle(std::vector<Particle*> &list, arma::vec r, arma::vec v);
+    void generate_particle(std::vector<Particle*> &list, arma::vec r, arma::vec v);  // helper function for filling particles with random particles
 
 
 
@@ -99,7 +99,8 @@ class PenningTrap{
 
     void save_solution(std::string filename);   // save solution to file
     int count_particles();    //  count the particles still left in the drap
-    void generate_random_identical_particles(double charge, double mass, int no_of_particles);    // Np_in particles with random positions and velocities
+    void generate_random_identical_particles(double charge, double mass, int no_of_particles, int seed=69);    // Np_in particles with random positions and velocities
+    void print_particles();   // print information about particles in trap
     
 };
 

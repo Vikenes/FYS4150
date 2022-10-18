@@ -329,8 +329,8 @@ def first_with_timedep():
 
 
 if __name__=="__main__":
-    #test_single_particle()
+    test_single_particle()
 
-    #test_double_particle()
+    test_double_particle()
 
-    first_with_timedep()
+    #first_with_timedep()
