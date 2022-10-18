@@ -46,51 +46,60 @@ int run_tests(std::string scheme){
 
     Particle p1a = p1;
     PenningTrap Trap1a = Trap;
-    Trap1a.set_solution_filename(folder + "single_n1");
     Trap1a.add_particle(p1a);
     Trap1a.simulate(sim_duration, sim_duration/n(0), scheme);
+    Trap1a.save_solution(folder + "single_n1");
     
     Particle p1b = p1;
     PenningTrap Trap1b = Trap;
-    Trap1b.set_solution_filename(folder + "single_n2");
     Trap1b.add_particle(p1b);
     Trap1b.simulate(sim_duration, sim_duration/n(1), scheme);
+    Trap1b.save_solution(folder + "single_n2");
 
     Particle p1c = p1;
     PenningTrap Trap1c = Trap;
-    Trap1c.set_solution_filename(folder + "single_n3");
     Trap1c.add_particle(p1c);
     Trap1c.simulate(sim_duration, sim_duration/n(2), scheme);
+    Trap1c.save_solution(folder + "single_n3");
 
     Particle p1d = p1;
     PenningTrap Trap1d = Trap;
-    Trap1d.set_solution_filename(folder + "single_n4");
     Trap1d.add_particle(p1d);
     Trap1d.simulate(sim_duration, sim_duration/n(3), scheme);
+    Trap1d.save_solution(folder + "single_n4");
 
 
     /*  (2) Double particle 
             (a) without interactions
             (b) with interactions   */
+
     h = sim_duration/n(2);
     
     PenningTrap Trap2a = PenningTrap(B0, V0, d, false);
     Particle p1a2 = p1; Particle p2a2 = p2;
-    Trap2a.set_solution_filename(folder + "double_without");
     Trap2a.add_particle(p1a2);
     Trap2a.add_particle(p2a2);
     Trap2a.simulate(sim_duration, h, scheme);
+    Trap2a.save_solution(folder + "double_without");
 
     PenningTrap Trap2b = PenningTrap(B0, V0, d, true);
     Particle p1b2 = p1; Particle p2b2 = p2;
-    Trap2b.set_solution_filename(folder + "double_with");
     Trap2b.add_particle(p1b2);
     Trap2b.add_particle(p2b2);
     Trap2b.simulate(sim_duration, h, scheme);
+    Trap2b.save_solution(folder + "double_with");
 
     return 0;
 }
 
+
+
+int generate_particle(std::vector<Particle*> &list, arma::vec r, arma::vec v){
+    Particle* new_particle = new Particle(q_Ca, m_Ca, r, v);
+    list.push_back(new_particle);
+
+    return 0;
+}
 
 
 int time_dependent_potential(double amplitude, double frequency, std::string scheme="RK4"){
@@ -103,10 +112,28 @@ int time_dependent_potential(double amplitude, double frequency, std::string sch
 
     PenningTrap Trap = PenningTrap(B0, V0, d); 
     Trap.switch_interactions("off");
-    Trap.set_solution_filename(folder + "first");
+    
     Trap.apply_time_dependence(amplitude, frequency);
-    Trap.generate_random_identical_particles(q_Ca, m_Ca, 100);
+    std::vector<Particle*> list;
+    arma::arma_rng::set_seed(69); // OBS! want to have this in utils
+    arma::vec rr;
+    arma::vec vv;
+
+    for(int p=0; p<100; p++){
+        rr = arma::vec(3).randn() * 0.1 * d;                //  random initial position
+        vv = arma::vec(3).randn() * 0.1 * d;                //  random initial velocity 
+        generate_particle(list, rr, vv);
+    }
+
+    
+    for(int i=0; i<10; i++){
+        std::cout << list.at(i) -> position() << std::endl;
+    }
+    
+
+    //Trap.generate_random_identical_particles(q_Ca, m_Ca, 100);
     Trap.simulate(sim_duration, h, scheme);
+    Trap.save_solution(folder + "first");
 
     return 0;
 }
@@ -127,10 +154,9 @@ int particles_left(double amplitude, arma::vec frequency, std::string scheme="RK
     double h = sim_duration/1000;
 
     PenningTrap Trap = PenningTrap(B0, V0, d);
-    Trap.generate_random_identical_particles(q_Ca, m_Ca, 10);
+    //Trap.generate_random_identical_particles(q_Ca, m_Ca, 10);
     Trap.switch_interactions("off");
     std::cout << Trap.Np << std::endl;
-
 
 
     int Nomega = frequency.size();
@@ -152,6 +178,8 @@ int main(){
 
     //run_tests("FE");
     //run_tests("RK4");
+
+
 
     arma::vec f = arma::vec({0.1,0.4,0.7});
     arma::vec omega_V = arma::linspace(0.2, 2.5, 100); // [ MHz ] 

@@ -20,7 +20,7 @@ class PenningTrap{
     /**
      * Declaration of a set of matrices that we use in the calculations.
      *  rows -> value at (x, y, z)
-     *  cols -> particle number 
+     *  cols -> particle number
      */
     arma::mat Q, M;                   //  charges, masses
     arma::mat E_ext, B_ext, E_int;    //  external electric, external magnetic, internal electric fields
@@ -84,7 +84,6 @@ class PenningTrap{
      *      cols        -> particles
      *      row(0)      -> time (t)
      *      rows(1,3)   -> position (x,y,z)
-     *      rows(4,6)   -> velocity (vx,vy,vz)
      */
     arma::cube system;
 
@@ -98,7 +97,8 @@ class PenningTrap{
     void apply_time_dependence(double amplitude, double frequency);  //  set electric potential V0 -> V0*(1+f*cos(ωV*t))
     void ready();                         //  initialise matrices etc. for a given Np
     void simulate(double T, double dt, std::string scheme="RK4", bool point=false);   //  simulate for T μs using time step dt μs using scheme
-    void set_solution_filename(std::string filename);   //  define filename of soliution file
+
+    void save_solution(std::string filename);   // save solution to file
     int count_particles();    //  count the particles still left in the drap
     void generate_random_identical_particles(double charge, double mass, int no_of_particles);    // Np_in particles with random positions and velocities
     

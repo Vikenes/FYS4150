@@ -184,31 +184,22 @@ void PenningTrap::simulate(double T, double dt, std::string scheme, bool point){
     //  initialise system:
     if(tmp){
         for(int p=0; p<Np; p++){
-            
             for(int j=0; j<3; j++){
                 Q.col(p).row(j) = particles_tmp.at(p).charge();
                 M.col(p).row(j) = particles_tmp.at(p).mass();
-
             }
             system.slice(0).col(p).rows(1,3) = particles_tmp.at(p).position();
             system.slice(0).col(p).rows(4,6) = particles_tmp.at(p).velocity();
-            
         }
     }
     else{
         for(int p=0; p<Np; p++){
-            
             for(int j=0; j<3; j++){
                 Q.col(p).row(j) = particles.at(p) -> charge();
                 M.col(p).row(j) = particles.at(p) -> mass();
-                std::cout << particles.at(p)->charge() << std::endl;
-
             }
-            std::cout << "here" << std::endl;
-            std::cout << particles.at(p)->position() << std::endl;
             system.slice(0).col(p).rows(1,3) = particles.at(p) -> position();
-            system.slice(0).col(p).rows(4,6) = particles.at(p) -> velocity();
-            
+            system.slice(0).col(p).rows(4,6) = particles.at(p) -> velocity();   
         }
     }
 
@@ -257,12 +248,12 @@ void PenningTrap::simulate(double T, double dt, std::string scheme, bool point){
             } 
     }
 
-    write_arma_to_file_scientific(system, filename);  
-    std::cout << "\n    Written solution to ../output/data/" << filename << ".txt.\n" << std::endl;
 }
 
-void PenningTrap::set_solution_filename(std::string filename_in){
-    filename = filename_in;
+
+void PenningTrap::save_solution(std::string filename){
+    write_arma_to_file_scientific(system, filename);  
+    std::cout << "\n    Written solution to ../output/data/" << filename << ".txt.\n" << std::endl;
 }
 
 
