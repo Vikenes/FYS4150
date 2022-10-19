@@ -49,17 +49,17 @@ int run_tests(std::string scheme){
             (c) for n = 16000
             (d) for n = 32000   */
 
-    PenningTrap Trap1a = test_single_particle(scheme, n(0));
-    Trap1a.save_solution(folder + "single_n1");
+    // PenningTrap Trap1a = test_single_particle(scheme, n(0));
+    // Trap1a.save_solution(folder + "single_n1");
     
-    PenningTrap Trap1b = test_single_particle(scheme, n(1));
-    Trap1b.save_solution(folder + "single_n2");
+    // PenningTrap Trap1b = test_single_particle(scheme, n(1));
+    // Trap1b.save_solution(folder + "single_n2");
 
-    PenningTrap Trap1c = test_single_particle(scheme, n(2));
-    Trap1c.save_solution(folder + "single_n3");
+    // PenningTrap Trap1c = test_single_particle(scheme, n(2));
+    // Trap1c.save_solution(folder + "single_n3");
 
-    PenningTrap Trap1d = test_single_particle(scheme, n(3));
-    Trap1d.save_solution(folder + "single_n4");
+    // PenningTrap Trap1d = test_single_particle(scheme, n(3));
+    // Trap1d.save_solution(folder + "single_n4");
 
 
     /*  (2) Double particle 
@@ -108,7 +108,7 @@ int main(){
     auto start_time = std::chrono::high_resolution_clock::now();
 
     /* PROBLEM 8 */
-    run_tests("FE");
+    // run_tests("FE");
     run_tests("RK4");
 
     /* PROBLEM 9 */

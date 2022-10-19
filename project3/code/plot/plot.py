@@ -397,7 +397,7 @@ def check_upper_and_lower_bound():
 if __name__=="__main__":
     test_single_particle()
 
-    #test_double_particle()
+    # test_double_particle()
 
     #first_with_timedep()
     # trapped_particles()

@@ -35,14 +35,15 @@ int write_to_file_scientific(std::vector<double> x, std::vector<double> v, std::
 int write_arma_to_file_scientific(arma::cube R, std::string filename, int width, int prec){
     // Write armadillo cube to file                         
     std::string path = "../output/data/"; // path for .txt files
-    std::string file = path + filename + ".txt";
     std::ofstream ofile;
 
-    ofile.open(file.c_str());
-    std::string header = "t, x, y, z, vx, vy, vz \n";
-    ofile << header;
     // std::cout << "test:" << std::endl;
     for(int p=0; p<R.n_cols; p++){
+        
+        std::string file = path + filename + "_p" + std::to_string(p+1) + ".txt";
+        ofile.open(file.c_str());
+        std::string header = "t, x, y, z, vx, vy, vz \n";
+        ofile << header;
         // std::cout << "sl" << std::endl;
         
         for(int i=0; i<R.n_slices; i++){
@@ -53,9 +54,10 @@ int write_arma_to_file_scientific(arma::cube R, std::string filename, int width,
             }
             ofile << std::endl;
         }
+        
+        ofile.close();
     }
 
-    ofile.close();
 
     return 0;
 }
