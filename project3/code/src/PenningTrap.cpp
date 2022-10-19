@@ -118,7 +118,7 @@ void PenningTrap::simulate(double T, double dt, std::string scheme, bool point){
     for(int p=0; p<Np; p++){
             particles.at(p) -> new_position(system.slice(Nt-1).col(p).rows(1,3));
             particles.at(p) -> new_velocity(system.slice(Nt-1).col(p).rows(4,6));
-        } 
+        }
 
 }
 
@@ -184,7 +184,7 @@ arma::mat PenningTrap::evolve_FE(double dt, arma::mat RU){
         internal_forces(RU);
     }
     dRU.rows(3,5) = (F_ext + F_int) / M * dt;
-    dRU.rows(0,2) = (RU.rows(3,5) + dRU.rows(3,5)) * dt;
+    dRU.rows(0,2) = (RU.rows(3,5)) * dt;
     return dRU;
 }
 
@@ -194,7 +194,7 @@ arma::mat PenningTrap::evolve_FE(double dt, double t, arma::mat RU){
         internal_forces(RU);
     }
     dRU.rows(3,5) = (F_ext + F_int) / M * dt;
-    dRU.rows(0,2) = (RU.rows(3,5) + dRU.rows(3,5)) * dt;
+    dRU.rows(0,2) = (RU.rows(3,5)) * dt;
     return dRU;
 }
 
