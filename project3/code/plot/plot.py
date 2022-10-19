@@ -147,8 +147,8 @@ def test_single_particle():
 
 def test_double_particle(scheme="RK4"):
 
-    tRUa = np.loadtxt(data_path + f"tests/{scheme}/double_without.txt", unpack=True, delimiter=",", skiprows=1)
-    tRUb = np.loadtxt(data_path + f"tests/{scheme}/double_with.txt", unpack=True, delimiter=",", skiprows=1)
+    tRUa = np.loadtxt(data_path + f"{scheme}/double_without.txt", unpack=True, delimiter=",", skiprows=1)
+    tRUb = np.loadtxt(data_path + f"{scheme}/double_with.txt", unpack=True, delimiter=",", skiprows=1)
 
     Nt = int(len(tRUa[0])/2)
     t = tRUa[0,:Nt]
@@ -395,10 +395,10 @@ def check_upper_and_lower_bound():
 
 
 if __name__=="__main__":
-    #test_single_particle()
+    test_single_particle()
 
-    #test_double_particle()
+    # test_double_particle()
 
     #first_with_timedep()
-    trapped_particles()
-    trapped_particles_zoom()
+    # trapped_particles()
+    # trapped_particles_zoom()
