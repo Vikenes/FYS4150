@@ -332,7 +332,7 @@ def trapped_particles(amplitudes={1:0.1, 2:0.4, 3:0.7}, scheme="RK4"):
     fig, ax = plt.subplots(layout="constrained")
     for f_no in amplitudes:
         f = amplitudes[f_no]
-        omega, Ntrapped = np.loadtxt(data_path + f"{scheme}/trapped_f{f_no}.txt", unpack=True, delimiter=",", skiprows=1)
+        omega, Ntrapped = np.loadtxt(data_path + f"{scheme}/trapped_f{f_no}.txt", unpack=True, delimiter=",")
         ax.plot(omega, Ntrapped, 'o-', lw=2, alpha=.7, label=r"$f_{%i} = %.1f$"%(f_no, f))
 
     set_ax_info(ax, xlabel=r'$\omega_V$ [MHz]', ylabel=r"$N_\mathrm{trapped}$")
@@ -348,7 +348,7 @@ def trapped_particles_zoom(amplitudes={1:0.1}, scheme="RK4"):
     fig, ax = plt.subplots(layout="constrained")
     for f_no in amplitudes:
         f = amplitudes[f_no]
-        omega, Ntrapped = np.loadtxt(data_path + f"{scheme}/trapped_f{f_no}_with.txt", unpack=True, delimiter=",", skiprows=1)
+        omega, Ntrapped = np.loadtxt(data_path + f"{scheme}/trapped_f{f_no}_with.txt", unpack=True, delimiter=",")
         ax.plot(omega, Ntrapped, 'o-', lw=2, alpha=.7, label=r"$f_{%i} = %.1f$"%(f_no, f))
 
     set_ax_info(ax, xlabel=r'$\omega_V$ [MHz]', ylabel=r"$N_\mathrm{trapped}$")
@@ -394,11 +394,11 @@ def check_upper_and_lower_bound():
     plt.show()
 
 
-# if __name__=="__main__":
+if __name__=="__main__":
     #test_single_particle()
 
     #test_double_particle()
 
     #first_with_timedep()
-
-    # trapped_particles_zoom()
+    trapped_particles()
+    trapped_particles_zoom()
