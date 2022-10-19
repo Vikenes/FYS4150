@@ -356,14 +356,49 @@ def trapped_particles_zoom(amplitudes={1:0.1}, scheme="RK4"):
     plt.show()
 
 
+def check_upper_and_lower_bound():
+    # Removed later??
+    RK4_ = np.loadtxt(data_path + f"tests/RK4/single_n4.txt", unpack=True, delimiter=",", skiprows=1)
+
+    # print(RK4_.shape)
+    t, x, y = RK4_[0:3]
+    v0 = RK4_[5][0]
+    x0 = x[0]
+    m = 40.078 
+    B0 = 96.5 
+    V_d2 = 9.65 
+    omegaz2 = 2*V_d2 /m 
+    omega_0 = B0/m 
+
+    omega_minus = omega_0/2 - np.sqrt(omega_0**2 - 2*omegaz2)/2 
+    omega_plus  = omega_0/2 + np.sqrt(omega_0**2 - 2*omegaz2)/2 
+
+    A_plus  = (v0 + omega_minus*x0) / (omega_minus - omega_plus)
+    A_minus = - (v0 + omega_plus * x0) / (omega_minus - omega_plus)
+
+    R_minus = np.abs(A_plus - A_minus)
+    R_plus = A_plus + A_minus
+
+    # R_minus = (2*v0 + x[0]*omega_0) / np.sqrt(omega_0**2 - 2*omegaz2)
+    # R_plus  = x[0] 
+
+    theta = np.linspace(0,2*np.pi,int(1e3))
+    f_squared = A_plus**2 + A_minus**2 + 2*np.cos((omega_plus-omega_minus)*theta)
+    R_t = np.sqrt(f_squared)
+
+    plt.plot(x,y)
+    plt.plot(R_plus*np.cos(theta), R_plus*np.sin(theta), label=r'$R_{+}$')
+    plt.plot(R_minus*np.cos(theta), R_minus*np.sin(theta), label=r'$R_{-}$')
+    plt.axis('equal')
+    plt.legend(fontsize=20)
+    plt.show()
 
 
-
-if __name__=="__main__":
+# if __name__=="__main__":
     #test_single_particle()
 
     #test_double_particle()
 
     #first_with_timedep()
 
-    trapped_particles_zoom()
+    # trapped_particles_zoom()
