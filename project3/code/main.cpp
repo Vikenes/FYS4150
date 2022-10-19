@@ -35,14 +35,10 @@ PenningTrap test_double_particle(bool with_interactions, std::string scheme, dou
 
 int run_tests(std::string scheme){
     assert(scheme=="RK4" or scheme=="FE");
-    std::string folder = "tests/" + scheme + "/";
+    std::string folder = scheme + "/";
     /**
      * Function for running the baby case simulations we have set up
      */
-    PenningTrap Trap = PenningTrap(B0, V0, d);
-    //  initialise the two test particles:
-    Particle p1 = Particle(q_Ca, m_Ca, arma::vec({20,0,20}), arma::vec({0,25,0}));
-    Particle p2 = Particle(q_Ca, m_Ca, arma::vec({25,25,0}), arma::vec({0,40,5}));
     double sim_duration = 50;
     arma::vec n = arma::vec({4000, 8000, 16000, 32000});
     double h; 
@@ -116,16 +112,16 @@ int main(){
     run_tests("RK4");
 
     /* PROBLEM 9 */
-    double f1=0.1, f2=0.4, f3=0.7; // amplitudes
-    arma::vec omega_V = arma::linspace(0.2, 2.5, 300); // [ MHz ] 
-    assert(omega_V(1)-omega_V(0)<0.02);
+    // double f1=0.1, f2=0.4, f3=0.7; // amplitudes
+    // arma::vec omega_V = arma::linspace(0.2, 2.5, 300); // [ MHz ] 
+    // assert(omega_V(1)-omega_V(0)<0.02);
 
     //particles_left(f1, omega_V, "trapped_f1");      // Running time: 1195.99 s
     //particles_left(f2, omega_V, "trapped_f2");      // Running time: 843.927 s
     //particles_left(f3, omega_V, "trapped_f3");      // Running time: 747.507 s
 
-    arma::vec omega_V_fine = arma::linspace(1.35, 1.45, 40);
-    particles_left(f1, omega_V_fine, "trapped_f1_with", "RK4", "on");
+    // arma::vec omega_V_fine = arma::linspace(1.35, 1.45, 40);
+    // particles_left(f1, omega_V_fine, "trapped_f1_with", "RK4", "on");
 
     
     auto stop_time = std::chrono::high_resolution_clock::now();

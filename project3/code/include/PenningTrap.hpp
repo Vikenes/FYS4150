@@ -133,7 +133,7 @@ class PenningTrap{
     /* Switch Coloumb interaction mode from current to other.
         -> if interactions are on, they are turned off 
         -> if interactions are off, they are turned on */
-    void switch_interactions();   // if on -> off, if off -> on
+    void switch_interactions();  
     /* Switch Coloumb interactions {switch_in}.
         -> turn on: switch_in = "on" or "ON"
         -> turn off: switch_in = "off" or "OFF" */
