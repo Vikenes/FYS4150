@@ -35,7 +35,7 @@ PenningTrap test_double_particle(bool with_interactions, std::string scheme, dou
 
 int run_tests(std::string scheme){
     assert(scheme=="RK4" or scheme=="FE");
-    std::string folder = "tests/" + scheme + "/";
+    std::string folder = scheme + "/";
     /**
      * Function for running the baby case simulations we have set up
      */
@@ -53,17 +53,17 @@ int run_tests(std::string scheme){
             (c) for n = 16000
             (d) for n = 32000   */
 
-    PenningTrap Trap1a = test_single_particle(scheme, n(0));
-    Trap1a.save_solution(folder + "single_n1");
+    // PenningTrap Trap1a = test_single_particle(scheme, n(0));
+    // Trap1a.save_solution(folder + "single_n1");
     
-    PenningTrap Trap1b = test_single_particle(scheme, n(1));
-    Trap1b.save_solution(folder + "single_n2");
+    // PenningTrap Trap1b = test_single_particle(scheme, n(1));
+    // Trap1b.save_solution(folder + "single_n2");
 
-    PenningTrap Trap1c = test_single_particle(scheme, n(2));
-    Trap1c.save_solution(folder + "single_n3");
+    // PenningTrap Trap1c = test_single_particle(scheme, n(2));
+    // Trap1c.save_solution(folder + "single_n3");
 
-    PenningTrap Trap1d = test_single_particle(scheme, n(3));
-    Trap1d.save_solution(folder + "single_n4");
+    // PenningTrap Trap1d = test_single_particle(scheme, n(3));
+    // Trap1d.save_solution(folder + "single_n4");
 
 
     /*  (2) Double particle 
@@ -112,20 +112,20 @@ int main(){
     auto start_time = std::chrono::high_resolution_clock::now();
 
     /* PROBLEM 8 */
-    run_tests("FE");
+    // run_tests("FE");
     run_tests("RK4");
 
     /* PROBLEM 9 */
-    double f1=0.1, f2=0.4, f3=0.7; // amplitudes
-    arma::vec omega_V = arma::linspace(0.2, 2.5, 300); // [ MHz ] 
-    assert(omega_V(1)-omega_V(0)<0.02);
+    // double f1=0.1, f2=0.4, f3=0.7; // amplitudes
+    // arma::vec omega_V = arma::linspace(0.2, 2.5, 300); // [ MHz ] 
+    // assert(omega_V(1)-omega_V(0)<0.02);
 
     //particles_left(f1, omega_V, "trapped_f1");      // Running time: 1195.99 s
     //particles_left(f2, omega_V, "trapped_f2");      // Running time: 843.927 s
     //particles_left(f3, omega_V, "trapped_f3");      // Running time: 747.507 s
 
-    arma::vec omega_V_fine = arma::linspace(1.35, 1.45, 40);
-    particles_left(f1, omega_V_fine, "trapped_f1_with", "RK4", "on");
+    // arma::vec omega_V_fine = arma::linspace(1.35, 1.45, 40);
+    // particles_left(f1, omega_V_fine, "trapped_f1_with", "RK4", "on");
 
     
     auto stop_time = std::chrono::high_resolution_clock::now();
