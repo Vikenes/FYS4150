@@ -1,8 +1,6 @@
 \section{Introduction}\label{sec:introduction}
 
 
-The Penning trap \dots % about Penning trap
-
 \textbf{Suggested introduction outline:}
 \begin{enumerate}
     \item Introduce Penning Trap 
@@ -13,6 +11,38 @@ The Penning trap \dots % about Penning trap
     \item Others (Trapped, ressonance, error, etc.)
     \item Project outline 
 \end{enumerate}
+
+
+\textcolor{red}{WILL REPHRASE: }
+Should you ever be wanting to trap a charged paricle, a natural starting point would be to create a potential whose mimimum is three-dimensional, implying a quadrupole potential of the form $V(\vec{r}) = Ax^2 + By^2 + Cy^2$. If one remembers the Laplace's equation, $\nabla^2 V = 0$, an issue arises as $A+B+C=0$. This means that it is impossible to achieve three-dimensional trapping with static fields. Inspired by the work of Frans Michel Penning, Hans Georg Dehmelt built the first Penning trap, a device for trapping charged particles using an additional magnetic field. In particular, the trap creates an inhomogeneous quadrupole electric field and a homogeneous axial magnetic field that ensures, under some conditions, that charged particles remain inside of it.
+% rephrase !!!!
+
+
+A particle with charge $q$ in an electric field $\vec{E}$ and a magnetic field $\vec{B}$ undergoes the Lorentz force $\vec{F}$ given by
+
+\begin{equation}\label{eq:lorentz_force}
+    \vec{F} = q\vec{E} + q \vec{v} \cross \vec{B},
+\end{equation}
+where $\vec{v}$ is the particle's velocity. Suppose the particle has mass $m$, then Newton's second law gives us the equation of motion for the particle:
+
+\begin{equation}\label{eq:eom_lorentz}
+ \dv{\vec{v}}{t} = \frac{\vec{F}}{m}  \Rightarrow \dv[2]{\vec{r}}{t}= \frac{q}{m} (\vec{E} + \vec{v} \cross \vec{B} ) 
+\end{equation}
+
+% Comment about initial conditions? No...
+The external electric field is related to the potential through $\vec{E} = -\nabla V$. We now have simple equations for predicting a single particle's motion inside of a Penning trap, and we will later discuss what is required of the initial conditions in order for it to stay put. If we were to accompany the single particle with another charged particle, however, we would need to consider the contribution to the electric field from the Coulomb interactions between the two of them. This complicates the system in such a way that we generally cannot solve it analytically \textcolor{blue}{(IS THIS CORRECT?)}; we need to use numerical integration methods. 
+
+We consider two different numerical schemes for solving ordinary differential equations (ODEs)\footnote{We shall have to split the eq. \eqref{eq:eom_lorentz} in two first order ODEs.}, forward Euler (FE) and fourth order Runge-Kutta (RK4). The former is a numerical procedure of first order, whereas the latter is of fourth order, resulting in global errors proportional to the step size and the step size to the power of four, respectively. That is, say we have a step size $h\sim 0.1$, the error arising from FE is $h^{1-4} \sim 1000$ times larger than that of RK4 \textcolor{blue}{(WAIT, WHAT?)}. However, one should keep in mind that the RK4\textcolor{red}{-}algorithm demands many more floating points operations (FLOPs) from our computer than what the FE\textcolor{red}{-}algorithm does.
+
+Now being able to solve the system of several interacting charged particles in the Penning trap in question, we should ponder the effect the Coulomb interactions have on the trap's ability to contain the particles. 
+\textcolor{green}{FILL WITH PONDERING}
+
+In addition, we will investigate the effect of adding an oscillating time-dependent perturbation to the external electric potential $V$. This is indeed similar to another approach for particle storage, named the Paul trap, in which the oscillating field is used instead of the magnetic field. The combined ion trap, the combination of these two structures, allows for storage of oppositely charged particles, but is vulnerable to some ranges of oscillation frequencies and amplitudes \textcolor{blue}{(CHECK THIS)}.
+% move to right after first paragraph?
+
+\textcolor{green}{OUTLINE}
+
+
 
 \subsection*{Equations (temporary title)}
 We will consider an ideal Penning trap, where the electric field is defined by the electric potential 

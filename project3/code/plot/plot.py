@@ -90,8 +90,8 @@ def test_single_particle():
     colors = ['dodgerblue', 'olive', 'darkorange', 'navy']
     markersizes = [16, 13, 9, 4]
     for k in range(1, 5):
-        FE = np.loadtxt(data_path + f"tests/FE/single_n{k}.txt", unpack=True, delimiter=",", skiprows=1)
-        RK4 = np.loadtxt(data_path + f"tests/RK4/single_n{k}.txt", unpack=True, delimiter=",", skiprows=1)
+        FE = np.loadtxt(data_path + f"FE/single_n{k}.txt", unpack=True, delimiter=",", skiprows=1)
+        RK4 = np.loadtxt(data_path + f"RK4/single_n{k}.txt", unpack=True, delimiter=",", skiprows=1)
 
         t = FE[0] # times
         n = len(t)-1
@@ -147,8 +147,8 @@ def test_single_particle():
 
 def test_double_particle(scheme="RK4"):
 
-    tRUa = np.loadtxt(data_path + f"tests/{scheme}/double_without.txt", unpack=True, delimiter=",", skiprows=1)
-    tRUb = np.loadtxt(data_path + f"tests/{scheme}/double_with.txt", unpack=True, delimiter=",", skiprows=1)
+    tRUa = np.loadtxt(data_path + f"{scheme}/double_without.txt", unpack=True, delimiter=",", skiprows=1)
+    tRUb = np.loadtxt(data_path + f"{scheme}/double_with.txt", unpack=True, delimiter=",", skiprows=1)
 
     Nt = int(len(tRUa[0])/2)
     t = tRUa[0,:Nt]
@@ -395,10 +395,10 @@ def check_upper_and_lower_bound():
 
 
 if __name__=="__main__":
-    #test_single_particle()
+    test_single_particle()
 
     #test_double_particle()
 
     #first_with_timedep()
-    trapped_particles()
-    trapped_particles_zoom()
+    # trapped_particles()
+    # trapped_particles_zoom()
