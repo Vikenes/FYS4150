@@ -109,7 +109,7 @@ int main(){
 
     /* PROBLEM 8 */
     // run_tests("FE");
-    run_tests("RK4");
+    // run_tests("RK4");
 
     /* PROBLEM 9 */
     // double f1=0.1, f2=0.4, f3=0.7; // amplitudes
@@ -121,8 +121,8 @@ int main(){
     //particles_left(f3, omega_V, "trapped_f3");      // Running time: 747.507 s
 
     // arma::vec omega_V_fine = arma::linspace(1.35, 1.45, 40);
-    // particles_left(f1, omega_V_fine, "trapped_f1_with", "RK4", "on");
-
+    // particles_left(f1, omega_V_fine, "trapped_f1_with_fine", "RK4", "on");
+    // particles_left(f1, omega_V_fine, "trapped_f1_without_fine", "RK4", "off");
     
     auto stop_time = std::chrono::high_resolution_clock::now();
 

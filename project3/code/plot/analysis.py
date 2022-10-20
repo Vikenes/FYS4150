@@ -52,7 +52,7 @@ def analytical_xy(t, x0, v0):
 
 
 
-def compare_z_analytical(push=False):
+def compare_z_analytical(savepush=False):
     """
     Sanity check.
     """
@@ -66,13 +66,13 @@ def compare_z_analytical(push=False):
 
     z_anal = analytical_z(t, z0)
 
-    plot.z_analytical(z_anal, z_FE, z_RK, t, push)
+    plot.z_analytical(z_anal, z_FE, z_RK, t, savepush)
    
     return None 
 
 
 
-def compute_errors(method, plot=True, push=False):
+def compute_errors(method, make_plot=True, savepush=False):
     if method=="FE":
         folder = FE_path 
         title = "Forward Euler"
@@ -105,9 +105,9 @@ def compute_errors(method, plot=True, push=False):
         times.append(t)
         h_k.append(t[-1] / (len(t) - 1))
    
-    if plot:
+    if make_plot:
         fname = "rel_error_" + method
-        plot.error_plot(rel_errors, times, fname, title, push)
+        plot.error_plot(rel_errors, times, fname, title, savepush)
 
     else:
         r_err = 0 
@@ -120,7 +120,7 @@ def compute_errors(method, plot=True, push=False):
 
 
 
-def xy_plane_movements(push=False):
+def xy_plane_movements(savepush=False):
     # RK4 only 
     p1_no_int = load("double_without_p1.txt")
     p2_no_int = load("double_without_p2.txt")
@@ -136,9 +136,9 @@ def xy_plane_movements(push=False):
     fname = "xy_two_particles"
     xlabel = r"$x\,[\mathrm{\mu m}]$"
     ylabel = r"$y\,[\mathrm{\mu m}]$"
-    plot.two_particles_plane((p1xy, p2xy), (p1xy_int, p2xy_int), xlabel, ylabel, fname=fname, push=push)
+    plot.two_particles_plane((p1xy, p2xy), (p1xy_int, p2xy_int), xlabel, ylabel, fname=fname, savepush=savepush)
 
-def x_phase_plot(push=False):
+def x_phase_plot(savepush=False):
     p1_no_int = load("double_without_p1.txt")
     p2_no_int = load("double_without_p2.txt")
     p1_int = load("double_with_p1.txt")
@@ -154,10 +154,10 @@ def x_phase_plot(push=False):
     fname = "x_phase_plot"
     xlabel = r"$x\,[\mathrm{\mu m}]$"
     ylabel = r"$v_x\,[\mathrm{\mu m / \mu s}]$"
-    plot.two_particles_plane((p1x, p2x), (p1x_int, p2x_int), xlabel, ylabel, fname=fname, push=push)
+    plot.two_particles_plane((p1x, p2x), (p1x_int, p2x_int), xlabel, ylabel, fname=fname, savepush=savepush)
 
 
-def z_phase_plot(push=False):
+def z_phase_plot(savepush=False):
     p1_no_int = load("double_without_p1.txt")
     p2_no_int = load("double_without_p2.txt")
     p1_int = load("double_with_p1.txt")
@@ -173,12 +173,48 @@ def z_phase_plot(push=False):
     fname = "z_phase_plot"
     xlabel = r"$z\,[\mathrm{\mu m}]$"
     ylabel = r"$v_z\,[\mathrm{\mu m / \mu s}]$"
-    plot.two_particles_plane((p1z, p2z), (p1z_int, p2z_int), xlabel, ylabel, fname=fname, push=push)
+    plot.two_particles_plane((p1z, p2z), (p1z_int, p2z_int), xlabel, ylabel, fname=fname, savepush=savepush)
+
+
+def movement_3d():
+    return None 
+
+
+def trapped_without_interaction(savepush=False):
+    N0 = 100 
+    f_values = [0.1, 0.4, 0.7]
+    N_trapped_list = []
+
+    for f in range(1,4):
+        omega_V, trapped = load(f"trapped_f{f}.txt", skiprows=0)
+        N_trapped_list.append(trapped / N0)
+
+    plot.plot_trapped_coarse(N_trapped_list, omega_V, f_values, "trapped_particles_without_interaction", title=None, savepush=savepush)
+
+
+def trapped_fine_search(savepush=False):
+    N0 = 100 
+    legs = ["Interaction", "No interaction"]
+
+    f = [0.1, 0.1] 
+    n_trapped = []
+    omega_V, trapped_int = load(f"trapped_f1_with_fine.txt", skiprows=0)
+    omega_V, trapped_noint = load(f"trapped_f1_without_fine.txt", skiprows=0)
+    n_trapped.append(trapped_int / N0)
+    n_trapped.append(trapped_noint / N0)
+
+    plot.plot_trapped_fine(n_trapped, omega_V, legs, "trapped_particles_fine", title=None, savepush=savepush)
+
+
+
 
 # compare_z_analytical()
-# xy_plane_movements()
-compute_errors("RK", plot=False)
-compute_errors("FE", plot=False)
+# compute_errors("RK", make_plot=False)
+# compute_errors("FE", plot=False)
 
+# xy_plane_movements()
 # x_phase_plot()
 # z_phase_plot()
+
+trapped_without_interaction()
+# trapped_fine_search()
