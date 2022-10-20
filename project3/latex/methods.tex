@@ -1,6 +1,126 @@
 \section{Methods}\label{sec:methods}
 
 
+\subsection{(appropriate title) -schematics or whatever}
+
+
+
+
+Consider an ideal Penning trap with characteristic dimension $d$, a length scale given by $d= \sqrt{z_0^2+ \frac{1}{2}r_0^2}$, where $z_0$ is the distinance between the endcaps and $r_0$ the radius of of the ring \textcolor{red}{REF TO SOME SCHEMATIC FIGURE}. These electrodes create an external electric field $\vec{E}_\mathrm{ext}$ resulting from the potential
+
+\begin{equation}
+    V (\vec{r})= V(x,y,z) = \frac{V_0}{2d^2}(2z^2 - x^2 - y^2), \label{eq:penning_potential}
+\end{equation}
+
+where $V_0$ is the potential applied to the electrodes. The external electric field is then 
+
+\begin{equation}
+    \vec{E}_\mathrm{ext} = -\nabla V = \frac{V_0}{d^2} (x,\,y,\,-2z). \label{eq:p1_E_field_pot_gradient}
+\end{equation}
+
+A constant homogeneous magnetic field $\vec{B}_\mathrm{ext}$ is imposed in the $z$-direction,
+\begin{equation}
+    \vec{B}_\mathrm{ext} = (0,0,B_0). \label{eq:homogeneous_B_field}
+\end{equation}
+
+
+\subsection{(appropriate title) -math/analytical work}
+
+We restrict ourselves to dealing with only positively charged particles, $q>0$. Consider the single-particle case, i.e. the situation with only one particle present in the trap or when we look at one of several particles that do not interact\footnote{This is not physical.}. Now, the only contributions to the fields are external, hence $\vec{E} = \vec{E}_\mathrm{ext}$ and $\vec{B} = \vec{B}_\mathrm{ext}$. We use eq. \eqref{eq:lorentz_force} to find the Lorentz force,
+
+\begin{equation} \label{eq:p1_lorentz_force_penning}
+    \begin{split}
+        \vec{F} &= \frac{q V_0}{d^2}(x,\,y,\,-2z) + q B_0 (\dot{y},\,-\dot{x},\,0) \\
+        &= \frac{m}{2}\omega_z^2 (x,\,y,\,-2z) + m \omega_0 (\dot{y},\,-\dot{x},\,0),
+    \end{split}
+\end{equation} 
+
+where we defined $\omega_0 \equiv \frac{qB_0}{m}$ and $\omega_z^2 \equiv \frac{2qV_0}{m d^2}$. The equation of motion in eq. \eqref{eq:eom_lorentz} are three differential equations in each spatial component,
+
+\begin{align}
+    \ddot{x} - \omega_0 \dot{y} - \frac{1}{2} \omega_z^2 x &= 0, \label{eq:p1_eom_x} \\ 
+    \ddot{y} + \omega_0 \dot{x} - \frac{1}{2} \omega_z^2 y &= 0, \label{eq:p1_eom_y} \\ 
+    \ddot{z} + \omega_z^2 z &= 0. \label{eq:p1_eom_z}
+\end{align}
+
+The general solution of eq. \eqref{eq:p1_eom_z} is
+
+\begin{equation}
+    z(t) = c_1 \cos(\omega_z t) + c_2 \sin(\omega_z t). \label{eq:p1_diffeq_solution_z}
+\end{equation}
+
+The other two, eqs. \eqref{eq:p1_eom_x} and \eqref{eq:p1_eom_y}, are coupled. We introduce a complex function $f(t)=x(t) + iy(t)$ for which we have the time derivatives $\dot{f} = \dot{x} + i\dot{y}$ and $\ddot{f} = \ddot{x} + i\ddot{y}$. Multiply equation \eqref{eq:p1_eom_y} with $i$ and add to equation \eqref{eq:p1_eom_x} to obtain the following:
+
+\begin{equation}\label{eq:p2_eom_rewritten}
+    \begin{split}
+    \ddot{x} + i\ddot{y} + \omega_0(i\dot{x} - \dot{y}) -\frac{1}{2}\omega_z^2(x+iy) &= 0 \\
+    (\ddot{x} + i\ddot{y}) + i\omega_0(\dot{x} +i \dot{y}) -\frac{1}{2}\omega_z^2(x+iy) &= 0. 
+    \end{split}
+\end{equation}
+
+The single differential equation in terms of the complex function $f(t)$ is therefore
+
+\begin{equation}
+    \ddot{f} + i\omega_0 \dot{f} - \frac{1}{2}\omega_z^2 f = 0. \label{eq:p2_f_complex_equation}
+\end{equation}
+
+The general solution to equation \eqref{eq:p2_f_complex_equation} is 
+\begin{equation}
+    f(t) = A_+ e^{-i(\omega_+ t + \phi_+)} + A_- e^{-i(\omega_- t + \phi_-)}, \label{eq:p3_f_general_solution}
+\end{equation}
+where $\phi_+$ and $\phi_-$ are constant phases, $A_+$ and $A_-$ are positive amplitudes and 
+\begin{equation}
+    \omega_\pm = \frac{\omega_0 \pm \sqrt{\omega_0^2 - 2\omega_z^2}}{2}. \label{eq:p3_omega_pm}
+\end{equation}
+
+The $\omega_+$ is the modified cyclotron frequency and the $\omega_-$ is the magnetron frequency that composes the two modes in the orbital motion we will discuss later.
+
+\colorbox{blue}{Stopped here (19.10.22), going to bed}
+
+
+We see from equation  \eqref{eq:p3_f_general_solution} that if $\omega_\pm$ is real, then $\abs{f(t)} < \infty$ for $t\to\infty$ and we have a bounded solution in the $xy$-plane. For $\omega_\pm$ to be real we see from equation \eqref{eq:p3_omega_pm} that the following must hold:
+\begin{align}
+    \omega_0^2 &\geq 2\omega_z^2  \\
+    \implies \frac{q}{m} &\geq \frac{4V_0}{(B_0d)^2}.
+\end{align} 
+We may regard equation \eqref{eq:p3_f_general_solution} as a sum of vectors $\vec{r}_\pm$ with amplitudes $r_\pm=A_\pm$ and directions given by the angles $\alpha_\pm = \omega_\pm t + \phi_\pm$ in the complex plane (representing the $xy$-plane). The magnitude $\abs{f(t)} = \abs{f}$ for this sum of vectors is then given by:
+\begin{align}
+    \abs{f} = \sqrt{\abs{\vec{r}_+}^2 + \abs{\vec{r}_-}^2 + 2\abs{\vec{r}_+}\abs{\vec{r_-}}\cos{(\abs{\alpha_+-\alpha_-})}}.
+\end{align}
+
+
+
+
+
+
+The maximum distance from the origin, $R_+$, occurs when the two vectors are pointing in the same direction, i.e. $\abs{\alpha_+-\alpha_-} = 0 \implies \cos0=1$, which yields:
+\begin{align}
+    R_+ &= \sqrt{A_+^2 + A_-^2 + 2A_+A_-} = \sqrt{(A_+ + A_-)^2} \nonumber \\
+    &= A_+ + A_-
+\end{align}
+Similarily, the minimum distance, $R_-$, from the origin occurs when the vectors are pointing in opposite directions, i.e. $\abs{\alpha_+-\alpha_-} = \pi \implies \cos\pi=-1$, which yields:
+\begin{align}
+    R_- &= \sqrt{A_+^2 + A_-^2 - 2A_+A_-} = \sqrt{(A_+ - A_-)^2} \nonumber \\
+    &= \abs{A_+ - A_-}
+\end{align}
+
+
+
+
+\begin{align}
+    \ddot{x}_i - \omega_{0,i} \dot{y}_i - \frac{1}{2}\omega_{z,i}^2 x_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{x_i - x_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_x} \\
+    \ddot{y}_i + \omega_{0,i} \dot{x}_i - \frac{1}{2}\omega_{z,i}^2 y_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{y_i - y_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_y} \\ 
+    \ddot{z}_i + \omega_{z,i}^2 z_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{z_i - z_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_z}
+\end{align}
+
+
+
+
+
+
+
+\subsection{(appropriate title) -coding}
+
 We aim to create a program in \CC\, that simulates a set of $N_\mathrm{p}$ particles inside a Penning trap. An object-oriented code is befitting this task and we present in the following descriptions of the classes \verb|Particle| and \verb|PenningTrap|.
 
 The purpose of \texttt{Particle} is to hold the parameters, such as the position, of a particle. We let an object of this class be initialised with a charge $q$, a mass $m$, a position $\vec{r} = (x,y,z)$ and a velocity $\vec{v} = (v_x, v_y, v_z)$. We add functions to update the latter two. 

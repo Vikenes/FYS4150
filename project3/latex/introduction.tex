@@ -12,10 +12,7 @@
     \item Project outline 
 \end{enumerate}
 
-
-\textcolor{red}{WILL REPHRASE: }
-Should you ever be wanting to trap a charged paricle, a natural starting point would be to create a potential whose mimimum is three-dimensional, implying a quadrupole potential of the form $V(\vec{r}) = Ax^2 + By^2 + Cy^2$. If one remembers the Laplace's equation, $\nabla^2 V = 0$, an issue arises as $A+B+C=0$. This means that it is impossible to achieve three-dimensional trapping with static fields. Inspired by the work of Frans Michel Penning, Hans Georg Dehmelt built the first Penning trap, a device for trapping charged particles using an additional magnetic field. In particular, the trap creates an inhomogeneous quadrupole electric field and a homogeneous axial magnetic field that ensures, under some conditions, that charged particles remain inside of it.
-% rephrase !!!!
+Say we were to contain one or more charged particles in motion inside some closed volume. A natural starting point would be to create a potential whose minimum is three-dimensional. Such a quadrupole potential would take the form $V(\vec{r}) = Ax^2 + By^2 + Cy^2$, however, Laplace's equation demands $\nabla^{\! 2}V = A+ B+ C = 0$. What this means, is that a three-dimensional static field will not do. One way around this is to use a strong homogeneous axial magnetic field together with a quadrupole electric field. The former incarcerate the particle(s) radially, whereas the latter limits their axial motion. A device of such a structure is called a "Penning trap" and was first built by Hans Georg Dehmelt under the influence of Frans Michel Penning's work. \textcolor{pink}{(((smooth transition)))}
 
 
 A particle with charge $q$ in an electric field $\vec{E}$ and a magnetic field $\vec{B}$ undergoes the Lorentz force $\vec{F}$ given by
@@ -30,9 +27,9 @@ where $\vec{v}$ is the particle's velocity. Suppose the particle has mass $m$, t
 \end{equation}
 
 % Comment about initial conditions? No...
-The external electric field is related to the potential through $\vec{E} = -\nabla V$. We now have simple equations for predicting a single particle's motion inside of a Penning trap, and we will later discuss what is required of the initial conditions in order for it to stay put. If we were to accompany the single particle with another charged particle, however, we would need to consider the contribution to the electric field from the Coulomb interactions between the two of them. This complicates the system in such a way that we generally cannot solve it analytically \textcolor{blue}{(IS THIS CORRECT?)}; we need to use numerical integration methods. 
+The external electric field is related to the potential through $\vec{E} = -\nabla V$. We now have simple equations for predicting a single particle's motion inside of a Penning trap, and we will later discuss what is required of the initial conditions in order for it to stay put. If we were to accompany the single particle with another charged particle, however, we would need to consider the contribution to the electric field from the Coulomb interactions between the two of them. Adding more charged particles complicates the system even more in such a way that we generally will struggle to solve it analytically \textcolor{blue}{(IS THIS CORRECT?)}; we need to use numerical integration methods. 
 
-We consider two different numerical schemes for solving ordinary differential equations (ODEs)\footnote{We shall have to split the eq. \eqref{eq:eom_lorentz} in two first order ODEs.}, forward Euler (FE) and fourth order Runge-Kutta (RK4). The former is a numerical procedure of first order, whereas the latter is of fourth order, resulting in global errors proportional to the step size and the step size to the power of four, respectively. That is, say we have a step size $h\sim 0.1$, the error arising from FE is $h^{1-4} \sim 1000$ times larger than that of RK4 \textcolor{blue}{(WAIT, WHAT?)}. However, one should keep in mind that the RK4\textcolor{red}{-}algorithm demands many more floating points operations (FLOPs) from our computer than what the FE\textcolor{red}{-}algorithm does.
+We consider two different numerical schemes for solving ordinary differential equations (ODEs)\footnote{We shall have to split the eq. \eqref{eq:eom_lorentz} in two first order ODEs.}, forward Euler (FE) and fourth order Runge-Kutta (RK4). The former is a numerical procedure of first order, whereas the latter is of fourth order, resulting in global errors proportional to the step size and the step size to the power of four, respectively. That is, say we have a step size $h\sim 0.1$, the error arising from FE is $h^{1-4} \sim 1000$ times larger than that of RK4 \textcolor{blue}{(WAIT, WHAT?)}. However, one should keep in mind that the RK4 algorithm demands many more floating points operations (FLOPs) from our computer than what the FE algorithm does.
 
 Now being able to solve the system of several interacting charged particles in the Penning trap in question, we should ponder the effect the Coulomb interactions have on the trap's ability to contain the particles. 
 \textcolor{green}{FILL WITH PONDERING}
@@ -41,107 +38,6 @@ In addition, we will investigate the effect of adding an oscillating time-depend
 % move to right after first paragraph?
 
 \textcolor{green}{OUTLINE}
-
-
-
-\subsection*{Equations (temporary title)}
-We will consider an ideal Penning trap, where the electric field is defined by the electric potential 
-\begin{equation}
-    V(x,y,z) = \frac{V_0}{2d^2}(2z^2 - x^2 - y^2), \label{eq:penning_potential}
-\end{equation}
-where $V_0$ is the potential applied to the electrodes, $d$ is the characteristic dimension. And ... Define equation more appropriately. 
-
-For a single particle, the electric field is given by the negative gradient of the potential in equation \eqref{eq:penning_potential}
-\begin{equation}
-    \vec{E} = -\nabla V = \frac{V_0}{d^2} (x,\,y,\,-2z) \label{eq:p1_E_field_pot_gradient}
-\end{equation}
-
-A homogeneous magnetic field is imposed in the $z$-direction 
-\begin{equation}
-    \mathbf{B}= B_0 \hat{e}_z = (0,0,B_0). \label{eq:homogeneous_B_field}
-\end{equation}
-
-The force $\mathbf{F}$ on a single particle with charge $q$, is given by the Lorentz Force 
-\begin{equation}
-    \vec{F} = q \vec{E} + q \vec{v} \cross \vec{B}. \label{eq:em_force}
-\end{equation}
-Inserting the expressions for $\vec{E}$ and computing the cross product $\vec{v}\cross \vec{B}$ the resulting Lorentz force on the particle is 
-\begin{equation} \label{eq:p1_lorentz_force_penning}
-    \begin{split}
-        \vec{F} &= \frac{q V_0}{d^2}(x,\,y,\,-2z) + q B_0 (\dot{y},\,-\dot{x},\,0) \\
-        &= \frac{m}{2}\omega_z^2 (x,\,y,\,-2z) + m \omega_0 (\dot{y},\,-\dot{x},\,0),
-    \end{split}
-\end{equation} 
-where we defined $\omega_0\equiv \frac{qB_0}{m}$ and $\omega_z^2 \equiv \frac{2qV_0}{m d^2}$. From Newton's second law, we have $\ddot{\vec{r}}=\vec{F}/m$. Dividing equation \eqref{eq:p1_lorentz_force_penning} by $m$, we get three equations of motion, one for each spatial component. These differential equations are 
-\begin{align}
-    \ddot{x} - \omega_0 \dot{y} - \frac{1}{2} \omega_z^2 x &= 0, \label{eq:p1_eom_x} \\ 
-    \ddot{y} + \omega_0 \dot{x} - \frac{1}{2} \omega_z^2 y &= 0, \label{eq:p1_eom_y} \\ 
-    \ddot{z} + \omega_z^2 z &= 0. \label{eq:p1_eom_z}
-\end{align}
-Equation \eqref{eq:p1_eom_z} has the general solution   
-\begin{equation}
-    z(t) = c_1 \cos(\omega_z t) + c_2 \sin(\omega_z t). \label{eq:p1_diffeq_solution_z}
-\end{equation}
-For this project, we will assume $q>0$. (Move this?)
-
-Equations \eqref{eq:p1_eom_x} and \eqref{eq:p1_eom_y} are coupled. We therefore introduce a complex function $f(t)=x(t)+i y(t)$ whose time derivatives are:
-\begin{align}
-    \dot{f} &= \dot{x}+i\dot{y} \\
-    \ddot{f} &= \ddot{x} + i\ddot{y}.
-\end{align}
-We then multiply equation \eqref{eq:p1_eom_y} with $i$ and add to equation \eqref{eq:p1_eom_x} to obtain:
-\begin{align}
-    \ddot{x} + i\ddot{y} + \omega_0(i\dot{x} - \dot{y}) -\frac{1}{2}\omega_z^2(x+iy) &= 0 \nonumber \\
-    (\ddot{x} + i\ddot{y}) + i\omega_0(\dot{x} +i \dot{y}) -\frac{1}{2}\omega_z^2(x+iy) &= 0. \label{eq:p2_eom_rewritten}
-\end{align}
-The single differential equation in terms of the complex function $f(t)$ is therefore: 
-\begin{equation}
-    \ddot{f} + i\omega_0 \dot{f} - \frac{1}{2}\omega_z^2 f = 0. \label{eq:p2_f_complex_equation}
-\end{equation}
-The general solution to equation \eqref{eq:p2_f_complex_equation} is 
-\begin{equation}
-    f(t) = A_+ e^{-i(\omega_+ t + \phi_+)} + A_- e^{-i(\omega_- t + \phi_-)}, \label{eq:p3_f_general_solution}
-\end{equation}
-where $\phi_+$ and $\phi_-$ are constant phases, $A_+$ and $A_-$ are positive amplitudes and 
-\begin{equation}
-    \omega_\pm = \frac{\omega_0 \pm \sqrt{\omega_0^2 - 2\omega_z^2}}{2}. \label{eq:p3_omega_pm}
-\end{equation}
-We see from equation  \eqref{eq:p3_f_general_solution} that if $\omega_\pm$ is real, then $\abs{f(t)} < \infty$ for $t\to\infty$ and we have a bounded solution in the $xy$-plane. For $\omega_\pm$ to be real we see from equation \eqref{eq:p3_omega_pm} that the following must hold:
-\begin{align}
-    \omega_0^2 &\geq 2\omega_z^2  \\
-    \implies \frac{q}{m} &\geq \frac{4V_0}{(B_0d)^2}.
-\end{align} 
-We may regard equation \eqref{eq:p3_f_general_solution} as a sum of vectors $\vec{r}_\pm$ with amplitudes $r_\pm=A_\pm$ and directions given by the angles $\alpha_\pm = \omega_\pm t + \phi_\pm$ in the complex plane (representing the $xy$-plane). The magnitude $\abs{f(t)} = \abs{f}$ for this sum of vectors is then given by:
-\begin{align}
-    \abs{f} = \sqrt{\abs{\vec{r}_+}^2 + \abs{\vec{r}_-}^2 + 2\abs{\vec{r}_+}\abs{\vec{r_-}}\cos{(\abs{\alpha_+-\alpha_-})}}.
-\end{align}
-
-
-
-
-
-
-
-
-The maximum distance from the origin, $R_+$, occurs when the two vectors are pointing in the same direction, i.e. $\abs{\alpha_+-\alpha_-} = 0 \implies \cos0=1$, which yields:
-\begin{align}
-    R_+ &= \sqrt{A_+^2 + A_-^2 + 2A_+A_-} = \sqrt{(A_+ + A_-)^2} \nonumber \\
-    &= A_+ + A_-
-\end{align}
-Similarily, the minimum distance, $R_-$, from the origin occurs when the vectors are pointing in opposite directions, i.e. $\abs{\alpha_+-\alpha_-} = \pi \implies \cos\pi=-1$, which yields:
-\begin{align}
-    R_- &= \sqrt{A_+^2 + A_-^2 - 2A_+A_-} = \sqrt{(A_+ - A_-)^2} \nonumber \\
-    &= \abs{A_+ - A_-}
-\end{align}
-
-
-
-
-\begin{align}
-    \ddot{x}_i - \omega_{0,i} \dot{y}_i - \frac{1}{2}\omega_{z,i}^2 x_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{x_i - x_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_x} \\
-    \ddot{y}_i + \omega_{0,i} \dot{x}_i - \frac{1}{2}\omega_{z,i}^2 y_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{y_i - y_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_y} \\ 
-    \ddot{z}_i + \omega_{z,i}^2 z_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{z_i - z_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_z}
-\end{align}
 
 
 
