@@ -55,7 +55,7 @@ def save_push(fig, pdf_name, save=True, push=False, show=False, tight=True):
     else:
         plt.clf()
 
-def set_ax_info(ax, xlabel, ylabel, zlabel='none', style='plain', title=None, legend=True):
+def set_ax_info(ax, xlabel, ylabel, zlabel='none', style='plain', title=None, legend=True, loc='best'):
     """Write title and labels on an axis with the correct fontsizes.
 
     Args:
@@ -76,7 +76,22 @@ def set_ax_info(ax, xlabel, ylabel, zlabel='none', style='plain', title=None, le
     except AttributeError:
         pass
     if legend:
-        ax.legend(fontsize=15)
+        ax.legend(fontsize=15, loc=loc)
+
+
+def z_analytical(z_anal, z_FE, z_RK, t, save=True):
+
+    fig, ax = plt.subplots()
+    ax.plot(t, z_anal, lw=10, alpha=0.5, color='green', label='Analytical')
+    ax.plot(t, z_FE, color='red', lw=3, ls='solid', label='Forward Euler')
+    ax.plot(t, z_RK, color='blue', lw=2, ls='--', label='Runge Kutta 4')
+    ax.set_xlim(t[0], t[-1]+12)
+    set_ax_info(ax, r"$t\,[\mathrm{\mu s}]$", r"$z\,[\mathrm{\mu m}]$", loc='upper right')
+    # ax.legend(loc='upper right')
+    if save:
+        save_push(fig, pdf_name="compare_z_analytical")
+    else:
+        plt.show()
 
 
 

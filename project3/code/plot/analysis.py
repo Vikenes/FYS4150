@@ -66,14 +66,8 @@ def compare_z_analytical():
 
     z_anal = analytical_z(t, z0)#z0 * np.cos(omega_z * t)
 
-    ### plot.function_for_plotting_this
-
-    """
-    plt.plot(t, z_anal)
-    plt.plot(t, z_FE)
-    plt.plot(t, z_RK)
-    plt.show()
-    """
+    plot.z_analytical(z_anal, z_FE, z_RK, t)
+   
     return None 
 
 
@@ -129,6 +123,6 @@ def xy_plane_movements():
 
 
 
-# compare_z_analytical()
-xy_plane_movements()
-compute_errors()
+compare_z_analytical()
+# xy_plane_movements()
+# compute_errors()
