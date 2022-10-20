@@ -65,7 +65,8 @@ def set_ax_info(ax, xlabel, ylabel, zlabel='none', style='plain', title=None, le
         ylabel (str): the desired lab on the y-axis
     """
     ax.set_xlabel(xlabel, fontsize=20)
-    ax.set_ylabel(ylabel, fontsize=20)
+    if ylabel != False:
+        ax.set_ylabel(ylabel, fontsize=20)
     if zlabel != 'none':
         ax.set_zlabel(ylabel, fontsize=20)
     ax.set_title(title, fontsize=20)
@@ -94,17 +95,41 @@ def z_analytical(z_anal, z_FE, z_RK, t, save=True, push=False):
         plt.show()
 
 
-def two_particles_plane(p_noint, p_int, title):
+def two_particles_plane(p_noint, p_int, fname, push=False):
+    """
+    To be made prettier...
+    """
     p1_noint, p2_noint = p_noint 
     p1_int, p2_int = p_int 
 
-    fig, ax = plt.subplots(ncols=2)
-    ax[0].scatter(*p1_noint)
-    ax[0].scatter(*p2_noint)
-    ax[1].scatter(*p1_int)
-    ax[1].scatter(*p2_int)
-    # ax.set_aspect('equal')
-    plt.show()
+    fig, ax = plt.subplots(ncols=2, sharey=True, layout='constrained')
+    
+
+    ax[0].scatter(*p1_noint, s=3, marker='o')
+    ax[0].scatter(*p2_noint, s=3, marker='o')
+    ax[1].scatter(*p1_int, s=3, marker='o')
+    ax[1].scatter(*p2_int, s=3, marker='o')
+    
+    ax[0].plot(*p1_noint.T[0], marker="P", ms=12)
+    ax[0].plot(*p2_noint.T[0], marker="P", ms=12)
+    ax[0].plot(*p1_noint.T[-1], marker="*", ms=12)
+    ax[0].plot(*p2_noint.T[-1], marker="*", ms=12)
+
+    ax[1].plot(*p1_int.T[0], marker="P", ms=12)
+    ax[1].plot(*p2_int.T[0], marker="P", ms=12)
+    ax[1].plot(*p1_int.T[-1], marker="*", ms=12)
+    ax[1].plot(*p2_int.T[-1], marker="*", ms=12)
+    
+
+    # ax[0].set_aspect('equal')
+    ax[1].set_aspect('equal')
+    xlabel = r"$x\,[\mathrm{\mu m}]$"
+    ylabel = r"$y\,[\mathrm{\mu m}]$"
+
+    set_ax_info(ax[0], xlabel, ylabel, title='No interaction', legend=False)
+    set_ax_info(ax[1], xlabel, ylabel=False, title='With interaction', legend=False)
+    
+    save_push(fig, fname, push=push)
 
 
 
@@ -244,6 +269,7 @@ def test_double_particle(scheme="RK4"):
     axes = trajectory_plane([ax1, ax2], (0,1))
 
     plt.show() # savepush
+    exit()
 
 
     '''Make phase plots'''
@@ -423,9 +449,9 @@ def check_upper_and_lower_bound():
 
 
 if __name__=="__main__":
-    test_single_particle()
+    # test_single_particle()
 
-    # test_double_particle()
+    test_double_particle()
 
     #first_with_timedep()
     # trapped_particles()

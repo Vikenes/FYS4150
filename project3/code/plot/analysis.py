@@ -89,7 +89,7 @@ def compute_errors():
 
 
 
-def xy_plane_movements():
+def xy_plane_movements(push=False):
     # RK4 only 
     p1_no_int = load("double_without_p1.txt")
     p2_no_int = load("double_without_p2.txt")
@@ -102,29 +102,12 @@ def xy_plane_movements():
     p1xy_int = p1_int[1:3]
     p2xy_int = p2_int[1:3]
 
-    plot.two_particles_plane((p1xy, p2xy), (p1xy_int, p2xy_int), title='er')
+    fname = "xy_two_particles"
+    plot.two_particles_plane((p1xy, p2xy), (p1xy_int, p2xy_int), fname=fname, push=push)
 
-    """
-    plt.plot(p1x, p1y,label='p1')
-    plt.plot(p2x,p2y, label='p2')
-    plt.plot(*[p1x[0],p1y[0]], 'o')
-    plt.plot(*[p2x[0],p2y[0]], 'o')
-    plt.legend()
-    plt.axis('equal')
-    plt.show()
-
-    plt.plot(p1x_int, p1y_int,label='p1')
-    plt.plot(p2x_int, p2y_int,label='p2')
-    plt.plot(*[p1x_int[0],p1y_int[0]], 'o')
-    plt.plot(*[p2x_int[0],p2y_int[0]], 'o')
-
-    plt.legend()
-    plt.axis('equal')
-    plt.show()
-    """
 
 
 
 # compare_z_analytical()
-xy_plane_movements()
+# xy_plane_movements()
 # compute_errors()
