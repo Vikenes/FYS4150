@@ -79,7 +79,7 @@ def set_ax_info(ax, xlabel, ylabel, zlabel='none', style='plain', title=None, le
         ax.legend(fontsize=15, loc=loc)
 
 
-def z_analytical(z_anal, z_FE, z_RK, t, save=True):
+def z_analytical(z_anal, z_FE, z_RK, t, save=True, push=False):
 
     fig, ax = plt.subplots()
     ax.plot(t, z_anal, lw=10, alpha=0.5, color='green', label='Analytical')
@@ -89,9 +89,22 @@ def z_analytical(z_anal, z_FE, z_RK, t, save=True):
     set_ax_info(ax, r"$t\,[\mathrm{\mu s}]$", r"$z\,[\mathrm{\mu m}]$", loc='upper right')
     # ax.legend(loc='upper right')
     if save:
-        save_push(fig, pdf_name="compare_z_analytical")
+        save_push(fig, pdf_name="compare_z_analytical", push=push)
     else:
         plt.show()
+
+
+def two_particles_plane(p_noint, p_int, title):
+    p1_noint, p2_noint = p_noint 
+    p1_int, p2_int = p_int 
+
+    fig, ax = plt.subplots(ncols=2)
+    ax[0].scatter(*p1_noint)
+    ax[0].scatter(*p2_noint)
+    ax[1].scatter(*p1_int)
+    ax[1].scatter(*p2_int)
+    # ax.set_aspect('equal')
+    plt.show()
 
 
 

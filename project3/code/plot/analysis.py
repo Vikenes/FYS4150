@@ -52,7 +52,7 @@ def analytical_xy(t, x0, v0):
 
 
 
-def compare_z_analytical():
+def compare_z_analytical(push=False):
     """
     Sanity check.
     """
@@ -66,7 +66,7 @@ def compare_z_analytical():
 
     z_anal = analytical_z(t, z0)#z0 * np.cos(omega_z * t)
 
-    plot.z_analytical(z_anal, z_FE, z_RK, t)
+    plot.z_analytical(z_anal, z_FE, z_RK, t, push)
    
     return None 
 
@@ -96,11 +96,13 @@ def xy_plane_movements():
     p1_int = load("double_with_p1.txt")
     p2_int = load("double_with_p2.txt")
 
-    p1x, p1y = p1_no_int[1:3]
-    p2x, p2y = p2_no_int[1:3]
+    p1xy = p1_no_int[1:3]
+    p2xy = p2_no_int[1:3]
 
-    p1x_int, p1y_int = p1_int[1:3]
-    p2x_int, p2y_int = p2_int[1:3]
+    p1xy_int = p1_int[1:3]
+    p2xy_int = p2_int[1:3]
+
+    plot.two_particles_plane((p1xy, p2xy), (p1xy_int, p2xy_int), title='er')
 
     """
     plt.plot(p1x, p1y,label='p1')
@@ -123,6 +125,6 @@ def xy_plane_movements():
 
 
 
-compare_z_analytical()
-# xy_plane_movements()
+# compare_z_analytical()
+xy_plane_movements()
 # compute_errors()
