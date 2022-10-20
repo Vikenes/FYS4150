@@ -151,7 +151,21 @@ def error_plot(errors, times, fname, title, push=False):
     save_push(fig, fname, push=push)
 
 
-    return None 
+def plot_trapped(N_trapped, omega_V, f_values, fname, title, push=False):
+    fig, ax = plt.subplots()
+    for i in range(len(N_trapped)):
+        ax.plot(omega_V, N_trapped[i], label=rf"$f=${f_values[i]:.1f}")
+
+    xlabel = r"$\omega_V\,\mathrm[MHz]$"
+    ylabel = r"Number of trapped particles"
+    set_ax_info(ax, xlabel, ylabel, title=title)
+    ax.set_xlim(ax.get_xlim()[0], ax.get_xlim()[1]+ 0.3)
+    ax.legend(fontsize=20, loc='lower right')
+    
+    # plt.show()
+    save_push(fig, fname, push=push)
+
+
 
 def test_single_particle():
     # FIXME

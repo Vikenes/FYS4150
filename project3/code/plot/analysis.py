@@ -72,7 +72,7 @@ def compare_z_analytical(push=False):
 
 
 
-def compute_errors(method, plot=True, push=False):
+def compute_errors(method, make_plot=True, push=False):
     if method=="FE":
         folder = FE_path 
         title = "Forward Euler"
@@ -105,7 +105,7 @@ def compute_errors(method, plot=True, push=False):
         times.append(t)
         h_k.append(t[-1] / (len(t) - 1))
    
-    if plot:
+    if make_plot:
         fname = "rel_error_" + method
         plot.error_plot(rel_errors, times, fname, title, push)
 
@@ -175,10 +175,39 @@ def z_phase_plot(push=False):
     ylabel = r"$v_z\,[\mathrm{\mu m / \mu s}]$"
     plot.two_particles_plane((p1z, p2z), (p1z_int, p2z_int), xlabel, ylabel, fname=fname, push=push)
 
-# compare_z_analytical()
-# xy_plane_movements()
-compute_errors("RK", plot=False)
-compute_errors("FE", plot=False)
 
+def movement_3d():
+    return None 
+
+
+def trapped_without(push=False):
+
+
+    f_values = [0.1, 0.4, 0.7]
+    N_trapped_list = []
+
+    for f in range(1,4):
+        omega_V, trapped = load(f"trapped_f{f}.txt", skiprows=0)
+
+        # plt.plot(omega_V, trapped)
+        # plt.show()
+        # exit()
+        N_trapped_list.append(trapped)
+    
+    plot.plot_trapped(N_trapped_list, omega_V, f_values, "trapped_particles_without_interaction", title=None, push=push)
+
+
+        
+
+
+
+
+# compare_z_analytical()
+# compute_errors("RK", make_plot=False)
+# compute_errors("FE", plot=False)
+
+# xy_plane_movements()
 # x_phase_plot()
 # z_phase_plot()
+
+trapped_without(push=True)
