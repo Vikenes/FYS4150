@@ -64,7 +64,7 @@ def compare_z_analytical(push=False):
     z_RK = RK[3]
     z0 = z_FE[0]
 
-    z_anal = analytical_z(t, z0)#z0 * np.cos(omega_z * t)
+    z_anal = analytical_z(t, z0)
 
     plot.z_analytical(z_anal, z_FE, z_RK, t, push)
    
@@ -72,7 +72,7 @@ def compare_z_analytical(push=False):
 
 
 
-def compute_errors(method, push=False):
+def compute_errors(method, plot=True, push=False):
     if method=="FE":
         folder = FE_path 
         title = "Forward Euler"
@@ -80,8 +80,11 @@ def compute_errors(method, push=False):
         folder = RK_path 
         title = "Runge Kutta 4"
 
-    errors = []
+    abs_errors = []
+    rel_errors = []
     times = []
+    h_k = []
+
     for k in range(1,5):
         RK = load(f"single_n{k}.txt", folder)
         t = RK[0]
@@ -97,12 +100,21 @@ def compute_errors(method, push=False):
         abs_err = np.linalg.norm(r_vec - r_anal, axis=0)
         rel_err = abs_err / np.linalg.norm(r_anal, axis=0)
         
-        errors.append(rel_err)
+        abs_errors.append(abs_err)
+        rel_errors.append(rel_err)
         times.append(t)
+        h_k.append(t[-1] / (len(t) - 1))
    
-    fname = "rel_error_" + method
+    if plot:
+        fname = "rel_error_" + method
+        plot.error_plot(rel_errors, times, fname, title, push)
 
-    plot.error_plot(errors, times, fname, title)
+    else:
+        r_err = 0 
+        for i in range(1,4):
+            r_err += np.log10( np.max(abs_errors[i]) / np.max(abs_errors[i-1]) ) / np.log10(h_k[i] / h_k[i-1])
+
+        print(f"Error convergence rate for {method}: {r_err/3:.5e}")
 
     return None 
 
@@ -165,8 +177,8 @@ def z_phase_plot(push=False):
 
 # compare_z_analytical()
 # xy_plane_movements()
-compute_errors("RK", True)
-compute_errors("FE", True)
+compute_errors("RK", plot=False)
+compute_errors("FE", plot=False)
 
 # x_phase_plot()
 # z_phase_plot()

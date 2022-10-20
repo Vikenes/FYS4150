@@ -88,7 +88,6 @@ def z_analytical(z_anal, z_FE, z_RK, t, save=True, push=False):
     ax.plot(t, z_RK, color='blue', lw=2, ls='--', label='Runge Kutta 4')
     ax.set_xlim(t[0], t[-1]+12)
     set_ax_info(ax, r"$t\,[\mathrm{\mu s}]$", r"$z\,[\mathrm{\mu m}]$", loc='upper right')
-    # ax.legend(loc='upper right')
     if save:
         save_push(fig, pdf_name="compare_z_analytical", push=push)
     else:
@@ -290,7 +289,6 @@ def test_double_particle(scheme="RK4"):
     axes = trajectory_plane([ax1, ax2], (0,1))
 
     plt.show() # savepush
-    exit()
 
 
     '''Make phase plots'''
@@ -470,9 +468,9 @@ def check_upper_and_lower_bound():
 
 
 if __name__=="__main__":
-    # test_single_particle()
+    test_single_particle()
 
-    test_double_particle()
+    # test_double_particle()
 
     #first_with_timedep()
     # trapped_particles()
