@@ -124,15 +124,15 @@ def two_particles_plane(p_noint, p_int, xlabel, ylabel, fname, push=False):
     ax[0].set_aspect('equal')
     ax[1].set_aspect('equal')
 
+    ### IMPORTANT ###
+    # Axis are not properly aligned.. 
+
     set_ax_info(ax[0], xlabel, ylabel, title='No interaction', legend=False)
     set_ax_info(ax[1], xlabel, ylabel=False, title='With interaction', legend=False)
-    # ax[0].set_ylim(0.5)
-    # ax[1].set_ylim(1)
 
 
     
-    # save_push(fig, fname, push=push)
-    plt.show()
+    save_push(fig, fname, push=push)
 
 
 

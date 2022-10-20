@@ -126,8 +126,25 @@ def x_phase_plot(push=False):
     plot.two_particles_plane((p1x, p2x), (p1x_int, p2x_int), xlabel, ylabel, fname=fname, push=push)
 
 
+def z_phase_plot(push=False):
+    p1_no_int = load("double_without_p1.txt")
+    p2_no_int = load("double_without_p2.txt")
+    p1_int = load("double_with_p1.txt")
+    p2_int = load("double_with_p2.txt")
+
+
+
+    p1x = p1_no_int[1::3]
+    p2x = p2_no_int[1::3]
+    p1x_int = p1_int[1::3]
+    p2x_int = p2_int[1::3]
+
+    fname = "x_phase_plot"
+    xlabel = r"$x\,[\mathrm{\mu m}]$"
+    ylabel = r"$v_x\,[\mathrm{\mu m / \mu s}]$"
+    plot.two_particles_plane((p1x, p2x), (p1x_int, p2x_int), xlabel, ylabel, fname=fname, push=push)
 
 # compare_z_analytical()
 # xy_plane_movements()
 # compute_errors()
-x_phase_plot()
+x_phase_plot(True)
