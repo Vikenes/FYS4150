@@ -72,18 +72,37 @@ def compare_z_analytical(push=False):
 
 
 
-def compute_errors():
-    RK = load("single_n3.txt")
-    t,x,y,z,vx,vy,vz = RK
+def compute_errors(method, push=False):
+    if method=="FE":
+        folder = FE_path 
+        title = "Forward Euler"
+    elif method=="RK":
+        folder = RK_path 
+        title = "Runge Kutta 4"
 
-    v0 = vy[0]
-    x0 = x[0]
+    errors = []
+    times = []
+    for k in range(1,5):
+        RK = load(f"single_n{k}.txt", folder)
+        t = RK[0]
+        r_vec = RK[1:4]
+        v_vec = RK[4:]
 
-    x_anal, y_anal = analytical_xy(t, x0, v0)
-    plt.plot(x_anal, y_anal, color='red')
-    plt.plot(x,y, '--')
-    plt.axis('equal')
-    plt.show()
+        x0 = r_vec.T[0,0]
+        z0 = r_vec.T[0,-1]
+        v0 = v_vec.T[0,1]
+
+        r_anal = np.array([*analytical_xy(t, x0, v0), analytical_z(t, z0)])
+
+        abs_err = np.linalg.norm(r_vec - r_anal, axis=0)
+        rel_err = abs_err / np.linalg.norm(r_anal, axis=0)
+        
+        errors.append(rel_err)
+        times.append(t)
+   
+    fname = "rel_error_" + method
+
+    plot.error_plot(errors, times, fname, title)
 
     return None 
 
@@ -146,6 +165,8 @@ def z_phase_plot(push=False):
 
 # compare_z_analytical()
 # xy_plane_movements()
-# compute_errors()
+compute_errors("RK", True)
+compute_errors("FE", True)
+
 # x_phase_plot()
-z_phase_plot(True)
+# z_phase_plot()

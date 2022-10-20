@@ -133,8 +133,26 @@ def two_particles_plane(p_noint, p_int, xlabel, ylabel, fname, push=False):
 
     
     save_push(fig, fname, push=push)
+    # plt.show()
+
+def error_plot(errors, times, fname, title, push=False):
+    
+    
+    fig, ax = plt.subplots()
+    for i in range(len(errors)):
+        nk =  len(errors[i]) - 1
+        ax.plot(times[i], errors[i], label=r"$n_k =$" + f"{nk:.0f}")# +  r"$\,\mathrm{\mu s}$")
+
+    xlabel=r'$t\,\mathrm{\mu s}$'
+    ylabel=r'Relative error size for $n_k$ steps'
+    set_ax_info(ax, xlabel, ylabel, title=title)
+    ax.legend(fontsize=20)
+    
+    # plt.show()
+    save_push(fig, fname, push=push)
 
 
+    return None 
 
 def test_single_particle():
     # FIXME
