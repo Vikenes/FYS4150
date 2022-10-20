@@ -80,7 +80,7 @@ def set_ax_info(ax, xlabel, ylabel, zlabel='none', style='plain', title=None, le
         ax.legend(fontsize=15, loc=loc)
 
 
-def z_analytical(z_anal, z_FE, z_RK, t, save=True, push=False):
+def z_analytical(z_anal, z_FE, z_RK, t, savepush=False):
 
     fig, ax = plt.subplots()
     ax.plot(t, z_anal, lw=10, alpha=0.5, color='green', label='Analytical')
@@ -88,13 +88,13 @@ def z_analytical(z_anal, z_FE, z_RK, t, save=True, push=False):
     ax.plot(t, z_RK, color='blue', lw=2, ls='--', label='Runge Kutta 4')
     ax.set_xlim(t[0], t[-1]+12)
     set_ax_info(ax, r"$t\,[\mathrm{\mu s}]$", r"$z\,[\mathrm{\mu m}]$", loc='upper right')
-    if save:
-        save_push(fig, pdf_name="compare_z_analytical", push=push)
+    if savepush:
+        save_push(fig, pdf_name="compare_z_analytical", push=True)
     else:
         plt.show()
 
 
-def two_particles_plane(p_noint, p_int, xlabel, ylabel, fname, push=False):
+def two_particles_plane(p_noint, p_int, xlabel, ylabel, fname, savepush=False):
     """
     To be made prettier...
     """
@@ -130,11 +130,12 @@ def two_particles_plane(p_noint, p_int, xlabel, ylabel, fname, push=False):
     set_ax_info(ax[1], xlabel, ylabel=False, title='With interaction', legend=False)
 
 
-    
-    save_push(fig, fname, push=push)
-    # plt.show()
+    if savepush:
+        save_push(fig, fname, push=True)
+    else:
+        plt.show()
 
-def error_plot(errors, times, fname, title, push=False):
+def error_plot(errors, times, fname, title, savepush=False):
     
     
     fig, ax = plt.subplots()
@@ -147,23 +148,43 @@ def error_plot(errors, times, fname, title, push=False):
     set_ax_info(ax, xlabel, ylabel, title=title)
     ax.legend(fontsize=20)
     
-    # plt.show()
-    save_push(fig, fname, push=push)
+    if savepush:
+        save_push(fig, fname, push=True)
+    else:
+        plt.show()
 
 
-def plot_trapped(N_trapped, omega_V, f_values, fname, title, push=False):
+def plot_trapped_coarse(N_trapped, omega_V, f_values, fname, title, savepush=False):
     fig, ax = plt.subplots()
     for i in range(len(N_trapped)):
-        ax.plot(omega_V, N_trapped[i], label=rf"$f=${f_values[i]:.1f}")
+        ax.plot(omega_V, N_trapped[i], label=rf"$f=\,${f_values[i]:.1f}")
 
-    xlabel = r"$\omega_V\,\mathrm[MHz]$"
-    ylabel = r"Number of trapped particles"
+    xlabel = r"$\omega_V\,[\mathrm{MHz}]$"
+    ylabel = r"$N_{\mathrm{trapped}} / N_0$"
     set_ax_info(ax, xlabel, ylabel, title=title)
     ax.set_xlim(ax.get_xlim()[0], ax.get_xlim()[1]+ 0.3)
     ax.legend(fontsize=20, loc='lower right')
     
-    # plt.show()
-    save_push(fig, fname, push=push)
+    if savepush:
+        save_push(fig, fname, push=True)
+    else:
+        plt.show()
+
+
+def plot_trapped_fine(N_trapped, omega_V, legs, fname, title, savepush=False):
+    fig, ax = plt.subplots()
+    for i in range(len(N_trapped)):
+        ax.plot(omega_V, N_trapped[i], label=legs[i])
+
+    xlabel = r"$\omega_V\,[\mathrm{MHz}]$"
+    ylabel = r"$N_{\mathrm{trapped}} / N_0$"
+    set_ax_info(ax, xlabel, ylabel, title=title)
+    ax.legend(fontsize=20, loc='lower right')
+
+    if savepush:
+        save_push(fig, fname, push=True)
+    else:
+        plt.show()
 
 
 
