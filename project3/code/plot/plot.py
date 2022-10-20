@@ -95,14 +95,14 @@ def z_analytical(z_anal, z_FE, z_RK, t, save=True, push=False):
         plt.show()
 
 
-def two_particles_plane(p_noint, p_int, fname, push=False):
+def two_particles_plane(p_noint, p_int, xlabel, ylabel, fname, push=False):
     """
     To be made prettier...
     """
     p1_noint, p2_noint = p_noint 
     p1_int, p2_int = p_int 
 
-    fig, ax = plt.subplots(ncols=2, sharey=True, layout='constrained')
+    fig, ax = plt.subplots(ncols=2, sharey='all', layout='constrained')
     
 
     ax[0].scatter(*p1_noint, s=3, marker='o')
@@ -121,15 +121,18 @@ def two_particles_plane(p_noint, p_int, fname, push=False):
     ax[1].plot(*p2_int.T[-1], marker="*", ms=12)
     
 
-    # ax[0].set_aspect('equal')
+    ax[0].set_aspect('equal')
     ax[1].set_aspect('equal')
-    xlabel = r"$x\,[\mathrm{\mu m}]$"
-    ylabel = r"$y\,[\mathrm{\mu m}]$"
 
     set_ax_info(ax[0], xlabel, ylabel, title='No interaction', legend=False)
     set_ax_info(ax[1], xlabel, ylabel=False, title='With interaction', legend=False)
+    # ax[0].set_ylim(0.5)
+    # ax[1].set_ylim(1)
+
+
     
-    save_push(fig, fname, push=push)
+    # save_push(fig, fname, push=push)
+    plt.show()
 
 
 
