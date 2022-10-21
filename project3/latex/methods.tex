@@ -23,10 +23,31 @@ A constant homogeneous magnetic field $\vec{B}_\mathrm{ext}$ is imposed in the $
     \vec{B}_\mathrm{ext} = (0,0,B_0). \label{eq:homogeneous_B_field}
 \end{equation}
 
+An important simplification to note is that we regard the extent of the trap as a sphere of radius $d$. This means that in fact
+
+\begin{equation}\label{eq:trap_ext_E_field}
+    \vec{E}_\mathrm{ext} (\vec{r}) = 
+    \begin{cases}
+        \frac{V_0}{d^2} \big( \hat{e}_x + \hat{e}_y -2\hat{e}_z \big), & \abs{\vec{r}} \leq d \\
+        \vec{0},  & \abs{\vec{r}} > d
+    \end{cases}
+\end{equation}
+
+and
+
+\begin{equation}\label{eq:trap_ext_B_field}
+    \vec{B}_\mathrm{ext} (\vec{r}) = 
+    \begin{cases}
+        B_0\hat{e}_z, & \abs{\vec{r}} \leq d \\
+        \vec{0}, & \abs{\vec{r}} > d
+    \end{cases}.
+\end{equation}
+
+
 
 \subsection{(appropriate title) -math/analytical work}
 
-We restrict ourselves to dealing with only positively charged particles, $q>0$. Consider the single-particle case, i.e. the situation with only one particle present in the trap or when we look at one of several particles that do not interact\footnote{This is not physical.}. Now, the only contributions to the fields are external, hence $\vec{E} = \vec{E}_\mathrm{ext}$ and $\vec{B} = \vec{B}_\mathrm{ext}$. We use eq. \eqref{eq:lorentz_force} to find the Lorentz force,
+We restrict ourselves to dealing with only positively charged particles, $q>0$. Consider the single-particle case, i.e. the situation with only one particle present in the trap or when we look at one of several particles that do not interact\footnote{This is not physical.}. Now, the only contributions to the fields are external, hence $\vec{E} = \vec{E}_\mathrm{ext}$ and $\vec{B} = \vec{B}_\mathrm{ext}$. We use eq. \eqref{eq:lorentz_force} to compute the Lorentz force,
 
 \begin{equation} \label{eq:p1_lorentz_force_penning}
     \begin{split}
@@ -46,8 +67,10 @@ where we defined $\omega_0 \equiv \frac{qB_0}{m}$ and $\omega_z^2 \equiv \frac{2
 The general solution of eq. \eqref{eq:p1_eom_z} is
 
 \begin{equation}
-    z(t) = c_1 \cos(\omega_z t) + c_2 \sin(\omega_z t). \label{eq:p1_diffeq_solution_z}
+    z(t) = c_1 \cos(\omega_z t) + c_2 \sin(\omega_z t), \label{eq:p1_diffeq_solution_z}
 \end{equation}
+
+where $c_1, c_2 \in \mathbb{R}$ are determined by initial conditions.
 
 The other two, eqs. \eqref{eq:p1_eom_x} and \eqref{eq:p1_eom_y}, are coupled. We introduce a complex function $f(t)=x(t) + iy(t)$ for which we have the time derivatives $\dot{f} = \dot{x} + i\dot{y}$ and $\ddot{f} = \ddot{x} + i\ddot{y}$. Multiply equation \eqref{eq:p1_eom_y} with $i$ and add to equation \eqref{eq:p1_eom_x} to obtain the following:
 
@@ -75,43 +98,45 @@ where $\phi_+$ and $\phi_-$ are constant phases, $A_+$ and $A_-$ are positive am
 
 The $\omega_+$ is the modified cyclotron frequency and the $\omega_-$ is the magnetron frequency that composes the two modes in the orbital motion we will discuss later.
 
-\colorbox{blue}{Stopped here (19.10.22), going to bed}
 
+We see from equation \eqref{eq:p3_f_general_solution} that if $\omega_\pm$ is real, then $\abs{f(t)} < \infty$ as $t\to\infty$ and we have a bounded solution in the $xy$-plane. For $\omega_\pm$ to be real we see from equation \eqref{eq:p3_omega_pm} that the following must hold:
 
-We see from equation  \eqref{eq:p3_f_general_solution} that if $\omega_\pm$ is real, then $\abs{f(t)} < \infty$ for $t\to\infty$ and we have a bounded solution in the $xy$-plane. For $\omega_\pm$ to be real we see from equation \eqref{eq:p3_omega_pm} that the following must hold:
-\begin{align}
-    \omega_0^2 &\geq 2\omega_z^2  \\
-    \implies \frac{q}{m} &\geq \frac{4V_0}{(B_0d)^2}.
-\end{align} 
-We may regard equation \eqref{eq:p3_f_general_solution} as a sum of vectors $\vec{r}_\pm$ with amplitudes $r_\pm=A_\pm$ and directions given by the angles $\alpha_\pm = \omega_\pm t + \phi_\pm$ in the complex plane (representing the $xy$-plane). The magnitude $\abs{f(t)} = \abs{f}$ for this sum of vectors is then given by:
-\begin{align}
+\begin{equation}\label{eq:p3_omega_constraints}
+    \omega_0^2 \geq 2\omega_z^2  \quad \implies \quad \frac{q}{m} \geq \frac{4V_0}{(B_0d)^2}
+\end{equation} 
+
+We may regard equation \eqref{eq:p3_f_general_solution} as a sum of vectors $\vec{r}_\pm$ with amplitudes $\abs{\vec{r}_\pm}=A_\pm$ and directions given by the angles $\alpha_\pm = \omega_\pm t + \phi_\pm$ in the complex plane that represents our $xy$-plane. The magnitude $\abs{f} \equiv \abs{f(t)}$ for this sum of vectors is
+
+\begin{equation}\label{eq:p3_magnitude_f}
     \abs{f} = \sqrt{\abs{\vec{r}_+}^2 + \abs{\vec{r}_-}^2 + 2\abs{\vec{r}_+}\abs{\vec{r_-}}\cos{(\abs{\alpha_+-\alpha_-})}}.
-\end{align}
+\end{equation}
+
+The maximum distance from the origin, $R_+$, occurs when the two vectors are pointing in the same direction, i.e. $\abs{\alpha_+-\alpha_-} = 0 \implies \cos0=1$, giving 
+
+\begin{equation}\label{eq:p4_Rplus}    
+    \begin{split}
+        R_+ &= \sqrt{A_+^2 + A_-^2 + 2A_+A_-} = \sqrt{(A_+ + A_-)^2} \\
+        &= A_+ + A_-.
+    \end{split}
+\end{equation}
+
+Similarily, the minimum distance, $R_-$, is achieved when the vectors are pointing in opposite directions, i.e. $\abs{\alpha_+-\alpha_-} = \pi \implies \cos\pi=-1$ which yields
+
+\begin{equation}\label{eq:p4_Rminus}    
+    \begin{split}
+        R_- &= \sqrt{A_+^2 + A_-^2 - 2A_+A_-} = \sqrt{(A_+ - A_-)^2} \\
+        &= \abs{A_+ - A_-}.
+    \end{split}
+\end{equation}
 
 
 
 
-
-
-The maximum distance from the origin, $R_+$, occurs when the two vectors are pointing in the same direction, i.e. $\abs{\alpha_+-\alpha_-} = 0 \implies \cos0=1$, which yields:
-\begin{align}
-    R_+ &= \sqrt{A_+^2 + A_-^2 + 2A_+A_-} = \sqrt{(A_+ + A_-)^2} \nonumber \\
-    &= A_+ + A_-
-\end{align}
-Similarily, the minimum distance, $R_-$, from the origin occurs when the vectors are pointing in opposite directions, i.e. $\abs{\alpha_+-\alpha_-} = \pi \implies \cos\pi=-1$, which yields:
-\begin{align}
-    R_- &= \sqrt{A_+^2 + A_-^2 - 2A_+A_-} = \sqrt{(A_+ - A_-)^2} \nonumber \\
-    &= \abs{A_+ - A_-}
-\end{align}
-
-
-
-
-\begin{align}
-    \ddot{x}_i - \omega_{0,i} \dot{y}_i - \frac{1}{2}\omega_{z,i}^2 x_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{x_i - x_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_x} \\
-    \ddot{y}_i + \omega_{0,i} \dot{x}_i - \frac{1}{2}\omega_{z,i}^2 y_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{y_i - y_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_y} \\ 
-    \ddot{z}_i + \omega_{z,i}^2 z_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{z_i - z_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_z}
-\end{align}
+%\begin{align}
+    %\ddot{x}_i - \omega_{0,i} \dot{y}_i - \frac{1}{2}\omega_{z,i}^2 x_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{x_i - x_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_x} \\
+    %\ddot{y}_i + \omega_{0,i} \dot{x}_i - \frac{1}{2}\omega_{z,i}^2 y_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{y_i - y_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_y} \\ 
+    %\ddot{z}_i + \omega_{z,i}^2 z_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{z_i - z_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_z}
+%\end{align}
 
 
 
@@ -125,34 +150,61 @@ We aim to create a program in \CC\, that simulates a set of $N_\mathrm{p}$ parti
 
 The purpose of \texttt{Particle} is to hold the parameters, such as the position, of a particle. We let an object of this class be initialised with a charge $q$, a mass $m$, a position $\vec{r} = (x,y,z)$ and a velocity $\vec{v} = (v_x, v_y, v_z)$. We add functions to update the latter two. 
 
-The \texttt{PenningTrap}-class imitates the physical system that is the Penning trap of magnetic field $\vec{B}=B_0\hat{e}_z$, electric potential $V = \frac{V_0}{2d^2} (2z^2-x^2-y^2)$ and characteristic dimension $d$. It is friend with the \texttt{Particle}-class and, in order to resemble the physical situation as much as possible, accepts only input particles of this type. When filled with $N_\mathrm{p}\geq 1$, an object of \texttt{PenningTrap} is ready to simulate the evolution of the \texttt{Particle} object(s) for a given period of time and time step with either a Forward-Euler or a \nth{4} order Runge-Kutta numerical scheme. 
+The \texttt{PenningTrap}-class imitates the physical system that is the Penning trap of external electric and magnetic fields according to eqs. \eqref{eq:trap_ext_E_field} and \eqref{eq:trap_ext_B_field}, and characteristic dimension $d$. It is friend with the \texttt{Particle}-class and, in order to resemble the physical situation as much as possible, accepts only input particles of this type. When filled with $N_\mathrm{p}\geq 1$, an object of \texttt{PenningTrap} is ready to simulate the evolution of the \texttt{Particle} object(s) for a given period of time and time step with either a Forward-Euler or a fourth order Runge-Kutta numerical scheme. 
 
 \dots
 
 
-\verb|PenningTrap| offers several additional functionalites. Amongst other things, the class:
+\texttt{PenningTrap} includes several additional functionalites. Amongst other things, the class
 
 \begin{itemize}
-    \item offers the choice between \nth{4} order Runge-Kutta or Forward-Euler as integration method %idk
-    \item provides the option to include or exclude Coloumb interactions in the simulation, as they are computationally greedy
-    \item includes a method for adding a time-dependent perturbation to the external electric potential, $V_0\rightarrow V_0 (1+ f(1+\cos{(\omega_V t)}))$
-    \item has the ability to count the number of particles still trapped, that is the number particles whose position $\vec{r}$ is such that $\abs{\vec{r}} \leq d$
-    \item can generate a set of identical particles with positions and velocities that are normally distrubuted within the trap's dimensions
+    \item offers the choice between RK4 or FE integration method.
+    \item provides the option to include or exclude Coloumb interactions in the simulation, as they are computationally greedy.
+    \item includes a method for adding a time-dependent perturbation to the external electric potential, $V_0\rightarrow V_0 (1+ f(1+\cos{(\omega_V t)}))$.
+    \item has the ability to count the number of particles still trapped, that is the number particles whose position $\vec{r}$ is such that $\abs{\vec{r}} \leq d$.
+    \item can generate a set of identical particles with positions and velocities that are normally distrubuted within the trap's dimensions.
+\end{itemize}
+
+\subsubsection*{Numerical integration}
+The FE algorithm \textcolor{red}{(REF TO FE ALGO)} \dots \textcolor{blue}{SHORT DESC. OF FE}
+
+For the RK4 algorithm \textcolor{red}{(REF TO RK4 ALGO)}, we have to keep some things in mind when considering interaction forces. For one step in time, we must make sure that the first value of $k$ is calculated for all particles before moving on to the second value, and so on. 
+\textcolor{blue}{NEED MORE HERE}
+
+
+\subsubsection*{Specific values}  % Maybe subsection?
+
+Our Penning trap is defined by the following numerical values:
+
+\begin{itemize}
+    \item[] $d=500 \,\mathrm{\text{\textmu} m}$
+    \item[] $V_0=25.0 \,\mathrm{mV}$
+    \item[] $B_0=1.00 \,\mathrm{T}$
+\end{itemize}
+
+We convert all to this set of base units:
+
+\begin{itemize}
+    \item[] Unit-length $=$ one micrometre $= 1\, \mathrm{\text{\textmu}m} $ 
+    \item[] Unit-time $=$ one microsecond $= 1\, \mathrm{\text{\textmu}s} $
+    \item[] Unit-mass $=$ one atomic mass unit $= 1\, \mathrm{u} $
+    \item[] Unit-charge $=$ one elementary charge $= 1\, \mathrm{e} $
 \end{itemize}
 
 
 \subsection{Initial conditions}\label{sec:initial_conditions}
-For simulations of one or two particles, we use the following initial conditions:
+
+The particles we consider are Calcium ions (Ca$^+$) with charge $q=1 \,\mathrm{e}$ and mass $m = 40.078 \,\mathrm{u}$. For simulations of one or two particles, we use the following initial conditions:
 \begin{itemize}
     \item Particle 1\label{item:initial_conditions_p1}
     \begin{itemize}
-        \item[] $(x_0, y_0, z_0) = (20,0,20) \mu\mathrm{m}$.
-        \item[] $(v_{x,0}, v_{y,0}, v_{z,0}) = (0,25,0) \mu\mathrm{m}/\mu\mathrm{s}$.
+        \item[] $\vec{r}^{(1)}_0 = (20, \,0, \,20) \, \mathrm{\text{\textmu}m} $
+        \item[] $\vec{v}^{(1)}_0 = (0,\,25,\,0) \, \mathrm{\text{\textmu}m}/ \mathrm{\text{\textmu}s}$
     \end{itemize}
     \item Particle 2\label{item:initial_conditions_p2}
     \begin{itemize}
-        \item[] $(x_0, y_0, z_0) = (25,25,0) \mu\mathrm{m}$.
-        \item[] $(v_{x,0}, v_{y,0}, v_{z,0}) = (0,40,5) \mu\mathrm{m}/\mu\mathrm{s}$.
+        \item[] $\vec{r}^{(2)}_0 = (25, \,25, \,0) \, \mathrm{\text{\textmu}m} $
+        \item[] $\vec{v}^{(2)}_0 = (0,\,40,\,5) \, \mathrm{\text{\textmu}m}/ \mathrm{\text{\textmu}s}$
     \end{itemize}
 \end{itemize}
 
