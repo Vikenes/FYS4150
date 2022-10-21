@@ -203,7 +203,11 @@ arma::mat PenningTrap::evolve_RK4(double dt, arma::mat RU){
     K2 = K_val(RU+K1/2) * dt;
     K3 = K_val(RU+K2/2) * dt;
     K4 = K_val(RU+K3) * dt; 
-
+    // std::cout<<"dt: "<<dt<<std::endl;
+    // std::cout<<"K1: "<<K1<<std::endl;
+    // std::cout<<"K2: "<<K2<<std::endl;
+    // std::cout<<"K3: "<<K3<<std::endl;
+    // std::cout<<"K4: "<<K4<<std::endl;
     dRU = (K1+2*K2+2*K3+K4)/6;
     return dRU;
 }
@@ -254,21 +258,22 @@ void PenningTrap::generate_particle(std::vector<Particle*> &list, arma::vec r, a
     Np++;
 }
 
-arma::mat PenningTrap::K_val(arma::mat RU){
-    K.rows(0,2) = RU.rows(3,5);
-    external_forces(RU);
+arma::mat PenningTrap::K_val(arma::mat RU_){
+    K.rows(0,2) = RU_.rows(3,5);
+    external_forces(RU_);
     if(interactions){
-        internal_forces(RU);
+        internal_forces(RU_);
     }
+    // std::cout<<RU_<<std::endl;
     K.rows(3,5) = (F_ext + F_int) / M;
     return K;
 }
 
-arma::mat PenningTrap::K_val(double t, arma::mat RU){
-    K.rows(0,2) = RU.rows(3,5);
-    external_forces(t, RU);
+arma::mat PenningTrap::K_val(double t, arma::mat RU_){
+    K.rows(0,2) = RU_.rows(3,5);
+    external_forces(t, RU_);
     if(interactions){
-        internal_forces(RU);
+        internal_forces(RU_);
     }
     K.rows(3,5) = (F_ext + F_int) / M;
     return K;

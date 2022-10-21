@@ -14,8 +14,8 @@ RK_path = data_path + "RK4/"
 
 
 m = 40.078
-B0 = 96.5
-V_d2 = 9.65 
+B0 =9.64852558 * 10
+V_d2 = 25e-3 * 9.64852558e7 / 500**2
 
 omega_z = np.sqrt(2 * V_d2 / m)
 omega_0 = B0/m 
@@ -97,7 +97,7 @@ def compute_errors(method, make_plot=True, savepush=False):
 
         r_anal = np.array([*analytical_xy(t, x0, v0), analytical_z(t, z0)])
 
-        abs_err = np.linalg.norm(r_vec - r_anal, axis=0)
+        abs_err = np.linalg.norm((r_vec - r_anal), axis=0)
         rel_err = abs_err / np.linalg.norm(r_anal, axis=0)
         
         abs_errors.append(abs_err)
@@ -209,12 +209,12 @@ def trapped_fine_search(savepush=False):
 
 
 # compare_z_analytical()
-# compute_errors("RK", make_plot=False)
+compute_errors("RK")
 # compute_errors("FE", plot=False)
 
 # xy_plane_movements()
 # x_phase_plot()
 # z_phase_plot()
 
-trapped_without_interaction()
+# trapped_without_interaction()
 # trapped_fine_search()

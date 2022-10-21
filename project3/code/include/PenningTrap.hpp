@@ -69,7 +69,7 @@ class PenningTrap{
     /* Calculate the value of Kj in the RK4-algorithm given positions and velocities {RU}.
       -> K.rows(0,2): dR = U
       -> K.rows(3,6): dV = F(R, U)/m */
-    arma::mat K_val(arma::mat RU);
+    arma::mat K_val(arma::mat RU_);
     /* Find the length of the vectors inside a matrix {R} of 'Np' coloumns and 3 rows.
         -> result is a matrix of equal dimensions where the coloumns have three equal elements */
     arma::mat Pnorm(arma::mat R);
@@ -93,7 +93,7 @@ class PenningTrap{
     /* Calculate the value of Kj in the RK4-algorithm given a time {t} and positions and velocities {RU}.
       -> K.rows(0,2): dR = U
       -> K.rows(3,6): dV = F(t, R, U)/m */
-    arma::mat K_val(double t, arma::mat RU);
+    arma::mat K_val(double t, arma::mat RU_);
 
 
   public:
