@@ -2,15 +2,57 @@
 
 
 
+We simulate \textcolor{red}{(check concistency!)} Particle 1 for a time period of $T = 50 \,\mathrm{\text{\textmu} s}$ using $n=\{4000, 8000, 16000, 32000 \}$ steps, both using FE and RK4. % n_k?
+
+
 %------------------------------------------------------------------------------
 %   displacement in z-direction as function of time. analyitcal, FE, and RK4
 %------------------------------------------------------------------------------
 \begin{figure}[h!]
     \includegraphics[width=\linewidth]{compare_z_analytical.pdf}
-    \caption{Movement in the $z$ for a single particle, simulation for $50$ $\mu\mathrm{s}$. The analytical solution from equation \ref{eq:p1_diffeq_solution_z} is plotted in green, and the integrated solutions using the forward Euler and Runge-Kutta 4 scheme is shown in red and blue respectively. Initial conditions are those of particle 1, given in \ref{item:initial_conditions_p1} }
+    \caption{Movement in the $z$-plane for a single particle, simulation for $50$ $\mu\mathrm{s}$. The analytical solution from equation \ref{eq:p1_diffeq_solution_z} is plotted in green, and the integrated solutions using the forward Euler and Runge-Kutta 4 scheme is shown in red and blue respectively. Initial conditions are those of particle 1, given in \ref{item:initial_conditions_p1} }
     \label{fig:compare_z_analytical}
 \end{figure}
 
+
+\begin{figure}[h!]
+    \includegraphics[width=\linewidth]{rel_error_FE.pdf}
+    \caption{Some caption}
+    \label{fig:error_FE}
+\end{figure}
+
+
+\begin{figure}[h!]
+    \includegraphics[width=\linewidth]{rel_error_RK.pdf}
+    \caption{Some caption}
+    \label{fig:error_RK}
+\end{figure}
+
+\dots
+
+
+
+We simulate \textcolor{red}{(check concistency!)} Particle 1 and Particle 2 for $T = 50 \,\mathrm{\text{\textmu} s}$ using $n=8000$ steps, now also using both integration schemes. We do this both with Coulomb interactions turned off and on. 
+
+
+\dots
+
+
+We now fill the trap with $N_\mathrm{p} = 100$ randomly distributed Ca$^+$-ions \dots
+\begin{figure}[h!]
+    \includegraphics[width=\linewidth]{trapped_particles_without_interaction.pdf}
+    \caption{Some caption}
+    \label{fig:trapped_without}
+\end{figure}
+
+%------------------------------------------------------------------------------
+%   some description
+%------------------------------------------------------------------------------
+\begin{figure}[h!]
+    \includegraphics[width=\linewidth]{trapped_particles_fine.pdf}
+    \caption{Some caption}
+    \label{fig:trapped_with}
+\end{figure}
 
 
 
@@ -23,8 +65,7 @@
 %   movement of two particles in xy-plane with and without interaction
 %------------------------------------------------------------------------------
 \begin{figure}[h!]
-    % \includegraphics[width=\linewidth]{xy_two_particles.pdf}
-    \includegraphics[width=\linewidth]{dummy.jpg}
+    \includegraphics[width=\linewidth]{xy_two_particles.pdf}
     \caption{Movement of two particles in the $xy$-plane simulated for $50$ $\mu$s. The left panel show their trajectories computed without particle interaction. In the right panel we have allowed for the particles to interact. We have used the Runge-Kutta 4 scheme to obtain these trajectories. Particle 1 is shown in blue, and particle 2 in green. Both panels use the same initial conditions as specified in rection \ref{sec:initial_conditions}. The staring points of their trajectories are indicated with a cross, their ending points with a star. }
     \label{fig:xy_two_particles}
 \end{figure}
@@ -33,18 +74,18 @@
 %   some description
 %------------------------------------------------------------------------------
 \begin{figure}[h!]
-    \includegraphics[width=\linewidth]{dummy.jpg}
+    \includegraphics[width=\linewidth]{x_phase_plot.pdf}
     \caption{Some caption}
-    \label{fig:some_ref}
+    \label{fig:x_phase_two_particles}
 \end{figure}
 
 %------------------------------------------------------------------------------
 %   some description
 %------------------------------------------------------------------------------
 \begin{figure}[h!]
-    \includegraphics[width=\linewidth]{dummy.jpg}
+    \includegraphics[width=\linewidth]{z_phase_plot.pdf}
     \caption{Some caption}
-    \label{fig:some_ref}
+    \label{fig:z_phase_two_particles}
 \end{figure}
 
 %------------------------------------------------------------------------------
@@ -61,7 +102,6 @@
  
 \twocolumngrid
  
-testing agin
 
 
 

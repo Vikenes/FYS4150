@@ -5,8 +5,14 @@
 
 
 
+\begin{figure}[h!]
+    \includegraphics[width=\linewidth]{Trap_schematic.png}
+    \caption{Schematic of the Penning trap. The cross-section is in the $xz$-plane. The ring electrode (green) and end caps (dark blue) sets the inhomogenoeous electric field (white arrows). The homogeneous magnetic field (blue arrows) is resulting from the cylinder magnet (light blue) outside of the trap. For simplicity, we will assume that the trap extends the distance $d$ in all directions, see text for further details.}
+    \label{fig:schematic_trap}
+\end{figure}
 
-Consider an ideal Penning trap with characteristic dimension $d$, a length scale given by $d= \sqrt{z_0^2+ \frac{1}{2}r_0^2}$, where $z_0$ is the distinance between the endcaps and $r_0$ the radius of of the ring \textcolor{red}{REF TO SOME SCHEMATIC FIGURE}. These electrodes create an external electric field $\vec{E}_\mathrm{ext}$ resulting from the potential
+
+Consider an ideal Penning trap with characteristic dimension $d$, a length scale given by $d= \sqrt{z_0^2+ \frac{1}{2}r_0^2}$, where $z_0$ is the distance between the centre and the endcap and $r_0$ the radius of of the ring, as in Figure \ref{fig:schematic_trap}. These electrodes create an external electric field $\vec{E}_\mathrm{ext}$ resulting from the potential
 
 \begin{equation}
     V (\vec{r})= V(x,y,z) = \frac{V_0}{2d^2}(2z^2 - x^2 - y^2), \label{eq:penning_potential}
@@ -28,7 +34,7 @@ An important simplification to note is that we regard the extent of the trap as 
 \begin{equation}\label{eq:trap_ext_E_field}
     \vec{E}_\mathrm{ext} (\vec{r}) = 
     \begin{cases}
-        \frac{V_0}{d^2} \big( \hat{e}_x + \hat{e}_y -2\hat{e}_z \big), & \abs{\vec{r}} \leq d \\
+        \frac{V_0}{d^2} \big( x\hat{e}_x + y\hat{e}_y -2z\hat{e}_z \big), & \abs{\vec{r}} \leq d \\
         \vec{0},  & \abs{\vec{r}} > d
     \end{cases}
 \end{equation}
@@ -42,6 +48,21 @@ and
         \vec{0}, & \abs{\vec{r}} > d
     \end{cases}.
 \end{equation}
+
+
+
+\subsection{Coulomb interactions}
+
+A particle of charge $q_1$ at position $\vec{r}_1$ exerts a force on another particle of charge $q_2$ at $\vec{r}_2$ equal $k_e q_1q_2 (\vec{r}_2-\vec{r}_1) \abs{\vec{r}_2-\vec{r}_1}^3$, where $k_e$ is the Boltzmann constant. When there are several particles present in the trap, we will want to include the contribution from these forces in the equation. The interaction field $\vec{E}_\mathrm{int}$ set up by $N_\mathrm{p}$ point charges $\{q_1, q_2, \dots, q_{N_\mathrm{p}}\}$ at positions $\{\vec{r}_1, \vec{r}_2, \dots, \vec{r}_{N_\mathrm{p}}\}$ is given by
+
+\begin{equation}\label{eq:interaction_field}
+    \vec{E}_\mathrm{int} (\vec{r}) = k_e \sum_{p=1}^{N_\mathrm{p}} q_p \frac{\vec{r}-\vec{r}_p}{\abs{\vec{r}-\vec{r}_p}^3}.
+\end{equation}
+
+Note that this is a comprehensive task when introducing many particles, even for the computer. 
+
+The resulting electric and magnetic field contributing to the Lorentz force in eq. \eqref{eq:lorentz_force} is then $\vec{E} = \vec{E}_\mathrm{ext} + \vec{E}_\mathrm{int}$ and $\vec{B} = \vec{B}_\mathrm{ext}$, respectively, from eqs. \eqref{eq:trap_ext_E_field}, \eqref{eq:trap_ext_B_field} and \eqref{eq:interaction_field}.
+
 
 
 
@@ -150,7 +171,8 @@ We aim to create a program in \CC\, that simulates a set of $N_\mathrm{p}$ parti
 
 The purpose of \texttt{Particle} is to hold the parameters, such as the position, of a particle. We let an object of this class be initialised with a charge $q$, a mass $m$, a position $\vec{r} = (x,y,z)$ and a velocity $\vec{v} = (v_x, v_y, v_z)$. We add functions to update the latter two. 
 
-The \texttt{PenningTrap}-class imitates the physical system that is the Penning trap of external electric and magnetic fields according to eqs. \eqref{eq:trap_ext_E_field} and \eqref{eq:trap_ext_B_field}, and characteristic dimension $d$. It is friend with the \texttt{Particle}-class and, in order to resemble the physical situation as much as possible, accepts only input particles of this type. When filled with $N_\mathrm{p}\geq 1$, an object of \texttt{PenningTrap} is ready to simulate the evolution of the \texttt{Particle} object(s) for a given period of time and time step with either a Forward-Euler or a fourth order Runge-Kutta numerical scheme. 
+The \texttt{PenningTrap}-class imitates the physical system that is the Penning trap of external electric and magnetic fields according to eqs. \eqref{eq:trap_ext_E_field} and \eqref{eq:trap_ext_B_field}, and characteristic dimension $d$. It is friend with the \texttt{Particle}-class and, in order to resemble the physical situation as much as possible, accepts only input particles of this type. When filled with $N_\mathrm{p}\geq 1$, an object of \texttt{PenningTrap} is ready to simulate the evolution of the \texttt{Particle} object(s) for a given period of time and time step with either a forward Euler or a fourth order Runge-Kutta numerical scheme. 
+ 
 
 \dots
 
@@ -166,7 +188,19 @@ The \texttt{PenningTrap}-class imitates the physical system that is the Penning 
 \end{itemize}
 
 \subsubsection*{Numerical integration}
-The FE algorithm \textcolor{red}{(REF TO FE ALGO)} \dots \textcolor{blue}{SHORT DESC. OF FE}
+The equation of motion \eqref{eq:eom_lorentz} is split into two first order ODEs as follows:
+
+\begin{equation}\label{eq:split_ODEs}
+    \begin{split}
+        \dot{\vec{v}} &= \frac{\vec{F}}{m} \\
+        \dot{\vec{r}} &= \vec{v}
+    \end{split}
+\end{equation}
+
+We then get six discretised equations to solve for each particle at each step in time.
+
+The FE algorithm \textcolor{red}{(REF TO FE ALGO)} 
+\dots \textcolor{blue}{SHORT DESC. OF FE}
 
 For the RK4 algorithm \textcolor{red}{(REF TO RK4 ALGO)}, we have to keep some things in mind when considering interaction forces. For one step in time, we must make sure that the first value of $k$ is calculated for all particles before moving on to the second value, and so on. 
 \textcolor{blue}{NEED MORE HERE}
