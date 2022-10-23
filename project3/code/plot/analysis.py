@@ -78,7 +78,7 @@ def compute_errors(method, make_plot=True, savepush=False):
         title = "Forward Euler"
     elif method=="RK":
         folder = RK_path 
-        title = "Runge Kutta 4"
+        title = "Runge-Kutta 4"
 
     abs_errors = []
     rel_errors = []
@@ -194,14 +194,15 @@ def trapped_without_interaction(savepush=False):
 
 def trapped_fine_search(savepush=False):
     N0 = 100 
-    legs = ["Interaction", "No interaction"]
+    legs = ["No interactions", "Interactions"]
 
     f = [0.1, 0.1] 
     n_trapped = []
     omega_V, trapped_int = load(f"trapped_f1_with_fine.txt", skiprows=0)
     omega_V, trapped_noint = load(f"trapped_f1_without_fine.txt", skiprows=0)
-    n_trapped.append(trapped_int / N0)
     n_trapped.append(trapped_noint / N0)
+    n_trapped.append(trapped_int / N0)
+    
 
     plot.plot_trapped_fine(n_trapped, omega_V, legs, "trapped_particles_fine", title=None, savepush=savepush)
 
@@ -209,12 +210,12 @@ def trapped_fine_search(savepush=False):
 
 
 # compare_z_analytical()
-compute_errors("RK")
-# compute_errors("FE", plot=False)
+# compute_errors("RK", savepush=True)
+# compute_errors("FE", savepush=True)
 
-# xy_plane_movements()
-# x_phase_plot()
-# z_phase_plot()
+# xy_plane_movements(savepush=True)
+x_phase_plot(savepush=True)
+z_phase_plot(savepush=True)
 
-# trapped_without_interaction()
-# trapped_fine_search()
+#trapped_without_interaction(savepush=True)
+#trapped_fine_search(savepush=True)

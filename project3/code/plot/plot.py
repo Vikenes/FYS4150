@@ -103,28 +103,30 @@ def two_particles_plane(p_noint, p_int, xlabel, ylabel, fname, savepush=False):
 
     fig, ax = plt.subplots(ncols=2, sharey='all', layout='constrained')
     
-
-    ax[0].scatter(*p1_noint, s=3, marker='o')
-    ax[0].scatter(*p2_noint, s=3, marker='o')
-    ax[1].scatter(*p1_int, s=3, marker='o')
-    ax[1].scatter(*p2_int, s=3, marker='o')
+    ax[0].scatter(*p1_noint, s=3, marker='o', c="navy", alpha=.7)
+    ax[0].scatter(*p2_noint, s=3, marker='o', c="orangered", alpha=.7)
+    ax[1].scatter(*p1_int, s=3, marker='o', c="navy", alpha=.7)
+    ax[1].scatter(*p2_int, s=3, marker='o', c="orangered", alpha=.7)
     
-    ax[0].plot(*p1_noint.T[0], marker="P", ms=12)
-    ax[0].plot(*p2_noint.T[0], marker="P", ms=12)
-    ax[0].plot(*p1_noint.T[-1], marker="*", ms=12)
-    ax[0].plot(*p2_noint.T[-1], marker="*", ms=12)
+    ax[0].plot(*p1_noint.T[0], marker="P", ms=12, c="b")
+    ax[0].plot(*p2_noint.T[0], marker="P", ms=12, c="y")
+    ax[0].plot(*p1_noint.T[-1], marker="*", ms=12, c="b")
+    ax[0].plot(*p2_noint.T[-1], marker="*", ms=12, c="y")
 
-    ax[1].plot(*p1_int.T[0], marker="P", ms=12)
-    ax[1].plot(*p2_int.T[0], marker="P", ms=12)
-    ax[1].plot(*p1_int.T[-1], marker="*", ms=12)
-    ax[1].plot(*p2_int.T[-1], marker="*", ms=12)
+    ax[1].plot(*p1_int.T[0], marker="P", ms=12, c="b")
+    ax[1].plot(*p2_int.T[0], marker="P", ms=12, c="y")
+    ax[1].plot(*p1_int.T[-1], marker="*", ms=12, c="b")
+    ax[1].plot(*p2_int.T[-1], marker="*", ms=12, c="y")
     
 
     ax[0].set_aspect('equal')
     ax[1].set_aspect('equal')
-
-    ### IMPORTANT ###
-    # Axis are not properly aligned.. 
+    xlim = ax[0].get_xlim()
+    ylim = ax[0].get_ylim()
+    ax[0].set_xlim(xlim)
+    ax[0].set_ylim(ylim)
+    ax[1].set_xlim(xlim)
+    ax[1].set_ylim(ylim)
 
     set_ax_info(ax[0], xlabel, ylabel, title='No interaction', legend=False)
     set_ax_info(ax[1], xlabel, ylabel=False, title='With interaction', legend=False)
@@ -137,16 +139,19 @@ def two_particles_plane(p_noint, p_int, xlabel, ylabel, fname, savepush=False):
 
 def error_plot(errors, times, fname, title, savepush=False):
     
+    colours = ['dodgerblue', 'olive', 'darkorange', 'navy']
+    markersizes = [5.5, 5, 4.5, 4]
     
     fig, ax = plt.subplots()
     for i in range(len(errors)):
         nk =  len(errors[i]) - 1
-        ax.plot(times[i], errors[i], label=r"$n_k =$" + f"{nk:.0f}")# +  r"$\,\mathrm{\mu s}$")
+        ax.plot(times[i][1:], errors[i][1:], 'o-', ms=markersizes[i], c=colours[i], label=r"$n_k = %.0f$"%nk)
 
-    xlabel=r'$t\,\mathrm{\mu s}$'
-    ylabel=r'Relative error size for $n_k$ steps'
+    xlabel=r'$t$ [$\mu$s]'
+    ylabel=r'Relative error size'# for $n_k$ steps'
     set_ax_info(ax, xlabel, ylabel, title=title)
     ax.legend(fontsize=20)
+    ax.set_yscale("log")
     
     if savepush:
         save_push(fig, fname, push=True)
@@ -156,11 +161,13 @@ def error_plot(errors, times, fname, title, savepush=False):
 
 def plot_trapped_coarse(N_trapped, omega_V, f_values, fname, title, savepush=False):
     fig, ax = plt.subplots()
+    markersizes = [6, 5, 4] 
+    colours = ["#4C72B0", "#55A868", "#C44E52"]
     for i in range(len(N_trapped)):
-        ax.plot(omega_V, N_trapped[i], label=rf"$f=\,${f_values[i]:.1f}")
+        ax.plot(omega_V, N_trapped[i], 'o-', ms=markersizes[i], c=colours[i], alpha=.7, label=rf"$f=\,${f_values[i]:.1f}")
 
     xlabel = r"$\omega_V\,[\mathrm{MHz}]$"
-    ylabel = r"$N_{\mathrm{trapped}} / N_0$"
+    ylabel = r"$N_{\mathrm{trapped}} / N_\mathrm{p}$"
     set_ax_info(ax, xlabel, ylabel, title=title)
     ax.set_xlim(ax.get_xlim()[0], ax.get_xlim()[1]+ 0.3)
     ax.legend(fontsize=20, loc='lower right')
@@ -173,11 +180,12 @@ def plot_trapped_coarse(N_trapped, omega_V, f_values, fname, title, savepush=Fal
 
 def plot_trapped_fine(N_trapped, omega_V, legs, fname, title, savepush=False):
     fig, ax = plt.subplots()
-    for i in range(len(N_trapped)):
-        ax.plot(omega_V, N_trapped[i], label=legs[i])
-
+    colours = ["#4C72B0", "#55A868", "#C44E52"]
+    # assuming f = f1
+    ax.plot(omega_V, N_trapped[0],'o-', ms=6, c=colours[0], label=legs[0], alpha=.5)
+    ax.plot(omega_V, N_trapped[1],'o--', lw=2, ms=9, c=colours[0], label=legs[1])
     xlabel = r"$\omega_V\,[\mathrm{MHz}]$"
-    ylabel = r"$N_{\mathrm{trapped}} / N_0$"
+    ylabel = r"$N_{\mathrm{trapped}} / N_\mathrm{p}$"
     set_ax_info(ax, xlabel, ylabel, title=title)
     ax.legend(fontsize=20, loc='lower right')
 
@@ -186,6 +194,14 @@ def plot_trapped_fine(N_trapped, omega_V, legs, fname, title, savepush=False):
     else:
         plt.show()
 
+
+
+
+
+
+
+
+# OLD:
 
 
 def test_single_particle():
