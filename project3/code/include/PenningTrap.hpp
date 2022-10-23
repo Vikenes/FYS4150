@@ -61,7 +61,7 @@ class PenningTrap{
     /* Calculate the total forces from internal fields at positions and velocities {RU}.
       -> result 'F_int' */
     arma::mat internal_forces(arma::mat RU); 
-    /* Evolve system at positions and velocities {RU} for one step of {dt} μs in time using the Forward Euler scheme. */
+    /* Evolve system at positions and velocities {RU} for one step of {dt} μs in time using the forward Euler scheme. */
     arma::mat evolve_FE(double dt, arma::mat RU);
     /* Evolve system at positions and velocities {RU} for one step of {dt} μs in time using the Runge-Kutta 4 scheme. */
     arma::mat evolve_RK4(double dt, arma::mat RU);
@@ -86,7 +86,7 @@ class PenningTrap{
       -> result 'F_ext' */
     arma::mat external_forces(double t, arma::mat RU);
     
-    /* Evolve system at time {t} and positions and velocities {RU} for one step of {dt} μs in time using the Forward Euler scheme. */
+    /* Evolve system at time {t} and positions and velocities {RU} for one step of {dt} μs in time using the forward Euler scheme. */
     arma::mat evolve_FE(double dt, double t, arma::mat RU);
     /* Evolve system at time {t} and positions and velocities {RU} for one step of {dt} μs in time using the Runge-Kutta 4 scheme. */
     arma::mat evolve_RK4(double dt, double t, arma::mat RU);
@@ -124,17 +124,17 @@ class PenningTrap{
       - the magnetic field strength to {B0_in} T,
       - the electric potential magnitude to {V0_in} mV, 
       - the charcteristic dimension to {d_in} μm and
-      turn the Coloumb interactions on if {interactions_in}, else off. */
+      turn the Coulomb interactions on if {interactions_in}, else off. */
     PenningTrap(double B0_in, double V0_in, double d_in, bool interactions_in=true);
 
     // Member functions
     /* Add a particle to the Penning trap. */
     void add_particle(Particle &particle); 
-    /* Switch Coloumb interaction mode from current to other.
+    /* Switch Coulomb interaction mode from current to other.
         -> if interactions are on, they are turned off 
         -> if interactions are off, they are turned on */
     void switch_interactions();  
-    /* Switch Coloumb interactions {switch_in}.
+    /* Switch Coulomb interactions {switch_in}.
         -> turn on: switch_in = "on" or "ON"
         -> turn off: switch_in = "off" or "OFF" */
     void switch_interactions(std::string switch_in);
