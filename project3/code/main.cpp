@@ -119,14 +119,14 @@ int main(){
     double dOmega_coarse = omega_V(1)-omega_V(0);
     assert(dOmega_coarse<0.02);
 
-    // particles_left(f1, omega_V, "trapped_f1_without");      // Running time: 1195.99 s
-    particles_left(f2, omega_V, "trapped_f2_without");      // Running time: 7797.29 s (129.955 min)  (80000 time steps)
+    // particles_left(f1, omega_V, "trapped_f1_without");      // Running time: 140 min ish
+    // particles_left(f2, omega_V, "trapped_f2_without");      // Running time: 7797.29 s (129.955 min)  (80000 time steps)
     // particles_left(f3, omega_V, "trapped_f3_without");      // Running time: 747.507 s
 
-    arma::vec omega_V_fine = arma::linspace(1.35, 1.45, 40);
+    arma::vec omega_V_fine = arma::linspace(1.38, 1.45, 40);
     double dOmega_fine = omega_V_fine(1)-omega_V_fine(0);
-    assert(dOmega_fine < 0.2*dOmega_coarse);        //  at least 5 times more fine-grained
-    // particles_left(f1, omega_V_fine, "trapped_f1_with_fine", "RK4", "on");
+    //assert(dOmega_fine < 0.2*dOmega_coarse);        //  at least 5 times more fine-grained
+    particles_left(f1, omega_V_fine, "trapped_f1_with_fine", "RK4", "on");
     // particles_left(f1, omega_V_fine, "trapped_f1_without_fine", "RK4", "off");
     
     auto stop_time = std::chrono::high_resolution_clock::now();

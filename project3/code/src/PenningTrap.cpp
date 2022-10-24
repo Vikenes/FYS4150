@@ -106,6 +106,14 @@ void PenningTrap::simulate(double T, double dt, std::string scheme, bool point){
         system.slice(i+1).rows(1,6) = RU + dRU;
         system.slice(i+1).row(0).fill(t + dt);
 
+        if(i%100==0){
+            //  check if there are any particles left in the trap
+            arma::mat D = Pnorm(RU.rows(0,2)+dRU.rows(0,2));
+            if(arma::all(D.row(0)>d)){
+                std::cout << "All particles have escaped." << std::endl;
+                break;
+            }
+        }
 
         if(point){ // fixme
             for(int p=0; p<Np; Np++){
@@ -203,11 +211,6 @@ arma::mat PenningTrap::evolve_RK4(double dt, arma::mat RU){
     K2 = K_val(RU+K1/2) * dt;
     K3 = K_val(RU+K2/2) * dt;
     K4 = K_val(RU+K3) * dt; 
-    // std::cout<<"dt: "<<dt<<std::endl;
-    // std::cout<<"K1: "<<K1<<std::endl;
-    // std::cout<<"K2: "<<K2<<std::endl;
-    // std::cout<<"K3: "<<K3<<std::endl;
-    // std::cout<<"K4: "<<K4<<std::endl;
     dRU = (K1+2*K2+2*K3+K4)/6;
     return dRU;
 }
@@ -264,7 +267,6 @@ arma::mat PenningTrap::K_val(arma::mat RU_){
     if(interactions){
         internal_forces(RU_);
     }
-    // std::cout<<RU_<<std::endl;
     K.rows(3,5) = (F_ext + F_int) / M;
     return K;
 }
