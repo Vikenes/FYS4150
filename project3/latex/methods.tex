@@ -53,7 +53,7 @@ and
 
 \subsection{Coulomb interactions}
 
-A particle of charge $q_1$ at position $\vec{r}_1$ exerts a force on another particle of charge $q_2$ at $\vec{r}_2$ equal $k_e q_1q_2 (\vec{r}_2-\vec{r}_1) \abs{\vec{r}_2-\vec{r}_1}^3$, where $k_e$ is the Boltzmann constant. When there are several particles present in the trap, we will want to include the contribution from these forces in the equation. The interaction field $\vec{E}_\mathrm{int}$ set up by $N_\mathrm{p}$ point charges $\{q_1, q_2, \dots, q_{N_\mathrm{p}}\}$ at positions $\{\vec{r}_1, \vec{r}_2, \dots, \vec{r}_{N_\mathrm{p}}\}$ is given by
+A particle of charge $q_1$ at position $\vec{r}_1$ exerts a force on another particle of charge $q_2$ at $\vec{r}_2$ equal $k_e q_1q_2 (\vec{r}_2-\vec{r}_1) / \abs{\vec{r}_2-\vec{r}_1}^3$, where $k_e$ is the Boltzmann constant. When there are several particles present in the trap, we will want to include the contribution from these forces in the equation. The interaction field $\vec{E}_\mathrm{int}$ set up by $N_\mathrm{p}$ point charges $\{q_1, q_2, \dots, q_{N_\mathrm{p}}\}$ at positions $\{\vec{r}_1, \vec{r}_2, \dots, \vec{r}_{N_\mathrm{p}}\}$ is given by
 
 \begin{equation}\label{eq:interaction_field}
     \vec{E}_\mathrm{int} (\vec{r}) = k_e \sum_{p=1}^{N_\mathrm{p}} q_p \frac{\vec{r}-\vec{r}_p}{\abs{\vec{r}-\vec{r}_p}^3}.

@@ -16,4 +16,4 @@ debug_gdb:
 	g++ -g -std=c++11 main.cpp src/*.cpp -I include -o  main.exe -larmadillo && gdb --args ./main.exe
 
 plots:
-	cd plot && python3 plot.py && cd ..
+	cd plot && python3 analysis.py && cd ..
