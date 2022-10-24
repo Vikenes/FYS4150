@@ -116,13 +116,16 @@ int main(){
     /* PROBLEM 9 */
     double f1=0.1, f2=0.4, f3=0.7; // amplitudes
     arma::vec omega_V = arma::linspace(0.2, 2.5, 300); // [ MHz ] 
-    assert(omega_V(1)-omega_V(0)<0.02);
+    double dOmega_coarse = omega_V(1)-omega_V(0);
+    assert(dOmega_coarse<0.02);
 
-    particles_left(f1, omega_V, "trapped_f1_without");      // Running time: 1195.99 s
-    // particles_left(f2, omega_V, "trapped_f2_without");      // Running time: 843.927 s
+    // particles_left(f1, omega_V, "trapped_f1_without");      // Running time: 1195.99 s
+    particles_left(f2, omega_V, "trapped_f2_without");      // Running time: 7797.29 s (129.955 min)  (80000 time steps)
     // particles_left(f3, omega_V, "trapped_f3_without");      // Running time: 747.507 s
 
-    // arma::vec omega_V_fine = arma::linspace(1.35, 1.45, 40);
+    arma::vec omega_V_fine = arma::linspace(1.35, 1.45, 40);
+    double dOmega_fine = omega_V_fine(1)-omega_V_fine(0);
+    assert(dOmega_fine < 0.2*dOmega_coarse);        //  at least 5 times more fine-grained
     // particles_left(f1, omega_V_fine, "trapped_f1_with_fine", "RK4", "on");
     // particles_left(f1, omega_V_fine, "trapped_f1_without_fine", "RK4", "off");
     

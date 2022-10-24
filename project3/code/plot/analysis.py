@@ -186,7 +186,11 @@ def trapped_without_interaction(savepush=False):
     N_trapped_list = []
 
     for f in range(1,4):
-        omega_V, trapped = load(f"trapped_f{f}.txt", skiprows=0)
+        try:
+            omega_V, trapped = load(f"trapped_f{f}_without.txt", skiprows=0) # updated files
+            print('ok')
+        except FileNotFoundError:
+            omega_V, trapped = load(f"trapped_f{f}.txt", skiprows=0)
         N_trapped_list.append(trapped / N0)
 
     plot.plot_trapped_coarse(N_trapped_list, omega_V, f_values, "trapped_particles_without_interaction", title=None, savepush=savepush)
@@ -214,8 +218,8 @@ def trapped_fine_search(savepush=False):
 # compute_errors("FE", savepush=True)
 
 # xy_plane_movements(savepush=True)
-x_phase_plot(savepush=True)
-z_phase_plot(savepush=True)
+# x_phase_plot(savepush=True)
+# z_phase_plot(savepush=True)
 
-#trapped_without_interaction(savepush=True)
+trapped_without_interaction(savepush=False)
 #trapped_fine_search(savepush=True)
