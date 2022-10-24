@@ -16,7 +16,9 @@ PenningTrap test_single_particle(std::string scheme, double no_of_timesteps, dou
     PenningTrap Trap = PenningTrap(B0, V0, d);
     Trap.add_particle(p1);
     //  run simulation:
-    Trap.simulate(simulation_duration, simulation_duration/no_of_timesteps, scheme);
+    double dt = simulation_duration/no_of_timesteps;
+    std::cout << "n: "<<no_of_timesteps<<"  "<<"dt: "<<dt<< std::endl;
+    Trap.simulate(simulation_duration, dt, scheme);
     return Trap;
 }
 
@@ -49,28 +51,28 @@ int run_tests(std::string scheme){
             (c) for n = 16000
             (d) for n = 32000   */
 
-    // PenningTrap Trap1a = test_single_particle(scheme, n(0));
-    // Trap1a.save_solution(folder + "single_n1");
+    PenningTrap Trap1a = test_single_particle(scheme, n(0));
+    Trap1a.save_solution(folder + "single_n1");
     
-    // PenningTrap Trap1b = test_single_particle(scheme, n(1));
-    // Trap1b.save_solution(folder + "single_n2");
+    PenningTrap Trap1b = test_single_particle(scheme, n(1));
+    Trap1b.save_solution(folder + "single_n2");
 
-    // PenningTrap Trap1c = test_single_particle(scheme, n(2));
-    // Trap1c.save_solution(folder + "single_n3");
+    PenningTrap Trap1c = test_single_particle(scheme, n(2));
+    Trap1c.save_solution(folder + "single_n3");
 
-    // PenningTrap Trap1d = test_single_particle(scheme, n(3));
-    // Trap1d.save_solution(folder + "single_n4");
+    PenningTrap Trap1d = test_single_particle(scheme, n(3));
+    Trap1d.save_solution(folder + "single_n4");
 
 
     /*  (2) Double particle 
             (a) without interactions
             (b) with interactions   */
     
-    PenningTrap Trap2a = test_double_particle(false, scheme, n(2));
-    Trap2a.save_solution(folder + "double_without");
+    // PenningTrap Trap2a = test_double_particle(false, scheme, n(2));
+    // Trap2a.save_solution(folder + "double_without");
 
-    PenningTrap Trap2b = test_double_particle(true, scheme, n(2));
-    Trap2b.save_solution(folder + "double_with");
+    // PenningTrap Trap2b = test_double_particle(true, scheme, n(2));
+    // Trap2b.save_solution(folder + "double_with");
 
     return 0;
 }
@@ -87,7 +89,7 @@ int particles_left(int sim_dur, double h, double amplitude, double frequency, st
 
 int particles_left(double amplitude, arma::vec frequency, std::string filename, std::string scheme="RK4", std::string interaction_switch="off"){
     double sim_duration = 500;
-    double h = sim_duration/8000;
+    double h = sim_duration/80000;
 
     int Nomega = frequency.size();
     std::vector<int> trapped(Nomega);
@@ -112,13 +114,13 @@ int main(){
     // run_tests("RK4");
 
     /* PROBLEM 9 */
-    // double f1=0.1, f2=0.4, f3=0.7; // amplitudes
-    // arma::vec omega_V = arma::linspace(0.2, 2.5, 300); // [ MHz ] 
-    // assert(omega_V(1)-omega_V(0)<0.02);
+    double f1=0.1, f2=0.4, f3=0.7; // amplitudes
+    arma::vec omega_V = arma::linspace(0.2, 2.5, 300); // [ MHz ] 
+    assert(omega_V(1)-omega_V(0)<0.02);
 
-    //particles_left(f1, omega_V, "trapped_f1");      // Running time: 1195.99 s
-    //particles_left(f2, omega_V, "trapped_f2");      // Running time: 843.927 s
-    //particles_left(f3, omega_V, "trapped_f3");      // Running time: 747.507 s
+    particles_left(f1, omega_V, "trapped_f1_without");      // Running time: 1195.99 s
+    // particles_left(f2, omega_V, "trapped_f2_without");      // Running time: 843.927 s
+    // particles_left(f3, omega_V, "trapped_f3_without");      // Running time: 747.507 s
 
     // arma::vec omega_V_fine = arma::linspace(1.35, 1.45, 40);
     // particles_left(f1, omega_V_fine, "trapped_f1_with_fine", "RK4", "on");
