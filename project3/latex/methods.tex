@@ -24,7 +24,6 @@ which traps the particles in the $z$-direction. To contain the particles in the 
     \vec{B}_\mathrm{ext} = (0,0,B_0). \label{eq:homogeneous_B_field}
 \end{equation}
 
-\Vetle{The discussion below should perhaps be moved to the methods section. It's only a simplification we make in our numerical model.}
 As a simplification, we consider the trap as a sphere of radius $d$. We set the external fields to zero outside this region, so the electric field is   
 \begin{equation}\label{eq:trap_ext_E_field}
     \vec{E}_\mathrm{ext} (\vec{r}) = 
@@ -41,10 +40,10 @@ and the magnetic field is
         (0,\,0,\,0), & \abs{\vec{r}} > d
     \end{cases}.
 \end{equation}
-
+For the analytical derivations that follow in this section (section \ref{sec:penning_trap}), we will assume that $\abs{r}\leq d$ is fulfilled.  
 
 \subsection{Analytical solutions - Single particle}\label{subsec_methods:single_particle_analytical}
-We restrict ourselves to dealing with only positively charged particles, $q>0$ \Vetle{Check that this agrees with introduction, maybe move this?}. We begin by considering a single particle in the Penning trap. The Lorentz force is then governed by the external fields only, hence $\vec{E} = \vec{E}_\mathrm{ext}$ and $\vec{B} = \vec{B}_\mathrm{ext}$. We use eq. \eqref{eq:lorentz_force} to compute the Lorentz force, \Vetle{use equation and split on the equation below?}
+We begin by considering a single particle in the Penning trap. The Lorentz force is then governed by the external fields only, hence $\vec{E} = \vec{E}_\mathrm{ext}$ and $\vec{B} = \vec{B}_\mathrm{ext}$. We use eq. \eqref{eq:lorentz_force} to compute the Lorentz force, 
 \begin{align}
     \vec{F} &= \frac{q V_0}{d^2}(x,\,y,\,-2z) + q B_0 (\dot{y},\,-\dot{x},\,0) \nonumber\\
     &= \frac{m}{2}\omega_z^2 (x,\,y,\,-2z) + m \omega_0 (\dot{y},\,-\dot{x},\,0),\label{eq:p1_lorentz_force_penning}
@@ -127,7 +126,7 @@ To simplify the analysis, we will neglect any other contribution affecting the m
 \section{Methods}\label{sec:methods}
 
 
-\subsection{\Nanna{(appropriate title)} Numerical implementation and integration \Johan{appropriate enough?}}\label{sec:code}
+\subsection{Numerical implementation and integration}\label{sec:code}
 
 We aim to create a program in \CC\, that simulates a set of $N_\mathrm{p}$ particles inside a Penning trap. An object-oriented code is befitting this task and we present in the following descriptions of the classes \verb|Particle| and \verb|PenningTrap|.
 
@@ -137,81 +136,51 @@ The \texttt{PenningTrap}-class imitates the physical system that is the Penning 
 
 \Nanna{Some more here?}
 
+\Vetle{Rewrite the below list. Should not be bullet points. Should perhaps not introduce features that are not yet relevant for the report, e.g. time-dep potential is not mentioned yet.}
+
 \texttt{PenningTrap} includes several additional functionalites. Amongst other things, the class
 
 \begin{itemize}
     \item offers the choice between RK4 or FE integration method.
     \item provides the option to include or exclude Coloumb interactions in the simulation, as they are computationally greedy.
-    \item includes a method for adding a time-dependent perturbation to the external electric potential, $V_0\rightarrow V_0 (1+ f(1+\cos{(\omega_V t)}))$.
+    \item includes a method for adding a time-dependent perturbation to the external electric potential, $V_0\rightarrow V_0 (1+ f\cos{(\omega_V t)})$.
     \item has the ability to count the number of particles still trapped, that is the number particles whose position $\vec{r}$ is such that $\abs{\vec{r}} \leq d$.
     \item can generate a set of identical particles with positions and velocities that are normally distrubuted within the trap's dimensions.
 \end{itemize}
 
-\subsubsection*{Numerical integration - \Vetle{move to appendix?}\Johan{Nei det passer greit her}}
+\subsubsection*{Numerical integration}
 The equation of motion \eqref{eq:eom_lorentz} is split into two first order ODEs as follows:
 
 \begin{equation}\label{eq:split_ODEs}
     \begin{split}
-        \dot{\vec{v}} &= \frac{\vec{F}}{m} \\
+        \dot{\vec{v}} &= \frac{\vec{F}}{m} \\s
         \dot{\vec{r}} &= \vec{v}
     \end{split}
 \end{equation}
 
 We then get six discretised equations to solve for each particle at each step in time. We use two different approaches when solving equations \ref{eq:split_ODEs} numerically. Both methods are single step methods, meaning we advance one time step per iteration. The simpler method, FE \citep{Atkinson1989} is of first order meaning that we advance one time step by considering the gradient at the current time step only. This results in few FLOPs per iteration. Hence, this scheme offers numerical efficiency. The draw back is the accuracy of the resultant solution. For a step size $h$, the FE scheme has a local truncation error of $\mathcal{O}(h^2)$ which results in a global error $\mathcal{O}(h)$. Since we want $h$ to be small, the global error is large compared to the local error.  
 
-The second, more advanced method is the RK4 methods \citep{Atkinson1989}, which is of fourth order. This means that we advance one time step by considering the gradient four times across a single time step. The gradient we use to advance the solution is a superposition of the four previously found gradients. This results in many FLOPs per iteration. Hence, this scheme is numerically expensive. However, it offers a far more accurate solution yielding a local truncation error of $\mathcal{O}(h^5)$ and global error $\mathcal{O}(h^4)$. Again, since $h$ is small, these errors are four magnitudes smaller than those of the FE scheme. 
+The second, more advanced method is the RK4 methods \citep{Atkinson1989}, which is of fourth order. This means that we advance one time step by considering the gradient four times across a single time step. The gradient we use to advance the solution is a superposition of the four previously found gradients. This results in many FLOPs per iteration. Hence, this scheme is numerically more expensive than the FE scheme. However, it offers a far more accurate solution yielding a local truncation error of $\mathcal{O}(h^5)$ and global error $\mathcal{O}(h^4)$. Again, since $h$ is small, these errors are four magnitudes smaller than those of the FE scheme. 
 
 
-\subsection{Initialisation values} 
-
-Our Penning trap is defined by the following numerical values:
-
+\subsection{Penning trap parameters and particle properties}\label{subsec_methods:numbers_and_units}
+For the Penning trap parameters, we choose the following numerical values:
 \begin{itemize}
     \item[] $d=500 \,\mathrm{\text{\textmu} m}$
     \item[] $V_0=25.0 \,\mathrm{mV}$
     \item[] $B_0=1.00 \,\mathrm{T}$
 \end{itemize}
-
-We convert all to this set of base units:
-
+We convert all quantities to the following set of base units:
 \begin{itemize}
     \item[] Unit-length $=$ one micrometre $= 1\, \mathrm{\text{\textmu}m} $ 
     \item[] Unit-time $=$ one microsecond $= 1\, \mathrm{\text{\textmu}s} $
     \item[] Unit-mass $=$ one atomic mass unit $= 1\, \mathrm{u} $
     \item[] Unit-charge $=$ one elementary charge $= 1\, \mathrm{e} $
 \end{itemize}
+The particles we consider are Calcium ions (Ca$^+$) with charge $q=1 \,\mathrm{e}$ and mass $m = 40.078 \,\mathrm{u}$. These values ensure that the condition in equation \eqref{eq:p3_omega_constraints} is fulfilled. 
 
-We specify the duration of one simulation as $T$, with $n$ time steps, resulting in a step length of $h = \Delta t = T/n$. We intend to run the simulation for two different durations:
-\begin{itemize}
-    \item[] $T_1 = $ 50 \textmu s
-    \item[] $T_2 = $ 500 \textmu s
-\end{itemize}
-and four different time steps:
-\begin{itemize}
-    \item[] $n_1 = 4000$
-    \item[] $n_2 = 8000$
-    \item[] $n_3 = 16000$
-    \item[] $n_4 = 32000$
-\end{itemize}
-However, deviation from this may occur if computations proves to be lengthy, or if we want a specific step length. 
-
-For simulations of duration $T_1$ with different number of steps, we will use an estimate of the error convergence rate $r_\mathrm{err}$ given by
-
-\begin{equation}\label{eq:error_convergence_rate}
-    r_\mathrm{err} = \frac{1}{3} \sum_{k=2}^{4} \frac{\log{\big(\Delta_{\mathrm{max}, k} /\Delta_{\mathrm{max}, k-1}\big)}}{\log{\big(h_k/h_{k-1} \big)}},
-\end{equation}
-where $h_k =T_1/n_k$ is the step size an
-
-\begin{equation}\label{eq:abs_error}
-    \Delta_{\mathrm{max}, k} = \max_{i}\abs{\vec{r}_{i, \mathrm{exact}} - \vec{r}_i}
-\end{equation}
-
-is the maximum absolute error in the solution obtained with $n_k$ time steps. We used that $\vec{r}_{i, \mathrm{exact}}$ is the analytical solution.
 
 \subsection{Initial conditions}\label{sec:initial_conditions}
-
-The particles we consider are Calcium ions (Ca$^+$) with charge $q=1 \,\mathrm{e}$ and mass $m = 40.078 \,\mathrm{u}$. 
-
 For simulations of one or two particles, we use the following initial conditions:
 \begin{itemize}
     \item Particle 1\label{item:initial_conditions_p1}
@@ -226,18 +195,70 @@ For simulations of one or two particles, we use the following initial conditions
     \end{itemize}
 \end{itemize}
 
-For simulations with more than two particles, we initialise the Calcium ions randomly in the sense that their initial positions and velocities are normally distributed around the centre of the trap.
 
-\subsection{Error analysis}\label{sec:error_analysis}
 
-\subsection{Simulations}\label{sec:simulation}
-\subsubsection{Single particle}
+\subsection{Single particle simulation}\label{sec:simulation}
+We begin by simulating a single particle, using the initial conditions for Particle 1 in section \ref{sec:initial_conditions}. We compare the resulting axial motion obtained from FE and RK4 with the analytical solution in equation \eqref{eq:p1_diffeq_solution_z} which has the specific solution 
+\begin{align}
+    z(t) = z_0 \cos(\omega_z t), \label{eq:z_spec_analytical_solution}
+\end{align}
+where $z_0=20\,\mum$. We simulate over a duration of $T_1=50\,\mus$, using $n_1=4000$ steps. 
+
+To study the accuracy of the two algorithms, we compute the size of the relative error of the two algorithms as a function of time for a duration of $T_1$. To study the step size dependency, we do this for four different time steps:
+\begin{itemize}
+    \item[] $n_1 = 4000$
+    \item[] $n_2 = 8000$
+    \item[] $n_3 = 16000$
+    \item[] $n_4 = 32000$
+\end{itemize}
+The size of the error is given by 
+\begin{equation}\label{eq:relative_error_size}
+    \Delta_\mathrm{rel,k} = \frac{\abs{\vec{r}_\mathrm{exact} - \vec{r_k}}}{\abs{\vec{r}_\mathrm{exact}}}
+\end{equation}
+where $\vec{r}_\mathrm{exact}$ is the analytical solution. For the movement in the $xy$-plane, the specific solution for $f(t)$ is given by equation \eqref{eq:p3_f_general_solution} with 
+\begin{equation} \label{eq:xy_amplitudes_spec_analytical_solution}
+    \begin{split}
+        A_+ = \frac{v_0 + \omega_- x_0}{\omega_- - \omega_+}&,\quad A_- = - \frac{v_0 + \omega_+ x_0}{\omega_- - \omega_+}, \\
+        \phi_+ =0&,\quad \phi_- =0,
+    \end{split}
+\end{equation}
+where $v_0=\dot{y}(0)=25\,\mums$ and $x_0=20\,\mum$. $z(t)$ is given by equation \eqref{eq:z_spec_analytical_solution}.
+
+
+% We specify the duration of one simulation as $T$, with $n$ time steps, resulting in a step length of $h = \Delta t = T/n$. We intend to run the simulation for two different durations:
+% \begin{itemize}
+%     \item[] $T_1 = $ 50 \textmu s
+%     \item[] $T_2 = $ 500 \textmu s
+% \end{itemize}
+% However, deviation from this may occur if computations proves to be lengthy, or if we want a specific step length. 
+
+% For simulations of duration $T_1$ with different number of steps, we will use an estimate of the error convergence rate $r_\mathrm{err}$ given by
+
+Using the results of the estimated errors, we will estimate the error convergence rate, $r_\mathrm{err}$ for our two algorithms 
+\begin{equation}\label{eq:error_convergence_rate}
+    r_\mathrm{err} = \frac{1}{3} \sum_{k=2}^{4} \frac{\log{\big(\Delta_{\mathrm{max}, k} /\Delta_{\mathrm{max}, k-1}\big)}}{\log{\big(h_k/h_{k-1} \big)}},
+\end{equation}
+where $h_k =T_1/n_k$ is the step size and
+\begin{equation}\label{eq:abs_error}
+    \Delta_{\mathrm{max}, k} = \max_{i}\abs{\vec{r}_{i, \mathrm{exact}} - \vec{r}_i}
+\end{equation}
+is the maximum size of the absolute error with $n_k$ time steps. 
 
 \subsubsection{Two particles}
+Having studied the accuracy of our solver, we proceed by studying two particles in the Penning trap with the initial conditions specified in section \ref{sec:initial_conditions}. For $n_2=8000$ timesteps we simulate the two particles over a duration of $T_1$, both with an without interactions, using the RK4 method. In both cases, we will study the motion of the two particles in the $(x,y)$-plane, their trajectories in the $(x,v_x)$-plane and the $(z,v_z)$-plane and a 3D plot showing their trajectories in $(x,y,z)$ space.   
 
-\subsubsection{Many particles}
+\subsection{Many particles - Resonance}
+Now that the basics of our Penning trap is complete, we explore resonance features of our trap when we have a large number of particles in the trap. To to this, we subject the system to a timedependent electromagnetic field  by making the replacement 
+\begin{equation}
+    V_0 \to V_0 (1 + f \cos(\omega_V t)), \label{eq:p9_time_dep_potential}
+\end{equation} 
+where $f$ is a constant amplitude and $\omega_V$ is the angular frequency of the time-dependent potential. Using this potential, we will consider $N_\mathrm{p}=100$ particles with normal distributed initial positions and velocities with a mean of zero and variance $\sigma^2=1$. The magnitude of each particle's initial position and velocity vector is $d/10$. To find potential resonance frequencies, we will plot the fraction of particles that are left in the trap after a duration of $T_2=500\,\mathrm{\mu s}$\footnote{Strictly speaking, some of them are stopped before this due to an empty trap, but the result is the same.} as a function of applied frequency $\omega_V\in(0.2,\,2.5)\,\mathrm{MHz}$. For this broad frequency range we use a step size of $0.02\,\mathrm{MHz}$ for the applied frequencies and switch off the interactions between the particles. We plot the result for the three amplitudes $f=0.1,\,0.4,\,0.7$, using $n=80000$ time steps. Using only the RK4 scheme, we perform two sorts of frequency scans:
 
-State and decsribe each simulation, much is already written in the results section
+\begin{itemize} % have absolutely no idea why I struggle with enumerate here
+    \item[(i)] \textbf{Broad-band resonance search}: Run many simulations with interactions switched \textit{off} for a broad range of frequencies, but with equal magnitude of the perturbation. Log the number of particles remaining in the trap after each simulation.
+    \item[(ii)] \textbf{Narrow-band resonance search}: Run several simulations with interactions turned \textit{on} for a narrow range of frequencies. The band is determined using the result of (i) to locate a small range of response frequencies. Repeat with interactions turned \textit{off} for comparison. Make sure the grid of frequencies is fine-grained compared to the one in (i). \Nanna{Rephrase} Repeat for interactions turned \textit{off} for comparison. Write down the number of particles trapped at $T_2$.
+\end{itemize}
+Having completed a broad frequency search, we proceed by 
 
 
 

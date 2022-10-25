@@ -95,16 +95,6 @@ Figure \ref{fig:x_phase_two_particles} show the phase plots of the two particles
 
 \subsection{Many particles}\label{sec:many_particles}
 
-We now fill the trap with $N_\mathrm{p} = 100$ randomly distributed Ca$^+$-ions as elaborated in section \ref{sec:initial_conditions}. We add the perturbation to the external electric field in the trap described in section \ref{sec:code}. The following simulations are run for $T_2$\footnote{Strictly speaking, some of them are stopped before this due to an empty trap, but the result is the same.} before counting the number of particles still remaining in the trap, $N_\mathrm{trapped}$. Note that all simulations begin with equally initialised particles.
-
-Using only the RK4 scheme, we perform two sorts of frequency scans: \Nanna{Move some of this to methods?}
-
-
-\begin{itemize} % have absolutely no idea why I struggle with enumerate here
-    \item[(i)] \textbf{Broad-band resonance search}: Run many simulations with interactions switched \textit{off} for a broad range of frequencies, but with equal magnitude of the perturbation. Log the number of particles remaining in the trap after each simulation.
-    \item[(ii)] \textbf{Narrow-band resonance search}: Run several simulations with interactions turned \textit{on} for a narrow range of frequencies. The band is determined using the result of (i) to locate a small range of response frequencies. Repeat with interactions turned \textit{off} for comparison. Make sure the grid of frequencies is fine-grained compared to the one in (i). \Nanna{Rephrase} Repeat for interactions turned \textit{off} for comparison. Write down the number of particles trapped at $T_2$.
-\end{itemize}
-
 Three broad-band scans are performed, one for each of the amplitudes $f=0.1, 0.4,$ and $0.7$. In particular, we run 300 simulations where we use the same amplitude $f$ and for each run, apply a different frequency $\omega_V \in[0.2,2.5] \,\mathrm{MHz}$. We reused the time step size from section \ref{sec:two_particles}. The fraction of particles remaining is presented in Figure \ref{fig:trapped_without} as a function of applied frequency. 
 
 For the next step, we choose the smallest amplitude and the middlemost response in Figure \ref{fig:trapped_without}, i.e. $f=0.1$ and $\omega_V \in[1.35,1.45] \,\mathrm{MHz}$. We run 50 simulations, each with slightly different applied frequency, for which interactions forces are included. The number of steps is reduced to 20000 in this case, corresponding to a step size $2 T_1/n_1$ (twice that of the first simulation in section \ref{sec:one_particle}). We repeat for negligible interactions. Figure \ref{fig:trapped_with} shows $N_\mathrm{trapped}$ as a function of $\omega_V$ in both cases. 

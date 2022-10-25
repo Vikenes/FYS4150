@@ -1,6 +1,11 @@
 \section{Conclusion}\label{sec:conclusion}
 \textit{In this section we state three things in a concise manner: what we have done, what we have found, and what should or could be done in the future.}
 
+\Johan{The following is supposed to be in the discussion section}
+
+We provide the movement in the $z$-direction in figure \ref{fig:compare_z_analytical} as some sort of test to see whether the numerical integrations methods works or not. Hence, we use the fewest number of time steps, $n_1$ in order reveal the largest potential errors. From the figure they seem to overlap perfectly, however there is reason to think the error in the calculated solutions grow with time. This is indeed the case, as the error for the small duration $T_1$ is not visible due to the thickness of plotted lines and the scale of the plot. Although not shown here, if we were to zoom in on the graphs at a late time they do not overlap, i.e. indicating that there is an error although hard to spot. Nevertheless, the calculated solution seems to fit the analytical quite well, but we are still interested in quantifying the error, which we expect to be smaller if we increase the number of time steps. 
+
+Using the analytical solution as reference, the relative error as found from equation \ref{eq:relative_error_size} is shown in figure \ref{fig:error_FE} for the FE scheme and in figure \ref{fig:error_RK} for the RK4 scheme. Here, all four time steps $n_k, k\in[1,4]$ is included. The increase in error for both plots as we increase the number of time steps seem to follow the order of the global error for each scheme. This also becomes apparent when considering the actual relative error in the plots ($y$-axis values), and the magnitudinal decrease in error when we increase the number of time steps. The latter is significantly more apparent for the RK4 scheme, which is to be expected as the global error should go as $\mathcal{O}(h^4)$, rather than $\mathcal{O}(h)$ for the FE scheme. There is a noticeable increase in the widths of the different graphs for the RK4 scheme in figure \ref{fig:error_RK}. This can be explained by the small numerical values of the relative error, and the fact that we use a logarithmic $y$-axis which emphasize the variation for small errors (broad fuzzy looking graph for $n_4$).
 
 
 % ===========================================
