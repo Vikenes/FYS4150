@@ -144,7 +144,7 @@ class PenningTrap{
     /* Initialise matrices etc. for a complete set of particles. */
     void ready();       
     /* Simulate the system for {T} μs using time step {dt} μs using {scheme} */
-    void simulate(double T, double dt, std::string scheme="RK4", bool point=false);
+    void simulate(double T, double dt, std::string scheme="RK4");
     /* Save solution to a file named {filename}. */
     void save_solution(std::string filename);
     /* Count the particles that are located within the walls of the Penning trap. 
