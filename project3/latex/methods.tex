@@ -127,7 +127,7 @@ To simplify the analysis, we will neglect any other contribution affecting the m
 \section{Methods}\label{sec:methods}
 
 
-\subsection{\Nanna{(appropriate title)} Numerical work}\label{sec:code}
+\subsection{\Nanna{(appropriate title)} Numerical implementation and integration \Johan{appropriate enough?}}\label{sec:code}
 
 We aim to create a program in \CC\, that simulates a set of $N_\mathrm{p}$ particles inside a Penning trap. An object-oriented code is befitting this task and we present in the following descriptions of the classes \verb|Particle| and \verb|PenningTrap|.
 
@@ -147,7 +147,7 @@ The \texttt{PenningTrap}-class imitates the physical system that is the Penning 
     \item can generate a set of identical particles with positions and velocities that are normally distrubuted within the trap's dimensions.
 \end{itemize}
 
-\subsubsection*{Numerical integration - \Vetle{move to appendix?}}
+\subsubsection*{Numerical integration - \Vetle{move to appendix?}\Johan{Nei det passer greit her}}
 The equation of motion \eqref{eq:eom_lorentz} is split into two first order ODEs as follows:
 
 \begin{equation}\label{eq:split_ODEs}
@@ -157,14 +157,12 @@ The equation of motion \eqref{eq:eom_lorentz} is split into two first order ODEs
     \end{split}
 \end{equation}
 
-We then get six discretised equations to solve for each particle at each step in time.
+We then get six discretised equations to solve for each particle at each step in time. We use two different approaches when solving equations \ref{eq:split_ODEs} numerically. Both methods are single step methods, meaning we advance one time step per iteration. The simpler method, FE \citep{Atkinson1989} is of first order meaning that we advance one time step by considering the gradient at the current time step only. This results in few FLOPs per iteration. Hence, this scheme offers numerical efficiency. The draw back is the accuracy of the resultant solution. For a step size $h$, the FE scheme has a local truncation error of $\mathcal{O}(h^2)$ which results in a global error $\mathcal{O}(h)$. Since we want $h$ to be small, the global error is large compared to the local error.  
 
-The simple FE algorithm \citep{Arkinson1989} \Nanna{...} The FE method is a first order, single-step method, meaning that we only need the current numerical solution to compute the next \Nanna{(Objection, relevance?)}.
-
-The fourth order, single-step RK4 method uses four estimates of the gradient on the interval between to steps in time. It gives rise to much more precise solutions than what the FE method does, but the algorithm requires more computational time. For the RK4 algorithm \citep{Arkinson1989}, we have to keep some things in mind when considering forces between particles. For a singlw step in time, we must make sure that the first gradient estimate is calculated for all particles before moving on to the second estimate, and so on. 
+The second, more advanced method is the RK4 methods \citep{Atkinson1989}, which is of fourth order. This means that we advance one time step by considering the gradient four times across a single time step. The gradient we use to advance the solution is a superposition of the four previously found gradients. This results in many FLOPs per iteration. Hence, this scheme is numerically expensive. However, it offers a far more accurate solution yielding a local truncation error of $\mathcal{O}(h^5)$ and global error $\mathcal{O}(h^4)$. Again, since $h$ is small, these errors are four magnitudes smaller than those of the FE scheme. 
 
 
-\subsection{Specific values \Vetle{Put as a subsubsection just after Penning trap?}} 
+\subsection{Initialisation values} 
 
 Our Penning trap is defined by the following numerical values:
 
@@ -183,7 +181,7 @@ We convert all to this set of base units:
     \item[] Unit-charge $=$ one elementary charge $= 1\, \mathrm{e} $
 \end{itemize}
 
-We intend to run the simulation for two different durations:
+We specify the duration of one simulation as $T$, with $n$ time steps, resulting in a step length of $h = \Delta t = T/n$. We intend to run the simulation for two different durations:
 \begin{itemize}
     \item[] $T_1 = $ 50 \textmu s
     \item[] $T_2 = $ 500 \textmu s
@@ -195,7 +193,7 @@ and four different time steps:
     \item[] $n_3 = 16000$
     \item[] $n_4 = 32000$
 \end{itemize}
-
+However, deviation from this may occur if computations proves to be lengthy, or if we want a specific step length. 
 
 \subsection{Initial conditions}\label{sec:initial_conditions}
 
