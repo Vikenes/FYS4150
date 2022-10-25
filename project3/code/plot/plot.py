@@ -144,8 +144,8 @@ def error_plot(errors, times, fname, title, savepush=False):
     
     fig, ax = plt.subplots()
     for i in range(len(errors)):
-        nk =  len(errors[i]) - 1
-        ax.plot(times[i][1:], errors[i][1:], 'o-', ms=markersizes[i], c=colours[i], label=r"$n_k = %.0f$"%nk)
+        n =  len(errors[i]) - 1
+        ax.plot(times[i][1:], errors[i][1:], 'o-', ms=markersizes[i], c=colours[i], label=r"$n_{:.0f} = {:.0f}$".format(i+1, n))
 
     xlabel=r'$t$ [$\mu$s]'
     ylabel=r'Relative error size'# for $n_k$ steps'

@@ -56,8 +56,8 @@ def compare_z_analytical(savepush=False):
     """
     Sanity check.
     """
-    FE = load("single_n4.txt", FE_path)
-    RK = load("single_n4.txt")
+    FE = load("single_n1.txt", FE_path)
+    RK = load("single_n1.txt")
 
     t = FE[0]
     z_FE = FE[3]
@@ -213,13 +213,13 @@ def trapped_fine_search(savepush=False):
 
 
 
-# compare_z_analytical()
-# compute_errors("RK", savepush=True)
-# compute_errors("FE", savepush=True)
+compare_z_analytical()
+compute_errors("RK", savepush=False)
+compute_errors("FE", savepush=False)
 
 # xy_plane_movements(savepush=True)
 # x_phase_plot(savepush=True)
 # z_phase_plot(savepush=True)
 
-trapped_without_interaction(savepush=False)
+# trapped_without_interaction(savepush=False)
 #trapped_fine_search(savepush=True)
