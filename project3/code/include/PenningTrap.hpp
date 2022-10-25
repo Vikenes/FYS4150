@@ -39,9 +39,9 @@ class PenningTrap{
      *  rows -> (x, y, z, vx, vy, vz)
      *  cols -> particle number 
      */
-    arma::mat RU;       //  positions (rows 0,1,2) and velocities (rows 3,4,5) of particles
-    arma::mat dRU;      //  change in positions (rows 0,1,2) and velocities (rows 3,4,5) of particles
-    double t=0;         //  current time 
+    arma::mat RU_;      //  positions (rows 0,1,2) and velocities (rows 3,4,5) of particles
+    arma::mat dRU_;     //  change in positions (rows 0,1,2) and velocities (rows 3,4,5) of particles
+    double t_=0;        //  current time 
 
 
     // Member functions
@@ -69,7 +69,7 @@ class PenningTrap{
     /* Calculate the value of Kj in the RK4-algorithm given positions and velocities {RU}.
       -> K.rows(0,2): dR = U
       -> K.rows(3,6): dV = F(R, U)/m */
-    arma::mat K_val(arma::mat RU_);
+    arma::mat K_val(arma::mat RU);
     /* Find the length of the vectors inside a matrix {R} of 'Np' coloumns and 3 rows.
         -> result is a matrix of equal dimensions where the coloumns have three equal elements */
     arma::mat Pnorm(arma::mat R);
@@ -93,7 +93,7 @@ class PenningTrap{
     /* Calculate the value of Kj in the RK4-algorithm given a time {t} and positions and velocities {RU}.
       -> K.rows(0,2): dR = U
       -> K.rows(3,6): dV = F(t, R, U)/m */
-    arma::mat K_val(double t, arma::mat RU_);
+    arma::mat K_val(double t, arma::mat RU);
 
 
   public:
