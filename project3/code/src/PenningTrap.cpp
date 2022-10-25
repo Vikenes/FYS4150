@@ -16,7 +16,7 @@ void PenningTrap::add_particle(Particle &particle){
 }
 
 void PenningTrap::print_particles(){
-    std::cout << "\nParticles at time t = " << t << std::endl;
+    std::cout << "\nParticles at time t = " << t_ << std::endl;
     std::cout << "_____________________________________________________" << std::endl;
     for(int p=0; p<Np; p++){
         arma::vec r = particles.at(p) -> position();
@@ -101,19 +101,19 @@ void PenningTrap::simulate(double T, double dt, std::string scheme){
             }
         }
         if(scheme=="RK4"){ // FIXME (want less if/else)
-            if(time_dep){dRU_ = evolve_RK4(dt, t_, RU_);}
-            else{dRU_ = evolve_RK4(dt, RU_);}
+            if(time_dep){dRU = evolve_RK4(dt, t_, RU_);}
+            else{dRU = evolve_RK4(dt, RU_);}
         }
         else if(scheme=="FE"){
-            if(time_dep){dRU_ = evolve_FE(dt, t_, RU_);}
-            else{dRU_ = evolve_FE(dt, RU_);}
+            if(time_dep){dRU = evolve_FE(dt, t_, RU_);}
+            else{dRU = evolve_FE(dt, RU_);}
         }
         else{
             std::cout << "Arguments FE and RK4 are the only valid ones." << std::endl;
             assert(false);
         }
 
-        system.slice(i+1).rows(1,6) = RU_ + dRU_;
+        system.slice(i+1).rows(1,6) = RU_ + dRU;
         system.slice(i+1).row(0).fill(t_ + dt);
     }
     t_ = system(0, 0, Nt-1);
@@ -134,7 +134,7 @@ void PenningTrap::ready(){
     if(Np==1){interactions = false;}
 
     Q = arma::mat(3, Np).fill(0.); M = arma::mat(3, Np).fill(0.);  
-    RU_ = arma::zeros(6, Np); dRU_ = arma::zeros(6, Np); 
+    RU_ = arma::zeros(6, Np); dRU = arma::zeros(6, Np); 
 
     E_ext = arma::zeros(3, Np); B_ext = arma::zeros(3, Np); E_int = arma::zeros(3, Np);
     F_ext = arma::zeros(3, Np); F_int = arma::zeros(3, Np);

@@ -40,7 +40,7 @@ class PenningTrap{
      *  cols -> particle number 
      */
     arma::mat RU_;      //  positions (rows 0,1,2) and velocities (rows 3,4,5) of particles
-    arma::mat dRU_;     //  change in positions (rows 0,1,2) and velocities (rows 3,4,5) of particles
+    arma::mat dRU;      //  change in positions (rows 0,1,2) and velocities (rows 3,4,5) of particles
     double t_=0;        //  current time 
 
 

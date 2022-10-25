@@ -110,8 +110,8 @@ int main(){
     auto start_time = std::chrono::high_resolution_clock::now();
 
     /* PROBLEM 8 */
-    // run_tests("FE");
-    // run_tests("RK4");
+    //run_tests("FE");
+    //run_tests("RK4");
 
     /* PROBLEM 9 */
     double f1=0.1, f2=0.4, f3=0.7; // amplitudes
@@ -129,8 +129,8 @@ int main(){
     arma::vec omega_V_fine = arma::linspace(1.35, 1.45, 50);
     double dOmega_fine = omega_V_fine(1)-omega_V_fine(0);
     assert(dOmega_fine < 0.5*dOmega_coarse);        //  at least twice as fine-grained
-    particles_left(f1, omega_V_fine, "trapped_f1_with_fine", "RK4", "on", 20000);
-    // particles_left(f1, omega_V_fine, "trapped_f1_without_fine", "RK4", "off", 20000);
+    // particles_left(f1, omega_V_fine, "trapped_f1_with_fine", "RK4", "on", 20000);  // Running time: 6623.53 s (110.392 min)
+    particles_left(f1, omega_V_fine, "trapped_f1_without_fine", "RK4", "off", 20000);
     
     auto stop_time = std::chrono::high_resolution_clock::now();
 
