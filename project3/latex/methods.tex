@@ -159,7 +159,7 @@ The equation of motion \eqref{eq:eom_lorentz} is split into two first order ODEs
 
 We then get six discretised equations to solve for each particle at each step in time. We use two different approaches when solving equations \ref{eq:split_ODEs} numerically. Both methods are single step methods, meaning we advance one time step per iteration. The simpler method, FE \citep{Atkinson1989} is of first order meaning that we advance one time step by considering the gradient at the current time step only. This results in few FLOPs per iteration. Hence, this scheme offers numerical efficiency. The draw back is the accuracy of the resultant solution. For a step size $h$, the FE scheme has a local truncation error of $\mathcal{O}(h^2)$ which results in a global error $\mathcal{O}(h)$. Since we want $h$ to be small, the global error is large compared to the local error.  
 
-The second, more advanced method is the RK4 methods \citep{Atkinson1989}, which is of fourth order. This means that we advance one time step by considering the gradient four times across a single time step. The gradient we use to advance the solution is a superposition of the four previously found gradients. This results in many FLOPs per iteration. Hence, this scheme is numerically expensive. However, it offers a far more accurate solution yielding a local truncation error of $\mathcal{O}(h^5)$ and global error $\mathcal{O}(h^4)$. Again, since $h$ is small, these errors are four magnitudes smaller than those of the FE scheme. 
+The second, more advanced method is the RK4 methods \citep{Atkinson1989}, which is of fourth order. This means that we advance one time step by considering the gradient four times across a single time step. The gradient we use to advance the solution is a superposition of the four previously found gradients. This results in many FLOPs per iteration. Hence, this scheme is numerically more expensive than the FE scheme. However, it offers a far more accurate solution yielding a local truncation error of $\mathcal{O}(h^5)$ and global error $\mathcal{O}(h^4)$. Again, since $h$ is small, these errors are four magnitudes smaller than those of the FE scheme. 
 
 
 \subsection{Initialisation values} 
@@ -228,7 +228,6 @@ For simulations of one or two particles, we use the following initial conditions
 
 For simulations with more than two particles, we initialise the Calcium ions randomly in the sense that their initial positions and velocities are normally distributed around the centre of the trap.
 
-\subsection{Error analysis}\label{sec:error_analysis}
 
 \subsection{Simulations}\label{sec:simulation}
 \subsubsection{Single particle}
@@ -236,6 +235,7 @@ For simulations with more than two particles, we initialise the Calcium ions ran
 \subsubsection{Two particles}
 
 \subsubsection{Many particles}
+\subsection{Error analysis}\label{sec:error_analysis}
 
 State and decsribe each simulation, much is already written in the results section
 
