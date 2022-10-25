@@ -66,7 +66,7 @@ int PenningTrap::count_particles(){
     return Np_trapped;
 }
 
-void PenningTrap::simulate(double T, double dt, std::string scheme, bool point){
+void PenningTrap::simulate(double T, double dt, std::string scheme){
     int Nt = int(T/dt) + 1;         //  number of time points 
     
 
@@ -90,6 +90,16 @@ void PenningTrap::simulate(double T, double dt, std::string scheme, bool point){
     for(int i=0; i<Nt-1; i++){
         RU = system.slice(i).rows(1,6);
         t = system(0,0,i);
+        if(i%100==0){
+            //  check if there are any particles left in the trap
+            arma::mat D = Pnorm(RU.rows(0,2));
+            if(arma::all(D.row(0)>d)){
+                std::cout << "All particles have escaped. Ending simulation at t = " << t << " s." << std::endl;
+                system.slice(Nt-1).rows(1,6) = RU;  //   fill last pos (temporary sol.)
+                system.slice(Nt-1).row(0).fill(t);  //   fill last pos (temporary sol.)
+                break;
+            }
+        }
         if(scheme=="RK4"){ // FIXME (want less if/else)
             if(time_dep){dRU = evolve_RK4(dt, t, RU);}
             else{dRU = evolve_RK4(dt, RU);}
@@ -105,22 +115,6 @@ void PenningTrap::simulate(double T, double dt, std::string scheme, bool point){
 
         system.slice(i+1).rows(1,6) = RU + dRU;
         system.slice(i+1).row(0).fill(t + dt);
-
-        if(i%100==0){
-            //  check if there are any particles left in the trap
-            arma::mat D = Pnorm(RU.rows(0,2)+dRU.rows(0,2));
-            if(arma::all(D.row(0)>d)){
-                std::cout << "All particles have escaped." << std::endl;
-                break;
-            }
-        }
-
-        if(point){ // fixme
-            for(int p=0; p<Np; Np++){
-                particles.at(p) -> new_position(system.slice(i).col(p).rows(1,3));
-                particles.at(p) -> new_velocity(system.slice(i).col(p).rows(4,6));
-            }
-        }
     }
     t = system(0, 0, Nt-1);
     for(int p=0; p<Np; p++){
