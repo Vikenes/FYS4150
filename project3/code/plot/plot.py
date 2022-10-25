@@ -216,6 +216,15 @@ def plot_trapped_coarse(N_trapped, omega_V, f_values, fname, title, savepush=Fal
     set_ax_info(ax, xlabel, ylabel, title=title)
     ax.set_xlim(ax.get_xlim()[0], ax.get_xlim()[1]+ 0.3)
     ax.legend(fontsize=20, loc='lower right')
+
+    # REMOVE:
+    #ax.axvline(np.pi/2, ls=':', color='k')
+    #ax.axvline(np.pi-np.sqrt(2)*0.69, ls=':', color='y')  # ω+ - ω-
+    #ax.axvline(0.69, ls=':', color='c')  # ωz
+    #ax.axvline(np.sqrt(2)*0.69, ls=':', color='c')  # ωz
+    #ax.axvline(np.pi-0.69, ls=':', color='k')  # ω0
+    #ax.axvline(2.30-np.pi/4, ls=':', color='k') 
+    #ax.axvline(2.30-np.pi/2, ls=':', color='k') 
     
     if savepush:
         save_push(fig, fname, push=True)
