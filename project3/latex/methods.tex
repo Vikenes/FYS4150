@@ -1,9 +1,7 @@
 \section{Methods}\label{sec:methods}
 
 
-\subsection{\Nanna{(appropriate title)} - The Penning trap}
-
-
+\subsection{The Penning trap}\label{subsec_methods:penning_trap_setup}
 
 \begin{figure}[h!]
     \includegraphics[width=\linewidth]{Trap_schematic.png}
@@ -11,47 +9,101 @@
     \label{fig:schematic_trap}
 \end{figure}
 
-Consider an ideal Penning trap with characteristic dimension $d$, a length scale given by $d= \sqrt{z_0^2+ \frac{1}{2}r_0^2}$, where $z_0$ is the distance between the centre and the endcap and $r_0$ the radius of of the ring, as in Figure \ref{fig:schematic_trap}. These electrodes create an external electric field $\vec{E}_\mathrm{ext}$ resulting from the potential
-
+We consider an ideal Penning trap in three dimensions, with a schematic of the trap shown in figure \ref{fig:schematic_trap}. The electrodes create an external electric field $\vec{E}_\mathrm{ext}$ defined by the potential
 \begin{equation}
     V (\vec{r})= V(x,y,z) = \frac{V_0}{2d^2}(2z^2 - x^2 - y^2), \label{eq:penning_potential}
 \end{equation}
-
-where $V_0$ is the potential applied to the electrodes. The external electric field is then 
-
+where $V_0$ is the potential applied to the electrodes and $d= \sqrt{z_0^2+ \frac{1}{2}r_0^2}$ is the characteristic dimension, where $z_0$ is the distance between the centre and the endcap and $r_0$ is the radius of of the ring. The external electric field resulting from this potential is  
 \begin{equation}
-    \vec{E}_\mathrm{ext} = -\nabla V = \frac{V_0}{d^2} (x,\,y,\,-2z). \label{eq:p1_E_field_pot_gradient}
+    \vec{E}_\mathrm{ext} = -\nabla V = \frac{V_0}{d^2} (x,\,y,\,-2z), \label{eq:p1_E_field_pot_gradient}
 \end{equation}
-
-A constant homogeneous magnetic field $\vec{B}_\mathrm{ext}$ is imposed in the $z$-direction,
+which traps the particles in the $z$-direction. To contain the particles in the $xy$-plane, a constant homogeneous magnetic field $\vec{B}_\mathrm{ext}$ is imposed in the $z$-direction,
 \begin{equation}
     \vec{B}_\mathrm{ext} = (0,0,B_0). \label{eq:homogeneous_B_field}
 \end{equation}
-
-An important simplification to note is that we regard the extent of the trap as a sphere of radius $d$. This means that in fact
-
+As a simplification, we consider the trap as a sphere of radius $d$. We set the external fields to zero outside this region, so the electric field is   
 \begin{equation}\label{eq:trap_ext_E_field}
     \vec{E}_\mathrm{ext} (\vec{r}) = 
     \begin{cases}
-        \frac{V_0}{d^2} \big( x\hat{e}_x + y\hat{e}_y -2z\hat{e}_z \big), & \abs{\vec{r}} \leq d \\
-        \vec{0},  & \abs{\vec{r}} > d
-    \end{cases}
+        \frac{V_0}{d^2} \left( x,\, y,\, -2z \right), & \abs{\vec{r}} \leq d \\
+        (0,\,0,\,0),  & \abs{\vec{r}} > d
+    \end{cases}, 
 \end{equation}
-
-and
-
+and the magnetic field is 
 \begin{equation}\label{eq:trap_ext_B_field}
     \vec{B}_\mathrm{ext} (\vec{r}) = 
     \begin{cases}
-        B_0\hat{e}_z, & \abs{\vec{r}} \leq d \\
-        \vec{0}, & \abs{\vec{r}} > d
+        (0,\,0,\,B_0), & \abs{\vec{r}} \leq d \\
+        (0,\,0,\,0), & \abs{\vec{r}} > d
     \end{cases}.
 \end{equation}
+\Vetle{The above discussion of restrictions on B and E should perhaps be moved. It's not included in our analytical derivations.}
+
+\subsection{Analytical solutions - Single particle}\label{subsec_methods:single_particle_analytical}
+We restrict ourselves to dealing with only positively charged particles, $q>0$ \Vetle{Check that this agrees with introduction, maybe move this?}. We begin by considering a single particle in the Penning trap. The Lorentz force is then governed by the external fields only, hence $\vec{E} = \vec{E}_\mathrm{ext}$ and $\vec{B} = \vec{B}_\mathrm{ext}$. We use eq. \eqref{eq:lorentz_force} to compute the Lorentz force, \Vetle{use equation and split on the equation below?}
+\begin{align}
+    \vec{F} &= \frac{q V_0}{d^2}(x,\,y,\,-2z) + q B_0 (\dot{y},\,-\dot{x},\,0) \nonumber\\
+    &= \frac{m}{2}\omega_z^2 (x,\,y,\,-2z) + m \omega_0 (\dot{y},\,-\dot{x},\,0),\label{eq:p1_lorentz_force_penning}
+\end{align}
+where we defined $\omega_0 \equiv \frac{qB_0}{m}$ and $\omega_z^2 \equiv \frac{2qV_0}{m d^2}$. Using equation \eqref{eq:eom_lorentz} gives us three equations of motion, one for each spatial component, which are 
+\begin{subequations}\label{eq:p1_eom_xyz}
+    \begin{align}
+        \ddot{x} - \omega_0 \dot{y} - \frac{1}{2} \omega_z^2 x &= 0, \label{eq:p1_eom_x} \\ 
+        \ddot{y} + \omega_0 \dot{x} - \frac{1}{2} \omega_z^2 y &= 0, \label{eq:p1_eom_y} \\ 
+        \ddot{z} + \omega_z^2 z &= 0. \label{eq:p1_eom_z}
+    \end{align}
+\end{subequations}
+The general solution of eq. \eqref{eq:p1_eom_z} is
+\begin{equation}
+    z(t) = c_1 \cos(\omega_z t) + c_2 \sin(\omega_z t), \label{eq:p1_diffeq_solution_z}
+\end{equation}
+where $c_1,\, c_2 \in \mathbb{R}$ are determined by initial conditions.
+
+Equations \eqref{eq:p1_eom_x} and \eqref{eq:p1_eom_y} are coupled, so we introduce a complex function $f(t)=x(t) + iy(t)$ to write them as a single differential equation. Multiplying equation \eqref{eq:p1_eom_y} with $i$ and adding it to equation \eqref{eq:p1_eom_x} we obtain the following:
+\begin{align}
+    \ddot{x} + i\ddot{y} + \omega_0(i\dot{x} - \dot{y}) -\frac{1}{2}\omega_z^2(x+iy) &= 0 \nonumber \\
+    (\ddot{x} + i\ddot{y}) + i\omega_0(\dot{x} +i \dot{y}) -\frac{1}{2}\omega_z^2(x+iy) &= 0. \label{eq:p2_eom_rewritten}
+\end{align}
+We recognize the first and second parentheses as $\ddot{f}$ and $\dot{f}$, repsectively. The differential equation for $f(t)$ is
+\begin{equation}
+    \ddot{f} + i\omega_0 \dot{f} - \frac{1}{2}\omega_z^2 f = 0, \label{eq:p2_f_complex_equation}
+\end{equation}
+which has the general solution 
+\begin{equation}
+    f(t) = A_+ e^{-i(\omega_+ t + \phi_+)} + A_- e^{-i(\omega_- t + \phi_-)}, \label{eq:p3_f_general_solution}
+\end{equation}
+where $\phi_+$ and $\phi_-$ are constant phases, $A_+$ and $A_-$ are positive amplitudes and 
+\begin{equation}
+    \omega_\pm = \frac{\omega_0 \pm \sqrt{\omega_0^2 - 2\omega_z^2}}{2}. \label{eq:p3_omega_pm}
+\end{equation}
+The physical coordinates are then $x(t)=\Re f(t)$ and $y(t)=\Im f(t)$. \Vetle{The following sentence confuses me:} The $\omega_+$ is the modified cyclotron frequency and the $\omega_-$ is the magnetron frequency that composes the two modes in the orbital motion we will discuss later.
+
+In order to have a bounded solution for the particle in the $xy$-plane, we must have $\abs{f(t)} < \infty$ as $t\to\infty$. We see from equation \eqref{eq:p3_f_general_solution} that this condition is fulfilled if $\omega_\pm\in\mathbb{R}$. From equation \eqref{eq:p3_omega_pm}, this translates to the following constraint on $\omega_0$ and $\omega_z$:  
+\begin{equation}\label{eq:p3_omega_constraints}
+    \begin{split}
+        \omega_0^2 &\geq 2\omega_z^2, \\ 
+        \frac{q}{m} &\geq \frac{4V_0}{(B_0d)^2},
+    \end{split}
+\end{equation} 
+where we used the definitions of $\omega_0$ and $\omega_z$ to get a constraint relating the particle properties with the Penning trap parameters. This allows us to choose appropriate parameters for our Penning trap, depending on the mass of the particle we consider. 
+
+Knowing that the particles are bound in the $xy$-plane, we want to consider the upper and lower bounds, $R_+$ and $R_-$ respectively, on the particle's distance from the origin. With $f(t)$ being a complex function, its magnitude is found by $\abs{f(t)}=\sqrt{f(t)f^*(t)}$. Defining $\alpha_\pm \equiv \omega_\pm t + \phi_\pm$ to simplify the expressions, we get 
+\begin{equation}\label{eq:p3_magnitude_f_squared}
+        \abs{f^2(t)} = A_+^2 + A_-^2 + A_+ A_- \closed{e^{i(\alpha_+ - \alpha_-)} + e^{-i(\alpha_+ - \alpha_-)}}
+\end{equation}
+Recognizing the sum of the exponentials as the cosine, $\abs{f(t)}$ becomes 
+\begin{equation}\label{eq:p3_magnitude_f}
+    \abs{f(t)} = \sqrt{A_+^2 + A_-^2 + 2A_+ A_-\cos(\alpha_+ - \alpha_-)}.
+\end{equation}
+The maximum distance from the origin, $R_+$, occurs when $\alpha_+-\alpha_- = 0 \implies \cos0=1$. Similarily, the minimum distance, $R_-$, is achieved when $\alpha_+-\alpha_- = \pi \implies \cos\pi=-1$. Equation \eqref{eq:p3_magnitude_f} now gives us simple expression for the two bounds  
+\begin{align}
+    R_+ &= \sqrt{(A_+ + A_-)^2} = A_+ + A_-, \label{eq:p4_Rplus} \\
+    R_- &= \sqrt{(A_+ - A_-)^2} = \abs{A_+ - A_-}. \label{eq:p4_Rminus}  
+\end{align}
 
 
-
-\subsection{Coulomb interactions}
-
+\subsection{Multiple particles}\label{subsec_methods:multiple_particles}
+So far, we have only considered the presence of a single particle in the Penning trap.  
 A particle of charge $q_1$ at position $\vec{r}_1$ exerts a force on another particle of charge $q_2$ at $\vec{r}_2$ equal $k_e q_1q_2 (\vec{r}_2-\vec{r}_1) / \abs{\vec{r}_2-\vec{r}_1}^3$, where $k_e$ is the Boltzmann constant. When there are several particles present in the trap, we will want to include the contribution from these forces in the equation. The interaction field $\vec{E}_\mathrm{int}$ set up by $N_\mathrm{p}$ point charges $\{q_1, q_2, \dots, q_{N_\mathrm{p}}\}$ at positions $\{\vec{r}_1, \vec{r}_2, \dots, \vec{r}_{N_\mathrm{p}}\}$ is given by
 
 \begin{equation}\label{eq:interaction_field}
@@ -61,95 +113,6 @@ A particle of charge $q_1$ at position $\vec{r}_1$ exerts a force on another par
 The Coulomb interactions give rise to non-linear differential equations which typically require a numerical approach. Note that this is a comprehensive task when introducing many particles, even for the computer. 
 
 The resulting electric and magnetic field contributing to the Lorentz force in eq. \eqref{eq:lorentz_force} is then $\vec{E} = \vec{E}_\mathrm{ext} + \vec{E}_\mathrm{int}$ and $\vec{B} = \vec{B}_\mathrm{ext}$, respectively, from eqs. \eqref{eq:trap_ext_E_field}, \eqref{eq:trap_ext_B_field} and \eqref{eq:interaction_field}.
-
-
-
-
-\subsection{\Nanna{(appropriate title)} Analytical work}
-
-We restrict ourselves to dealing with only positively charged particles, $q>0$. Consider the single-particle case, i.e. the situation with only one particle present in the trap or when we look at one of several particles that do not interact\footnote{This is not physical.}. Now, the only contributions to the fields are external, hence $\vec{E} = \vec{E}_\mathrm{ext}$ and $\vec{B} = \vec{B}_\mathrm{ext}$. We use eq. \eqref{eq:lorentz_force} to compute the Lorentz force,
-
-
-\begin{align}
-    \vec{F} &= \frac{q V_0}{d^2}(x,\,y,\,-2z) + q B_0 (\dot{y},\,-\dot{x},\,0) \nonumber\\
-    &= \frac{m}{2}\omega_z^2 (x,\,y,\,-2z) + m \omega_0 (\dot{y},\,-\dot{x},\,0),\label{eq:p1_lorentz_force_penning}
-\end{align}
-
-where we defined $\omega_0 \equiv \frac{qB_0}{m}$ and $\omega_z^2 \equiv \frac{2qV_0}{m d^2}$. The equation of motion in eq. \eqref{eq:eom_lorentz} are three differential equations in each spatial component,
-
-\begin{subequations}\label{eq:p1_eom_xyz}
-    \begin{align}
-        \ddot{x} - \omega_0 \dot{y} - \frac{1}{2} \omega_z^2 x &= 0, \label{eq:p1_eom_x} \\ 
-        \ddot{y} + \omega_0 \dot{x} - \frac{1}{2} \omega_z^2 y &= 0, \label{eq:p1_eom_y} \\ 
-        \ddot{z} + \omega_z^2 z &= 0. \label{eq:p1_eom_z}
-    \end{align}
-\end{subequations}
-
-
-The general solution of eq. \eqref{eq:p1_eom_z} is
-
-\begin{equation}
-    z(t) = c_1 \cos(\omega_z t) + c_2 \sin(\omega_z t), \label{eq:p1_diffeq_solution_z}
-\end{equation}
-
-where $c_1, c_2 \in \mathbb{R}$ are determined by initial conditions.
-
-The other two, eqs. \eqref{eq:p1_eom_x} and \eqref{eq:p1_eom_y}, are coupled. We introduce a complex function $f(t)=x(t) + iy(t)$ for which we have the time derivatives $\dot{f} = \dot{x} + i\dot{y}$ and $\ddot{f} = \ddot{x} + i\ddot{y}$. Multiply equation \eqref{eq:p1_eom_y} with $i$ and add to equation \eqref{eq:p1_eom_x} to obtain the following:
-
-\begin{align}
-    \ddot{x} + i\ddot{y} + \omega_0(i\dot{x} - \dot{y}) -\frac{1}{2}\omega_z^2(x+iy) &= 0 \nonumber \\
-    (\ddot{x} + i\ddot{y}) + i\omega_0(\dot{x} +i \dot{y}) -\frac{1}{2}\omega_z^2(x+iy) &= 0. \label{eq:p2_eom_rewritten}
-\end{align}
-
-The single differential equation in terms of the complex function $f(t)$ is therefore
-
-\begin{equation}
-    \ddot{f} + i\omega_0 \dot{f} - \frac{1}{2}\omega_z^2 f = 0. \label{eq:p2_f_complex_equation}
-\end{equation}
-
-The general solution to equation \eqref{eq:p2_f_complex_equation} is 
-\begin{equation}
-    f(t) = A_+ e^{-i(\omega_+ t + \phi_+)} + A_- e^{-i(\omega_- t + \phi_-)}, \label{eq:p3_f_general_solution}
-\end{equation}
-where $\phi_+$ and $\phi_-$ are constant phases, $A_+$ and $A_-$ are positive amplitudes and 
-\begin{equation}
-    \omega_\pm = \frac{\omega_0 \pm \sqrt{\omega_0^2 - 2\omega_z^2}}{2}. \label{eq:p3_omega_pm}
-\end{equation}
-
-The $\omega_+$ is the modified cyclotron frequency and the $\omega_-$ is the magnetron frequency that composes the two modes in the orbital motion we will discuss later.
-
-
-We see from equation \eqref{eq:p3_f_general_solution} that if $\omega_\pm$ is real, then $\abs{f(t)} < \infty$ as $t\to\infty$ and we have a bounded solution in the $xy$-plane. For $\omega_\pm$ to be real we see from equation \eqref{eq:p3_omega_pm} that the following must hold:
-
-\begin{equation}\label{eq:p3_omega_constraints}
-    \omega_0^2 \geq 2\omega_z^2  \quad \implies \quad \frac{q}{m} \geq \frac{4V_0}{(B_0d)^2}
-\end{equation} 
-
-We may regard equation \eqref{eq:p3_f_general_solution} as a sum of vectors $\vec{r}_\pm$ with amplitudes $\abs{\vec{r}_\pm}=A_\pm$ and directions given by the angles $\alpha_\pm = \omega_\pm t + \phi_\pm$ in the complex plane that represents our $xy$-plane. The magnitude $\abs{f} \equiv \abs{f(t)}$ for this sum of vectors is
-
-\begin{equation}\label{eq:p3_magnitude_f}
-    \abs{f} = \sqrt{\abs{\vec{r}_+}^2 + \abs{\vec{r}_-}^2 + 2\abs{\vec{r}_+}\abs{\vec{r_-}}\cos{(\abs{\alpha_+-\alpha_-})}}.
-\end{equation}
-
-The maximum distance from the origin, $R_+$, occurs when the two vectors are pointing in the same direction, i.e. $\abs{\alpha_+-\alpha_-} = 0 \implies \cos0=1$, giving 
-
-
-\begin{align}
-    R_+ &= \sqrt{A_+^2 + A_-^2 + 2A_+A_-} = \sqrt{(A_+ + A_-)^2}\nonumber \\
-    &= A_+ + A_-. \label{eq:p4_Rplus}   
-\end{align}
-
-Similarily, the minimum distance, $R_-$, is achieved when the vectors are pointing in opposite directions, i.e. $\abs{\alpha_+-\alpha_-} = \pi \implies \cos\pi=-1$ which yields
-
- 
-\begin{align}
-    R_- &= \sqrt{A_+^2 + A_-^2 - 2A_+A_-} = \sqrt{(A_+ - A_-)^2}\nonumber \\
-    &= \abs{A_+ - A_-}. \label{eq:p4_Rminus}  
-\end{align}
-
-
-\Nanna{Where do we use this?}
-
 
 %\begin{align}
     %\ddot{x}_i - \omega_{0,i} \dot{y}_i - \frac{1}{2}\omega_{z,i}^2 x_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{x_i - x_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_x} \\
@@ -183,7 +146,7 @@ The \texttt{PenningTrap}-class imitates the physical system that is the Penning 
     \item can generate a set of identical particles with positions and velocities that are normally distrubuted within the trap's dimensions.
 \end{itemize}
 
-\subsubsection*{Numerical integration}
+\subsubsection*{Numerical integration - \Vetle{move to appendix?}}
 The equation of motion \eqref{eq:eom_lorentz} is split into two first order ODEs as follows:
 
 \begin{equation}\label{eq:split_ODEs}
@@ -200,7 +163,7 @@ The simple FE algorithm \citep{Arkinson1989} \Nanna{...} The FE method is a firs
 The fourth order, single-step RK4 method uses four estimates of the gradient on the interval between to steps in time. It gives rise to much more precise solutions than what the FE method does, but the algorithm requires more computational time. For the RK4 algorithm \citep{Arkinson1989}, we have to keep some things in mind when considering forces between particles. For a singlw step in time, we must make sure that the first gradient estimate is calculated for all particles before moving on to the second estimate, and so on. 
 
 
-\subsection{Setup and simulation \Nanna{or some other title}} 
+\subsection{Specific values \Vetle{Put as a subsubsection just after Penning trap?}} 
 
 Our Penning trap is defined by the following numerical values:
 
