@@ -28,6 +28,13 @@ omega_plus  = (omega_0 + np.sqrt(omega_0**2 - 2*omega_z**2)) / 2
 omega_minus = (omega_0 - np.sqrt(omega_0**2 - 2*omega_z**2)) / 2
 
 
+def print_frequencies():
+    print(f"         Cyclotron frequency ω0 = {omega_0:5.2f} MHz")
+    print(f"             Axial frequency ωz = {omega_z:5.2f} MHz")
+    print(f"Modified cyclotron frequency ω+ = {omega_plus:5.2f} MHz")
+    print(f"         Magnetron frequency ω- = {omega_minus:5.2f} MHz")
+
+
 def load(file, folder=RK_path, skiprows=1):
     # Tired of repeating unpack, delimiter, skiprows for all... 
     return np.loadtxt(folder + file, unpack=True, delimiter=",", skiprows=skiprows)
@@ -207,6 +214,7 @@ def trapped_without_interaction(savepush=False):
         omega_V, trapped = load(f"trapped_f{f}_without.txt", skiprows=0)
         N_trapped_list.append(trapped / N0)
 
+
     plot.plot_trapped_coarse(N_trapped_list, omega_V, f_values, "trapped_particles_without_interaction", title=None, savepush=savepush)
 
 
@@ -225,9 +233,11 @@ def trapped_fine_search(savepush=False):
 
 
 
-compare_z_analytical(savepush=True)
-compute_errors("RK", savepush=True)
-compute_errors("FE", savepush=True)
+print_frequencies()
+
+#compare_z_analytical(savepush=True)
+#compute_errors("RK", savepush=True)
+#compute_errors("FE", savepush=True)
 
 #compute_errors("RK", make_plot=False)
 #compute_errors("FE", make_plot=False)
@@ -237,8 +247,8 @@ compute_errors("FE", savepush=True)
 # z_phase_plot(savepush=True)
 #movement_3d(savepush=True)
 
-trapped_without_interaction(savepush=True)
-trapped_fine_search(savepush=True)
+trapped_without_interaction(savepush=False)
+#trapped_fine_search(savepush=True)
 
 
 """
