@@ -12,33 +12,33 @@
     \item Project outline 
 \end{enumerate}
 
-Say we were to contain one or more charged particles in motion inside some closed volume. A natural starting point would be to create a potential whose minimum is three-dimensional. Such a quadrupole potential would take the form $V(\vec{r}) = Ax^2 + By^2 + Cy^2$, however, Laplace's equation demands $\nabla^{\! 2}V = A+ B+ C = 0$. What this means, is that a three-dimensional static field will not do. One way around this is to use a strong homogeneous axial magnetic field together with a quadrupole electric field. The former incarcerate the particle(s) radially, whereas the latter limits their axial motion. A device of such a structure is called a "Penning trap" and was first built by Hans Georg Dehmelt under the influence of Frans Michel Penning's work. \textcolor{pink}{(((smooth transition)))}
-
-
-A particle with charge $q$ in an electric field $\vec{E}$ and a magnetic field $\vec{B}$ undergoes the Lorentz force $\vec{F}$ given by
-
+Trapping charged particles is a common and useful method in order to perform various measurements and experiments. A natural starting point would be to create a three-dimensional electric potential which pulls the particles towards a center. According to Earnshaw's theorem (\textcolor{red}{Citation?}) keeping a charged particle in stable equilibrium with an electrostatic force alone is not possible. One way around this is to use a strong homogeneous axial magnetic field together with a quadrupole electric field. The former incarcerate the particle(s) radially, whereas the latter confines the particles radially. A device of such a structure is called a "Penning trap" and was first built by Hans Georg Dehmelt under the influence of Frans Michel Penning's work. \textcolor{red}{(Citation?)}. The Lorentz force $\vec{F}$ acting on a particle with charge $q$ that is subjected to this electric field and a magnetic field, $\vec{B}$, is given by 
 \begin{equation}\label{eq:lorentz_force}
     \vec{F} = q\vec{E} + q \vec{v} \cross \vec{B},
 \end{equation}
 where $\vec{v}$ is the particle's velocity. Suppose the particle has mass $m$, then Newton's second law gives us the equation of motion for the particle:
 
 \begin{equation}\label{eq:eom_lorentz}
- \dv{\vec{v}}{t} = \frac{\vec{F}}{m}  \Rightarrow \dv[2]{\vec{r}}{t}= \frac{q}{m} (\vec{E} + \vec{v} \cross \vec{B} ) 
+ \dv{\vec{v}}{t} = \frac{\vec{F}}{m}  \Rightarrow \dv[2]{\vec{r}}{t}= \frac{q}{m} (\vec{E} + \vec{v} \cross \vec{B} ).
 \end{equation}
+The external electric field is related to the potential through $\vec{E} = -\nabla V$. By choosing a particular electric potential and magnetic field, we can solve equation \eqref{eq:eom_lorentz} to predict the motion of a single particle inside a Penning trap, \textcolor{red}{are we going to the following sentence?} and we will later discuss what is required of the initial conditions in order for it to stay put. In reality one is often concerned with storing multiple particles, not just a single one. Having multiple particles in the trap simultaneously the electric field will then get an additional contribution from Coulomb interactions between the particles. The resulting equations of motion will then be much more cumbersome to tackle analytically, and we will therefore resort to numerical integration methods. 
 
-% Comment about initial conditions? No...
-The external electric field is related to the potential through $\vec{E} = -\nabla V$. We now have simple equations for predicting a single particle's motion inside of a Penning trap, and we will later discuss what is required of the initial conditions in order for it to stay put. If we were to accompany the single particle with another charged particle, however, we would need to consider the contribution to the electric field from the Coulomb interactions between the two of them. Adding more charged particles complicates the system even more in such a way that we generally will struggle to solve it analytically \textcolor{blue}{(IS THIS CORRECT?)}; we need to use numerical integration methods. 
+\textcolor{red}{Old paragraph:}
+If we were to accompany the single particle with another charged particle, however, we would need to consider the contribution to the electric field from the Coulomb interactions between the two of them. Adding more charged particles complicates the system even more in such a way that we generally will struggle to solve it analytically \textcolor{blue}{(IS THIS CORRECT?)}; we need to use numerical integration methods. 
 
-We consider two different numerical schemes for solving ordinary differential equations (ODEs)\footnote{We shall have to split the eq. \eqref{eq:eom_lorentz} in two first order ODEs.}, forward Euler (FE) and fourth order Runge-Kutta (RK4). The former is a numerical procedure of first order, whereas the latter is of fourth order, resulting in global errors proportional to the step size and the step size to the power of four, respectively. That is, say we have a step size $h\sim 0.1$, the error arising from FE is $h^{1-4} \sim 1000$ times larger than that of RK4 \textcolor{blue}{(WAIT, WHAT?)}. However, one should keep in mind that the RK4 algorithm demands many more floating points operations (FLOPs) from our computer than what the FE algorithm does.
 
+Equation \eqref{eq:eom_lorentz} can be split into two ordinary differential equations (ODEs) that we can solve numerically. The two methods we will consider are forward Euler (FE) and fourth order Runge-Kutta (RK4). The former is a numerical procedure of first order, whereas the latter is of fourth order, resulting in global errors proportional to the step size and the step size to the power of four, respectively. That is, say we have a step size $h\sim 0.1$, \textcolor{red}{Fix following error discussion:} the error arising from FE is $h^{1-4} \sim 1000$ times larger than that of RK4 \textcolor{blue}{(WAIT, WHAT?)}. The RK4 algorithm does however demand many more floating points operations (FLOPs) than the FE algorithm, and will therefore be more computationally expensive at a given step size. However, the RK4 algorithm could be much faster than the FE algorithm, since the FE algorithm requires a much smaller step size in order to achieve a certain level of precision. We will therefore study the relative error of the two algorithms at different step sizes, by comparing with the analytical solution from a single particle inside the trap.          
+
+\textcolor{red}{Not wuite sure about the next two paragraphs.}
 Now being able to solve the system of several interacting charged particles in the Penning trap in question, we should ponder the effect the Coulomb interactions have on the trap's ability to contain the particles. 
-\textcolor{green}{FILL WITH PONDERING}
+\textcolor{green}{FILL WITH PONDERING}. 
 
 In addition, we will investigate the effect of adding an oscillating time-dependent perturbation to the external electric potential $V$. This is indeed similar to another approach for particle storage, named the Paul trap, in which the oscillating field is used instead of the magnetic field. The combined ion trap, the combination of these two structures, allows for storage of oppositely charged particles, but is vulnerable to some ranges of oscillation frequencies and amplitudes \textcolor{blue}{(CHECK THIS)}.
 % move to right after first paragraph?
 
-\textcolor{green}{OUTLINE}
+\textcolor{red}{Below: Refer to sections explicitly.}
 
+In this report we will begin by introducing a specific electric potential and magnetic field that we consider for our Penning trap. We will then find the equations of motion for a single particle, and the resulting analytical solutions. For the case of a single particle the analytical solutions will provide constraints on the parameters we consider in our trap. In the following section we present our solver, explaining its main features as well as how the ODEs are solved by the two algorithms in question. After that we present our choice of parameters for the trap. In addition to this, we present initial conditions for two particles that we will use for initial testing of our solver. Using two particles, we will study their motion in a plane, their trajectories in phase space and their motion in 3D space, both with and without interactions. For one of the particles we will also study its axial motion, comparing the analytical solution to that of the two algorithms. Using our analytical results for the single particle, we will study the size of the relative error of our two algorithms as a function of time for four different choices of step size. We will use these results to estimate the error convergence rate $r_\mathrm{err}$ for the two methods. 
 
 
 % ===========================================

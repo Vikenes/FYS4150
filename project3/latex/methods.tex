@@ -59,31 +59,33 @@ A particle of charge $q_1$ at position $\vec{r}_1$ exerts a force on another par
     \vec{E}_\mathrm{int} (\vec{r}) = k_e \sum_{p=1}^{N_\mathrm{p}} q_p \frac{\vec{r}-\vec{r}_p}{\abs{\vec{r}-\vec{r}_p}^3}.
 \end{equation}
 
-Note that this is a comprehensive task when introducing many particles, even for the computer. 
+The Coulomb interactions give rise to non-linear differential equations which typically require a numerical approach. Note that this is a comprehensive task when introducing many particles, even for the computer. 
 
 The resulting electric and magnetic field contributing to the Lorentz force in eq. \eqref{eq:lorentz_force} is then $\vec{E} = \vec{E}_\mathrm{ext} + \vec{E}_\mathrm{int}$ and $\vec{B} = \vec{B}_\mathrm{ext}$, respectively, from eqs. \eqref{eq:trap_ext_E_field}, \eqref{eq:trap_ext_B_field} and \eqref{eq:interaction_field}.
 
 
 
 
-\subsection{(appropriate title) -math/analytical work}
+\subsection{\Nanna{(appropriate title)} Analytical work}
 
 We restrict ourselves to dealing with only positively charged particles, $q>0$. Consider the single-particle case, i.e. the situation with only one particle present in the trap or when we look at one of several particles that do not interact\footnote{This is not physical.}. Now, the only contributions to the fields are external, hence $\vec{E} = \vec{E}_\mathrm{ext}$ and $\vec{B} = \vec{B}_\mathrm{ext}$. We use eq. \eqref{eq:lorentz_force} to compute the Lorentz force,
 
-\begin{equation} \label{eq:p1_lorentz_force_penning}
-    \begin{split}
-        \vec{F} &= \frac{q V_0}{d^2}(x,\,y,\,-2z) + q B_0 (\dot{y},\,-\dot{x},\,0) \\
-        &= \frac{m}{2}\omega_z^2 (x,\,y,\,-2z) + m \omega_0 (\dot{y},\,-\dot{x},\,0),
-    \end{split}
-\end{equation} 
+
+\begin{align}
+    \vec{F} &= \frac{q V_0}{d^2}(x,\,y,\,-2z) + q B_0 (\dot{y},\,-\dot{x},\,0) \nonumber\\
+    &= \frac{m}{2}\omega_z^2 (x,\,y,\,-2z) + m \omega_0 (\dot{y},\,-\dot{x},\,0),\label{eq:p1_lorentz_force_penning}
+\end{align}
 
 where we defined $\omega_0 \equiv \frac{qB_0}{m}$ and $\omega_z^2 \equiv \frac{2qV_0}{m d^2}$. The equation of motion in eq. \eqref{eq:eom_lorentz} are three differential equations in each spatial component,
 
-\begin{align}
-    \ddot{x} - \omega_0 \dot{y} - \frac{1}{2} \omega_z^2 x &= 0, \label{eq:p1_eom_x} \\ 
-    \ddot{y} + \omega_0 \dot{x} - \frac{1}{2} \omega_z^2 y &= 0, \label{eq:p1_eom_y} \\ 
-    \ddot{z} + \omega_z^2 z &= 0. \label{eq:p1_eom_z}
-\end{align}
+\begin{subequations}\label{eq:p1_eom_xyz}
+    \begin{align}
+        \ddot{x} - \omega_0 \dot{y} - \frac{1}{2} \omega_z^2 x &= 0, \label{eq:p1_eom_x} \\ 
+        \ddot{y} + \omega_0 \dot{x} - \frac{1}{2} \omega_z^2 y &= 0, \label{eq:p1_eom_y} \\ 
+        \ddot{z} + \omega_z^2 z &= 0. \label{eq:p1_eom_z}
+    \end{align}
+\end{subequations}
+
 
 The general solution of eq. \eqref{eq:p1_eom_z} is
 
@@ -95,12 +97,10 @@ where $c_1, c_2 \in \mathbb{R}$ are determined by initial conditions.
 
 The other two, eqs. \eqref{eq:p1_eom_x} and \eqref{eq:p1_eom_y}, are coupled. We introduce a complex function $f(t)=x(t) + iy(t)$ for which we have the time derivatives $\dot{f} = \dot{x} + i\dot{y}$ and $\ddot{f} = \ddot{x} + i\ddot{y}$. Multiply equation \eqref{eq:p1_eom_y} with $i$ and add to equation \eqref{eq:p1_eom_x} to obtain the following:
 
-\begin{equation}\label{eq:p2_eom_rewritten}
-    \begin{split}
-    \ddot{x} + i\ddot{y} + \omega_0(i\dot{x} - \dot{y}) -\frac{1}{2}\omega_z^2(x+iy) &= 0 \\
-    (\ddot{x} + i\ddot{y}) + i\omega_0(\dot{x} +i \dot{y}) -\frac{1}{2}\omega_z^2(x+iy) &= 0. 
-    \end{split}
-\end{equation}
+\begin{align}
+    \ddot{x} + i\ddot{y} + \omega_0(i\dot{x} - \dot{y}) -\frac{1}{2}\omega_z^2(x+iy) &= 0 \nonumber \\
+    (\ddot{x} + i\ddot{y}) + i\omega_0(\dot{x} +i \dot{y}) -\frac{1}{2}\omega_z^2(x+iy) &= 0. \label{eq:p2_eom_rewritten}
+\end{align}
 
 The single differential equation in terms of the complex function $f(t)$ is therefore
 
@@ -134,21 +134,20 @@ We may regard equation \eqref{eq:p3_f_general_solution} as a sum of vectors $\ve
 
 The maximum distance from the origin, $R_+$, occurs when the two vectors are pointing in the same direction, i.e. $\abs{\alpha_+-\alpha_-} = 0 \implies \cos0=1$, giving 
 
-\begin{equation}\label{eq:p4_Rplus}    
-    \begin{split}
-        R_+ &= \sqrt{A_+^2 + A_-^2 + 2A_+A_-} = \sqrt{(A_+ + A_-)^2} \\
-        &= A_+ + A_-.
-    \end{split}
-\end{equation}
+
+\begin{align}
+    R_+ &= \sqrt{A_+^2 + A_-^2 + 2A_+A_-} = \sqrt{(A_+ + A_-)^2}\nonumber \\
+    &= A_+ + A_-. \label{eq:p4_Rplus}   
+\end{align}
 
 Similarily, the minimum distance, $R_-$, is achieved when the vectors are pointing in opposite directions, i.e. $\abs{\alpha_+-\alpha_-} = \pi \implies \cos\pi=-1$ which yields
 
-\begin{equation}\label{eq:p4_Rminus}    
-    \begin{split}
-        R_- &= \sqrt{A_+^2 + A_-^2 - 2A_+A_-} = \sqrt{(A_+ - A_-)^2} \\
-        &= \abs{A_+ - A_-}.
-    \end{split}
-\end{equation}
+ 
+\begin{align}
+    R_- &= \sqrt{A_+^2 + A_-^2 - 2A_+A_-} = \sqrt{(A_+ - A_-)^2}\nonumber \\
+    &= \abs{A_+ - A_-}. \label{eq:p4_Rminus}  
+\end{align}
+
 
 
 
@@ -165,17 +164,15 @@ Similarily, the minimum distance, $R_-$, is achieved when the vectors are pointi
 
 
 
-\subsection{(appropriate title) -coding}
+\subsection{\Nanna{(appropriate title)} Numerical work}
 
 We aim to create a program in \CC\, that simulates a set of $N_\mathrm{p}$ particles inside a Penning trap. An object-oriented code is befitting this task and we present in the following descriptions of the classes \verb|Particle| and \verb|PenningTrap|.
 
 The purpose of \texttt{Particle} is to hold the parameters, such as the position, of a particle. We let an object of this class be initialised with a charge $q$, a mass $m$, a position $\vec{r} = (x,y,z)$ and a velocity $\vec{v} = (v_x, v_y, v_z)$. We add functions to update the latter two. 
 
-The \texttt{PenningTrap}-class imitates the physical system that is the Penning trap of external electric and magnetic fields according to eqs. \eqref{eq:trap_ext_E_field} and \eqref{eq:trap_ext_B_field}, and characteristic dimension $d$. It is friend with the \texttt{Particle}-class and, in order to resemble the physical situation as much as possible, accepts only input particles of this type. When filled with $N_\mathrm{p}\geq 1$, an object of \texttt{PenningTrap} is ready to simulate the evolution of the \texttt{Particle} object(s) for a given period of time and time step with either a forward Euler or a fourth order Runge-Kutta numerical scheme. 
- 
+The \texttt{PenningTrap}-class imitates the physical system that is the Penning trap of external electric and magnetic fields according to eqs. \eqref{eq:trap_ext_E_field} and \eqref{eq:trap_ext_B_field}, and characteristic dimension $d$. It is friend with the \texttt{Particle}-class and, in order to resemble the physical situation as much as possible, accepts only input particles of this type. When filled with $N_\mathrm{p}\geq 1$, an object of \texttt{PenningTrap} is ready to simulate the evolution of the \texttt{Particle} object(s) for a given period of time and time step size with either a forward Euler or a fourth order Runge-Kutta numerical scheme. 
 
-\dots
-
+\Nanna{Some more here?}
 
 \texttt{PenningTrap} includes several additional functionalites. Amongst other things, the class
 
@@ -199,14 +196,13 @@ The equation of motion \eqref{eq:eom_lorentz} is split into two first order ODEs
 
 We then get six discretised equations to solve for each particle at each step in time.
 
-The FE algorithm \textcolor{red}{(REF TO FE ALGO)} 
-\dots \textcolor{blue}{SHORT DESC. OF FE}
+The simple FE algorithm \Nanna{(REF TO FE ALGO)} \dots The FE method is a first order, single-step method, meaning that we only need the last point to find the next.
+\dots \Nanna{SHORT DESC. OF FE}
 
-For the RK4 algorithm \textcolor{red}{(REF TO RK4 ALGO)}, we have to keep some things in mind when considering interaction forces. For one step in time, we must make sure that the first value of $k$ is calculated for all particles before moving on to the second value, and so on. 
-\textcolor{blue}{NEED MORE HERE}
+The fourth order RK4 method uses four estimates of the gradient on the interval between to steps in time. It gives rise to much more precise solutions than what the FE method does, but the algorithm requires more computational time. For the RK4 algorithm \Nanna{(REF TO RK4 ALGO)}, we have to keep some things in mind when considering forces between particles. For a singlw step in time, we must make sure that the first gradient estimate is calculated for all particles before moving on to the second estimate, and so on. 
 
 
-\subsubsection*{Specific values}  % Maybe subsection?
+\subsection{Specific values \Nanna{or some other title}} 
 
 Our Penning trap is defined by the following numerical values:
 
@@ -228,7 +224,9 @@ We convert all to this set of base units:
 
 \subsection{Initial conditions}\label{sec:initial_conditions}
 
-The particles we consider are Calcium ions (Ca$^+$) with charge $q=1 \,\mathrm{e}$ and mass $m = 40.078 \,\mathrm{u}$. For simulations of one or two particles, we use the following initial conditions:
+The particles we consider are Calcium ions (Ca$^+$) with charge $q=1 \,\mathrm{e}$ and mass $m = 40.078 \,\mathrm{u}$. 
+
+For simulations of one or two particles, we use the following initial conditions:
 \begin{itemize}
     \item Particle 1\label{item:initial_conditions_p1}
     \begin{itemize}
@@ -241,6 +239,42 @@ The particles we consider are Calcium ions (Ca$^+$) with charge $q=1 \,\mathrm{e
         \item[] $\vec{v}^{(2)}_0 = (0,\,40,\,5) \, \mathrm{\text{\textmu}m}/ \mathrm{\text{\textmu}s}$
     \end{itemize}
 \end{itemize}
+
+For simulations with more than two particles, we initialise the Calcium ions randomly in the sense that their initial positions and velocities are normally distrubuted around the centre of the trap.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

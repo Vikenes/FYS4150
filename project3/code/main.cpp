@@ -68,11 +68,11 @@ int run_tests(std::string scheme){
             (a) without interactions
             (b) with interactions   */
     
-    // PenningTrap Trap2a = test_double_particle(false, scheme, n(2));
-    // Trap2a.save_solution(folder + "double_without");
+    PenningTrap Trap2a = test_double_particle(false, scheme, n(2));
+    Trap2a.save_solution(folder + "double_without");
 
-    // PenningTrap Trap2b = test_double_particle(true, scheme, n(2));
-    // Trap2b.save_solution(folder + "double_with");
+    PenningTrap Trap2b = test_double_particle(true, scheme, n(2));
+    Trap2b.save_solution(folder + "double_with");
 
     return 0;
 }
@@ -115,20 +115,22 @@ int main(){
 
     /* PROBLEM 9 */
     double f1=0.1, f2=0.4, f3=0.7; // amplitudes
+
+    //  performoing broad-band scan without interactions:
     arma::vec omega_V = arma::linspace(0.2, 2.5, 300); // [ MHz ] 
     double dOmega_coarse = omega_V(1)-omega_V(0);
     assert(dOmega_coarse<0.02);
 
     // particles_left(f1, omega_V, "trapped_f1_without");      // Running time: 140 min ish
     // particles_left(f2, omega_V, "trapped_f2_without");      // Running time: 7797.29 s (129.955 min)  (80000 time steps)
-    particles_left(f3, omega_V, "trapped_f3_without");      // Running time: 747.507 s
-
+    // particles_left(f3, omega_V, "trapped_f3_without");      // Running time: 747.507 s
+   
+    //  performoing narrow-band scan with and without interactions for one amplitude
     arma::vec omega_V_fine = arma::linspace(1.35, 1.45, 50);
     double dOmega_fine = omega_V_fine(1)-omega_V_fine(0);
-    std::cout << dOmega_coarse << " , " << dOmega_fine << std::endl;
-    // assert(dOmega_fine < 0.5*dOmega_coarse);        //  at least 4 times more fine-grained
-    // particles_left(f1, omega_V_fine, "trapped_f1_with_fine", "RK4", "on",20000);
-    // particles_left(f1, omega_V_fine, "trapped_f1_without_fine", "RK4", "off");
+    assert(dOmega_fine < 0.5*dOmega_coarse);        //  at least twice as fine-grained
+    particles_left(f1, omega_V_fine, "trapped_f1_with_fine", "RK4", "on", 20000);
+    // particles_left(f1, omega_V_fine, "trapped_f1_without_fine", "RK4", "off", 20000);
     
     auto stop_time = std::chrono::high_resolution_clock::now();
 

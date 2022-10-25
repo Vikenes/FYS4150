@@ -88,35 +88,35 @@ void PenningTrap::simulate(double T, double dt, std::string scheme){
 
     //  run simulation:
     for(int i=0; i<Nt-1; i++){
-        RU = system.slice(i).rows(1,6);
-        t = system(0,0,i);
+        RU_ = system.slice(i).rows(1,6);
+        t_ = system(0,0,i);
         if(i%100==0){
             //  check if there are any particles left in the trap
-            arma::mat D = Pnorm(RU.rows(0,2));
+            arma::mat D = Pnorm(RU_.rows(0,2));
             if(arma::all(D.row(0)>d)){
-                std::cout << "All particles have escaped. Ending simulation at t = " << t << " s." << std::endl;
-                system.slice(Nt-1).rows(1,6) = RU;  //   fill last pos (temporary sol.)
-                system.slice(Nt-1).row(0).fill(t);  //   fill last pos (temporary sol.)
+                std::cout << "All particles have escaped. Ending simulation at t = " << t_ << " s." << std::endl;
+                system.slice(Nt-1).rows(1,6) = RU_;  //   fill last pos (temporary sol.)
+                system.slice(Nt-1).row(0).fill(t_);  //   fill last pos (temporary sol.)
                 break;
             }
         }
         if(scheme=="RK4"){ // FIXME (want less if/else)
-            if(time_dep){dRU = evolve_RK4(dt, t, RU);}
-            else{dRU = evolve_RK4(dt, RU);}
+            if(time_dep){dRU_ = evolve_RK4(dt, t_, RU_);}
+            else{dRU_ = evolve_RK4(dt, RU_);}
         }
         else if(scheme=="FE"){
-            if(time_dep){dRU = evolve_FE(dt, t, RU);}
-            else{dRU = evolve_FE(dt, RU);}
+            if(time_dep){dRU_ = evolve_FE(dt, t_, RU_);}
+            else{dRU_ = evolve_FE(dt, RU_);}
         }
         else{
             std::cout << "Arguments FE and RK4 are the only valid ones." << std::endl;
             assert(false);
         }
 
-        system.slice(i+1).rows(1,6) = RU + dRU;
-        system.slice(i+1).row(0).fill(t + dt);
+        system.slice(i+1).rows(1,6) = RU_ + dRU_;
+        system.slice(i+1).row(0).fill(t_ + dt);
     }
-    t = system(0, 0, Nt-1);
+    t_ = system(0, 0, Nt-1);
     for(int p=0; p<Np; p++){
             particles.at(p) -> new_position(system.slice(Nt-1).col(p).rows(1,3));
             particles.at(p) -> new_velocity(system.slice(Nt-1).col(p).rows(4,6));
@@ -134,7 +134,7 @@ void PenningTrap::ready(){
     if(Np==1){interactions = false;}
 
     Q = arma::mat(3, Np).fill(0.); M = arma::mat(3, Np).fill(0.);  
-    RU = arma::zeros(6, Np); dRU = arma::zeros(6, Np); 
+    RU_ = arma::zeros(6, Np); dRU_ = arma::zeros(6, Np); 
 
     E_ext = arma::zeros(3, Np); B_ext = arma::zeros(3, Np); E_int = arma::zeros(3, Np);
     F_ext = arma::zeros(3, Np); F_int = arma::zeros(3, Np);
@@ -255,21 +255,21 @@ void PenningTrap::generate_particle(std::vector<Particle*> &list, arma::vec r, a
     Np++;
 }
 
-arma::mat PenningTrap::K_val(arma::mat RU_){
-    K.rows(0,2) = RU_.rows(3,5);
-    external_forces(RU_);
+arma::mat PenningTrap::K_val(arma::mat RU){
+    K.rows(0,2) = RU.rows(3,5);
+    external_forces(RU);
     if(interactions){
-        internal_forces(RU_);
+        internal_forces(RU);
     }
     K.rows(3,5) = (F_ext + F_int) / M;
     return K;
 }
 
-arma::mat PenningTrap::K_val(double t, arma::mat RU_){
-    K.rows(0,2) = RU_.rows(3,5);
-    external_forces(t, RU_);
+arma::mat PenningTrap::K_val(double t, arma::mat RU){
+    K.rows(0,2) = RU.rows(3,5);
+    external_forces(t, RU);
     if(interactions){
-        internal_forces(RU_);
+        internal_forces(RU);
     }
     K.rows(3,5) = (F_ext + F_int) / M;
     return K;
