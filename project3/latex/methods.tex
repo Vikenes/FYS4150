@@ -127,7 +127,7 @@ To simplify the analysis, we will neglect any other contribution affecting the m
 \section{Methods}\label{sec:methods}
 
 
-\subsection{\Nanna{(appropriate title)} Numerical implementation and integration \Johan{appropriate enough?}}\label{sec:code}
+\subsection{Numerical implementation and integration}\label{sec:code}
 
 We aim to create a program in \CC\, that simulates a set of $N_\mathrm{p}$ particles inside a Penning trap. An object-oriented code is befitting this task and we present in the following descriptions of the classes \verb|Particle| and \verb|PenningTrap|.
 
@@ -162,56 +162,24 @@ We then get six discretised equations to solve for each particle at each step in
 The second, more advanced method is the RK4 methods \citep{Atkinson1989}, which is of fourth order. This means that we advance one time step by considering the gradient four times across a single time step. The gradient we use to advance the solution is a superposition of the four previously found gradients. This results in many FLOPs per iteration. Hence, this scheme is numerically more expensive than the FE scheme. However, it offers a far more accurate solution yielding a local truncation error of $\mathcal{O}(h^5)$ and global error $\mathcal{O}(h^4)$. Again, since $h$ is small, these errors are four magnitudes smaller than those of the FE scheme. 
 
 
-\subsection{Initialisation values} 
-
-Our Penning trap is defined by the following numerical values:
-
+\subsection{Penning trap parameters and particle properties}\label{subsec_methods:numbers_and_units}
+For the Penning trap parameters, we choose the following numerical values:
 \begin{itemize}
     \item[] $d=500 \,\mathrm{\text{\textmu} m}$
     \item[] $V_0=25.0 \,\mathrm{mV}$
     \item[] $B_0=1.00 \,\mathrm{T}$
 \end{itemize}
-
-We convert all to this set of base units:
-
+We convert all quantities to the following set of base units:
 \begin{itemize}
     \item[] Unit-length $=$ one micrometre $= 1\, \mathrm{\text{\textmu}m} $ 
     \item[] Unit-time $=$ one microsecond $= 1\, \mathrm{\text{\textmu}s} $
     \item[] Unit-mass $=$ one atomic mass unit $= 1\, \mathrm{u} $
     \item[] Unit-charge $=$ one elementary charge $= 1\, \mathrm{e} $
 \end{itemize}
+The particles we consider are Calcium ions (Ca$^+$) with charge $q=1 \,\mathrm{e}$ and mass $m = 40.078 \,\mathrm{u}$. These values ensure that the condition in equation \eqref{eq:p3_omega_constraints} is fulfilled. 
 
-We specify the duration of one simulation as $T$, with $n$ time steps, resulting in a step length of $h = \Delta t = T/n$. We intend to run the simulation for two different durations:
-\begin{itemize}
-    \item[] $T_1 = $ 50 \textmu s
-    \item[] $T_2 = $ 500 \textmu s
-\end{itemize}
-and four different time steps:
-\begin{itemize}
-    \item[] $n_1 = 4000$
-    \item[] $n_2 = 8000$
-    \item[] $n_3 = 16000$
-    \item[] $n_4 = 32000$
-\end{itemize}
-However, deviation from this may occur if computations proves to be lengthy, or if we want a specific step length. 
-
-For simulations of duration $T_1$ with different number of steps, we will use an estimate of the error convergence rate $r_\mathrm{err}$ given by
-
-\begin{equation}\label{eq:error_convergence_rate}
-    r_\mathrm{err} = \frac{1}{3} \sum_{k=2}^{4} \frac{\log{\big(\Delta_{\mathrm{max}, k} /\Delta_{\mathrm{max}, k-1}\big)}}{\log{\big(h_k/h_{k-1} \big)}},
-\end{equation}
-where $h_k =T_1/n_k$ is the step size an
-
-\begin{equation}\label{eq:abs_error}
-    \Delta_{\mathrm{max}, k} = \max_{i}\abs{\vec{r}_{i, \mathrm{exact}} - \vec{r}_i}
-\end{equation}
-
-is the maximum absolute error in the solution obtained with $n_k$ time steps. We used that $\vec{r}_{i, \mathrm{exact}}$ is the analytical solution.
 
 \subsection{Initial conditions}\label{sec:initial_conditions}
-
-The particles we consider are Calcium ions (Ca$^+$) with charge $q=1 \,\mathrm{e}$ and mass $m = 40.078 \,\mathrm{u}$. 
-
 For simulations of one or two particles, we use the following initial conditions:
 \begin{itemize}
     \item Particle 1\label{item:initial_conditions_p1}
@@ -226,10 +194,50 @@ For simulations of one or two particles, we use the following initial conditions
     \end{itemize}
 \end{itemize}
 
-For simulations with more than two particles, we initialise the Calcium ions randomly in the sense that their initial positions and velocities are normally distributed around the centre of the trap.
 
 
-\subsection{Simulations}\label{sec:simulation}
+
+\Vetle{Move following to time-dep subsection:} For simulations with more than two particles, we initialise the Calcium ions randomly in the sense that their initial positions and velocities are normally distributed around the centre of the trap.
+
+
+\subsection{Single particle simulation}\label{sec:simulation}
+We begin by simulating a single particle, using the initial conditions for Particle 1 in section \ref{sec:initial_conditions}. We compare the resulting axial motion obtained from FE and RK4 with the analytical solution in equation \eqref{eq:p1_diffeq_solution_z}. \Vetle{Move analytical solution description from results to here.}
+
+We simulate over a duration of $T_1=50\,\mathrm{\mu s}$, using $n_1=4000$ steps. 
+
+To study the accuracy of the two algorithms, we compute the size of the relative error of the two algorithms as a function of time for a duration of $T_1$. To study the step size dependency, we do this for four different time steps:
+\begin{itemize}
+    \item[] $n_1 = 4000$
+    \item[] $n_2 = 8000$
+    \item[] $n_3 = 16000$
+    \item[] $n_4 = 32000$
+\end{itemize}
+The size of the error is given by 
+\begin{equation}\label{eq:relative_error_size}
+    \Delta_\mathrm{rel,k} = \frac{\abs{\vec{r}_\mathrm{exact} - \vec{r_k}}}{\abs{\vec{r}_\mathrm{exact}}}
+\end{equation}
+where $\vec{r}_\mathrm{exact}$ is the analytical solutions from equations \eqref{eq:p3_f_general_solution} and \eqref{eq:p1_diffeq_solution_z}. 
+
+
+% We specify the duration of one simulation as $T$, with $n$ time steps, resulting in a step length of $h = \Delta t = T/n$. We intend to run the simulation for two different durations:
+% \begin{itemize}
+%     \item[] $T_1 = $ 50 \textmu s
+%     \item[] $T_2 = $ 500 \textmu s
+% \end{itemize}
+% However, deviation from this may occur if computations proves to be lengthy, or if we want a specific step length. 
+
+% For simulations of duration $T_1$ with different number of steps, we will use an estimate of the error convergence rate $r_\mathrm{err}$ given by
+
+Using the results of the estimated errors, we will estimate the error convergence rate, $r_\mathrm{err}$ for our two algorithms 
+\begin{equation}\label{eq:error_convergence_rate}
+    r_\mathrm{err} = \frac{1}{3} \sum_{k=2}^{4} \frac{\log{\big(\Delta_{\mathrm{max}, k} /\Delta_{\mathrm{max}, k-1}\big)}}{\log{\big(h_k/h_{k-1} \big)}},
+\end{equation}
+where $h_k =T_1/n_k$ is the step size and
+\begin{equation}\label{eq:abs_error}
+    \Delta_{\mathrm{max}, k} = \max_{i}\abs{\vec{r}_{i, \mathrm{exact}} - \vec{r}_i}
+\end{equation}
+is the maximum absolute error in the solution obtained with $n_k$ time steps. We used that $\vec{r}_{i, \mathrm{exact}}$ is the analytical solution.
+
 \subsubsection{Single particle}
 
 \subsubsection{Two particles}
