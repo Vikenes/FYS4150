@@ -68,7 +68,7 @@ def set_ax_info(ax, xlabel, ylabel, zlabel='none', style='plain', title=None, le
     if ylabel != False:
         ax.set_ylabel(ylabel, fontsize=20)
     if zlabel != 'none':
-        ax.set_zlabel(ylabel, fontsize=20)
+        ax.set_zlabel(zlabel, fontsize=20)
     ax.set_title(title, fontsize=20)
     ax.tick_params(axis='both', which='major', labelsize=15)
     ax.yaxis.get_offset_text().set_fontsize(15)
@@ -136,6 +136,48 @@ def two_particles_plane(p_noint, p_int, xlabel, ylabel, fname, savepush=False):
         save_push(fig, fname, push=True)
     else:
         plt.show()
+
+
+def two_particles_3d(p_noint, p_int, fname, savepush=False):
+    p1_noint, p2_noint = p_noint 
+    p1_int, p2_int = p_int 
+
+    fig, (ax1, ax2) = plt.subplots(ncols=2,subplot_kw={'projection':'3d'})
+
+    axes = [ax1, ax2]
+    
+    # plot trajectories:
+    ax1.scatter(*p1_noint, s=3, marker='o', c="navy", alpha=.7)
+    ax1.scatter(*p2_noint, s=3, marker='o', c="orangered", alpha=.7)
+    ax2.scatter(*p1_int, s=3, marker='o', c="navy", alpha=.7)
+    ax2.scatter(*p2_int, s=3, marker='o', c="orangered", alpha=.7)
+
+
+    ax1.plot(*p1_noint.T[0], marker="P", ms=12, c="b")
+    ax1.plot(*p2_noint.T[0], marker="P", ms=12, c="y")
+    ax1.plot(*p1_noint.T[-1], marker="*", ms=12, c="b")
+    ax1.plot(*p2_noint.T[-1], marker="*", ms=12, c="y")
+
+    ax2.plot(*p1_int.T[0], marker="P", ms=12, c="b")
+    ax2.plot(*p2_int.T[0], marker="P", ms=12, c="y")
+    ax2.plot(*p1_int.T[-1], marker="*", ms=12, c="b")
+    ax2.plot(*p2_int.T[-1], marker="*", ms=12, c="y")
+    
+
+    xlabel = r"$x\,[\mathrm{\mu m}]$"
+    ylabel = r"$y\,[\mathrm{\mu m}]$"
+    zlabel = r"$z\,[\mathrm{\mu m}]$"
+    
+    set_ax_info(ax2, xlabel, ylabel, zlabel, title='With interaction', legend=False)
+    set_ax_info(ax1, xlabel, ylabel, zlabel, title='No interaction', legend=False)
+
+    fig.subplots_adjust(left=0.01, bottom=0.02, right=0.96, top=0.98, wspace=0.08, hspace=0.01)
+
+    if savepush:
+        save_push(fig, fname, push=True, tight=False)
+    else:
+        plt.show()
+
 
 def error_plot(errors, times, fname, title, savepush=False):
     

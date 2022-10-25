@@ -180,8 +180,22 @@ def z_phase_plot(savepush=False):
     plot.two_particles_plane((p1z, p2z), (p1z_int, p2z_int), xlabel, ylabel, fname=fname, savepush=savepush)
 
 
-def movement_3d():
-    return None 
+def movement_3d(savepush=False):
+    p1_no_int = load("double_without_p1.txt")
+    p2_no_int = load("double_without_p2.txt")
+    p1_int = load("double_with_p1.txt")
+    p2_int = load("double_with_p2.txt")
+    
+    
+    p1 = p1_no_int[1:4]
+    p2 = p2_no_int[1:4]
+
+    p1_int = p1_int[1:4]
+    p2_int = p2_int[1:4]
+
+    fname = "trajectory_3d"
+    plot.two_particles_3d((p1, p2), (p1_int, p2_int), fname=fname, savepush=savepush)
+
 
 
 def trapped_without_interaction(savepush=False):
@@ -211,15 +225,16 @@ def trapped_fine_search(savepush=False):
 
 
 
-# compare_z_analytical()
-# compute_errors("RK", savepush=True)
-# compute_errors("FE", savepush=True)
+#compare_z_analytical(savepush=True)
+#compute_errors("RK", savepush=True)
+#compute_errors("FE", savepush=True)
 
 # xy_plane_movements(savepush=True)
 # x_phase_plot(savepush=True)
 # z_phase_plot(savepush=True)
+# movement_3d(savepush=True)
 
-trapped_without_interaction(savepush=False)
+#trapped_without_interaction(savepush=False)
 #trapped_fine_search(savepush=True)
 
 
@@ -237,6 +252,7 @@ compute_errors("FE", savepush=sp)
 xy_plane_movements(savepush=sp)
 x_phase_plot(savepush=sp)
 z_phase_plot(savepush=sp)
+movement_3d(savepush=sp)
 
 # PROBLEM 9
 #   Broad-band scan:
