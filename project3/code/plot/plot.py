@@ -152,7 +152,6 @@ def two_particles_3d(p_noint, p_int, fname, savepush=False):
     ax2.scatter(*p1_int, s=3, marker='o', c="navy", alpha=.7)
     ax2.scatter(*p2_int, s=3, marker='o', c="orangered", alpha=.7)
 
-
     ax1.plot(*p1_noint.T[0], marker="P", ms=12, c="b")
     ax1.plot(*p2_noint.T[0], marker="P", ms=12, c="y")
     ax1.plot(*p1_noint.T[-1], marker="*", ms=12, c="b")
@@ -172,7 +171,6 @@ def two_particles_3d(p_noint, p_int, fname, savepush=False):
     set_ax_info(ax1, xlabel, ylabel, zlabel, title='No interaction', legend=False)
 
     fig.subplots_adjust(left=0.01, bottom=0.02, right=0.96, top=0.98, wspace=0.08, hspace=0.01)
-
     if savepush:
         save_push(fig, fname, push=True, tight=False)
     else:
@@ -235,6 +233,14 @@ def plot_trapped_fine(N_trapped, omega_V, legs, fname, title, savepush=False):
         save_push(fig, fname, push=True)
     else:
         plt.show()
+
+
+
+
+
+
+
+
 
 
 
