@@ -242,10 +242,15 @@ is the maximum absolute error in the solution obtained with $n_k$ time steps. We
 
 \subsubsection{Two particles}
 
-\subsubsection{Many particles}
-\subsection{Error analysis}\label{sec:error_analysis}
+\subsection{Many particles - Resonance}
+Now that the basics of our Penning trap is complete, we explore resonance features of our trap when we have a large number of particles in the trap. To to this, we subject the system to a timedependent electromagnetic field  by making the replacement 
+\begin{equation}
+    V_o0 \to V_0 (1 + f \cos(\omega_V t)), \label{eq:p9_time_dep_potential}
+\end{equation} 
+where $f$ is a constant amplitude and $\omega_V$ is the angular frequency of the time-dependent potential. Using this potential, we will consider $N_p=100$ particles with normal distributed initial positions and velocities where $\abs{\vec{r}_0^{(i)}}=\abs{\vec{v}_0^{(i)}}=d/10$. To find potential resonance frequencies, we will plot the fraction of particles that are left in the trap after a duration of $T_2=500\,\mathrm{\mu s}$ as a function of applied frequency $\omega_V\in(0.2,\,2.5)\,\mathrm{MHz}$. For this broad frequency range we use a step size of $0.02\,\mathrm{MHz}$ for the applied frequencies and switch off the interactions between the particles. We plot the result for the three amplitudes $f=0.1,\,0.4,\,0.7$. \Vetle{Need steps etc...}
 
-State and decsribe each simulation, much is already written in the results section
+
+Having completed a broad frequency search, we proceed by 
 
 
 
