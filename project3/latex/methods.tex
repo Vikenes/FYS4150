@@ -1,7 +1,7 @@
 \section{Methods}\label{sec:methods}
 
 
-\subsection{(appropriate title) -schematics or whatever}
+\subsection{\Nanna{(appropriate title)} - The Penning trap}
 
 
 
@@ -148,7 +148,7 @@ Similarily, the minimum distance, $R_-$, is achieved when the vectors are pointi
 \end{align}
 
 
-
+\Nanna{Where do we use this?}
 
 
 %\begin{align}
@@ -195,8 +195,7 @@ The equation of motion \eqref{eq:eom_lorentz} is split into two first order ODEs
 
 We then get six discretised equations to solve for each particle at each step in time.
 
-The simple FE algorithm \citep{Arkinson1989} \dots The FE method is a first order, single-step method, meaning that we only need the last point to find the next.
-\dots \Nanna{SHORT DESC. OF FE}
+The simple FE algorithm \citep{Arkinson1989} \Nanna{...} The FE method is a first order, single-step method, meaning that we only need the current numerical solution to compute the next \Nanna{(Objection, relevance?)}.
 
 The fourth order, single-step RK4 method uses four estimates of the gradient on the interval between to steps in time. It gives rise to much more precise solutions than what the FE method does, but the algorithm requires more computational time. For the RK4 algorithm \citep{Arkinson1989}, we have to keep some things in mind when considering forces between particles. For a singlw step in time, we must make sure that the first gradient estimate is calculated for all particles before moving on to the second estimate, and so on. 
 

@@ -1,17 +1,16 @@
 \section{Results}\label{sec:results}
 
 \subsection{Single particle}
-We start by simulating a single particle, Particle 1, with initial conditions given in \ref{sec:initial_conditions}. The duration of the simulation is set to $T = 50 \,\mathrm{\text{\textmu} s}$ and we use $n_1=4000$ time steps. In figure \ref{fig:compare_z_analytical} we plot the $z$-component of the position as function of time. The solutions are found both using the FE and RK4 schemes, shown in red and blue respectively. \textcolor{blue}{FE and RK4 defined shortening earlier?}. The analytical solution, found from equation \ref{eq:p1_diffeq_solution_z} where the initial conditions yield $c_1 = z_0 = 20\,\mathrm{\text{\textmu}m}$ and $c_2 =0$ is shown with green in the figure. 
+We start by simulating a single particle, Particle 1, with initial conditions given in \ref{sec:initial_conditions}. The duration of the simulation is set to $T = 50 \,\mathrm{\text{\textmu} s}$ and we use $n=4000$ time steps. In Figure \ref{fig:compare_z_analytical} we plot the $z$-component of the position as function of time. The solutions are found both using the FE and RK4 schemes, shown in red and blue respectively. \Johan{FE and RK4 defined shortening earlier?} \Nanna{- Yes, in introduction:)}. The analytical solution, found from equation \eqref{eq:p1_diffeq_solution_z} where the initial conditions yield $c_1 = z_0 = 20\,\mathrm{\text{\textmu}m}$ and $c_2 = v_{z,0}= 0$ is shown with green in the figure. 
 
-\textcolor{pink}{We simulate Particle 1, with initial conditions given in  for a time period of $T = 50 \,\mathrm{\text{\textmu} s}$ using $n=\{4000, 8000, 16000, 32000 \}$ steps. We run the simulations using both the FE and RK4 schemes, and calculates the relative error for each scheme at every time step, according to \textcolor{blue}{(reference to relative error formula)}. The result is shown in figure}
-
+We repeat the simulations for $n = 8000$, $16000$ and $32000$. We find the relative error at each time step according to \Johan{(reference to relative error formula)}. The results are shown in Figures \ref{fig:error_FE} and \ref{fig:error_RK}.
 
 %------------------------------------------------------------------------------
 %   displacement in z-direction as function of time. analyitcal, FE, and RK4
 %------------------------------------------------------------------------------
 \begin{figure}
     \includegraphics[width=\linewidth]{/png/compare_z_analytical.png}
-    \caption{Movement in the $z$-plane for a single particle, simulation for $50$ \textmu s with $n_1=4000$ time steps. The analytical solution from equation \ref{eq:p1_diffeq_solution_z} is plotted in green, and the integrated solutions using the forward Euler and Runge-Kutta 4 scheme is shown in red and blue respectively. Initial conditions are those of particle 1, given in \ref{sec:initial_conditions}.}
+    \caption{Movement in the $z$-plane for a single particle, simulation for $50$ \textmu s with $n_1=4000$ time steps. The analytical solution from equation \eqref{eq:p1_diffeq_solution_z} is plotted in green, and the integrated solutions using the forward Euler and Runge-Kutta 4 scheme is shown in red and blue respectively. Initial conditions are those of Particle 1, given in \ref{sec:initial_conditions}.}
     \label{fig:compare_z_analytical}
 \end{figure}
 
@@ -35,11 +34,11 @@ We start by simulating a single particle, Particle 1, with initial conditions gi
     \label{fig:error_RK}
 \end{figure}
 
-\dots
 
 
+\subsection{Two particles}
 
-We simulate \textcolor{red}{(check concistency!)} Particle 1 and Particle 2 for $T = 50 \,\mathrm{\text{\textmu} s}$ using $n=8000$ steps, now also using both integration schemes. We do this both with Coulomb interactions turned off and on. 
+We simulate Particle 1 and Particle 2 \Nanna{(Do not care about the capital letters, as long as we are consistent)} for $T = 50 \,\mathrm{\text{\textmu} s}$ using $n=8000$ steps, now also using both integration schemes. We do this both with Coulomb interactions turned off and on. 
 
 
 \dots
@@ -52,7 +51,7 @@ We now fill the trap with $N_\mathrm{p} = 100$ randomly distributed Ca$^+$-ions 
 %------------------------------------------------------------------------------
 \begin{figure}
     \includegraphics[width=\linewidth]{png/trapped_particles_without_interaction.png}
-    \caption{Fraction of particles that are still trapped by the Penning Trap after 500 \textmu s, as function of the applied frequency $\omega_V$, for different amplitudes $f\in[0.1, 0.4, 0.7]$, without considering particle interactions.}
+    \caption{Fraction of particles that are still trapped by the Penning trap after 500 \textmu s, as function of the applied frequency $\omega_V$, for different amplitudes $f\in[0.1, 0.4, 0.7]$, without considering particle interactions. All graphs are resulting from simulations using 80000 time steps.}
     \label{fig:trapped_without}
 \end{figure}
 
@@ -61,7 +60,7 @@ We now fill the trap with $N_\mathrm{p} = 100$ randomly distributed Ca$^+$-ions 
 %------------------------------------------------------------------------------
 \begin{figure}
     \includegraphics[width=\linewidth]{png/trapped_particles_fine.png}
-    \caption{Fraction of particles that are still trapped by the Penning Trap after 500 \textmu s, as function of selected applied resonance frequencies $\omega_V$, with amplitude $f=0.1$, both with and without particle interactions.}
+    \caption{Fraction of particles that are still trapped by the Penning trap after 500 \textmu s, as function of selected applied resonance frequencies $\omega_V$, with amplitude $f=0.1$, both with and without particle interactions. Both graphs are resulting from simulations using 20000 time steps.}
     \label{fig:trapped_with}
 \end{figure}
 
@@ -77,7 +76,7 @@ We now fill the trap with $N_\mathrm{p} = 100$ randomly distributed Ca$^+$-ions 
 %------------------------------------------------------------------------------
 \begin{figure}
     \includegraphics[width=0.8\linewidth]{png/xy_two_particles.png}
-    \caption{Movement of two particles in the $xy$-plane simulated for $50$ $\mu$s. The left panel show their trajectories computed without particle interaction. In the right panel we have allowed for the particles to interact. We have used the Runge-Kutta 4 scheme to obtain these trajectories. Particle 1 is shown in blue, and particle 2 in green. Both panels use the same initial conditions as specified in rection \ref{sec:initial_conditions}. The staring points of their trajectories are indicated with a cross, their ending points with a star. }
+    \caption{Movement of two particles in the $xy$-plane simulated for $50$ $\mu$s. The left panel show their trajectories computed without particle interaction. In the right panel we have allowed for the particles to interact. We have used the Runge-Kutta 4 scheme to obtain these trajectories. Particle 1 is shown in blue, and Particle 2 in green. Both panels use the same initial conditions as specified in rection \ref{sec:initial_conditions}. The staring points of their trajectories are indicated with a cross, their ending points with a star. }
     \label{fig:xy_two_particles}
 \end{figure}
 
@@ -86,7 +85,7 @@ We now fill the trap with $N_\mathrm{p} = 100$ randomly distributed Ca$^+$-ions 
 %------------------------------------------------------------------------------
 \begin{figure}
     \includegraphics[width=0.8\linewidth]{png/x_phase_plot.png}
-    \caption{Phase plots along the $x$-axis for two different particles simulated for 50 \textmu s. The left panel show their behaviour without interactions and the right panel with. Particle 1 is shown in blue, and particle 2 in green. Both panels use the same initial conditions as specified in rection \ref{sec:initial_conditions}. The staring points of their trajectories are indicated with a cross, their ending points with a star.}
+    \caption{Phase plots along the $x$-axis for two different particles simulated for 50 \textmu s. The left panel show their behaviour without interactions and the right panel with. Particle 1 is shown in blue, and Particle 2 in green. Both panels use the same initial conditions as specified in rection \ref{sec:initial_conditions}. The staring points of their trajectories are indicated with a cross, their ending points with a star.}
     \label{fig:x_phase_two_particles}
 \end{figure} 
 
