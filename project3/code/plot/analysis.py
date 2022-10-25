@@ -229,10 +229,13 @@ def trapped_fine_search(savepush=False):
 #compute_errors("RK", savepush=True)
 #compute_errors("FE", savepush=True)
 
+compute_errors("RK", make_plot=False)
+compute_errors("FE", make_plot=False)
+
 # xy_plane_movements(savepush=True)
 # x_phase_plot(savepush=True)
 # z_phase_plot(savepush=True)
-# movement_3d(savepush=True)
+movement_3d(savepush=True)
 
 #trapped_without_interaction(savepush=False)
 #trapped_fine_search(savepush=True)
@@ -248,6 +251,8 @@ sp = False # only show plots
 compare_z_analytical()
 compute_errors("RK", savepush=sp)
 compute_errors("FE", savepush=sp)
+compute_errors("RK", make_plot=False)
+compute_errors("FE", make_plot=False)
 #   Double-particle case:
 xy_plane_movements(savepush=sp)
 x_phase_plot(savepush=sp)
