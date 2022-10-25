@@ -46,7 +46,7 @@ We compute the convergence rate at according to equation \eqref{eq:error_converg
 
 We simulate Particle 1 and Particle 2 for duration $T_1$,  using $n_2$ time steps. This is a trade off between numerical accuracy and computation time, since we now use the RK4 method \Johan{(Or do we use both?)}, both with and and without Coulomb interactions. For the three figures soon to be mentioned, Particle 1 is shown in blue, Particle 2 in red, initial conditions are as specified in section \ref{sec:initial_conditions} and the start and end point of their trajectories are indicated with a cross and a star respectively. Figure \ref{fig:xy_two_particles} show the movement of the two particles in the $xy$-plane. The left panel when we have no Coulomb interaction, and the right panel when they interact. 
 
-Figure \ref{fig:x_phase_two_particles} show the phase plots of the two particles along the $x$-axis, and figure \ref{fig:z_phase_two_particles} along the $z$-axis.
+Figure \ref{fig:x_phase_two_particles} show the phase plots of the two particles along the $x$-axis, and Figure \ref{fig:z_phase_two_particles} along the $z$-axis.
 % Figures spanning the whole width. 
 \newpage
 \onecolumngrid
@@ -79,7 +79,9 @@ Figure \ref{fig:x_phase_two_particles} show the phase plots of the two particles
     \label{fig:z_phase_two_particles}
 \end{figure}
 
-
+%------------------------------------------------------------------------------
+%   3d plot (x, y z)
+%------------------------------------------------------------------------------
 \begin{figure}
     \includegraphics[width=0.8\linewidth]{png/trajectory_3d.png}
     \caption{The trajectory of Particle 1 (blue) and Particle 2 (orange) in the Penning trap for 50 \textmu s. The left panel shows the situation when we neglect interaction forces, whilst the right panel introduces these forces. The starting points of their trajectories are indicated with a cross, their ending points with a star.}
@@ -95,7 +97,7 @@ Figure \ref{fig:x_phase_two_particles} show the phase plots of the two particles
 
 We now fill the trap with $N_\mathrm{p} = 100$ randomly distributed Ca$^+$-ions as elaborated in section \ref{sec:initial_conditions}. We add the perturbation to the external electric field in the trap described in section \ref{sec:code}. The following simulations are run for $T_2$\footnote{Strictly speaking, some of them are stopped before this due to an empty trap, but the result is the same.} before counting the number of particles still remaining in the trap, $N_\mathrm{trapped}$. Note that all simulations begin with equally initialised particles.
 
-Using only the RK4 scheme, we perform two sorts of frequency scans:
+Using only the RK4 scheme, we perform two sorts of frequency scans: \Nanna{Move some of this to methods?}
 
 
 \begin{itemize} % have absolutely no idea why I struggle with enumerate here
