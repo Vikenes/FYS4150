@@ -1,9 +1,9 @@
 \section{Results}\label{sec:results}
 
 \subsection{Single particle}
-We start by simulating a single particle, Particle 1, with initial conditions given in \ref{sec:initial_conditions}. The duration of the simulation is set to $T = 50 \,\mathrm{\text{\textmu} s}$ and we use $n=4000$ time steps. In Figure \ref{fig:compare_z_analytical} we plot the $z$-component of the position as function of time. The solutions are found both using the FE and RK4 schemes, shown in red and blue respectively. \Johan{FE and RK4 defined shortening earlier?} \Nanna{- Yes, in introduction:)}. The analytical solution, found from equation \eqref{eq:p1_diffeq_solution_z} where the initial conditions yield $c_1 = z_0 = 20\,\mathrm{\text{\textmu}m}$ and $c_2 = v_{z,0}= 0$ is shown with green in the figure. 
+We start by simulating a single particle, Particle 1, with initial conditions given in \ref{sec:initial_conditions}. The duration of the simulation is set to $T = 50 \,\mathrm{\text{\textmu} s}$ and we use $n=4000$ time steps. In Figure \ref{fig:compare_z_analytical} we plot the $z$-component of the position as function of time. The solutions are found both using the FE and RK4 schemes, shown in red and blue respectively. \Johan{FE and RK4 defined shortening earlier?} \Nanna{- Yes, in introduction:)}. The analytical solution, found from equation \eqref{eq:p1_diffeq_solution_z} where the initial conditions yield $c_1 = z_0 = 20\,\mathrm{\text{\textmu}m}$ and $c_2 = v_{z,0}/\omega_z= 0$ is shown with green in the figure.
 
-We repeat the simulations for $n = 8000$, $16000$ and $32000$. We find the relative error at each time step according to \Johan{(reference to relative error formula)}. The results are shown in Figures \ref{fig:error_FE} and \ref{fig:error_RK}.
+Since both FE and RK4 are approximations of the analytical solution we expect them to have a relative error compared with it. We repeat the simulations for $n = 8000$, $16000$ and $32000$ and find the relative error at each time step according to \Johan{(reference to relative error formula)}. The results are shown in Figures \ref{fig:error_FE} and \ref{fig:error_RK}. We note that for an increasing time step, the relative time step decrease, and the error for the RK4 scheme is significantly less than that of FE. \Johan{(ref some previous discussion with hs?)}
 
 %------------------------------------------------------------------------------
 %   displacement in z-direction as function of time. analyitcal, FE, and RK4
@@ -36,6 +36,10 @@ We repeat the simulations for $n = 8000$, $16000$ and $32000$. We find the relat
 
 
 
+
+
+
+
 \subsection{Two particles}
 
 We simulate Particle 1 and Particle 2 \Nanna{(Do not care about the capital letters, as long as we are consistent)} for $T = 50 \,\mathrm{\text{\textmu} s}$ using $n=8000$ steps, now also using both integration schemes. We do this both with Coulomb interactions turned off and on. 
@@ -44,25 +48,7 @@ We simulate Particle 1 and Particle 2 \Nanna{(Do not care about the capital let
 \dots
 
 
-We now fill the trap with $N_\mathrm{p} = 100$ randomly distributed Ca$^+$-ions \dots
 
-%------------------------------------------------------------------------------
-%   Trapped particles without interaction
-%------------------------------------------------------------------------------
-\begin{figure}
-    \includegraphics[width=\linewidth]{png/trapped_particles_without_interaction.png}
-    \caption{Fraction of particles that are still trapped by the Penning trap after 500 \textmu s, as function of the applied frequency $\omega_V$, for different amplitudes $f\in[0.1, 0.4, 0.7]$, without considering particle interactions. All graphs are resulting from simulations using 80000 time steps.}
-    \label{fig:trapped_without}
-\end{figure}
-
-%------------------------------------------------------------------------------
-%   Trapped particles fine grid. 
-%------------------------------------------------------------------------------
-\begin{figure}
-    \includegraphics[width=\linewidth]{png/trapped_particles_fine.png}
-    \caption{Fraction of particles that are still trapped by the Penning trap after 500 \textmu s, as function of selected applied resonance frequencies $\omega_V$, with amplitude $f=0.1$, both with and without particle interactions. Both graphs are resulting from simulations using 20000 time steps.}
-    \label{fig:trapped_with}
-\end{figure}
 
 
 
@@ -97,6 +83,35 @@ We now fill the trap with $N_\mathrm{p} = 100$ randomly distributed Ca$^+$-ions 
     \caption{Phase plots along the $z$-axis for two different particles simulated for 50 \textmu s. The left panel show their behaviour without interactions and the right panel with. Particle 1 is shown in blue, and particle 2 in green. Both panels use the same initial conditions as specified in rection \ref{sec:initial_conditions}. The staring points of their trajectories are indicated with a cross, their ending points with a star.}
     \label{fig:z_phase_two_particles}
 \end{figure}
+\twocolumngrid
+
+
+
+
+
+\subsection{Many particles}
+
+We now fill the trap with $N_\mathrm{p} = 100$ randomly distributed Ca$^+$-ions \dots
+
+%------------------------------------------------------------------------------
+%   Trapped particles without interaction
+%------------------------------------------------------------------------------
+\begin{figure}
+    \includegraphics[width=\linewidth]{png/trapped_particles_without_interaction.png}
+    \caption{Fraction of particles that are still trapped by the Penning trap after 500 \textmu s, as function of the applied frequency $\omega_V$, for different amplitudes $f\in[0.1, 0.4, 0.7]$, without considering particle interactions. All graphs are resulting from simulations using 80000 time steps.}
+    \label{fig:trapped_without}
+\end{figure}
+
+%------------------------------------------------------------------------------
+%   Trapped particles fine grid. 
+%------------------------------------------------------------------------------
+\begin{figure}
+    \includegraphics[width=\linewidth]{png/trapped_particles_fine.png}
+    \caption{Fraction of particles that are still trapped by the Penning trap after 500 \textmu s, as function of selected applied resonance frequencies $\omega_V$, with amplitude $f=0.1$, both with and without particle interactions. Both graphs are resulting from simulations using 20000 time steps.}
+    \label{fig:trapped_with}
+\end{figure}
+
+
 
 %------------------------------------------------------------------------------
 %   Nanna, Johan and Vetle working on the project, respectively (from left to right), 2022 (colorized).
@@ -110,7 +125,6 @@ We now fill the trap with $N_\mathrm{p} = 100$ randomly distributed Ca$^+$-ions 
 
 
 
-\twocolumngrid
  
 
 
