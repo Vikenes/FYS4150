@@ -196,14 +196,12 @@ For simulations of one or two particles, we use the following initial conditions
 
 
 
-
-\Vetle{Move following to time-dep subsection:} For simulations with more than two particles, we initialise the Calcium ions randomly in the sense that their initial positions and velocities are normally distributed around the centre of the trap.
-
-
 \subsection{Single particle simulation}\label{sec:simulation}
-We begin by simulating a single particle, using the initial conditions for Particle 1 in section \ref{sec:initial_conditions}. We compare the resulting axial motion obtained from FE and RK4 with the analytical solution in equation \eqref{eq:p1_diffeq_solution_z}. \Vetle{Move analytical solution description from results to here.}
-
-We simulate over a duration of $T_1=50\,\mathrm{\mu s}$, using $n_1=4000$ steps. 
+We begin by simulating a single particle, using the initial conditions for Particle 1 in section \ref{sec:initial_conditions}. We compare the resulting axial motion obtained from FE and RK4 with the analytical solution in equation \eqref{eq:p1_diffeq_solution_z} which has the specific solution 
+\begin{align}
+    z(t) = z_0 \cos(\omega_z t), \label{eq:z_spec_analytical_solution}
+\end{align}
+where $z_0=20\,\mathrm{\mu s}$. We simulate over a duration of $T_1=50\,\mathrm{\mu s}$, using $n_1=4000$ steps. 
 
 To study the accuracy of the two algorithms, we compute the size of the relative error of the two algorithms as a function of time for a duration of $T_1$. To study the step size dependency, we do this for four different time steps:
 \begin{itemize}
@@ -216,7 +214,14 @@ The size of the error is given by
 \begin{equation}\label{eq:relative_error_size}
     \Delta_\mathrm{rel,k} = \frac{\abs{\vec{r}_\mathrm{exact} - \vec{r_k}}}{\abs{\vec{r}_\mathrm{exact}}}
 \end{equation}
-where $\vec{r}_\mathrm{exact}$ is the analytical solutions from equations \eqref{eq:p3_f_general_solution} and \eqref{eq:p1_diffeq_solution_z}. 
+where $\vec{r}_\mathrm{exact}$ is the analytical solution. For the movement in the $xy$-plane, the specific solution for $f(t)$ is given by equation \eqref{eq:p3_f_general_solution} with 
+\begin{equation} \label{eq:xy_amplitudes_spec_analytical_solution}
+    \begin{split}
+        A_+ = \frac{v_0 + \omega_- x_0}{\omega_- - \omega_+},\quad A_- = - \frac{v_0 + \omega_+ x_0}{\omega_- - \omega_+},
+        \phi_+ =0,\quad \phi_- =0,
+    \end{split}
+\end{equation}
+where $v_0=\dot{y}(0)=25\,\mathrm{\mu m / \mu s}$ and $x_0=20\,\mathrm{\mu m}$. $z(t)$ is given by equation \eqref{eq:z_spec_analytical_solution}.
 
 
 % We specify the duration of one simulation as $T$, with $n$ time steps, resulting in a step length of $h = \Delta t = T/n$. We intend to run the simulation for two different durations:
@@ -245,9 +250,9 @@ is the maximum absolute error in the solution obtained with $n_k$ time steps. We
 \subsection{Many particles - Resonance}
 Now that the basics of our Penning trap is complete, we explore resonance features of our trap when we have a large number of particles in the trap. To to this, we subject the system to a timedependent electromagnetic field  by making the replacement 
 \begin{equation}
-    V_o0 \to V_0 (1 + f \cos(\omega_V t)), \label{eq:p9_time_dep_potential}
+    V_0 \to V_0 (1 + f \cos(\omega_V t)), \label{eq:p9_time_dep_potential}
 \end{equation} 
-where $f$ is a constant amplitude and $\omega_V$ is the angular frequency of the time-dependent potential. Using this potential, we will consider $N_p=100$ particles with normal distributed initial positions and velocities where $\abs{\vec{r}_0^{(i)}}=\abs{\vec{v}_0^{(i)}}=d/10$. To find potential resonance frequencies, we will plot the fraction of particles that are left in the trap after a duration of $T_2=500\,\mathrm{\mu s}$ as a function of applied frequency $\omega_V\in(0.2,\,2.5)\,\mathrm{MHz}$. For this broad frequency range we use a step size of $0.02\,\mathrm{MHz}$ for the applied frequencies and switch off the interactions between the particles. We plot the result for the three amplitudes $f=0.1,\,0.4,\,0.7$. \Vetle{Need steps etc...}
+where $f$ is a constant amplitude and $\omega_V$ is the angular frequency of the time-dependent potential. Using this potential, we will consider $N_p=100$ particles with normal distributed initial positions and velocities with a mean of zero and variance $\sigma^2=1$. The magnitude of each particle's initial position and velocity vector is $d/10$. To find potential resonance frequencies, we will plot the fraction of particles that are left in the trap after a duration of $T_2=500\,\mathrm{\mu s}$ as a function of applied frequency $\omega_V\in(0.2,\,2.5)\,\mathrm{MHz}$. For this broad frequency range we use a step size of $0.02\,\mathrm{MHz}$ for the applied frequencies and switch off the interactions between the particles. We plot the result for the three amplitudes $f=0.1,\,0.4,\,0.7$. \Vetle{Need steps etc...}
 
 
 Having completed a broad frequency search, we proceed by 
