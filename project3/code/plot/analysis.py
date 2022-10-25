@@ -225,20 +225,20 @@ def trapped_fine_search(savepush=False):
 
 
 
-compare_z_analytical(savepush=True)
-compute_errors("RK", savepush=True)
-compute_errors("FE", savepush=True)
+# compare_z_analytical(savepush=True)
+# compute_errors("RK", savepush=True)
+# compute_errors("FE", savepush=True)
 
-#compute_errors("RK", make_plot=False)
-#compute_errors("FE", make_plot=False)
+# #compute_errors("RK", make_plot=False)
+# #compute_errors("FE", make_plot=False)
 
-# xy_plane_movements(savepush=True)
-# x_phase_plot(savepush=True)
-# z_phase_plot(savepush=True)
-#movement_3d(savepush=True)
+# # xy_plane_movements(savepush=True)
+# # x_phase_plot(savepush=True)
+# # z_phase_plot(savepush=True)
+# #movement_3d(savepush=True)
 
-trapped_without_interaction(savepush=True)
-trapped_fine_search(savepush=True)
+# trapped_without_interaction(savepush=True)
+# trapped_fine_search(savepush=True)
 
 
 """
@@ -266,3 +266,5 @@ trapped_without_interaction(savepush=sp)
 trapped_fine_search(savepush=sp)
 
 """
+
+print(f"omega_z = {np.sqrt(2/m*V_d2):.2f} MHz")
