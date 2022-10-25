@@ -201,7 +201,7 @@ We begin by simulating a single particle, using the initial conditions for Parti
 \begin{align}
     z(t) = z_0 \cos(\omega_z t), \label{eq:z_spec_analytical_solution}
 \end{align}
-where $z_0=20\,\mathrm{\mu s}$. We simulate over a duration of $T_1=50\,\mathrm{\mu s}$, using $n_1=4000$ steps. 
+where $z_0=20\,\mum$. We simulate over a duration of $T_1=50\,\mus$, using $n_1=4000$ steps. 
 
 To study the accuracy of the two algorithms, we compute the size of the relative error of the two algorithms as a function of time for a duration of $T_1$. To study the step size dependency, we do this for four different time steps:
 \begin{itemize}
@@ -217,11 +217,11 @@ The size of the error is given by
 where $\vec{r}_\mathrm{exact}$ is the analytical solution. For the movement in the $xy$-plane, the specific solution for $f(t)$ is given by equation \eqref{eq:p3_f_general_solution} with 
 \begin{equation} \label{eq:xy_amplitudes_spec_analytical_solution}
     \begin{split}
-        A_+ = \frac{v_0 + \omega_- x_0}{\omega_- - \omega_+},\quad A_- = - \frac{v_0 + \omega_+ x_0}{\omega_- - \omega_+},
-        \phi_+ =0,\quad \phi_- =0,
+        A_+ = \frac{v_0 + \omega_- x_0}{\omega_- - \omega_+}&,\quad A_- = - \frac{v_0 + \omega_+ x_0}{\omega_- - \omega_+}, \\
+        \phi_+ =0&,\quad \phi_- =0,
     \end{split}
 \end{equation}
-where $v_0=\dot{y}(0)=25\,\mathrm{\mu m / \mu s}$ and $x_0=20\,\mathrm{\mu m}$. $z(t)$ is given by equation \eqref{eq:z_spec_analytical_solution}.
+where $v_0=\dot{y}(0)=25\,\mums$ and $x_0=20\,\mum$. $z(t)$ is given by equation \eqref{eq:z_spec_analytical_solution}.
 
 
 % We specify the duration of one simulation as $T$, with $n$ time steps, resulting in a step length of $h = \Delta t = T/n$. We intend to run the simulation for two different durations:
