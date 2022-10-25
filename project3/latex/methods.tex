@@ -102,28 +102,24 @@ The maximum distance from the origin, $R_+$, occurs when $\alpha_+-\alpha_- = 0 
 \end{align}
 
 
+\subsection{Testing the numerical implementation}\label{subsec_methods:testing_single_particle}
+\Vetle{Move this? I don't know...}
+
 \subsection{Multiple particles}\label{subsec_methods:multiple_particles}
-So far, we have only considered the presence of a single particle in the Penning trap.  
-A particle of charge $q_1$ at position $\vec{r}_1$ exerts a force on another particle of charge $q_2$ at $\vec{r}_2$ equal $k_e q_1q_2 (\vec{r}_2-\vec{r}_1) / \abs{\vec{r}_2-\vec{r}_1}^3$, where $k_e$ is the Boltzmann constant. When there are several particles present in the trap, we will want to include the contribution from these forces in the equation. The interaction field $\vec{E}_\mathrm{int}$ set up by $N_\mathrm{p}$ point charges $\{q_1, q_2, \dots, q_{N_\mathrm{p}}\}$ at positions $\{\vec{r}_1, \vec{r}_2, \dots, \vec{r}_{N_\mathrm{p}}\}$ is given by
-
+So far, we have only considered the presence of a single particle in the Penning trap. With mulitple particles simultaneously present in the trap, each particle will now be affected by the Coulomb force from the other particles. The electric field at a point $\vec{r}$ due to interactions, $\vec{E}_\mathrm{int}(\vec{r})$, set up by $N_\mathrm{p}$ point charges $\{q_1, q_2, \dots, q_{N_\mathrm{p}}\}$ at positions $\{\vec{r}_1, \vec{r}_2, \dots, \vec{r}_{N_\mathrm{p}}\}$ is given by
 \begin{equation}\label{eq:interaction_field}
-    \vec{E}_\mathrm{int} (\vec{r}) = k_e \sum_{p=1}^{N_\mathrm{p}} q_p \frac{\vec{r}-\vec{r}_p}{\abs{\vec{r}-\vec{r}_p}^3}.
+    \vec{E}_\mathrm{int} (\vec{r}) = k_e \sum_{p=1}^{N_\mathrm{p}} q_p \frac{\vec{r}-\vec{r}_p}{\abs{\vec{r}-\vec{r}_p}^3},
 \end{equation}
+where $k_e$ is Coulomb's constant. The electric field contributing to the Lorentz force in equation \eqref{eq:lorentz_force} is then $\vec{E} = \vec{E}_\mathrm{ext} + \vec{E}_\mathrm{int}$, with the external field given by equation \eqref{eq:p1_E_field_pot_gradient} as before. Our set of differential equations in equation \eqref{eq:p1_eom_xyz} now get an additional term, and for a particle $i$, the equations become 
 
-The Coulomb interactions give rise to non-linear differential equations which typically require a numerical approach. Note that this is a comprehensive task when introducing many particles, even for the computer. 
-
-The resulting electric and magnetic field contributing to the Lorentz force in eq. \eqref{eq:lorentz_force} is then $\vec{E} = \vec{E}_\mathrm{ext} + \vec{E}_\mathrm{int}$ and $\vec{B} = \vec{B}_\mathrm{ext}$, respectively, from eqs. \eqref{eq:trap_ext_E_field}, \eqref{eq:trap_ext_B_field} and \eqref{eq:interaction_field}.
-
-%\begin{align}
-    %\ddot{x}_i - \omega_{0,i} \dot{y}_i - \frac{1}{2}\omega_{z,i}^2 x_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{x_i - x_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_x} \\
-    %\ddot{y}_i + \omega_{0,i} \dot{x}_i - \frac{1}{2}\omega_{z,i}^2 y_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{y_i - y_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_y} \\ 
-    %\ddot{z}_i + \omega_{z,i}^2 z_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{z_i - z_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_z}
-%\end{align}
-
-
-
-
-
+\begin{subequations}\label{eq:p4_diffeq_many_particles_xyz}
+    \begin{align}
+        \ddot{x}_i - \omega_{0,i} \dot{y}_i - \frac{1}{2}\omega_{z,i}^2 x_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{x_i - x_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_x} \\
+        \ddot{y}_i + \omega_{0,i} \dot{x}_i - \frac{1}{2}\omega_{z,i}^2 y_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{y_i - y_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0, \label{eq:p4_diffeq_many_particles_y} \\ 
+        \ddot{z}_i + \omega_{z,i}^2 z_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{z_i - z_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0. \label{eq:p4_diffeq_many_particles_z}
+    \end{align}
+\end{subequations}
+To solve these differential equations, we will resort to numerical methods. 
 
 
 \subsection{\Nanna{(appropriate title)} Numerical work}\label{sec:code}
