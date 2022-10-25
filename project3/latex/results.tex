@@ -1,8 +1,9 @@
 \section{Results}\label{sec:results}
 
+\subsection{Single particle}
+We start by simulating a single particle, Particle 1, with initial conditions given in \ref{sec:initial_conditions}. The duration of the simulation is set to $T = 50 \,\mathrm{\text{\textmu} s}$ and we use $n_1=4000$ time steps. In figure \ref{fig:compare_z_analytical} we plot the $z$-component of the position as function of time. The solutions are found both using the FE and RK4 schemes, shown in red and blue respectively. \textcolor{blue}{FE and RK4 defined shortening earlier?}. The analytical solution, found from equation \ref{eq:p1_diffeq_solution_z} where the initial conditions yield $c_1 = z_0 = 20\,\mathrm{\text{\textmu}m}$ and $c_2 =0$ is shown with green in the figure. 
 
-
-We simulate \textcolor{red}{(check concistency!)} Particle 1 for a time period of $T = 50 \,\mathrm{\text{\textmu} s}$ using $n=\{4000, 8000, 16000, 32000 \}$ steps, both using FE and RK4. % n_k?
+\textcolor{pink}{We simulate Particle 1, with initial conditions given in  for a time period of $T = 50 \,\mathrm{\text{\textmu} s}$ using $n=\{4000, 8000, 16000, 32000 \}$ steps. We run the simulations using both the FE and RK4 schemes, and calculates the relative error for each scheme at every time step, according to \textcolor{blue}{(reference to relative error formula)}. The result is shown in figure}
 
 
 %------------------------------------------------------------------------------
@@ -10,7 +11,7 @@ We simulate \textcolor{red}{(check concistency!)} Particle 1 for a time period o
 %------------------------------------------------------------------------------
 \begin{figure}
     \includegraphics[width=\linewidth]{/png/compare_z_analytical.png}
-    \caption{Movement in the $z$-plane for a single particle, simulation for $50$ \textmu s. The analytical solution from equation \ref{eq:p1_diffeq_solution_z} is plotted in green, and the integrated solutions using the forward Euler and Runge-Kutta 4 scheme is shown in red and blue respectively. Initial conditions are those of particle 1, given in \ref{item:initial_conditions_p1} }
+    \caption{Movement in the $z$-plane for a single particle, simulation for $50$ \textmu s with $n_1=4000$ time steps. The analytical solution from equation \ref{eq:p1_diffeq_solution_z} is plotted in green, and the integrated solutions using the forward Euler and Runge-Kutta 4 scheme is shown in red and blue respectively. Initial conditions are those of particle 1, given in \ref{sec:initial_conditions}.}
     \label{fig:compare_z_analytical}
 \end{figure}
 
@@ -74,7 +75,7 @@ We now fill the trap with $N_\mathrm{p} = 100$ randomly distributed Ca$^+$-ions 
 %------------------------------------------------------------------------------
 %   movement of two particles in xy-plane with and without interaction
 %------------------------------------------------------------------------------
-\begin{figure}[h!]
+\begin{figure}
     \includegraphics[width=0.8\linewidth]{png/xy_two_particles.png}
     \caption{Movement of two particles in the $xy$-plane simulated for $50$ $\mu$s. The left panel show their trajectories computed without particle interaction. In the right panel we have allowed for the particles to interact. We have used the Runge-Kutta 4 scheme to obtain these trajectories. Particle 1 is shown in blue, and particle 2 in green. Both panels use the same initial conditions as specified in rection \ref{sec:initial_conditions}. The staring points of their trajectories are indicated with a cross, their ending points with a star. }
     \label{fig:xy_two_particles}
@@ -83,16 +84,16 @@ We now fill the trap with $N_\mathrm{p} = 100$ randomly distributed Ca$^+$-ions 
 %------------------------------------------------------------------------------
 %   Phase plot (x, vx)
 %------------------------------------------------------------------------------
-\begin{figure}[h!]
+\begin{figure}
     \includegraphics[width=0.8\linewidth]{png/x_phase_plot.png}
     \caption{Phase plots along the $x$-axis for two different particles simulated for 50 \textmu s. The left panel show their behaviour without interactions and the right panel with. Particle 1 is shown in blue, and particle 2 in green. Both panels use the same initial conditions as specified in rection \ref{sec:initial_conditions}. The staring points of their trajectories are indicated with a cross, their ending points with a star.}
     \label{fig:x_phase_two_particles}
-\end{figure}
+\end{figure} 
 
 %------------------------------------------------------------------------------
 %   Phase plot (z, vz)
 %------------------------------------------------------------------------------
-\begin{figure}[h!]
+\begin{figure}
     \includegraphics[width=0.8\linewidth]{png/z_phase_plot.png}
     \caption{Phase plots along the $z$-axis for two different particles simulated for 50 \textmu s. The left panel show their behaviour without interactions and the right panel with. Particle 1 is shown in blue, and particle 2 in green. Both panels use the same initial conditions as specified in rection \ref{sec:initial_conditions}. The staring points of their trajectories are indicated with a cross, their ending points with a star.}
     \label{fig:z_phase_two_particles}
@@ -101,11 +102,11 @@ We now fill the trap with $N_\mathrm{p} = 100$ randomly distributed Ca$^+$-ions 
 %------------------------------------------------------------------------------
 %   Nanna, Johan and Vetle working on the project, respectively (from left to right), 2022 (colorized).
 %------------------------------------------------------------------------------
-\begin{figure}[h!]
+\begin{figure}
     \includegraphics[width=\linewidth]{dummy.jpg}
     \caption{Nanna, Johan and Vetle working on the project, respectively (from left to right), 2022 (colorized).}
     \label{fig:some_ref} 
-\end{figure}
+\end{figure} 
 
 
 
