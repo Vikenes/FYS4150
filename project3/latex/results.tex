@@ -42,16 +42,9 @@ Since both FE and RK4 are approximations of the analytical solution we expect th
 
 \subsection{Two particles}\label{sec:two_particles}
 
-We simulate Particle 1 and Particle 2 \Nanna{(Do not care about the capital letters, as long as we are consistent)} for $T = 50 \,\mathrm{\text{\textmu} s}$ using $n=8000$ steps, now also using both integration schemes. We do this both with Coulomb interactions turned off and on. 
+We simulate Particle 1 and Particle 2 for duration $T_1$ \textmu s,  using $n_2$ time steps. This is a trade off between numerical accuracy and computation time, since we now use the RK4 method \Johan{(Or do we use both?)}, both with and and without Coulomb interactions. For the three figures soon to be mentioned, Particle 1 is shown in blue, Particle 2 in red, initial conditions are as specified in section \ref{sec:initial_conditions} and the start and end point of their trajectories are indicated with a cross and a star respectively. Figure \ref{fig:xy_two_particles} show the movement of the two particles in the $xy$-plane. The left panel when we have no Coulomb interaction, and the right panel when they interact. 
 
-
-\dots
-
-
-
-
-
-
+Figure \ref{fig:x_phase_two_particles} show the phase plots of the two particles along the $x$-axis, and figure \ref{fig:z_phase_two_particles} along the $z$-axis.
 % Figures spanning the whole width. 
 \newpage
 \onecolumngrid
