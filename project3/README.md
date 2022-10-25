@@ -1,8 +1,8 @@
-# FYS4150 Project 3: 
+# FYS4150 Project 3: The Penning trap
 
 We present the work of Vetle A. Vikenes, Johan M. Kroken and Nanna Bryne in FYS4150.
 
-The answers to the problems are presented in `latex/project3.pdf`.
+The project report is found as `latex/project3.pdf`.
 
 ## The code
 
@@ -29,9 +29,13 @@ This command runs the script `code/plot/analysis.py` which uses code from `code/
 ### Content
 
 The script that performs all computations in this project is `code/main.cpp` which includes:
-* `code/src/Particle.cpp`: sets up the class `Particle`, intances of which are initiated with a charge, mass, position and velocity. 
-* `code/src/PenningTrap.cpp` 
-* `code/src/utils.cpp`
-* `code/src/algorithms.cpp` ????
+* `code/src/Particle.cpp`: sets up the class `Particle`, intances of which are initiated with a charge, mass, position and velocity
+* `code/src/PenningTrap.cpp`: sets up the class `PenningTrap`, intances of which are initiated with a magnetic field strength, electric potential scale and characteristic dimesion
+* `code/src/utils.cpp`: contains functions for writing `.txt`-files, as well as physical constants and other parameters we do not intend to vary in this project
+* `code/src/algorithms.cpp`: currently empty
 
-Corresponding header-files with explanations of member functions etc. are found in `code/include/`. 
+Corresponding **header-files with user-explanations** of member functions etc. are found in `code/include/`. 
+
+## Results
+
+You will find the final results as `.txt`-files in `output/data/RK4` and `output/data/FE`, and presented as figures in `.pdf`-files in `output/plots/`.
