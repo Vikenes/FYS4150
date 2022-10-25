@@ -11,7 +11,6 @@
     \label{fig:schematic_trap}
 \end{figure}
 
-
 Consider an ideal Penning trap with characteristic dimension $d$, a length scale given by $d= \sqrt{z_0^2+ \frac{1}{2}r_0^2}$, where $z_0$ is the distance between the centre and the endcap and $r_0$ the radius of of the ring, as in Figure \ref{fig:schematic_trap}. These electrodes create an external electric field $\vec{E}_\mathrm{ext}$ resulting from the potential
 
 \begin{equation}
@@ -196,10 +195,10 @@ The equation of motion \eqref{eq:eom_lorentz} is split into two first order ODEs
 
 We then get six discretised equations to solve for each particle at each step in time.
 
-The simple FE algorithm \Nanna{(REF TO FE ALGO)} \dots The FE method is a first order, single-step method, meaning that we only need the last point to find the next.
+The simple FE algorithm \citep{Arkinson1989} \dots The FE method is a first order, single-step method, meaning that we only need the last point to find the next.
 \dots \Nanna{SHORT DESC. OF FE}
 
-The fourth order RK4 method uses four estimates of the gradient on the interval between to steps in time. It gives rise to much more precise solutions than what the FE method does, but the algorithm requires more computational time. For the RK4 algorithm \Nanna{(REF TO RK4 ALGO)}, we have to keep some things in mind when considering forces between particles. For a singlw step in time, we must make sure that the first gradient estimate is calculated for all particles before moving on to the second estimate, and so on. 
+The fourth order, single-step RK4 method uses four estimates of the gradient on the interval between to steps in time. It gives rise to much more precise solutions than what the FE method does, but the algorithm requires more computational time. For the RK4 algorithm \citep{Arkinson1989}, we have to keep some things in mind when considering forces between particles. For a singlw step in time, we must make sure that the first gradient estimate is calculated for all particles before moving on to the second estimate, and so on. 
 
 
 \subsection{Specific values \Nanna{or some other title}} 
