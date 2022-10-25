@@ -1,17 +1,5 @@
 \section{Introduction}\label{sec:introduction}
 
-
-\textbf{Suggested introduction outline:}
-\begin{enumerate}
-    \item Introduce Penning trap 
-    \item Mention Lorentz force from potential and magnetic field of trap. 
-    \item Single particle and multiple particles 
-    \item Interactions 
-    \item FE vs. RK4 
-    \item Others (Trapped, ressonance, error, etc.)
-    \item Project outline 
-\end{enumerate}
-
 Trapping charged particles is a common and useful method in order to perform various measurements and experiments. A natural starting point would be to create a three-dimensional electric potential which pulls the particles towards a center. According to Earnshaw's theorem (\textcolor{red}{Citation?}) keeping a charged particle in stable equilibrium with an electrostatic force alone is not possible. One way around this is to use a strong homogeneous axial magnetic field together with a quadrupole electric field. The former incarcerate the particle(s) radially, whereas the latter confines the particles radially. A device of such a structure is called a "Penning trap" and was first built by Hans Georg Dehmelt under the influence of Frans Michel Penning's work \citep{Dehmelt1989}. \textcolor{red}{(Citation?)}. The Lorentz force $\vec{F}$ acting on a particle with charge $q$ that is subjected to this electric field and a magnetic field, $\vec{B}$, is given by 
 \begin{equation}\label{eq:lorentz_force}
     \vec{F} = q\vec{E} + q \vec{v} \cross \vec{B},
@@ -21,13 +9,16 @@ where $\vec{v}$ is the particle's velocity. Suppose the particle has mass $m$, t
 \begin{equation}\label{eq:eom_lorentz}
  \dv{\vec{v}}{t} = \frac{\vec{F}}{m}  \Rightarrow \dv[2]{\vec{r}}{t}= \frac{q}{m} (\vec{E} + \vec{v} \cross \vec{B} ).
 \end{equation}
-The external electric field is related to the potential through $\vec{E} = -\nabla V$. By choosing a particular electric potential and magnetic field, we can solve equation \eqref{eq:eom_lorentz} to predict the motion of a single particle inside a Penning trap, \textcolor{red}{are we going to the following sentence?} and we will later discuss what is required of the initial conditions in order for it to stay put. In reality one is often concerned with storing multiple particles, not just a single one. Having multiple particles in the trap simultaneously the electric field will then get an additional contribution from Coulomb interactions between the particles. The resulting equations of motion will then be much more cumbersome to tackle analytically, and we will therefore resort to numerical integration methods. 
-
-\textcolor{red}{Old paragraph:}
-If we were to accompany the single particle with another charged particle, however, we would need to consider the contribution to the electric field from the Coulomb interactions between the two of them. Adding more charged particles complicates the system even more in such a way that we generally will struggle to solve it analytically \textcolor{blue}{(IS THIS CORRECT?)}; we need to use numerical integration methods. 
+The external electric field is related to the potential through $\vec{E} = -\nabla V$. By choosing a particular electric potential and magnetic field, we can solve equation \eqref{eq:eom_lorentz} to predict the motion of a single particle inside a Penning trap. In reality one is often concerned with storing multiple particles, not just a single one. This introduces Coulomb interactions between the particles, and the resulting equations of motion will then be much more cumbersome to tackle analytically. To study the motion of the trapped particles we will therefore resort to numerical integration methods. 
 
 
+
+\Vetle{Remove a lot of the shit below. Remember to discuss single particle analytical shit.}
 Equation \eqref{eq:eom_lorentz} can be split into two ordinary differential equations (ODEs) that we can solve numerically. The two methods we will consider are forward Euler (FE) and fourth order Runge-Kutta (RK4). The former is a numerical procedure of first order, whereas the latter is of fourth order, resulting in global errors proportional to the step size and the step size to the power of four, respectively. That is, say we have a step size $h\sim 0.1$, \textcolor{red}{Fix following error discussion:} the error arising from FE is $h^{1-4} \sim 1000$ times larger than that of RK4 \textcolor{blue}{(WAIT, WHAT?)}. The RK4 algorithm does however demand many more floating points operations (FLOPs) than the FE algorithm, and will therefore be more computationally expensive at a given step size. However, the RK4 algorithm could be much faster than the FE algorithm, since the FE algorithm requires a much smaller step size in order to achieve a certain level of precision. We will therefore study the relative error of the two algorithms at different step sizes, by comparing with the analytical solution from a single particle inside the trap.          
+
+
+
+
 
 \textcolor{red}{Not wuite sure about the next two paragraphs.}
 Now being able to solve the system of several interacting charged particles in the Penning trap in question, we should ponder the effect the Coulomb interactions have on the trap's ability to contain the particles. 
