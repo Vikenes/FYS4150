@@ -27,9 +27,9 @@ int write_to_file(std::vector<double> a, std::vector<int> b, std::string filenam
 extern double k_e; //  Coulomb constant
 extern double T;   //  Tesla
 extern double V;   //  Volt
-extern double B0;  //  Magnetic field configuration in Penning Trap
-extern double V0;  //  Electric potential configuration in Penning Trap
-extern double d;   //  Size measure of Penning Trap
+extern double B0;  //  Magnetic field configuration in Penning trap
+extern double V0;  //  Electric potential configuration in Penning trap
+extern double d;   //  Size measure of Penning trap
 extern double Vdr;    //  Ratio of V0/d^2
 
 extern double q_Ca;

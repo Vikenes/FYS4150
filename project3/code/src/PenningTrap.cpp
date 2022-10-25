@@ -66,7 +66,7 @@ int PenningTrap::count_particles(){
     return Np_trapped;
 }
 
-void PenningTrap::simulate(double T, double dt, std::string scheme){
+void PenningTrap::simulate(double T, double dt, std::string scheme, int check_every){
     int Nt = int(T/dt) + 1;         //  number of time points 
     
 
@@ -85,18 +85,17 @@ void PenningTrap::simulate(double T, double dt, std::string scheme){
     }
 
     
-
+    int last_idx = Nt-1;    //  last index if simulation is not stopped
     //  run simulation:
     for(int i=0; i<Nt-1; i++){
         RU_ = system.slice(i).rows(1,6);
         t_ = system(0,0,i);
-        if(i%100==0){
+        if(i%check_every==0){
             //  check if there are any particles left in the trap
             arma::mat D = Pnorm(RU_.rows(0,2));
             if(arma::all(D.row(0)>d)){
                 std::cout << "All particles have escaped. Ending simulation at t = " << t_ << " s." << std::endl;
-                system.slice(Nt-1).rows(1,6) = RU_;  //   fill last pos (temporary sol.)
-                system.slice(Nt-1).row(0).fill(t_);  //   fill last pos (temporary sol.)
+                last_idx = i;   //  update last index
                 break;
             }
         }
@@ -116,10 +115,10 @@ void PenningTrap::simulate(double T, double dt, std::string scheme){
         system.slice(i+1).rows(1,6) = RU_ + dRU;
         system.slice(i+1).row(0).fill(t_ + dt);
     }
-    t_ = system(0, 0, Nt-1);
+    t_ = system(0, 0, last_idx);
     for(int p=0; p<Np; p++){
-            particles.at(p) -> new_position(system.slice(Nt-1).col(p).rows(1,3));
-            particles.at(p) -> new_velocity(system.slice(Nt-1).col(p).rows(4,6));
+            particles.at(p) -> new_position(system.slice(last_idx).col(p).rows(1,3));
+            particles.at(p) -> new_velocity(system.slice(last_idx).col(p).rows(4,6));
         }
 
 }

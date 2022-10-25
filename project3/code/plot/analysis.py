@@ -13,9 +13,13 @@ FE_path = data_path + "FE/"
 RK_path = data_path + "RK4/"
 
 
+
+# Analytical solution:
+Volt = 9.64852558
 m = 40.078
-B0 =9.64852558 * 10
-V_d2 = 25e-3 * 9.64852558e7 / 500**2
+B0 = 10 * Volt
+d = 500
+V_d2 = 25e-3 * 1e7 * Volt / d**2
 
 omega_z = np.sqrt(2 * V_d2 / m)
 omega_0 = B0/m 
@@ -203,13 +207,9 @@ def trapped_fine_search(savepush=False):
     n_trapped.append(trapped_noint / N0)
     n_trapped.append(trapped_int / N0)
     
-
     plot.plot_trapped_fine(n_trapped, omega_V, legs, "trapped_particles_fine", title=None, savepush=savepush)
 
 
-
-#compare_z_analytical()#compute_errors("RK", savepush=False)#compute_errors("FE", savepush=False)
-#xy_plane_movements(savepush=False)#x_phase_plot(savepush=False)#z_phase_plot(savepush=False)
 
 # compare_z_analytical()
 # compute_errors("RK", savepush=True)
@@ -221,3 +221,27 @@ def trapped_fine_search(savepush=False):
 
 trapped_without_interaction(savepush=False)
 #trapped_fine_search(savepush=True)
+
+
+"""
+Uncomment before delivery
+
+sp = False # only show plots
+
+# PROBLEM 8
+#   Single-particle case:
+compare_z_analytical()
+compute_errors("RK", savepush=sp)
+compute_errors("FE", savepush=sp)
+#   Double-particle case:
+xy_plane_movements(savepush=sp)
+x_phase_plot(savepush=sp)
+z_phase_plot(savepush=sp)
+
+# PROBLEM 9
+#   Broad-band scan:
+trapped_without_interaction(savepush=sp)
+#   Narrow-band scan:
+trapped_fine_search(savepush=sp)
+
+"""

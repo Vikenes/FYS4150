@@ -143,8 +143,9 @@ class PenningTrap{
     void apply_time_dependence(double amplitude, double frequency);
     /* Initialise matrices etc. for a complete set of particles. */
     void ready();       
-    /* Simulate the system for {T} μs using time step {dt} μs using {scheme} */
-    void simulate(double T, double dt, std::string scheme="RK4");
+    /* Simulate the system for {T} μs using time step {dt} μs using {scheme}.
+        -> check every {check_every} time step if all particles have escaped and in that case, stop simulation */
+    void simulate(double T, double dt, std::string scheme="RK4", int check_every=100);
     /* Save solution to a file named {filename}. */
     void save_solution(std::string filename);
     /* Count the particles that are located within the walls of the Penning trap. 
