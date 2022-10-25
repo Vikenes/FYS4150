@@ -87,9 +87,9 @@ int particles_left(int sim_dur, double h, double amplitude, double frequency, st
     return Trap.count_particles();
 }
 
-int particles_left(double amplitude, arma::vec frequency, std::string filename, std::string scheme="RK4", std::string interaction_switch="off"){
+int particles_left(double amplitude, arma::vec frequency, std::string filename, std::string scheme="RK4", std::string interaction_switch="off", int time_steps=80000){
     double sim_duration = 500;
-    double h = sim_duration/80000;
+    double h = sim_duration/time_steps;
 
     int Nomega = frequency.size();
     std::vector<int> trapped(Nomega);
@@ -121,12 +121,13 @@ int main(){
 
     // particles_left(f1, omega_V, "trapped_f1_without");      // Running time: 140 min ish
     // particles_left(f2, omega_V, "trapped_f2_without");      // Running time: 7797.29 s (129.955 min)  (80000 time steps)
-    // particles_left(f3, omega_V, "trapped_f3_without");      // Running time: 747.507 s
+    particles_left(f3, omega_V, "trapped_f3_without");      // Running time: 747.507 s
 
-    arma::vec omega_V_fine = arma::linspace(1.38, 1.45, 40);
+    arma::vec omega_V_fine = arma::linspace(1.35, 1.45, 50);
     double dOmega_fine = omega_V_fine(1)-omega_V_fine(0);
-    //assert(dOmega_fine < 0.2*dOmega_coarse);        //  at least 5 times more fine-grained
-    particles_left(f1, omega_V_fine, "trapped_f1_with_fine", "RK4", "on");
+    std::cout << dOmega_coarse << " , " << dOmega_fine << std::endl;
+    // assert(dOmega_fine < 0.5*dOmega_coarse);        //  at least 4 times more fine-grained
+    // particles_left(f1, omega_V_fine, "trapped_f1_with_fine", "RK4", "on",20000);
     // particles_left(f1, omega_V_fine, "trapped_f1_without_fine", "RK4", "off");
     
     auto stop_time = std::chrono::high_resolution_clock::now();

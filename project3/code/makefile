@@ -1,7 +1,15 @@
 all: compile link run
+all2: compile2 link run 
+all3: compile3 link run
 
 compile:
 	g++ -c -std=c++11 main.cpp src/*.cpp -I include
+
+compile2:
+	g++ -c -std=c++11 main.cpp src/*.cpp -I include -O2
+
+compile3:
+	g++ -c -std=c++11 main.cpp src/*.cpp -I include -O3
 
 link:
 	g++ -o main.exe *.o -larmadillo
