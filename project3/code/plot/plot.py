@@ -27,8 +27,10 @@ data_path = here + "/../../output/data/"
 plot_path = here + "/../../output/plots/"
 latex_path = here + "/../../latex/"
 
+make_png = True # temporary for saving pngs
 
-def save_push(fig, pdf_name, save=True, push=False, show=False, tight=True):
+
+def save_push(fig, pdf_name, save=True, push=False, show=False, tight=True, png_duplicate=make_png):
     """
     This function handles wether you want to show,
     save and/or push the file to git.
@@ -40,10 +42,13 @@ def save_push(fig, pdf_name, save=True, push=False, show=False, tight=True):
     """
     if tight:
         fig.tight_layout()
-    file = plot_path + pdf_name.replace('.pdf', '').strip() + ".pdf"
+    pdfname = pdf_name.replace('.pdf', '').strip() + ".pdf"
+    file = plot_path + pdfname
     if save:
         print(f'Saving plot: {file}')
         fig.savefig(file)
+        if png_duplicate:
+            fig.savefig(plot_path + "png/" + pdfname.replace('.pdf', '.png'))
     if push:
         os.system(f"git add {file}")
         os.system("git commit -m 'upload plot'")
@@ -233,6 +238,9 @@ def plot_trapped_fine(N_trapped, omega_V, legs, fname, title, savepush=False):
         save_push(fig, fname, push=True)
     else:
         plt.show()
+
+
+
 
 
 
