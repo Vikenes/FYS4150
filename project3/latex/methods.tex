@@ -229,7 +229,7 @@ where $h_k =T_1/n_k$ is the step size and
 \begin{equation}\label{eq:abs_error}
     \Delta_{\mathrm{max}, k} = \max_{i}\abs{\vec{r}_{i, \mathrm{exact}} - \vec{r}_i}
 \end{equation}
-is the maximum size of the absolute error with $n_k$ time steps. 
+is the maximum size of the absolute error with $n_k$ time steps. The global truncation error of our two methods have different $h$ dependence, as discussed in section \ref{sec:code}. $r_\mathrm{err}$ provides a simple estimated measure of how fast the two methods converge to the true value when we decrease $h$. 
 
 \subsubsection{Two particles}
 Having studied the accuracy of our solver, we proceed by studying two particles in the Penning trap with the initial conditions specified in section \ref{sec:initial_conditions}. For $n_2=8000$ timesteps we simulate the two particles over a duration of $T_1$, both with an without interactions, using the RK4 method. In both cases, we will study the motion of the two particles in the $(x,y)$-plane, their trajectories in the $(x,v_x)$-plane and the $(z,v_z)$-plane and a 3D plot showing their trajectories in $(x,y,z)$ space.   
