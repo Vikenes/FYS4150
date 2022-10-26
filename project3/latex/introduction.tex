@@ -1,18 +1,6 @@
 \section{Introduction}\label{sec:introduction}
 
-
-\textbf{Things left to do:}
-\begin{itemize}
-    \item Write abstract
-    \item Write conclusion
-    \item Finish discussion
-    \item Rewrite results, or change it up so we dont repeat ourselves. 
-    \item Check figure captions (conventional writing, references etc)
-    \item Read through most of the text for typos and coherence
-\end{itemize}
-
-
-Trapping charged particles is a common and useful method in order to perform various measurements and experiments. A natural starting point would be to create a three-dimensional electric potential which pulls the particles towards a center. According to Earnshaw's theorem \citep{GriffithsEarnshaw}, keeping a charged particle in stable equilibrium with an electrostatic force alone is not possible. One way around this is to use a strong homogeneous axial magnetic field together with a quadrupole electric field. The former incarcerate the particle(s) radially, whereas the latter confines the particles radially. A device of such a structure is called a "Penning trap" and was first built by Hans Georg Dehmelt under the influence of Frans Michel Penning's work \citep{Dehmelt1989}. The Lorentz force $\vec{F}$ acting on a particle with charge $q$ that is subjected to this electric field and a magnetic field, $\vec{B}$, is given by 
+Trapping charged particles is a common and useful method in order to perform various measurements and experiments. A natural starting point would be to create a three-dimensional electric potential which pulls the particles towards a center. According to Earnshaw's theorem \citep{GriffithsEarnshaw}, keeping a charged particle in stable equilibrium with an electrostatic force alone is not possible. One way around this is to use a strong homogeneous axial magnetic field together with a quadrupole electric field. The former incarcerates the particle(s) radially, whereas the latter confines the particle(s) radially. A device of such a structure is called a "Penning trap" and was first built by Hans Georg Dehmelt under the influence of Frans Michel Penning's work \citep{Dehmelt1989}. The Lorentz force, $\vec{F}$, acting on a particle with charge $q$ that is subjected to an electric field, $\vec{E}$, and a magnetic field, $\vec{B}$, is given by 
 \begin{equation}\label{eq:lorentz_force}
     \vec{F} = q\vec{E} + q \vec{v} \cross \vec{B},
 \end{equation}
@@ -21,28 +9,20 @@ where $\vec{v}$ is the particle's velocity. Suppose the particle has mass $m$, t
 \begin{equation}\label{eq:eom_lorentz}
  \dv{\vec{v}}{t} = \frac{\vec{F}}{m}  \Rightarrow \dv[2]{\vec{r}}{t}= \frac{q}{m} (\vec{E} + \vec{v} \cross \vec{B} ).
 \end{equation}
-The external electric field is related to the potential through $\vec{E} = -\nabla V$. By choosing a particular electric potential and magnetic field, we can solve equation \eqref{eq:eom_lorentz} to predict the motion of a single particle inside a Penning trap. In reality one is often concerned with storing multiple particles, not just a single one. This introduces Coulomb interactions between the particles, and the resulting equations of motion will then be much more cumbersome to tackle analytically. To study the motion of the trapped particles we will therefore resort to numerical integration methods. 
+The external electric field is related to the potential through $\vec{E} = -\nabla V$. By choosing a particular electric potential and magnetic field, we can solve equation \eqref{eq:eom_lorentz} to predict the motion of a single particle inside a Penning trap. 
 
-\Vetle{Mention that we use Calcium ions only in the introduction?}
-
-Equation \eqref{eq:eom_lorentz} can be split into two ordinary differential equations (ODEs) that we can solve numerically. The two methods we will consider are forward Euler (FE) and fourth order Runge-Kutta (RK4) \Vetle{citation?}. FE requires fewer floating point operations (FLOPs) per iteration compared to RK4, but RK4 provides a much more accurate result at a given step size \Vetle{replace "more accurate" with "smaller error" in previous sentence?}. By solving the equations of motion for a single particle in the Penning trap analytically we can estimate the error of the two numerical schemes. Estimating the accuracy of our solver when particle interactions are present is a difficult task in the absence of analyitcal expressions. The single particle case will therefore provide us with key insight to the validity of our solvers. By simulating two particles in the trap both with and without interactions, we can use the single particle results to evaluate our implementation.   
+In reality one is often concerned with storing multiple particles, not just a single one. This introduces Coulomb interactions between the particles, and the resulting equations of motion will then be much more cumbersome to tackle analytically. To study the motion of the trapped particles we will therefore resort to numerical integration methods. 
 
 
-\Vetle{New resonance explanation:}
+Equation \eqref{eq:eom_lorentz} can be split into two ordinary differential equations (ODEs) that we can solve numerically. The two methods we will consider are forward Euler (FE) and fourth order Runge-Kutta (RK4). FE requires fewer floating point operations (FLOPs) per iteration compared to RK4, but RK4 provides a much more accurate result at a given step size. By solving the equations of motion for a single particle in the Penning trap analytically we can estimate the error of the two numerical schemes. Estimating the accuracy of our solver when particle interactions are present is a difficult task in the absence of analyitcal expressions. The single particle case will therefore provide us with key insight to the validity of our solvers. By simulating two particles in the trap both with and without interactions, we can use the single particle results to evaluate our implementation.   
 
-When the basics of our solver have been studied we want to explore physical properties of the Penning trap. We will limit our analysis to a study of resonance phenomena in the trap. To do this we will subject the particles to a time dependent electric potential, which oscillates at a certain applied frequency. If resonance occurs we expect that particles eventually escapes the trap, when their distances from the origin exceeds the extent of the trap itself. By devising a scheme to quantify the escape of particles we can find the frequencies at which resonance occurs, and possibly relate this to the physical properties \Vetle{(/parameters/quantities?)} of the Penning trap. The final question we then want to answer is whether particle interactions affect the onset of resonance, and if so, how.                
-
-
-\Vetle{Old resonance explanation:}
-
-In addition, we will investigate the effect of adding an oscillating time-dependent perturbation to the external electric potential $V$. This is indeed similar to another approach for particle storage, named the Paul trap, in which the oscillating field is used instead of the magnetic field. The combined ion trap, the combination of these two structures, allows for storage of oppositely charged particles, but is vulnerable to some ranges of oscillation frequencies and amplitudes \textcolor{blue}{(CHECK THIS)}.
-% move to right after first paragraph?
+When the basics of our solver have been studied we want to explore physical properties of the Penning trap. We will limit our analysis to a study of resonance phenomena in the trap. To do this we will subject the particles to a time-dependent electric potential, which oscillates at a certain applied frequency. If resonance occurs we expect that particles eventually escape the trap, when their distances from the origin exceed the extent of the trap itself. By devising a scheme to quantify the escape of particles we can find the frequencies at which resonance occurs, and possibly relate this to the physical properties of the Penning trap. The final question we then want to answer is whether particle interactions affect the onset of resonance, and if so, how.                
 
 
 
-In this report we begin by introducing the Penning trap in section \ref{sec:penning_trap}. Here we present the setup of the trap and the resulting equations of motion for particles in the trap. We derive the analytical solutions for a single particle in section \ref{subsec_methods:single_particle_analytical} and describe the modifications to the equations of motion when interactions between multiple particles is included in section \ref{subsec_methods:multiple_particles}.    
+In this report we begin by introducing the Penning trap in section \ref{sec:penning_trap}. Here we present the setup of the trap and the resulting equations of motion for particles in the trap. We derive the analytical solutions for a single particle in section \ref{subsec_methods:single_particle_analytical} and describe the modifications to the equations of motion when interactions between multiple particles are included in section \ref{subsec_methods:multiple_particles}.    
 
-In section \ref{sec:code} we present our numerical solver. We present our choice of parameters for the trap and the initial conditions for testing in Sections \ref{subsec_methods:numbers_and_units} and \ref{sec:initial_conditions} repsectively. In section \ref{sec:simulation} we present the analysis for a single particle, as well as two particles in the trap. Section \ref{subsec_methods:many_particles_resonance} focuses on our investigation of resonance phenomena in the trap.  
+In section \ref{sec:code} we present our numerical solver. We present our choice of parameters for the trap and the initial conditions for testing in sections \ref{subsec_methods:numbers_and_units} and \ref{sec:initial_conditions} repsectively. In section \ref{sec:simulation} we present the analysis for a single particle, as well as two particles in the trap. Section \ref{subsec_methods:many_particles_resonance} focuses on our investigation of resonance phenomena in the trap.  
 
 The results of our investigations are presented in section \ref{sec:results}. Finally, we discuss our results and present our conclusions in sections \ref{sec:discussion} and \ref{sec:conclusion} respectively.   
 

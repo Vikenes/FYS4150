@@ -6,7 +6,7 @@
     \label{fig:schematic_trap}
 \end{figure}
 
-We consider an ideal Penning trap in three dimensions, with a schematic of the trap shown in figure \ref{fig:schematic_trap}.
+We consider an ideal Penning trap in three dimensions, with a schematic of the trap shown in Figure \ref{fig:schematic_trap}.
 
 
 \subsection{External electromagnetic fields}\label{subsec_methods:penning_trap_setup}
@@ -19,7 +19,7 @@ where $V_0$ is the potential applied to the electrodes and $d= \sqrt{z_0^2+ \fra
 \begin{equation}
     \vec{E}_\mathrm{ext} = -\nabla V = \frac{V_0}{d^2} (x,\,y,\,-2z), \label{eq:p1_E_field_pot_gradient}
 \end{equation}
-which traps the particles in the $z$-direction. To contain the particles in the $xy$-plane, a constant homogeneous magnetic field $\vec{B}_\mathrm{ext}$ is imposed in the $z$-direction,
+which traps the particles in the $z$-direction. To contain the particles in the $(x,y)$-plane, a constant homogeneous magnetic field $\vec{B}_\mathrm{ext}$ is imposed in the $z$-direction,
 \begin{equation}
     \vec{B}_\mathrm{ext} = (0,0,B_0). \label{eq:homogeneous_B_field}
 \end{equation}
@@ -64,10 +64,10 @@ where $c_1,\, c_2 \in \mathbb{R}$ are determined by initial conditions.
 
 Equations \eqref{eq:p1_eom_x} and \eqref{eq:p1_eom_y} are coupled, so we introduce a complex function $f(t)=x(t) + iy(t)$ to write them as a single differential equation. Multiplying equation \eqref{eq:p1_eom_y} with $i$ and adding it to equation \eqref{eq:p1_eom_x} we obtain the following:
 \begin{align}
-    \ddot{x} + i\ddot{y} + \omega_0(i\dot{x} - \dot{y}) -\frac{1}{2}\omega_z^2(x+iy) &= 0 \nonumber \\
+    \ddot{x} + i\ddot{y} + \omega_0(i\dot{x} - \dot{y}) -\frac{1}{2}\omega_z^2(x+iy) &= 0, \nonumber \\
     (\ddot{x} + i\ddot{y}) + i\omega_0(\dot{x} +i \dot{y}) -\frac{1}{2}\omega_z^2(x+iy) &= 0. \label{eq:p2_eom_rewritten}
 \end{align}
-We recognize the first and second parentheses as $\ddot{f}$ and $\dot{f}$, repsectively. The differential equation for $f(t)$ is
+We recognize the first and second parentheses as $\ddot{f}$ and $\dot{f}$, respectively. The differential equation for $f(t)$ is
 \begin{equation}
     \ddot{f} + i\omega_0 \dot{f} - \frac{1}{2}\omega_z^2 f = 0, \label{eq:p2_f_complex_equation}
 \end{equation}
@@ -79,9 +79,9 @@ where $\phi_+$ and $\phi_-$ are constant phases, $A_+$ and $A_-$ are positive am
 \begin{equation}
     \omega_\pm = \frac{\omega_0 \pm \sqrt{\omega_0^2 - 2\omega_z^2}}{2}. \label{eq:p3_omega_pm}
 \end{equation}
-The physical coordinates are then $x(t)=\Re f(t)$ and $y(t)=\Im f(t)$. \Vetle{The following sentence confuses me:} The $\omega_+$ is the modified cyclotron frequency and the $\omega_-$ is the magnetron frequency that composes the two modes in the orbital motion we will discuss later.
+The physical coordinates are then $x(t)=\Re f(t)$ and $y(t)=\Im f(t)$. The $\omega_+$ is the modified cyclotron frequency and the $\omega_-$ is the magnetron frequency, which we will discuss in section \ref{sec:discussion}.
 
-In order to have a bounded solution for the particle in the $xy$-plane, we must have $\abs{f(t)} < \infty$ as $t\to\infty$. We see from equation \eqref{eq:p3_f_general_solution} that this condition is fulfilled if $\omega_\pm\in\mathbb{R}$. From equation \eqref{eq:p3_omega_pm}, this translates to the following constraint on $\omega_0$ and $\omega_z$:  
+In order to have a bounded solution for the particle in the $(x,y)$-plane, we must have $\abs{f(t)} < \infty$ as $t\to\infty$. We see from equation \eqref{eq:p3_f_general_solution} that this condition is fulfilled if $\omega_\pm\in\mathbb{R}$. From equation \eqref{eq:p3_omega_pm}, this translates to the following constraint on $\omega_0$ and $\omega_z$:  
 \begin{equation}\label{eq:p3_omega_constraints}
     \begin{split}
         \omega_0^2 &\geq 2\omega_z^2, \\ 
@@ -90,9 +90,9 @@ In order to have a bounded solution for the particle in the $xy$-plane, we must 
 \end{equation} 
 where we used the definitions of $\omega_0$ and $\omega_z$ to get a constraint relating the particle properties with the Penning trap parameters. This allows us to choose appropriate parameters for our Penning trap, depending on the mass of the particle we consider. 
 
-Knowing that the particles are bound in the $xy$-plane, we want to consider the upper and lower bounds, $R_+$ and $R_-$ respectively, on the particle's distance from the origin. With $f(t)$ being a complex function, its magnitude is found by $\abs{f(t)}=\sqrt{f(t)f^*(t)}$. Defining $\alpha_\pm \equiv \omega_\pm t + \phi_\pm$ to simplify the expressions, we get 
+Knowing that the particles are bound in the $(x,y)$-plane, we want to consider the upper and lower bounds, $R_+$ and $R_-$ respectively, on the particle's distance from the origin. With $f(t)$ being a complex function, its magnitude is found by $\abs{f(t)}=\sqrt{f(t)f^*(t)}$. Defining $\alpha_\pm \equiv \omega_\pm t + \phi_\pm$ to simplify the expressions, we get 
 \begin{equation}\label{eq:p3_magnitude_f_squared}
-        \abs{f^2(t)} = A_+^2 + A_-^2 + A_+ A_- \closed{e^{i(\alpha_+ - \alpha_-)} + e^{-i(\alpha_+ - \alpha_-)}}
+        \abs{f^2(t)} = A_+^2 + A_-^2 + A_+ A_- \closed{e^{i(\alpha_+ - \alpha_-)} + e^{-i(\alpha_+ - \alpha_-)}}.
 \end{equation}
 Recognizing the sum of the exponentials as the cosine, $\abs{f(t)}$ becomes 
 \begin{equation}\label{eq:p3_magnitude_f}
@@ -112,7 +112,7 @@ So far, we have only considered the presence of a single particle in the Penning
 \end{equation}
 where $k_e$ is Coulomb's constant. 
 
-The electric field contributing to the Lorentz force in equation \eqref{eq:lorentz_force} is then $\vec{E} = \vec{E}_\mathrm{ext} + \vec{E}_\mathrm{int}$, with the external field given by equation \eqref{eq:p1_E_field_pot_gradient} as before. The magnetic field  Our set of differential equations in equation \eqref{eq:p1_eom_xyz} now get an additional term, and for a particle $i$, the equations become 
+The electric field contributing to the Lorentz force in equation \eqref{eq:lorentz_force} is then $\vec{E} = \vec{E}_\mathrm{ext} + \vec{E}_\mathrm{int}$, with the external field given by equation \eqref{eq:p1_E_field_pot_gradient} as before. Our set of differential equations in equation \eqref{eq:p1_eom_xyz} now get an additional term, and for a particle $i$, the equations become 
 
 \begin{subequations}\label{eq:p4_diffeq_many_particles_xyz}
     \begin{align}
@@ -121,7 +121,7 @@ The electric field contributing to the Lorentz force in equation \eqref{eq:loren
         \ddot{z}_i + \omega_{z,i}^2 z_i - k_e \frac{q_i}{m_i} \sum_{j\neq i} q_j \frac{z_i - z_j}{\abs{\vec{r}_i - \vec{r}_j}^3} =0. \label{eq:p4_diffeq_many_particles_z}
     \end{align}
 \end{subequations}
-To simplify the analysis, we will neglect any other contribution affecting the motions of the particles inside the trap. 
+To simplify the analysis, we will neglect any other contributions affecting the particles inside the trap. 
 
 \section{Methods}\label{sec:methods}
 
@@ -132,7 +132,7 @@ We aim to create a program in \CC\, that simulates a set of $N_\mathrm{p}$ parti
 
 The purpose of \texttt{Particle} is to hold the parameters of a particle. We let an object of this class be initialised with a charge $q$, a mass $m$, a position $\vec{r} = (x,y,z)$ and a velocity $\vec{v} = (v_x, v_y, v_z)$. We add functions to update the latter two.
 
-The \texttt{PenningTrap}-class imitates the physical system that is the Penning trap, and accepts only input particles of type \texttt{Particle}. When filled with $N_\mathrm{p}\geq 1$, an object of \texttt{PenningTrap} is ready to simulate the evolution of the \texttt{Particle} object(s) for a given period of time and time step size with either a forward Euler or a fourth order Runge-Kutta numerical scheme, by computing the external electric and magnetic fields according to equations \eqref{eq:trap_ext_E_field} and \eqref{eq:trap_ext_B_field}. When interactions are included, it includes the additional electric field contribution according to equation \eqref{eq:interaction_field}.
+The \texttt{PenningTrap}-class imitates the physical system that is the Penning trap, and accepts only input particles of type \texttt{Particle}. When filled with $N_\mathrm{p}\geq 1$ particle(s), an object of \texttt{PenningTrap} is ready to simulate the evolution of the \texttt{Particle} object(s) for a given period of time and time step size. Simulation is performed with either a FE or a RK4 numerical scheme, by computing the external electric and magnetic fields according to equations \eqref{eq:trap_ext_E_field} and \eqref{eq:trap_ext_B_field}. When interactions are included, the solver includes the electric field contribution according to equation \eqref{eq:interaction_field}.
 
 
 \subsubsection*{Numerical integration}
@@ -145,9 +145,9 @@ The equation of motion \eqref{eq:eom_lorentz} is split into two first order ODEs
     \end{split}
 \end{equation}
 
-We then get six discretised equations to solve for each particle at each step in time. We use two different approaches when solving equations \ref{eq:split_ODEs} numerically. Both methods are single step methods, meaning we advance one time step per iteration. The simpler method, FE \citep{Atkinson1989} is of first order meaning that we advance one time step by considering the gradient at the current time step only. This results in few FLOPs per iteration. Hence, this scheme offers numerical efficiency. The draw back is the accuracy of the resultant solution. For a step size $h$, the FE scheme has a local truncation error of $\mathcal{O}(h^2)$ which results in a global error $\mathcal{O}(h)$. Since we want $h$ to be small, the global error is large compared to the local error.  
+We then get six discretised equations to solve for each particle at each step in time. We use two different approaches when solving equations \eqref{eq:split_ODEs} numerically. Both methods are single step methods, meaning we advance one time step per iteration. The simpler method, FE \citep{Atkinson1989}, is of first order meaning that we advance one time step by considering the gradient at the current time step only. This results in few FLOPs per iteration. Hence, this scheme offers numerical efficiency. The draw back is the accuracy of the resultant solution. For a step size $h$, the FE scheme has a local truncation error of $\mathcal{O}(h^2)$ which results in a global error $\mathcal{O}(h)$. Since we want $h$ to be small, the global error is large compared to the local error.  
 
-The second, more advanced method is the RK4 methods \citep{Atkinson1989}, which is of fourth order. This means that we advance one time step by considering the gradient four times across a single time step. The gradient we use to advance the solution is a superposition of the four previously found gradients. This results in many FLOPs per iteration. Hence, this scheme is numerically more expensive than the FE scheme. However, it offers a far more accurate solution yielding a local truncation error of $\mathcal{O}(h^5)$ and global error $\mathcal{O}(h^4)$. Again, since $h$ is small, these errors are four magnitudes smaller than those of the FE scheme. As a result, with the RK4 method we are able to obtain a similar accuracy with a much larger step size compared to the FE method. 
+The second, more advanced, method is the RK4 methods \citep{Atkinson1989}, which is of fourth order. This means that we advance one time step by considering the superposition of four different gradients across a single time step. This results in many FLOPs per iteration. Hence, this scheme is numerically more expensive than the FE scheme. However, it offers a far more accurate solution yielding a local truncation error of $\mathcal{O}(h^5)$ and global error $\mathcal{O}(h^4)$. Again, since $h$ is small, these errors are four orders of magnitudes smaller than those of the FE scheme. As a result, with the RK4 method we are able to obtain a similar accuracy with a much larger step size compared to the FE method. 
 
  
 \subsection{Penning trap parameters and particle properties}\label{subsec_methods:numbers_and_units}
@@ -184,25 +184,25 @@ For simulations of one or two particles, we use the following initial conditions
 
 
 
-\subsection{Single particle simulation}\label{sec:simulation}
+\subsection{Particle simulations}\label{sec:simulation}
 We begin by simulating a single particle, using the initial conditions for Particle 1 in section \ref{sec:initial_conditions}. We compare the resulting axial motion obtained from FE and RK4 with the analytical solution in equation \eqref{eq:p1_diffeq_solution_z} which has the specific solution 
 \begin{align}
     z(t) = z_0 \cos(\omega_z t), \label{eq:z_spec_analytical_solution}
 \end{align}
 where $z_0=20\,\mum$. We simulate over a duration of $T_1=50\,\mus$, using $n_1=4000$ steps. 
 
-To study the accuracy of the two algorithms, we compute the size of the relative error of the two algorithms as a function of time for a duration of $T_1$. To study the step size dependency, we do this for four different time steps:
+To study the accuracy of the two algorithms, we compute the size of the relative error of the two algorithms as a function of time for a duration of $T_1$. To study the step size dependency, we do this for four different number of time steps:
 \begin{itemize}
     \item[] $n_1 = 4000$
     \item[] $n_2 = 8000$
     \item[] $n_3 = 16000$
     \item[] $n_4 = 32000$
 \end{itemize}
-The size of the error is given by 
+The size of the relative error is given by 
 \begin{equation}\label{eq:relative_error_size}
-    \Delta_\mathrm{rel,k} = \frac{\abs{\vec{r}_\mathrm{exact} - \vec{r_k}}}{\abs{\vec{r}_\mathrm{exact}}}
+    \Delta_\mathrm{rel,k} = \frac{\abs{\vec{r}_\mathrm{exact} - \vec{r}_k}}{\abs{\vec{r}_\mathrm{exact}}},
 \end{equation}
-where $\vec{r}_\mathrm{exact}$ is the analytical solution. For the movement in the $xy$-plane, the specific solution for $f(t)$ is given by equation \eqref{eq:p3_f_general_solution} with 
+where $\vec{r}_\mathrm{exact}$ is the analytical solution. For the movement in the $(x,y)$-plane, the specific solution for $f(t)$ is given by equation \eqref{eq:p3_f_general_solution} with 
 \begin{equation} \label{eq:xy_amplitudes_spec_analytical_solution}
     \begin{split}
         A_+ = \frac{v_0 + \omega_- x_0}{\omega_- - \omega_+}&,\quad A_- = - \frac{v_0 + \omega_+ x_0}{\omega_- - \omega_+}, \\
@@ -211,17 +211,7 @@ where $\vec{r}_\mathrm{exact}$ is the analytical solution. For the movement in t
 \end{equation}
 where $v_0=\dot{y}(0)=25\,\mums$ and $x_0=20\,\mum$. $z(t)$ is given by equation \eqref{eq:z_spec_analytical_solution}.
 
-
-% We specify the duration of one simulation as $T$, with $n$ time steps, resulting in a step length of $h = \Delta t = T/n$. We intend to run the simulation for two different durations:
-% \begin{itemize}
-%     \item[] $T_1 = $ 50 \textmu s
-%     \item[] $T_2 = $ 500 \textmu s
-% \end{itemize}
-% However, deviation from this may occur if computations proves to be lengthy, or if we want a specific step length. 
-
-% For simulations of duration $T_1$ with different number of steps, we will use an estimate of the error convergence rate $r_\mathrm{err}$ given by
-
-Using the results of the estimated errors, we will estimate the error convergence rate, $r_\mathrm{err}$ for our two algorithms 
+Using the results of the estimated errors, we will estimate the error convergence rate, $r_\mathrm{err}$, for our two algorithms 
 \begin{equation}\label{eq:error_convergence_rate}
     r_\mathrm{err} = \frac{1}{3} \sum_{k=2}^{4} \frac{\log{\big(\Delta_{\mathrm{max}, k} /\Delta_{\mathrm{max}, k-1}\big)}}{\log{\big(h_k/h_{k-1} \big)}},
 \end{equation}
@@ -231,21 +221,19 @@ where $h_k =T_1/n_k$ is the step size and
 \end{equation}
 is the maximum size of the absolute error with $n_k$ time steps. The global truncation error of our two methods have different $h$ dependence, as discussed in section \ref{sec:code}. $r_\mathrm{err}$ provides a simple estimated measure of how fast the two methods converge to the true value when we decrease $h$. 
 
-\subsubsection{Two particles}
 Having studied the accuracy of our solver, we proceed by studying two particles in the Penning trap with the initial conditions specified in section \ref{sec:initial_conditions}. For $n_2=8000$ timesteps we simulate the two particles over a duration of $T_1$, both with an without interactions, using the RK4 method. In both cases, we will study the motion of the two particles in the $(x,y)$-plane, their trajectories in the $(x,v_x)$-plane and the $(z,v_z)$-plane and a 3D plot showing their trajectories in $(x,y,z)$ space.   
 
 \subsection{Many particles - Resonance}\label{subsec_methods:many_particles_resonance}
-Now that the basics of our Penning trap is complete, we explore resonance features of our trap when we have a large number of particles in the trap. To to this, we subject the system to a timedependent electromagnetic field  by making the replacement 
+Now that the basics of our Penning trap is complete, we explore resonance features of our trap when we have a large number of particles in the trap. To do this, we subject the system to a time-dependent electromagnetic field  by making the replacement 
 \begin{equation}
     V_0 \to V_0 (1 + f \cos(\omega_V t)), \label{eq:p9_time_dep_potential}
 \end{equation} 
-where $f$ is a constant amplitude and $\omega_V$ is the angular frequency of the time-dependent potential. Using this potential, we will consider $N_\mathrm{p}=100$ particles with normal distributed initial positions and velocities with a mean of zero and variance $\sigma^2=1$. The magnitude of each particle's initial position and velocity vector is $d/10$. To find potential resonance frequencies, we will plot the fraction of particles that are left in the trap after a duration of $T_2=500\,\mathrm{\mu s}$\footnote{Strictly speaking, some of them are stopped before this due to an empty trap, but the result is the same.} as a function of applied frequency $\omega_V\in(0.2,\,2.5)\,\mathrm{MHz}$. For this broad frequency range we use a step size of $0.02\,\mathrm{MHz}$ for the applied frequencies and switch off the interactions between the particles. We plot the result for the three amplitudes $f=0.1,\,0.4,\,0.7$, using $n=80000$ time steps. Using only the RK4 scheme, we perform two sorts of frequency scans:
+where $f$ is a constant amplitude and $\omega_V$ is the angular frequency of the time-dependent potential. Using this potential, we will consider $N_\mathrm{p}=100$ particles with standard normal distribution for their initial positions and velocities. The magnitude of each particle's initial position and velocity vector is then scaled by a factor $d/10$. To find potential resonance frequencies, we will plot the fraction of particles that are left in the trap after a duration of $T_2=500\,\mus$\footnote{Strictly speaking, some simulations are stopped before this due to the trap being emptied.} as a function of applied frequency $\omega_V\in[0.2,\,2.5]\,\mathrm{MHz}$. For this broad frequency range we use a step size of $0.02\,\mathrm{MHz}$ for the applied frequencies and switch off the interactions between the particles. We plot the result for the three amplitudes $f=0.1,\,0.4,\,0.7$, using $n=80\,000$ time steps. Using only the RK4 scheme, we perform two sorts of frequency scans:
 
 \begin{itemize} % have absolutely no idea why I struggle with enumerate here
     \item[(i)] \textbf{Broad-band resonance search}: Run many simulations with interactions switched \textit{off} for a broad range of frequencies, but with equal magnitude of the perturbation. Log the number of particles remaining in the trap after each simulation.
-    \item[(ii)] \textbf{Narrow-band resonance search}: Run several simulations with interactions turned \textit{on} for a narrow range of frequencies. The band is determined using the result of (i) to locate a small range of response frequencies. Repeat with interactions turned \textit{off} for comparison. Make sure the grid of frequencies is fine-grained compared to the one in (i). \Nanna{Rephrase} Repeat for interactions turned \textit{off} for comparison. Write down the number of particles trapped at $T_2$.
+    \item[(ii)] \textbf{Narrow-band resonance search}: Run several simulations with interactions turned \textit{on} for a narrow range of frequencies. The band is determined using the result of (i) to locate a small range of response frequencies. Repeat with interactions turned \textit{off} for comparison. Write down the number of particles trapped at $T_2$.
 \end{itemize}
-Having completed a broad frequency search, we proceed by 
 
 
 
