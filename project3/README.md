@@ -32,7 +32,6 @@ The script that performs all computations in this project is `code/main.cpp` whi
 * `code/src/Particle.cpp`: sets up the class `Particle`, intances of which are initiated with a charge, mass, position and velocity
 * `code/src/PenningTrap.cpp`: sets up the class `PenningTrap`, intances of which are initiated with a magnetic field strength, electric potential scale and characteristic dimesion
 * `code/src/utils.cpp`: contains functions for writing `.txt`-files, as well as physical constants and other parameters we do not intend to vary in this project
-* `code/src/algorithms.cpp`: currently empty
 
 Corresponding **header-files with user-explanations** of member functions etc. are found in `code/include/`. 
 
