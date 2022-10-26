@@ -1,9 +1,9 @@
 \section{Results}\label{sec:results}
 
 \subsection{Single particle}\label{sec:one_particle}
-We start by simulating a single particle, Particle 1, with initial conditions given in \ref{sec:initial_conditions}. The duration of the simulation is set to $T_1$ and we use $n_1$ time steps. In Figure \ref{fig:compare_z_analytical} we plot the $z$-component of the position as function of time. The solutions are found both using the FE and RK4 schemes, shown in red and blue respectively. \Johan{FE and RK4 defined shortening earlier?} \Nanna{- Yes, in introduction:)}. The analytical solution, found from equation \eqref{eq:p1_diffeq_solution_z} where the initial conditions yield $c_1 = z_0 = 20\,\mathrm{\text{\textmu}m}$ and $c_2 = v_{z,0}/\omega_z= 0$ is shown with green in the figure.
+We run the first simulation as explained in section \ref{sec:simulation}. In Figure \ref{fig:compare_z_analytical} we plot the $z$-component of the position as function of time. The solutions are found both using the FE and RK4 schemes, shown in red and blue respectively. The analytical solution, found from equation \eqref{eq:z_spec_analytical_solution} is shown with green in the figure.
 
-Since both FE and RK4 are approximations of the analytical solution we expect them to have a relative error compared with it. We repeat the simulations using $n_2, n_3$ and $n_4$ time steps and find the relative error at each time step according to \Johan{(reference to relative error formula)}. The results are shown in Figures \ref{fig:error_FE} and \ref{fig:error_RK}. We note that for an increasing time step, the relative time step decrease, and the error for the RK4 scheme is significantly less than that of FE. \Johan{(ref some previous discussion with hs?)}
+Since both FE and RK4 are approximations of the analytical solution we expect them to have a relative error compared with it. We find this error from equation \eqref{eq:relative_error_size} for $n_k, k\in[1,4]$. The results are shown in Figures \ref{fig:error_FE} and \ref{fig:error_RK}. We note that for an increasing time step, the relative time step decrease, and the error for the RK4 scheme is significantly less than that of FE, as is expected.
 
 %------------------------------------------------------------------------------
 %   displacement in z-direction as function of time. analyitcal, FE, and RK4
@@ -39,7 +39,7 @@ Since both FE and RK4 are approximations of the analytical solution we expect th
 % r_\mathrm{err}^\mathrm{RK4} = 3.87392
 % r_\mathrm{err}^\mathrm{FE} = 1.44620
 
-We compute the convergence rate at according to equation \eqref{eq:error_convergence_rate} and find that $r_\mathrm{err}\simeq 3.9 $ for RK4 and that $r_\mathrm{err}\simeq 1.4 $ for FE. \Nanna{What is dis}
+We compute the convergence rate at according to equation \eqref{eq:error_convergence_rate} and find that $r_\mathrm{err}\simeq 3.9 $ for RK4 and that $r_\mathrm{err}\simeq 1.4 $ for FE.
 
 
 \subsection{Two particles}\label{sec:two_particles}
