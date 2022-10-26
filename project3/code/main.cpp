@@ -111,8 +111,8 @@ int main(){
     auto start_time = std::chrono::high_resolution_clock::now();
 
     /* PROBLEM 8 */
-    //run_tests("FE");
-    //run_tests("RK4");
+    run_tests("FE");
+    run_tests("RK4");
 
     /* PROBLEM 9 */
     double f1=0.1, f2=0.4, f3=0.7; // amplitudes
@@ -122,16 +122,16 @@ int main(){
     double dOmega_coarse = omega_V(1)-omega_V(0);
     assert(dOmega_coarse<0.02);
 
-    // particles_left(f1, omega_V, "trapped_f1_without");
-    // particles_left(f2, omega_V, "trapped_f2_without");
-    // particles_left(f3, omega_V, "trapped_f3_without"); 
+    particles_left(f1, omega_V, "trapped_f1_without");
+    particles_left(f2, omega_V, "trapped_f2_without");
+    particles_left(f3, omega_V, "trapped_f3_without"); 
    
     //  performoing narrow-band scan with and without interactions for one amplitude
     arma::vec omega_V_fine = arma::linspace(1.35, 1.45, 50);
     double dOmega_fine = omega_V_fine(1)-omega_V_fine(0);
     assert(dOmega_fine < 0.5*dOmega_coarse);        //  at least twice as fine-grained
-    // particles_left(f1, omega_V_fine, "trapped_f1_with_fine", "RK4", "on", 20000);  // Running time: 6623.53 s (110.392 min) (O3)
-    // particles_left(f1, omega_V_fine, "trapped_f1_without_fine", "RK4", "off", 20000); // Running time: 83.3052 s (1.38842 min) (O3)
+    particles_left(f1, omega_V_fine, "trapped_f1_with_fine", "RK4", "on", 20000);  // Running time: 6623.53 s (110.392 min) (O3)
+    particles_left(f1, omega_V_fine, "trapped_f1_without_fine", "RK4", "off", 20000); // Running time: 83.3052 s (1.38842 min) (O3)
     
     auto stop_time = std::chrono::high_resolution_clock::now();
 
