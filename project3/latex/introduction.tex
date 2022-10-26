@@ -6,6 +6,7 @@
     \item Write abstract
     \item Write conclusion
     \item Finish discussion
+    \item Finish introduction (make it fit with methods/results)
     \item Rewrite results, or change it up so we dont repeat ourselves. 
     \item Check figure captions (conventional writing, references etc)
     \item Read through most of the text for typos and coherence
@@ -23,16 +24,12 @@ where $\vec{v}$ is the particle's velocity. Suppose the particle has mass $m$, t
 \end{equation}
 The external electric field is related to the potential through $\vec{E} = -\nabla V$. By choosing a particular electric potential and magnetic field, we can solve equation \eqref{eq:eom_lorentz} to predict the motion of a single particle inside a Penning trap. In reality one is often concerned with storing multiple particles, not just a single one. This introduces Coulomb interactions between the particles, and the resulting equations of motion will then be much more cumbersome to tackle analytically. To study the motion of the trapped particles we will therefore resort to numerical integration methods. 
 
-
-
 \Vetle{Remove a lot of the shit below. Remember to discuss single particle analytical shit.}
-Equation \eqref{eq:eom_lorentz} can be split into two ordinary differential equations (ODEs) that we can solve numerically. The two methods we will consider are forward Euler (FE) and fourth order Runge-Kutta (RK4). The former is a numerical procedure of first order, whereas the latter is of fourth order, resulting in global errors proportional to the step size and the step size to the power of four, respectively. That is, say we have a step size $h\sim 0.1$, \textcolor{red}{Fix following error discussion:} the error arising from FE is $h^{1-4} \sim 1000$ times larger than that of RK4 \textcolor{blue}{(WAIT, WHAT?)}. The RK4 algorithm does however demand many more floating points operations (FLOPs) than the FE algorithm, and will therefore be more computationally expensive at a given step size. However, the RK4 algorithm could be much faster than the FE algorithm, since the FE algorithm requires a much smaller step size in order to achieve a certain level of precision. We will therefore study the relative error of the two algorithms at different step sizes, by comparing with the analytical solution from a single particle inside the trap.          
+Equation \eqref{eq:eom_lorentz} can be split into two ordinary differential equations (ODEs) that we can solve numerically. The two methods we will consider are forward Euler (FE) and fourth order Runge-Kutta (RK4) \Vetle{citation?}. FE requires fewer floating point operations (FLOPs) per iteration compared to RK4, but RK4 provides a much more accurate result at a given step size \Vetle{replace "more accurate" with "smaller error" in previous sentence?}. By solving the equations of motion for a single particle in the Penning trap analytically we can estimate the error of the two numerical schemes. Estimating the accuracy of our solver when particle interactions are present is a difficult task in the absence of analyitcal expressions. The single particle case will therefore provide us with key insight to the validity of our solvers. By simulating two particles in the trap both with and without interactions, we can use the single particle results to evaluate our implementation.   
 
 
 
-
-
-\textcolor{red}{Not quite sure about the next two paragraphs.}
+\textcolor{red}{Not quite sure about the next two paragraphs. }
 Now being able to solve the system of several interacting charged particles in the Penning trap in question, we should ponder the effect the Coulomb interactions have on the trap's ability to contain the particles. 
 \textcolor{green}{FILL WITH PONDERING}. 
 
