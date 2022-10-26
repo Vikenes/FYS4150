@@ -168,6 +168,23 @@ def x_phase_plot(savepush=False):
     plot.two_particles_plane((p1x, p2x), (p1x_int, p2x_int), xlabel, ylabel, fname=fname, savepush=savepush)
 
 
+def y_phase_plot(savepush=False):
+    p1_no_int = load("double_without_p1.txt")
+    p2_no_int = load("double_without_p2.txt")
+    p1_int = load("double_with_p1.txt")
+    p2_int = load("double_with_p2.txt")
+
+    p1y = p1_no_int[2::3]
+    p2y = p2_no_int[2::3]
+    p1y_int = p1_int[2::3]
+    p2y_int = p2_int[2::3]
+
+    fname = "y_phase_plot"
+    xlabel = r"$y\,[\mathrm{\mu m}]$"
+    ylabel = r"$v_y\,[\mathrm{\mu m / \mu s}]$"
+    plot.two_particles_plane((p1y, p2y), (p1y_int, p2y_int), xlabel, ylabel, fname=fname, savepush=False)
+
+
 def z_phase_plot(savepush=False):
     p1_no_int = load("double_without_p1.txt")
     p2_no_int = load("double_without_p2.txt")
@@ -233,6 +250,8 @@ def trapped_fine_search(savepush=False):
 
 
 
+
+y_phase_plot()
 # compare_z_analytical(savepush=True)
 # compute_errors("RK", savepush=True)
 # compute_errors("FE", savepush=True)
