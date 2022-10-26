@@ -250,36 +250,11 @@ def trapped_fine_search(savepush=False):
 
 
 
-
-y_phase_plot()
-# compare_z_analytical(savepush=True)
-# compute_errors("RK", savepush=True)
-# compute_errors("FE", savepush=True)
-
-#compare_z_analytical(savepush=True)
-#compute_errors("RK", savepush=True)
-#compute_errors("FE", savepush=True)
-
-# #compute_errors("RK", make_plot=False)
-# #compute_errors("FE", make_plot=False)
-
-# # xy_plane_movements(savepush=True)
-# # x_phase_plot(savepush=True)
-# # z_phase_plot(savepush=True)
-# #movement_3d(savepush=True)
-
-# trapped_without_interaction(savepush=True)
-# trapped_fine_search(savepush=True)
-
-
-"""
-Uncomment before delivery
-
 sp = False # only show plots
 
 # PROBLEM 8
 #   Single-particle case:
-compare_z_analytical()
+compare_z_analytical(savepush=sp)
 compute_errors("RK", savepush=sp)
 compute_errors("FE", savepush=sp)
 compute_errors("RK", make_plot=False)
@@ -295,7 +270,3 @@ movement_3d(savepush=sp)
 trapped_without_interaction(savepush=sp)
 #   Narrow-band scan:
 trapped_fine_search(savepush=sp)
-
-"""
-
-print(f"omega_z = {np.sqrt(2/m*V_d2):.2f} MHz")
