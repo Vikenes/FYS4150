@@ -2,6 +2,15 @@
 #include "Particle.hpp"
 #include "utils.hpp"
 
+
+/**
+ * Docstrings explaining the various methods are provided in the header file:
+ * PenningTrap.hpp
+ */
+
+
+
+
 PenningTrap::PenningTrap(double B0_in, double V0_in, double d_in, bool interactions_in){
     B0 = B0_in;
     V0 = V0_in;

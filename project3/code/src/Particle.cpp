@@ -1,5 +1,9 @@
 #include "Particle.hpp"
 
+/**
+ * See Particle.hpp for documentation
+ */
+
 Particle::Particle(double q, double m, arma::vec r, arma::vec v){
     q_ = q;
     m_ = m;
