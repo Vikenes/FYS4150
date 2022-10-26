@@ -40,7 +40,7 @@ and the magnetic field is
         (0,\,0,\,0), & \abs{\vec{r}} > d
     \end{cases}.
 \end{equation}
-For the analytical derivations that follow in this section (section \ref{sec:penning_trap}), we will assume that $\abs{r}\leq d$ is fulfilled.  
+For the analytical derivations that follow in this section (section \ref{sec:penning_trap}), we will assume that $\abs{\vec{r}}\leq d$ is fulfilled.  
 
 \subsection{Analytical solutions - Single particle}\label{subsec_methods:single_particle_analytical}
 We begin by considering a single particle in the Penning trap. The Lorentz force is then governed by the external fields only, hence $\vec{E} = \vec{E}_\mathrm{ext}$ and $\vec{B} = \vec{B}_\mathrm{ext}$. We use eq. \eqref{eq:lorentz_force} to compute the Lorentz force, 
@@ -130,23 +130,11 @@ To simplify the analysis, we will neglect any other contribution affecting the m
 
 We aim to create a program in \CC\, that simulates a set of $N_\mathrm{p}$ particles inside a Penning trap. An object-oriented code is befitting this task and we present in the following descriptions of the classes \verb|Particle| and \verb|PenningTrap|.
 
-The purpose of \texttt{Particle} is to hold the parameters, such as the position, of a particle. We let an object of this class be initialised with a charge $q$, a mass $m$, a position $\vec{r} = (x,y,z)$ and a velocity $\vec{v} = (v_x, v_y, v_z)$. We add functions to update the latter two. 
+The purpose of \texttt{Particle} is to hold the parameters of a particle. We let an object of this class be initialised with a charge $q$, a mass $m$, a position $\vec{r} = (x,y,z)$ and a velocity $\vec{v} = (v_x, v_y, v_z)$. We add functions to update the latter two. 
 
-The \texttt{PenningTrap}-class imitates the physical system that is the Penning trap of external electric and magnetic fields according to eqs. \eqref{eq:trap_ext_E_field} and \eqref{eq:trap_ext_B_field}, and characteristic dimension $d$. It is friend with the \texttt{Particle}-class and, in order to resemble the physical situation as much as possible, accepts only input particles of this type. When filled with $N_\mathrm{p}\geq 1$, an object of \texttt{PenningTrap} is ready to simulate the evolution of the \texttt{Particle} object(s) for a given period of time and time step size with either a forward Euler or a fourth order Runge-Kutta numerical scheme. 
+The \texttt{PenningTrap}-class imitates the physical system that is the Penning trap, and accepts only input particles of type \texttt{Particle}. When filled with $N_\mathrm{p}\geq 1$, an object of \texttt{PenningTrap} is ready to simulate the evolution of the \texttt{Particle} object(s) for a given period of time and time step size with either a forward Euler or a fourth order Runge-Kutta numerical scheme, by computing the external electric and magnetic fields according to equations \eqref{eq:trap_ext_E_field} and \eqref{eq:trap_ext_B_field}. When interactions are included, it includes the additional electric field contribution according to equation \eqref{eq:interaction_field}.   
 
-\Nanna{Some more here?}
 
-\Vetle{Rewrite the below list. Should not be bullet points. Should perhaps not introduce features that are not yet relevant for the report, e.g. time-dep potential is not mentioned yet.}
-
-\texttt{PenningTrap} includes several additional functionalites. Amongst other things, the class
-
-\begin{itemize}
-    \item offers the choice between RK4 or FE integration method.
-    \item provides the option to include or exclude Coloumb interactions in the simulation, as they are computationally greedy.
-    \item includes a method for adding a time-dependent perturbation to the external electric potential, $V_0\rightarrow V_0 (1+ f\cos{(\omega_V t)})$.
-    \item has the ability to count the number of particles still trapped, that is the number particles whose position $\vec{r}$ is such that $\abs{\vec{r}} \leq d$.
-    \item can generate a set of identical particles with positions and velocities that are normally distrubuted within the trap's dimensions.
-\end{itemize}
 
 \subsubsection*{Numerical integration}
 The equation of motion \eqref{eq:eom_lorentz} is split into two first order ODEs as follows:
