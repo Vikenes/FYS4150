@@ -10,7 +10,7 @@ Since both FE and RK4 are approximations of the analytical solution we expect th
 %------------------------------------------------------------------------------
 \begin{figure}
     \includegraphics[width=\linewidth]{/png/compare_z_analytical.png}
-    \caption{Movement in the $z$-plane for a single particle, simulation for $50$ \textmu s with $n_1=4000$ time steps. The analytical solution from equation \eqref{eq:p1_diffeq_solution_z} is plotted in green, and the integrated solutions using the forward Euler and Runge-Kutta 4 scheme is shown in red and blue respectively. Initial conditions are those of Particle 1, given in \ref{sec:initial_conditions}.}
+    \caption{Movement in the $z$-plane for a single particle, simulation for $T_1=50$ \textmu s with $n_1=4000$ time steps. The analytical solution from equation \eqref{eq:p1_diffeq_solution_z} is plotted in green, and the integrated solutions using the FE and RK4 scheme is shown in red and blue respectively. Initial conditions are those of Particle 1, given in \ref{sec:initial_conditions}.}
     \label{fig:compare_z_analytical}
 \end{figure}
 
@@ -20,7 +20,7 @@ Since both FE and RK4 are approximations of the analytical solution we expect th
 %------------------------------------------------------------------------------
 \begin{figure}
     \includegraphics[width=\linewidth]{png/rel_error_FE.png}
-    \caption{Relative error of the forward Euler scheme, simulated for $50$ \textmu s, for a different amount of steps $n_k$ as indicated in the figure legend. Pay attention to the logarithmic $y$-axis.}
+    \caption{Relative error of the FE scheme, simulated for $T_1=50$ \textmu s, for a different amount of steps $n_k, k\in[1,4]$ as indicated in the figure legend. Pay attention to the logarithmic $y$-axis.}
     \label{fig:error_FE}
 \end{figure}
 
@@ -30,7 +30,7 @@ Since both FE and RK4 are approximations of the analytical solution we expect th
 %------------------------------------------------------------------------------
 \begin{figure}
     \includegraphics[width=\linewidth]{png/rel_error_RK.png}
-    \caption{Relative error of the Runge-Kutta 4 scheme, simulated for $50$ \textmu s, for a different amount of steps $n_k$ as indicated in the figure legend. Pay attention to the logarithmic $y$-axis.}
+    \caption{Relative error of the RK4 scheme, simulated for $T_1=50$ \textmu s, for a different amount of steps $n_k, k\in[1,4]$ as indicated in the figure legend. Pay attention to the logarithmic $y$-axis.}
     \label{fig:error_RK}
 \end{figure}
 
@@ -57,7 +57,7 @@ Figure \ref{fig:x_phase_two_particles} show the phase plots of the two particles
 %------------------------------------------------------------------------------
 \begin{figure}
     \includegraphics[width=0.8\linewidth]{png/xy_two_particles.png}
-    \caption{Movement of two particles in the $xy$-plane simulated for $50$ $\mu$s. The left panel show their trajectories computed without particle interaction. In the right panel we have allowed for the particles to interact. We have used the Runge-Kutta 4 scheme to obtain these trajectories. Particle 1 is shown in blue, and Particle 2 in green. Both panels use the same initial conditions as specified in section \ref{sec:initial_conditions}. The starting points of their trajectories are indicated with a cross, their ending points with a star. }
+    \caption{Movement of two particles in the $xy$-plane simulated for $T_1=50$ $\mu$s. The left panel show their behaviour without interactions and the right panel with. We have used the RK4 scheme to obtain these trajectories. Particle 1 is shown in blue, and Particle 2 in red. Both panels use the same initial conditions as specified in section \ref{sec:initial_conditions}. The starting points of their trajectories are indicated with a cross, their ending points with a star.}
     \label{fig:xy_two_particles}
 \end{figure}
 
@@ -66,7 +66,7 @@ Figure \ref{fig:x_phase_two_particles} show the phase plots of the two particles
 %------------------------------------------------------------------------------
 \begin{figure}
     \includegraphics[width=0.8\linewidth]{png/x_phase_plot.png}
-    \caption{Phase plots along the $x$-axis for two different particles simulated for 50 \textmu s. The left panel show their behaviour without interactions and the right panel with. Particle 1 is shown in blue, and Particle 2 in green. Both panels use the same initial conditions as specified in section \ref{sec:initial_conditions}. The starting points of their trajectories are indicated with a cross, their ending points with a star.}
+    \caption{Phase plots along the $x$-axis for two different particles simulated for $T_1=50$ $\mu$s. The left panel show their behaviour without interactions and the right panel with. Particle 1 is shown in blue, and Particle 2 in red. Both panels use the same initial conditions as specified in section \ref{sec:initial_conditions}. The starting points of their trajectories are indicated with a cross, their ending points with a star.}
     \label{fig:x_phase_two_particles}
 \end{figure} 
 
@@ -75,7 +75,7 @@ Figure \ref{fig:x_phase_two_particles} show the phase plots of the two particles
 %------------------------------------------------------------------------------
 \begin{figure}
     \includegraphics[width=0.8\linewidth]{png/z_phase_plot.png}
-    \caption{Phase plots along the $z$-axis for two different particles simulated for 50 \textmu s. The left panel show their behaviour without interactions and the right panel with. Particle 1 is shown in blue, and Particle 2 in green. Both panels use the same initial conditions as specified in section \ref{sec:initial_conditions}. The starting points of their trajectories are indicated with a cross, their ending points with a star.}
+    \caption{Phase plots along the $z$-axis for two different particles simulated for $T_1=50$ $\mu$s. The left panel show their behaviour without interactions and the right panel with. Particle 1 is shown in blue, and Particle 2 in red. Both panels use the same initial conditions as specified in section \ref{sec:initial_conditions}. The starting points of their trajectories are indicated with a cross, their ending points with a star.}
     \label{fig:z_phase_two_particles}
 \end{figure}
 
@@ -84,7 +84,7 @@ Figure \ref{fig:x_phase_two_particles} show the phase plots of the two particles
 %------------------------------------------------------------------------------
 \begin{figure}
     \includegraphics[width=0.8\linewidth]{png/trajectory_3d.png}
-    \caption{The trajectory of Particle 1 (blue) and Particle 2 (orange) in the Penning trap for 50 \textmu s. The left panel shows the situation when we neglect interaction forces, whilst the right panel introduces these forces. The starting points of their trajectories are indicated with a cross, their ending points with a star.}
+    \caption{The trajectory of Particle 1 (blue) and Particle 2 (red) in the Penning trap for $T_1=50$ $\mu$s. The left panel show their behaviour without interactions and the right panel with. The starting points of their trajectories are indicated with a cross, their ending points with a star.}
     \label{fig:3d_trajectory}
 \end{figure}
 \twocolumngrid
@@ -105,7 +105,7 @@ For the next step, we choose the smallest amplitude and the middlemost response 
 %------------------------------------------------------------------------------
 \begin{figure}
     \includegraphics[width=\linewidth]{png/trapped_particles_without_interaction.png}
-    \caption{Fraction of particles that are still trapped by the Penning trap after 500 \textmu s, as function of the applied frequency $\omega_V$, for different amplitudes $f\in\{0.1, 0.4, 0.7\}$, without considering particle interactions. All graphs are resulting from simulations using 80000 time steps.}
+    \caption{Fraction of particles that are still trapped by the Penning trap, $N_\mathrm{trapped}$, after $T_2=500$ $\mu$s, as function of the applied frequency $\omega_V\in[0.2,2.5]$ MHz, for different amplitudes $f\in\{0.1, 0.4, 0.7\}$, without considering particle interactions. All graphs are resulting from simulations using $n=80000$ time steps.}
     \label{fig:trapped_without}
 \end{figure}
 
@@ -114,7 +114,7 @@ For the next step, we choose the smallest amplitude and the middlemost response 
 %------------------------------------------------------------------------------
 \begin{figure}
     \includegraphics[width=\linewidth]{png/trapped_particles_fine.png}
-    \caption{Fraction of particles that are still trapped by the Penning trap after 500 \textmu s, as function of selected applied resonance frequencies $\omega_V$, with amplitude $f=0.1$, both with and without particle interactions. Both graphs are resulting from simulations using 20000 time steps.}
+    \caption{Fraction of particles that are still trapped by the Penning trap, $N_\mathrm{trapped}$, after $T_2=500$ $\mu$s, as function of selected applied resonance frequencies $\omega_V\in[1.35,1.45]$ MHz, with amplitude $f=0.1$, both with and without particle interactions. Both graphs are resulting from simulations using $n=20000$ time steps.}
     \label{fig:trapped_with}
 \end{figure}
 
