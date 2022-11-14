@@ -1,0 +1,36 @@
+\appendix 
+
+\section{Analytical results}
+
+\begin{table}[h!]
+    \begin{tabular}{crrc}
+    $N_\uparrow$ & $E(s)$ & $M(s)$ & Degeneracy \\ \hline
+    $4$ & $-8\,\mathrm{J}$ & $4$ & $1$ \\
+    $3$ & $0$ & $2$ & $4$ \\
+    $2$ & $8\,\mathrm{J}$ & $0$ & $2$ \\
+    $2$ & $0$ & $0$ & $4$ \\
+    $1$ & $0$ & $-2$ & $4$ \\
+    $0$ & $-8\,\mathrm{J}$ & $-4$ & $1$
+    \end{tabular}
+    \caption{}
+    \label{tab:2d_configurations}
+\end{table}
+
+\begin{equation}\label{eq:analytical_partition_func}
+    Z = 12 + 2 e^{-8\bj} + 2 e^{8\bj} = 12 + 4 \cosh(8\bj)
+\end{equation}
+
+\begin{align}
+    \expval{\eps} &= -\pdv{\ln Z}{\beta} = -\frac{8J}{Z}\sinh(8\bj), \label{eq:analytical_avg_energy} \\ 
+    \expval{\eps^2} &= \sum_s \eps(s)^2 \frac{1}{Z} e^{-\beta E(s)} = \frac{16 J^2}{Z}\cosh(8\bj),\label{eq:analytical_avg_energy_squared} \\ 
+    \expval{\abs{m}} &= \sum_s \abs{m(s)} \frac{1}{Z}e^{-\beta E(s)} = \frac{2}{Z}\closed{2 + e^{8\bj}},\label{eq:analytical_avg_absolute_mag} \\ 
+    \expval{m^2} &= \sum_s m(s)^2 \frac{1}{Z} e^{-\beta E(s)} = \frac{2}{Z}\closed{1 + e^{8\bj}}. \label{eq:analytical_avg_mag_squared}
+\end{align}
+
+
+\begin{align}
+    C_V &= \frac{\beta}{N T}\closed{\expval{E^2} - \expval{E}^2} \nonumber \\ 
+    &= \frac{64\beta J^2}{Z T} \bracket{\cosh(8\bj) - \frac{4}{Z}\sinh^2(8\bj)}, \label{eq:analytical_CV} \\ 
+    \chi &= \frac{\beta}{N}\closed{\expval{M^2} - \expval{M}^2} \nonumber \\
+    &= \frac{8\beta}{Z}\bracket{\closed{1+e^{8\bj}} - \frac{2}{Z}\closed{2+e^{8\bj}}^2}. \label{eq:analytical_magnetic_susceptibility}
+\end{align}
