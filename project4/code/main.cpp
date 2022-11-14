@@ -20,6 +20,10 @@ arma::mat initialize(int L){
 
 
 std::vector<double> DeltaE(double beta){
+    /**
+     * Vector containing the five possible values
+     * Delta E can take. 
+    */
     std::vector<double> dE(5);
     for(int i=0; i<5; i++){
 
@@ -29,6 +33,16 @@ std::vector<double> DeltaE(double beta){
     return dE;
 }
 
+void initial_configuration(arma::mat& Lattice, double& E, double& M){
+    int n_spins = Lattice.n_rows;
+    for(int x=0; x<n_spins; x++){
+        for(int y=0; y<n_spins; y++){
+            M += (double) Lattice(x,y);
+            E -= (double) Lattice(x,y) * 
+                (Lattice(x, PBC(y+1,n_spins)) + Lattice(PBC(x+1,n_spins),y));
+        }
+    }
+}
 
 // void MC_cycle(arma::mat& Lattice, )
 
