@@ -62,6 +62,9 @@ int write_arma_to_file_scientific(arma::cube R, std::string filename, int width,
     return 0;
 }
 
+
+
+
 int write_to_file(std::vector<double> a, std::vector<double> b, std::string filename, int width){
                         
     std::string path = "../output/data/"; // path for .txt files
@@ -102,19 +105,4 @@ int write_to_file(std::vector<double> a, std::vector<int> b, std::string filenam
     return 0;
 }
 
-
-
-
-
-double k_e = 1.38935333 * std::pow(10,5);
-double T = 9.64852558 * 10;
-double V = 9.64852558 * std::pow(10,7);
-double B0 = 1 * T;
-double V0 = 25*std::pow(10,-3) * V;
-double d = 500;
-double Vdr = 9.65;
-
-// Calcium ion
-double q_Ca = 1;
-double m_Ca = 40.078;
 
