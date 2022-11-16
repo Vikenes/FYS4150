@@ -1,5 +1,24 @@
+\section{Theoretical background}\label{sec:theory}
+\subsection{2D Ising model}\label{subsec_theory:ising_2d}
+The Ising model is a mathematical model used to model statistical properties of materials, such as ferromagnetism. The two dimensional model we will consider consists of individual spins \Vetle{(will improve explanation later)} placed on fixed positions of a square lattice, where they are allowed to interact with their immideate neighbours. An individual spin on an arbitrary site $i$ in the lattice, $s_i$, can be in one of two possible states having a value of $s_i=+1$ or $s_i=-1$. In the absence of an external magnetic field, the energy of the system in a particular state $\vec{s}$ is described by  
+\begin{equation} \label{eq:energy}
+    E(\vec{s}) = -J \sum_{\langle kl \rangle}^N s_k s_l,
+\end{equation}
+where $\langle kl\rangle$ indicates that the sum is taken over the nearest neighbouring pairs of spins. \Vetle{Explain which neighbours are summed over.} The parameter $J$ repreents the sterngth of interactions between neighbouring spins, and we assume a constant $J>0$, so that energy is minimized when neighbouring spins are aligned. $N$ is the total number of spins in our lattice. We will limit our analysis to a grid of dimension $(L\cross L)$, where the total number of spins are $N=L^2$.  
+
+\subsection{Phase transitions and critical phenomena}\label{subsec_theory:PT_critical_phenomena}
+\Vetle{TBD}
+
+
+\subsection{Statistical mechanics}\label{subsec_theory:statistical_mechanics}
+In the Quantum Canonical ensemble, the probability distribution for a microstate $s$ of the system is given by 
+\begin{equation}\label{eq:boltzmann_distr}
+    p(\vec{s}) = \frac{1}{Z}e^{-\beta E(\vec{s})} 
+\end{equation} 
+
+
+\subsection{Monte Carlo methods} \label{subsec_theory:MC_methods}
+
+
 \section{Methods}\label{sec:methods}
 
-
-
-% ===========================================
