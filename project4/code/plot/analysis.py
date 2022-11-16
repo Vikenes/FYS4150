@@ -19,7 +19,7 @@ def load(file, folder=data_path, skiprows=1):
     return np.loadtxt(folder + file, unpack=True, delimiter=",", skiprows=skiprows)
     
 
-def compare_analytical():
+def compare_analytical(sp):
     n = load("test_analytical_10000_cycles.txt")[0]
     E, E2, M, M2 = load("test_analytical_10000_cycles.txt")[1:] / n
 
@@ -48,7 +48,54 @@ def compare_analytical():
     plt.show()
 
 
+def equilibriation_time(sp):
+    T1_unordered = load("equilibriate_L20_T1_unordered.txt") 
+    T1_ordered = load("equilibriate_L20_T1_ordered.txt") 
+
+    T2_unordered = load("equilibriate_L20_T2.4_unordered.txt") 
+    T2_ordered = load("equilibriate_L20_T2.4_ordered.txt") 
+
+
+    n_T1_unord = T1_unordered[0]
+    n_T1_order = T1_ordered[0]
+
+    n_T2_unord = T2_unordered[0]
+    n_T2_order = T2_ordered[0]
+
+
+    eps_T1_unord, m_T1_unord = T1_unordered[1:] / n_T1_unord
+    eps_T1_order, m_T1_order = T1_ordered[1:] / n_T1_order 
+
+    eps_T2_unord, m_T2_unord = T2_unordered[1:] / n_T2_unord
+    eps_T2_order, m_T2_order = T2_ordered[1:] / n_T2_order 
+
+
+    plt.plot(n_T1_order, eps_T1_order, color='red')
+    plt.plot(n_T1_unord, eps_T1_unord, '--', color='red')
+    plt.plot(n_T2_order, eps_T2_order, color='blue')
+    plt.plot(n_T2_unord, eps_T2_unord, '--', color='blue')
+    plt.show()
+
+
+def pdf_histogram(sp):
+    eps, eps2 = load("sample_eps_L20_T1_unordered.txt")
+
+    # bins = np.linspace(np.min(eps), np.max(eps), len(eps)) 
+
+    # print(np.min(eps), np.argmax(eps))
+    # eps_counts, eps_bins = np.histogram(eps)
+    # print(bins)
+    # print('--')
+    # print(eps_bins)
+    # print(eps_counts, eps_bins)
+    plt.hist(eps, bins=100)
+    # plt.plot(N, eps)
+    plt.show()
+
+
 sp = False # only show plots
 
 
-compare_analytical()
+compare_analytical(sp)
+equilibriation_time(sp)
+pdf_histogram(sp)
