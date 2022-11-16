@@ -6,13 +6,18 @@ std::string scientific_format(const double d, const int width, const int prec){
     return ss.str();
 }
 
-// std::string scientific_format(double d, const int width, const int prec){
-    // std::stringstream ss;
-    // ss << std::setw(width) << std::setprecision(prec) << std::scientific << d; 
-    // return ss.str();
-// }
+std::string float_to_string(const double d, const int prec){
+    /**
+     * Convert simple float to string with a given precision (default precision=2)
+     * Used to simplify file naming for different parameter choices.
+    */
+    std::stringstream ss;
+    ss << std::setprecision(prec) << d; 
+    return ss.str();
+}
 
-int write_to_file_scientific(std::vector<double> x, std::vector<double> v, std::string filename, int width, int prec){
+
+int write_to_file_scientific(std::vector<double> col1, std::vector<double> col2, std::string filename, int width, int prec){
                         
     std::string path = "../output/data/"; // path for .txt files
     std::string file = path + filename + ".txt";
@@ -20,10 +25,34 @@ int write_to_file_scientific(std::vector<double> x, std::vector<double> v, std::
 
     ofile.open(file.c_str());
 
-    int n = x.size();
+    int n = col1.size();
     for(int i=0; i<n; i++){
-        ofile << scientific_format(x[i], width, prec) << ", "
-              << scientific_format(v[i], width, prec)
+        ofile << scientific_format(col1[i], width, prec) << ", "
+              << scientific_format(col2[i], width, prec)
+              << std::endl;
+    }
+    std::cout << "Finished writing to file: " << file << std::endl;
+    ofile.close();
+
+    return 0;
+}
+
+
+
+int write_to_file_scientific(std::vector<double> col1, std::vector<double> col2, std::string filename, std::string header, int width, int prec){
+                        
+    std::string path = "../output/data/"; // path for .txt files
+    std::string file = path + filename + ".txt";
+    std::ofstream ofile;
+
+    ofile.open(file.c_str());
+
+    ofile << header << std::endl;
+
+    int n = col1.size();
+    for(int i=0; i<n; i++){
+        ofile << scientific_format(col1[i], width, prec) << ", "
+              << scientific_format(col2[i], width, prec)
               << std::endl;
     }
 
@@ -31,6 +60,7 @@ int write_to_file_scientific(std::vector<double> x, std::vector<double> v, std::
 
     return 0;
 }
+
 
 int write_arma_to_file_scientific(arma::cube R, std::string filename, int width, int prec){
     // Write armadillo cube to file                         
@@ -61,48 +91,4 @@ int write_arma_to_file_scientific(arma::cube R, std::string filename, int width,
 
     return 0;
 }
-
-
-
-
-int write_to_file(std::vector<double> a, std::vector<double> b, std::string filename, int width){
-                        
-    std::string path = "../output/data/"; // path for .txt files
-    std::string file = path + filename + ".txt";
-    std::ofstream ofile;
-
-    ofile.open(file.c_str());
-
-    int n = a.size();
-    for(int i=0; i<n; i++){
-        ofile << std::setw(width) << a[i] << ", "
-              << std::setw(width) << b[i]
-              << std::endl;
-    }
-
-    ofile.close();
-
-    return 0;
-}
-
-int write_to_file(std::vector<double> a, std::vector<int> b, std::string filename, int width){
-                        
-    std::string path = "../output/data/"; // path for .txt files
-    std::string file = path + filename + ".txt";
-    std::ofstream ofile;
-
-    ofile.open(file.c_str());
-
-    int n = a.size();
-    for(int i=0; i<n; i++){
-        ofile << std::setw(width) << a[i] << ", "
-              << std::setw(width) << b[i]
-              << std::endl;
-    }
-
-    ofile.close();
-
-    return 0;
-}
-
 
