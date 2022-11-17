@@ -1,24 +1,93 @@
 \section{Theoretical background}\label{sec:theory}
+\alert{I think the definitions and declarations should be improved throughout this section. Should specify how we denote the entire state, and choose a convention for talking about/denoting arbitrary states of the system.}
 \subsection{2D Ising model}\label{subsec_theory:ising_2d}
-The Ising model is a mathematical model used to model statistical properties of materials, such as ferromagnetism. The two dimensional model we will consider consists of individual spins \Vetle{(will improve explanation later)} placed on fixed positions of a square lattice, where they are allowed to interact with their immideate neighbours. An individual spin on an arbitrary site $i$ in the lattice, $s_i$, can be in one of two possible states having a value of $s_i=+1$ or $s_i=-1$. In the absence of an external magnetic field, the energy of the system in a particular state $\vec{s}$ is described by  
+The Ising model is a mathematical model used to model statistical properties of materials, such as ferromagnetism. The two dimensional model we will consider consists of indistinguishable spins \Vetle{(will improve explanation later)} placed on fixed positions of a square lattice, where they are allowed to interact with their immideate neighbours. An individual spin on an arbitrary site $i$ in the lattice, $s_i$, can be in one of two possible states having a value of $s_i=+1$ or $s_i=-1$. In the absence of an external magnetic field, the energy of the system in a particular state $\vec{s}$ is described by  
 \begin{equation} \label{eq:energy}
     E(\vec{s}) = -J \sum_{\langle kl \rangle}^N s_k s_l,
 \end{equation}
-where $\langle kl\rangle$ indicates that the sum is taken over the nearest neighbouring pairs of spins. \Vetle{Explain which neighbours are summed over.} The parameter $J$ repreents the sterngth of interactions between neighbouring spins, and we assume a constant $J>0$, so that energy is minimized when neighbouring spins are aligned. $N$ is the total number of spins in our lattice. We will limit our analysis to a grid of dimension $(L\cross L)$, where the total number of spins are $N=L^2$.  
+where $\langle kl\rangle$ indicates that the sum is taken over the nearest neighbouring pairs of spins. \Vetle{Explain which neighbours are summed over.} The parameter $J$ represents the strength of interactions between neighbouring spins, and we assume a constant $J>0$, so that energy is minimized when neighbouring spins are aligned. $N$ is the total number of spins in the square lattice, which is $N=L^2$ for a lattice of dimension $(L\cross L)$.
+
+The total magnetization of the system will be given by the sum over all spins 
+\begin{equation}\label{eq:total_magnetization}
+    M(\vec{s}) = \sum_{i}^N s_i.
+\end{equation}
 
 \subsection{Phase transitions and critical phenomena}\label{subsec_theory:PT_critical_phenomena}
-\Vetle{TBD}
+One of the most peculiar features of continuous phase transitions is that thermodynamic quantities are found to exhibit similar behaviour for a variety of different systems. These phase transitions can be characterized by \textit{critical exponents}, where physical quantities behave according to a power laws near the critical point. \Vetle{Mention universality classes?} For a 2D Ising model of infinite size, the behaviour of the \Vetle{fill in...}
+
+\begin{align}
+    \expval{\abs{M}} & \propto \abs{T - T_c(L=\infty)}^\beta, \label{eq:crit_expo_mag} \\
+    C_V & \propto \abs{T - T_c(L=\infty)}^{-\alpha}, \label{eq:crit_expo_heatcap} \\ 
+    \chi & \propto \abs{T - T_c(L=\infty)}^{-\gamma}, \label{eq:crit_expo_mag_susc} \\ 
+    \xi & \propto \abs{T - T_c(L=\infty)}^{-\nu}, \label{eq:crit_expo_corr_length}
+\end{align}
+where the critical exponents are $\beta=1/9$, $\alpha=0$, $\gamma=7/4$ and $\nu=1$. For our finite system, the largest possible correlation length is $\xi=L$, associated with $T=T_c(L)$, which is the critical temperature of our finite system. Using the constraint on $\xi$ yields the following relation 
+\begin{equation}
+    T_c(L) - T_c(L=\infty) = aL^{-1}, \label{eq:finite_size_scaling_relation}
+\end{equation}  
+where $a$ is a proportionality constant. \Vetle{I will connect the dots when I know how we will do this.}
+
+The analytical value of $T_c(L=\infty)$ for the 2D Ising model with no external magnetic field has found to be \cite{Onsager_Ising2D}
+\begin{equation}
+    T_c(L=\infty) = \frac{2}{\ln(1+\sqrt{2})} J/k_B \approx 2.269\,J/k_B. \label{eq:onsager_critical_temperature}
+\end{equation}
 
 
 \subsection{Statistical mechanics}\label{subsec_theory:statistical_mechanics}
-In the Quantum Canonical ensemble, the probability distribution for a microstate $s$ of the system is given by 
+
+The probability of finding the system in a particular state $\vec{s}$ at a given energy and a constant temperature, $T$, is governed by the Boltzmann distribution \Vetle{I want to write $p(\vec{s};T)$ as $p_\vec{s}(T)$}
 \begin{equation}\label{eq:boltzmann_distr}
-    p(\vec{s}) = \frac{1}{Z}e^{-\beta E(\vec{s})} 
+    p(\vec{s};T) = \frac{1}{Z}e^{-\beta E(\vec{s})},
 \end{equation} 
+where $\beta=1/k_B T$ with $k_B$ being the Boltzmann constant. $Z$ is the partition function, defined as 
+\begin{equation}\label{eq:partition_function}
+    Z = \sum_\vec{s} e^{-\beta E(\vec{s})},
+\end{equation}  
+where the sum goes over all possible states $\vec{s}$. 
+
+For an observable $Q$, its expectation value is given by 
+\begin{equation}\label{eq:observable_exp_val}
+    \expval{Q} = \sum_{\vec{s}} Q p(\vec{s};T) = \frac{1}{Z} \sum_\vec{s} Q e^{-\beta E(\vec{s})}.
+\end{equation}
+\Vetle{Should perhaps include a paragraph of estimated averages, and how these converge to the true thermal averages (ergodic hypothesis (not the same ``ergodic'' that is mentioned in the MCMC subsection))}
 
 
 \subsection{Monte Carlo methods} \label{subsec_theory:MC_methods}
+\alert{I will continue on the MC and metropolis theory later... In need to review with a fresh set of eyes. I started out being too ``abstract'', and it eventually became a mess. I think the outline of the explanation should be different, and will elaborate on that later.}
 
 
-\section{Methods}\label{sec:methods}
+\Vetle{I think the explanation below should be written with a greater emphasis on the fact that the ``samples'' we consider are spins in the lattice.}
+
+To compute thermal averages according to Eq. \eqref{eq:observable_exp_val} we need the partition function of the system. In the case of $N$ spins in the 2D Ising model, the number of computations required are $2^{L^2}=2^N$ (\Vetle{this is the total number of unique microstates}). \Vetle{I will relate this to different L sizes later.} 
+
+One way of overcoming this problem is to generate random samples of the system, and use these samples to estimate average quantities (\Vetle{or estimate PDF, but I don't want to put too much emphasis on that...}). A common choice for sampling the system is the Markov chain Monte Carlo (MCMC) method. A Markov chain is a stochastic process in which the outcome of an event is independent of the process's history. Loosely speaking, it can be regarded as a random walk in (\Vetle{our x-dimensional}) state space. With a MCMC method we can produce a Markov chain of samples that are distributed according to a desired distribution.    
+
+A Markov process is defined by a transition probability, $W(r \to r')$, which is the probability of the system to transition from a state $r$ to any given state $r'$. For the Markov chain to reach the desired distribution we have to fulfill two conditions.  The first condition is \textit{ergodicity} (\Vetle{I will add a footnote here later}), which states that the system has a non-zero probability of going from any state to any other state with a finite sequence of transitions. The second condition is \textit{detailed balance}, meaning that we require each transition to be reversible. That is, the probability that the system is in a state $r$ and transitions to a state $r'$ is the same as the probability of the system being in state $r'$ and transitioning to state $r$. Mathematically, this can be formulated as 
+\begin{equation}
+    p(r)W(r\to r') = p(r') W(r'\to r), \label{eq:detailed_balance}
+\end{equation} 
+where $p(r)$ is the distribution of the Markov process. It can be shown that when the conditions of ergodicity and detailed balance are fulfilled, the distribution, $p(r)$, of the Markov chain is both unique and stationary. \Vetle{I'm not sure if this is mathematically rigorous. Citation should definitely be considered \(I found this on wikipedia\)}
+
+\subsection{Metropolis algorithm} \label{subsec_theory:metropolis_algorithm}
+\alert{I am very torn about the placement of this subsection. It might fit the theory section well if it's written in a general manner, but could also be placed under the ``Methods'' section. The latter option means that we can write about our concrete implementation of it as well.}
+
+When we sample \Vetle{spins} of the Ising model, a naive approach is to sample states \Vetle{(states or configurations?)} according to a uniform random distribution. This has the disadvantage of including \Vetle{many} states which the system is unlikely to be in, and more computations will be required to obtain tolerable estimates of quantities. \Vetle{Quantities since I don't know how to phrase stuff...}. Since the system will tend to favor a smaller set of states \Vetle{(ref, equilibrium)} a natural choice is to consider the Boltzmann distribution. By placing a larger emphasis on states with a high probability, we \Vetle{are much smarter.} 
+
+
+\section{Methods (Implementation?)}\label{sec:methods}
+
+\subsection{Metropolis algorithm}\label{subsec_methods:metropolis}
+\Vetle{There is some useful stuff below, but my brain stopped working...}
+
+The Metropolis algorithm chooses the Boltzmann distribution, $p(\vec{s};T)$, as the stationary distribution. We then express the transition probabilities in terms of a proposal and acceptance probability, $T(x\to x')$ and $A(x\to x')$, respectively. From Eq. \eqref{eq:detailed_balance} we can rewrite the condition of detailed balance as 
+\begin{equation}
+    \frac{W(x\to x')}{W(x'\to x)} = \frac{T(x\to x') A(x\to x')}{T(x' \to x) A(x'\to x)} = \frac{p(\vec{s'})}{p(\vec{s})},
+\end{equation}  
+where the common factors of $Z$ in the PDFs will cancel. 
+
+\subsection{Energy change due to single spin flip}\label{subsec_methods:de_from_single_flip}
+
+
+\subsection{Analytical comparison}\label{subsec_methods:analytical_test}
+To test our implementation, we will consider a lattice of size $L=2$ for which we derive the analytical solutions. Appendix...  
 
