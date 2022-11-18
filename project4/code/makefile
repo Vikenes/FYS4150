@@ -2,7 +2,7 @@
 
 CXX = g++
 
-executable = .out # or .exe
+executable = .exe # or .out
 detected_OS := $(shell sh -c 'uname 2>/dev/null || echo Unknown')
 
 # Options:
@@ -10,7 +10,6 @@ PARALLEL ?= no
 OPTIMISE ?= no
 ARMA ?= yes
 SRC ?= yes 	# are these unnecessary?
-EXE ?= yes  # are these unnecessary?
 
 # Flags:
 EXTRA_FLAGS =  # dunno
@@ -22,11 +21,6 @@ LDFLAGS =  # linker
 # Add necessary flag for Mac:
 ifeq ($(detected_OS), Darwin)
 	CXXFLAGS += -std=c++11
-endif
-
-# Use .exe instead of :
-ifeq  ($(strip $(EXE)),yes)
-    executable = .exe
 endif
 
 # Add larmadillo flag:
