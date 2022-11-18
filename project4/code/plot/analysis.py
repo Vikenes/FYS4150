@@ -2,6 +2,7 @@ from cProfile import label
 import numpy as np 
 import matplotlib.pyplot as plt 
 from matplotlib import cm 
+from IPython import embed
 import seaborn as sns 
 import pandas as pd 
 import os 
@@ -19,10 +20,10 @@ def load(file, folder=data_path, skiprows=1):
     return np.loadtxt(folder + file, unpack=True, delimiter=",", skiprows=skiprows)
     
 
-def compare_analytical(sp):
-    n = load("test_analytical_10000_cycles.txt")[0]
-    E, E2, M, M2 = load("test_analytical_10000_cycles.txt")[1:] / n
-
+def compare_analytical(sp, filename="test_analytical_1000000_cycles.txt"):
+    n = load(filename)[0]
+    E, E2, M, M2 = load(filename)[1:] / n
+    nmax = int(filename.split("_")[2])
     eps_avg = E/4 
     m_avg = M/4 
 
@@ -35,17 +36,28 @@ def compare_analytical(sp):
     Cv_analytical  = analytical.CV(1) 
     chi_analytical = analytical.chi(1) 
 
-    fig, ax = plt.subplots(2,2)
-    ax[0,0].hlines(eps_analytical, n[0], n[-1], color='red')
-    ax[0,0].plot(n, eps_avg, '--', color='blue')
-    ax[0,1].hlines(m_analytical, n[0], n[-1], color='red')
-    ax[0,1].plot(n, m_avg, '--', color='blue')
-    ax[1,0].hlines(Cv_analytical, n[0], n[-1], color='red')
-    ax[1,0].plot(n, Cv_avg, '--', color='blue')
-    ax[1,1].hlines(chi_analytical, n[0], n[-1], color='red')
-    ax[1,1].plot(n, chi_avg, '--', color='blue')
+    embed()
+    indices = np.array([10**i for i in range(int(np.log10(nmax))+1)])
+    n_array = n[indices]
+    eps_avg_array = eps_avg[indices]
+    m_avg_array = m_avg[indices]
+    Cv_avg_array = Cv_avg[indices]
+    chi_avg_array = chi_avg[indices]
 
-    plt.show()
+    column_names = [r"$\langle \epsilon \rangle$", r"$\langle m \rangle$", r"\langle C_V \rangle$", r"$\langle \chi \rangle$"]
+    
+
+    # fig, ax = plt.subplots(2,2)
+    # ax[0,0].hlines(eps_analytical, n[0], n[-1], color='red')
+    # ax[0,0].plot(n, eps_avg, '--', color='blue')
+    # ax[0,1].hlines(m_analytical, n[0], n[-1], color='red')
+    # ax[0,1].plot(n, m_avg, '--', color='blue')
+    # ax[1,0].hlines(Cv_analytical, n[0], n[-1], color='red')
+    # ax[1,0].plot(n, Cv_avg, '--', color='blue')
+    # ax[1,1].hlines(chi_analytical, n[0], n[-1], color='red')
+    # ax[1,1].plot(n, chi_avg, '--', color='blue')
+
+    # plt.show()
 
 
 def equilibriation_time(sp):
@@ -97,5 +109,5 @@ sp = False # only show plots
 
 
 compare_analytical(sp)
-equilibriation_time(sp)
-pdf_histogram(sp)
+# equilibriation_time(sp)
+# pdf_histogram(sp)
