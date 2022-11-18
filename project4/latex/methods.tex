@@ -1,19 +1,23 @@
 \section{Theoretical background}\label{sec:theory}
-\alert{I think the definitions and declarations should be improved throughout this section. Should specify how we denote the entire state, and choose a convention for talking about/denoting arbitrary states of the system.}
+
+In this section we present a brief introduction to the 2D Ising model, as well some theoretical background of phase transition phenomena and statistical mechanics. Additionally, we briefly describe the overall ideas behind the workings of Markov chain Monte Carlo (MCMC) methods. Details regarding our own implementation of an MCMC algorithm will be presented in \Vetle{Section 69}.    
+
 \subsection{2D Ising model}\label{subsec_theory:ising_2d}
-The Ising model is a mathematical model used to model statistical properties of materials, such as ferromagnetism. The two dimensional model we will consider consists of indistinguishable spins \Vetle{(will improve explanation later)} placed on fixed positions of a square lattice, where they are allowed to interact with their immideate neighbours. An individual spin on an arbitrary site $i$ in the lattice, $s_i$, can be in one of two possible states having a value of $s_i=+1$ or $s_i=-1$. In the absence of an external magnetic field, the energy of the system in a particular state $\vec{s}$ is described by  
+The Ising model is a mathematical model used to model statistical properties of materials, such as ferromagnetism. It consists of discrete magnetic moments localized in a particular lattice. For simplicity, we will refer to the magnetic moments as "spins" throughout this report. Additionally, we will restrict our analysis to a square lattice in two dimensions without an external magnetic field. Each spin has a fixed position in the lattice, where they are allowed to interact with their immediate neighbors. We will denote a single spin as $s_i$, where the subscript $i$ refers to a certain position in the lattice. An individual spin can be in one of two possible states having a value of $s_i=+1$ or $s_i=-1$. We will refer to the \Vetle{(an arbitrary)} spin state of the entire lattice as a \textit{microstate}, which we will denote as $\nu$ \Vetle{(Don't want vector or hat/tilde, and other Greek letters may cause confusion)}. The lattice has dimension $(L\cross L)$, where we refer to $L$ as the lattice size. The number of \Vetle{(individual)} spins in the lattice is thus $N=L^2$. \Vetle{Explain that $\nu$ is a matrix?} The total energy of the system is given by 
 \begin{equation} \label{eq:energy}
-    E(\vec{s}) = -J \sum_{\langle kl \rangle}^N s_k s_l,
+    E(\nu) = -J \sum_{\langle kl \rangle}^N s_k s_l,
 \end{equation}
-where $\langle kl\rangle$ indicates that the sum is taken over the nearest neighbouring pairs of spins. \Vetle{Explain which neighbours are summed over.} The parameter $J$ represents the strength of interactions between neighbouring spins, and we assume a constant $J>0$, so that energy is minimized when neighbouring spins are aligned. $N$ is the total number of spins in the square lattice, which is $N=L^2$ for a lattice of dimension $(L\cross L)$.
+where $\langle kl\rangle$ indicates that the sum is taken over the nearest neighboring pairs of spins. \Vetle{Explain which neighbors are summed over.} The parameter $J$ represents the strength of interactions between neighboring spins, and we assume a constant $J>0$, so that energy is minimized when neighboring spins are aligned \Vetle{(Energy minimization sentence should perhaps be removed...)}. 
 
 The total magnetization of the system will be given by the sum over all spins 
 \begin{equation}\label{eq:total_magnetization}
-    M(\vec{s}) = \sum_{i}^N s_i.
+    M(\nu) = \sum_{i}^N s_i.
 \end{equation}
 
 \subsection{Phase transitions and critical phenomena}\label{subsec_theory:PT_critical_phenomena}
-One of the most peculiar features of continuous phase transitions is that thermodynamic quantities are found to exhibit similar behaviour for a variety of different systems. These phase transitions can be characterized by \textit{critical exponents}, where physical quantities behave according to a power laws near the critical point. \Vetle{Mention universality classes?} For a 2D Ising model of infinite size, the behaviour of the \Vetle{fill in...}
+\alert{This section is yet to be completed. I will write it more properly once I know we shall use it in practice.}
+
+One of the most peculiar features of continuous phase transitions is that thermodynamic quantities are found to exhibit similar behavior for a variety of different systems. These phase transitions can be characterized by \textit{critical exponents}, where physical quantities behave according to power laws near the critical point. \Vetle{Mention universality classes?} For a 2D Ising model of infinite size, the behavior of the \Vetle{fill in...}
 
 \begin{align}
     \expval{\abs{M}} & \propto \abs{T - T_c(L=\infty)}^\beta, \label{eq:crit_expo_mag} \\
@@ -21,7 +25,7 @@ One of the most peculiar features of continuous phase transitions is that thermo
     \chi & \propto \abs{T - T_c(L=\infty)}^{-\gamma}, \label{eq:crit_expo_mag_susc} \\ 
     \xi & \propto \abs{T - T_c(L=\infty)}^{-\nu}, \label{eq:crit_expo_corr_length}
 \end{align}
-where the critical exponents are $\beta=1/9$, $\alpha=0$, $\gamma=7/4$ and $\nu=1$. For our finite system, the largest possible correlation length is $\xi=L$, associated with $T=T_c(L)$, which is the critical temperature of our finite system. Using the constraint on $\xi$ yields the following relation 
+where the critical exponents are $\beta=1/8$, $\alpha=0$, $\gamma=7/4$ and $\nu=1$. For our finite system, the largest possible correlation length is $\xi=L$, associated with $T=T_c(L)$, which is the critical temperature of our finite system. Using the constraint on $\xi$ yields the following relation 
 \begin{equation}
     T_c(L) - T_c(L=\infty) = aL^{-1}, \label{eq:finite_size_scaling_relation}
 \end{equation}  
@@ -35,19 +39,19 @@ The analytical value of $T_c(L=\infty)$ for the 2D Ising model with no external 
 
 \subsection{Statistical mechanics}\label{subsec_theory:statistical_mechanics}
 
-The probability of finding the system in a particular state $\vec{s}$ at a given energy and a constant temperature, $T$, is governed by the Boltzmann distribution \Vetle{I want to write $p(\vec{s};T)$ as $p_\vec{s}(T)$}
+The probability of the system being in a microstate $\nu$ at a given energy and a constant temperature, $T$, is governed by the Boltzmann distribution \Vetle{I want to write $p(\vec{s};T)$ as $p_\vec{s}(T)$}
 \begin{equation}\label{eq:boltzmann_distr}
-    p(\vec{s};T) = \frac{1}{Z}e^{-\beta E(\vec{s})}, 
+    p_\nu (T) = \frac{1}{Z}e^{-\beta E(\nu)},
 \end{equation} 
 where $\beta=1/k_B T$ with $k_B$ being the Boltzmann constant. $Z$ is the partition function, defined as 
 \begin{equation}\label{eq:partition_function}
-    Z = \sum_\vec{s} e^{-\beta E(\vec{s})},
+    Z = \sum_\nu e^{-\beta E(\nu)},
 \end{equation}  
-where the sum goes over all possible states $\vec{s}$. 
+where the sum goes over all possible microstates $\nu$. 
 
-For an observable $Q$, its expectation value is given by 
+For an observable $Q(\nu)$, its expectation value is given by 
 \begin{equation}\label{eq:observable_exp_val}
-    \expval{Q} = \sum_{\vec{s}} Q p(\vec{s};T) = \frac{1}{Z} \sum_\vec{s} Q e^{-\beta E(\vec{s})}.
+    \expval{Q} = \sum_{\nu} Q(\nu)\, p_\nu(T) = \frac{1}{Z} \sum_\nu Q(\nu) e^{-\beta E(\nu)}.
 \end{equation}
 \Vetle{Should perhaps include a paragraph of estimated averages, and how these converge to the true thermal averages (ergodic hypothesis (not the same ``ergodic'' that is mentioned in the MCMC subsection))} 
 
