@@ -3,7 +3,7 @@
 CXX = g++
 
 executable = .exe # or .out
-detected_OS := $(shell sh -c 'uname 2>/dev/null || echo Unknown')
+detected_OS := $(shell sh -c 'uname 2>/dev/null || echo Unknown') # will be Darwin for Mac OS X
 
 # Options:
 PARALLEL ?= no
@@ -48,26 +48,35 @@ ifeq ($(strip $(PARALLEL)), yes)
 endif
 
 
+# General run command:
 all: compile link run
+# Aiming to have options here!
 
+# Compile main.cpp:
 compile:
 	$(CXX) $(CXXFLAGS) -c main.cpp $(EXTRA_FLAGS)
 
+# Link main.exe:
 link:
 	$(CXX) -o main.$(executable) *.o $(LDFLAGS) 
 
+# Run main.exe:
 run:
 	./main.$(executable) 
 
+# Debug, not sure:
 debug_valgrind:
 	$(CXX) $(CXXFLAGS) -gmain.cpp $(EXTRA_FLAGS) -o  main.$(executable) $(LDFLAGS) && valgrind ./main.$(executable) 
 
+# Debuh, not sure:
 debug_gdb:
 	$(CXX) $(CXXFLAGS) -gmain.cpp $(EXTRA_FLAGS) -o  main.$(executable) -$(LDFLAGS) && gdb --args ./main.$(executable)
 
+# Create and show all plots:
 plots:
 	cd plot && python3 analysis.py && cd ..
+# Aiming to have options here!
 
-
+# Clean folder for .c, .o, .exe, .out and .o.tmp files: (should all of these be included?)
 clean:
-	rm -f *.c *.o *.exe *.out
+	rm -f *.c *.o *.exe *.out *.o.tmp
