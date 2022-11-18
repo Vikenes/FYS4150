@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <random> 
 #include "utils.hpp"
+#include <omp.h>
 
 /**
  * PROJECT 4 FYS4150
@@ -277,6 +278,16 @@ int main(){
 
     probability_distr(1000, 100, 5000, 1, false);
     probability_distr(1000, 100, 5000, 2.4, false);
+
+    // testing parallel
+    #pragma omp parallel
+    {
+    int ID = omp_get_thread_num();
+
+    std::cout << "hello(" + std::to_string(ID) + "), ";
+    std::cout << "world(" + std::to_string(ID) + "), " << std::endl;
+
+    }
     
 
     auto stop_time = std::chrono::high_resolution_clock::now();
