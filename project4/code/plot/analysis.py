@@ -106,7 +106,14 @@ def equilibriation_time(sp):
 
 
 def pdf_histogram(sp):
-    eps, eps2 = load("sample_eps_L20_T1_unordered.txt")
+    epsT1, eps2T1 = load("sample_eps_L20_T1_unordered.txt")
+    epsT2, eps2T2 = load("sample_eps_L20_T2.4_unordered.txt")
+
+    epsT1_, eps2T1_ = load("sample_eps_L20_T1_unordered_old.txt")   ### WRONG!!! 
+    epsT2_, eps2T2_ = load("sample_eps_L20_T2.4_unordered_old.txt") ### WRONG!!! 
+
+    # eps, eps2 = load("sample_eps_L20_T1_unorderedtest.txt")
+
 
     # bins = np.linspace(np.min(eps), np.max(eps), len(eps)) 
 
@@ -116,7 +123,9 @@ def pdf_histogram(sp):
     # print('--')
     # print(eps_bins)
     # print(eps_counts, eps_bins)
-    plt.hist(eps, bins=100)
+    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(12,7))
+    ax[0].hist(epsT2, bins=100)
+    ax[1].hist(epsT2_, bins=100)
     # plt.plot(N, eps)
     plt.show()
 
@@ -124,9 +133,9 @@ def pdf_histogram(sp):
 sp = False # only show plots
 
 
-compare_analytical(sp)
+# compare_analytical(sp)
 # equilibriation_time(sp)
-# pdf_histogram(sp)
+pdf_histogram(sp)
 
 
 

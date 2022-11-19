@@ -201,7 +201,7 @@ void equilibriation_time(int N_MC_cycles, double T0, bool ordered){
 }
 
 
-void probability_distr(int N_samples, int MC_cycles_per_sample, int equilibriation_steps, double T0, bool ordered){
+void probability_distr(int N_samples, int equilibriation_steps, double T0, bool ordered){
     /**
      * Sample avg eps and abs(m).
      * Equilibriate system before measuring. 
@@ -209,7 +209,6 @@ void probability_distr(int N_samples, int MC_cycles_per_sample, int equilibriati
      * average values are computed over MC_cycles_per_sample.
     */
     std::cout << "Creating N=" << N_samples << " samples at T=" << float_to_string(T0);
-    std::cout << ", performing " << MC_cycles_per_sample << " MC cycles per sample" << std::endl;
 
     std::mt19937 generator(690);
     arma::mat Lattice = initialize(20, ordered);
@@ -221,7 +220,6 @@ void probability_distr(int N_samples, int MC_cycles_per_sample, int equilibriati
     double E = 0;
     double M = 0;
     double N_spins = Lattice.n_rows * Lattice.n_cols; 
-    double norm = 1 / ((double) (MC_cycles_per_sample));
 
     initial_configuration(Lattice, E, M);
 
@@ -232,17 +230,11 @@ void probability_distr(int N_samples, int MC_cycles_per_sample, int equilibriati
 
     // Compute samples 
     for(int sample=0; sample < N_samples; sample++){
-        cycle_avg[0] = 0.0;
-        cycle_avg[1] = 0.0;
-        for(int cycle=0; cycle < MC_cycles_per_sample; cycle++){
-            MC_cycle(Lattice, dE, E, M, generator());
-            cycle_avg[0] += E; cycle_avg[1] += E*E; 
-        }
+        MC_cycle(Lattice, dE, E, M, generator());
 
-        cycle_avg[0] *= norm; // Avg. tot. E over cycles
-        cycle_avg[1] *= norm; // Avg. E^2 over cycles 
-        eps_samples[sample]  = cycle_avg[0] / N_spins; // avg. E per spin 
-        eps2_samples[sample] = cycle_avg[1] / N_spins; // avg. E^2 per spin 
+        eps_samples[sample] = E / N_spins; // avg. E per spin 
+        eps2_samples[sample] = E*E / N_spins; // avg. E^2 per spin 
+
         if(sample % (N_samples / 10) == 0){
             std::cout << "  N=" << sample << " samples completed" << std::endl;
         }
@@ -269,15 +261,15 @@ int main(){
 
     auto start_time = std::chrono::high_resolution_clock::now();
 
-    test_analytical(int(1e6));
+    // test_analytical(int(1e6));
 
     // equilibriation_time(100000, 1, false);
     // equilibriation_time(100000, 1, true);
     // equilibriation_time(100000, 2.4, false);
     // equilibriation_time(100000, 2.4, true);
 
-    // probability_distr(1000, 100, 5000, 1, false);
-    // probability_distr(1000, 100, 5000, 2.4, false);
+    // probability_distr(100000, 10000, 1, false);
+    // probability_distr(100000, 10000, 2.4, false);
 
     // testing parallel
     // #pragma omp parallel
