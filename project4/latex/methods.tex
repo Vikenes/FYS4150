@@ -57,39 +57,71 @@ For an observable $Q(\nu)$, its expectation value is given by
 
 
 \subsection{Monte Carlo methods} \label{subsec_theory:MC_methods}
-\alert{I will continue on the MC and metropolis theory later... In need to review with a fresh set of eyes. I started out being too ``abstract'', and it eventually became a mess. I think the outline of the explanation should be different, and will elaborate on that later.}
 
-
-\Vetle{I think the explanation below should be written with a greater emphasis on the fact that the ``samples'' we consider are spins in the lattice.}
-
-To compute thermal averages according to Eq. \eqref{eq:observable_exp_val} we need the partition function of the system. In the case of $N$ spins in the 2D Ising model, the number of computations required are $2^{L^2}=2^N$ (\Vetle{this is the total number of unique microstates}). \Vetle{I will relate this to different L sizes later.} 
-
-One way of overcoming this problem is to generate random samples of the system, and use these samples to estimate average quantities (\Vetle{or estimate PDF, but I don't want to put too much emphasis on that...}). A common choice for sampling the system is the Markov chain Monte Carlo (MCMC) method. A Markov chain is a stochastic process in which the outcome of an event is independent of the process's history. Loosely speaking, it can be regarded as a random walk in (\Vetle{our x-dimensional}) state space. With a MCMC method we can produce a Markov chain of samples that are distributed according to a desired distribution.    
-
-A Markov process is defined by a transition probability, $W(r \to r')$, which is the probability of the system to transition from a state $r$ to any given state $r'$. For the Markov chain to reach the desired distribution we have to fulfill two conditions.  The first condition is \textit{ergodicity} (\Vetle{I will add a footnote here later}), which states that the system has a non-zero probability of going from any state to any other state with a finite sequence of transitions. The second condition is \textit{detailed balance}, meaning that we require each transition to be reversible. That is, the probability that the system is in a state $r$ and transitions to a state $r'$ is the same as the probability of the system being in state $r'$ and transitioning to state $r$. Mathematically, this can be formulated as 
-\begin{equation}
-    p(r)W(r\to r') = p(r') W(r'\to r), \label{eq:detailed_balance}
-\end{equation} 
-where $p(r)$ is the distribution of the Markov process. It can be shown that when the conditions of ergodicity and detailed balance are fulfilled, the distribution, $p(r)$, of the Markov chain is both unique and stationary. \Vetle{I'm not sure if this is mathematically rigorous. Citation should definitely be considered \(I found this on wikipedia\)}
+To study thermodynamic properties of the Ising model, we need to compute the partition function in Eq. \eqref{eq:partition_function}. However, this would require a sum over all possible microstates. For a lattice of size $L$ the total number of \Vetle{unique} microstates are $2^{L^2}=2^N$. This becomes an impossible task for the lattice sizes we are going to consider. To overcome this problem we may draw random samples of the system and use these samples to estimate thermal averages. A common choice for sampling the system is the Markov chain Monte Carlo (MCMC) method. A Markov chain is a stochastic process in which the outcome of an event is independent of the process's history. Loosely speaking, it can be regarded as a random walk in (\Vetle{our x-dimensional}) state space. There are several algorithms for constructing these Markov chains, but the one we will consider is the \textit{Metropolis-Hastings} algorithm. 
 
 \subsection{Metropolis algorithm} \label{subsec_theory:metropolis_algorithm}
-\alert{I am very torn about the placement of this subsection. It might fit the theory section well if it's written in a general manner, but could also be placed under the ``Methods'' section. The latter option means that we can write about our concrete implementation of it as well.}
-
-When we sample \Vetle{spins} of the Ising model, a naive approach is to sample states \Vetle{(states or configurations?)} according to a uniform random distribution. This has the disadvantage of including \Vetle{many} states which the system is unlikely to be in, and more computations will be required to obtain tolerable estimates of quantities. \Vetle{Quantities since I don't know how to phrase stuff...}. Since the system will tend to favor a smaller set of states \Vetle{(ref, equilibrium)} a natural choice is to consider the Boltzmann distribution. By placing a larger emphasis on states with a high probability, we \Vetle{are much smarter.} 
-
-
-\section{Methods (Implementation?)}\label{sec:methods}
-
-\subsection{Metropolis algorithm}\label{subsec_methods:metropolis}
-\Vetle{There is some useful stuff below, but my brain stopped working...}
-
-The Metropolis algorithm chooses the Boltzmann distribution, $p(\vec{s};T)$, as the stationary distribution. We then express the transition probabilities in terms of a proposal and acceptance probability, $T(x\to x')$ and $A(x\to x')$, respectively. From Eq. \eqref{eq:detailed_balance} we can rewrite the condition of detailed balance as 
+The Metropolis algorithm uses a Markov process to generate multiple samples of microstates that approximate a Boltzmann weighted ensemble. A Markov process is defined by a transition probability, $W(\nu \to \nu')$, which is the probability of the system to transition from a state $\nu$ to any given state $\nu'$. For the Markov chain to reach the desired distribution we have to fulfill two conditions.  The first condition is \textit{ergodicity} (\Vetle{I will add a footnote here later}), which states that the system has a non-zero probability of going from any state to any other state with a finite sequence of transitions. The second condition is \textit{detailed balance}, meaning that we require each transition to be reversible. That is, the probability for the system to be in a state $\nu$ and transition to a state $\nu'$ is equal to the probability for the system to be in state $\nu'$ and transition to state $\nu$. Mathematically, this can be formulated as 
 \begin{equation}
-    \frac{W(x\to x')}{W(x'\to x)} = \frac{T(x\to x') A(x\to x')}{T(x' \to x) A(x'\to x)} = \frac{p(\vec{s'})}{p(\vec{s})},
-\end{equation}  
-where the common factors of $Z$ in the PDFs will cancel. 
+    P(\nu)W(\nu\to \nu') = P(\nu') W(\nu'\to \nu), \label{eq:detailed_balance}
+\end{equation} 
+where $P(\nu)$ is the distribution of the Markov process \Vetle{(Improve explanation)}. It can be shown that when the conditions of ergodicity and detailed balance are fulfilled, the distribution $P(\nu)$ is both unique and stationary. \Vetle{I'm not sure if this is mathematically rigorous. Citation should definitely be considered (I found this on Wikipedia).}
 
-\subsection{Energy change due to single spin flip}\label{subsec_methods:de_from_single_flip}
+A naive approach for sampling configurations would be to sample random microstates uniformly. This has the disadvantage of including microstates which the system is unlikely to be in, and many computations would be required to get a satisfying distribution. Instead, the Metropolis algorithm works by choosing the Boltzmann distribution to sample spins, i.e. $P(\nu)=p_\nu(T)$. If we insert this into Eq. \eqref{eq:detailed_balance} and rewrite it, we get 
+\begin{equation}\label{eq:detailed_balance_ratio}
+    \frac{W(\nu\to \nu')}{W(\nu'\to \nu)} = \frac{p_{\nu'}(T)}{p_\nu(T)} = e^{-\beta(E(\nu')-E(\nu))}.
+\end{equation}
+Importantly, in Eq. \eqref{eq:detailed_balance_ratio} we now see that the partition function has vanished. 
+
+\alert{Unsure whether we should continue the derivation of the metropolis algorithm here, or save it for implementation section. Also, I am not 100\% sure what the ``correct'' derivation is when it comes to splitting up the transition probabilities.}
+
+
+\section{Implementations}\label{sec:implementations}
+
+
+
+\subsection{Energy change due to single spin flip}\label{subsec_implementations:de_from_single_flip}
+When flipping a single spin there is a limited number of possible values $\Delta E$ can take. Consider an arbitrary spin, $s_k$. The energy contribution from this spin's interaction with its neighbors is 
+\begin{equation}\label{eq:single_spin_energy}
+    E(s_k) = -J s_k \sum_{\langle l \rangle} s_l.
+\end{equation}   
+Flipping this spin corresponds to $s_k\to -s_k$. The change in energy from this is $\Delta E=E(-s_k)-E(s_k)$, resulting in the following expression:
+\begin{equation}\label{eq:DeltaE_from_single_spin_flip}
+    \begin{split}
+        \Delta E &= -J(-s_k) \sum_{\langle l \rangle} s_l - (-J s_k) \sum_{\langle l \rangle} s_l \\ 
+        &= 2Js_k \sum_{\langle l \rangle} s_l.
+    \end{split}
+\end{equation}
+Since $s_l=\pm1$, the sum can only take values of $\{-4,-2,0,2,4\}$, corresponding to all positive spins to all negative spins, respectively \Vetle{(Sloppy explanation)}. Since $s_k=\pm1$ as well, it's evident that flipping a single spin results in five possible values of $\Delta E$, which are 
+\begin{equation}\label{eq:DeltaE_possible_values}
+    \Delta E = \{-8J,-4J,0,4J,8J\}. 
+\end{equation}  
+
+\subsection{Metropolis algorithm}\label{subsec_implementations:metropolis}
+
+
+\Vetle{The algorithm will be changed later.}
+\begin{algorithm}[H]
+    \caption{Flip}\label{algo:flip}
+    \begin{algorithmic}
+        \State Pick $s_k$ on a random position in the lattice.
+        \State Compute $\Delta E$
+        \If{$\Delta E\leq0$}
+            \State $s_k = s_k * (-1)$
+            \State $E = E + \Delta E$
+            \State $M = M + 2 * s_k$
+        \Else
+            \State $w=\exp(-\beta \Delta E)$
+            \State $r\in\mathcal{U}(0,1)$
+            \If{$r\leq w$}
+                \State $s_k = s_k * (-1)$
+                \State $E = E + \Delta E$
+                \State $M = M + 2 * s_k$
+            \EndIf
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
+
 
 
 \subsection{Analytical comparison}\label{subsec_methods:analytical_test}
