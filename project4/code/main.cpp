@@ -189,11 +189,11 @@ void equilibriation_time(int N_MC_cycles, double T0, bool ordered){
     
     for(int cycle=1; cycle <= N_MC_cycles; cycle++){
         MC_cycle(Lattice, dE, E, M, generator());
-        average[0] += E;
-        average[1] += abs(M); 
+        average[0] += E / N_spins;
+        average[1] += abs(M) / N_spins; 
         avg_values << cycle << ", "
-                    << scientific_format(average[0]/N_spins) << ", "
-                    << scientific_format(average[1]/N_spins) << std::endl;
+                    << scientific_format(average[0]/cycle) << ", "
+                    << scientific_format(average[1]/cycle) << std::endl;
     }
     avg_values.close();
     std::cout << "Completed " << N_MC_cycles << " Monte Carlo cycles" << std::endl;
@@ -233,7 +233,7 @@ void probability_distr(int N_samples, int equilibriation_steps, double T0, bool 
         MC_cycle(Lattice, dE, E, M, generator());
 
         eps_samples[sample] = E / N_spins; // avg. E per spin 
-        eps2_samples[sample] = E*E / N_spins; // avg. E^2 per spin 
+        eps2_samples[sample] = E*E / N_spins / N_spins; // avg. E^2 per spin 
 
         if(sample % (N_samples / 10) == 0){
             std::cout << "  N=" << sample << " samples completed" << std::endl;
@@ -263,10 +263,10 @@ int main(){
 
     // test_analytical(int(1e6));
 
-    // equilibriation_time(100000, 1, false);
-    // equilibriation_time(100000, 1, true);
-    // equilibriation_time(100000, 2.4, false);
-    // equilibriation_time(100000, 2.4, true);
+    equilibriation_time(100000, 1, false);
+    equilibriation_time(100000, 1, true);
+    equilibriation_time(100000, 2.4, false);
+    equilibriation_time(100000, 2.4, true);
 
     // probability_distr(100000, 10000, 1, false);
     // probability_distr(100000, 10000, 2.4, false);

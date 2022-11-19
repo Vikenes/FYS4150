@@ -77,31 +77,19 @@ def compare_analytical(sp, filename="test_analytical_1000000_cycles.txt"):
 
 
 def equilibriation_time(sp):
-    T1_unordered = load("equilibriate_L20_T1_unordered.txt") 
-    T1_ordered = load("equilibriate_L20_T1_ordered.txt") 
+    n_T1, eps_T1_unord, m_T1_unord = load("equilibriate_L20_T1_unordered.txt")
+    n_T1, eps_T1_order, m_T1_order =  load("equilibriate_L20_T1_ordered.txt") 
 
-    T2_unordered = load("equilibriate_L20_T2.4_unordered.txt") 
-    T2_ordered = load("equilibriate_L20_T2.4_ordered.txt") 
-
-
-    n_T1_unord = T1_unordered[0]
-    n_T1_order = T1_ordered[0]
-
-    n_T2_unord = T2_unordered[0]
-    n_T2_order = T2_ordered[0]
+    n_T2, eps_T2_unord, m_T2_unord = load("equilibriate_L20_T2.4_unordered.txt") 
+    n_T2, eps_T2_order, m_T2_order =  load("equilibriate_L20_T2.4_ordered.txt") 
 
 
-    eps_T1_unord, m_T1_unord = T1_unordered[1:] / n_T1_unord
-    eps_T1_order, m_T1_order = T1_ordered[1:] / n_T1_order 
+    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(12,7))
 
-    eps_T2_unord, m_T2_unord = T2_unordered[1:] / n_T2_unord
-    eps_T2_order, m_T2_order = T2_ordered[1:] / n_T2_order 
-
-
-    plt.plot(n_T1_order, eps_T1_order, color='red')
-    plt.plot(n_T1_unord, eps_T1_unord, '--', color='red')
-    plt.plot(n_T2_order, eps_T2_order, color='blue')
-    plt.plot(n_T2_unord, eps_T2_unord, '--', color='blue')
+    ax[0].plot(n_T1, eps_T1_order, color='red')
+    ax[0].plot(n_T1, eps_T1_unord, '--', color='red')
+    ax[1].plot(n_T2, eps_T2_order, color='blue')
+    ax[1].plot(n_T2, eps_T2_unord, '--', color='blue')
     plt.show()
 
 
@@ -134,8 +122,8 @@ sp = False # only show plots
 
 
 # compare_analytical(sp)
-# equilibriation_time(sp)
-pdf_histogram(sp)
+equilibriation_time(sp)
+# pdf_histogram(sp)
 
 
 
