@@ -269,25 +269,25 @@ int main(){
 
     auto start_time = std::chrono::high_resolution_clock::now();
 
-    // test_analytical(10000);
+    test_analytical(int(1e6));
 
     // equilibriation_time(100000, 1, false);
     // equilibriation_time(100000, 1, true);
     // equilibriation_time(100000, 2.4, false);
     // equilibriation_time(100000, 2.4, true);
 
-    probability_distr(1000, 100, 5000, 1, false);
-    probability_distr(1000, 100, 5000, 2.4, false);
+    // probability_distr(1000, 100, 5000, 1, false);
+    // probability_distr(1000, 100, 5000, 2.4, false);
 
     // testing parallel
-    #pragma omp parallel
-    {
-    int ID = omp_get_thread_num();
+    // #pragma omp parallel
+    // {
+    // int ID = omp_get_thread_num();
 
-    std::cout << "hello(" + std::to_string(ID) + "), ";
-    std::cout << "world(" + std::to_string(ID) + "), " << std::endl;
+    // std::cout << "hello(" + std::to_string(ID) + "), ";
+    // std::cout << "world(" + std::to_string(ID) + "), " << std::endl;
 
-    }
+    // }
     
 
     auto stop_time = std::chrono::high_resolution_clock::now();
