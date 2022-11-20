@@ -17,7 +17,6 @@ LDFLAGS =  # linker
 
 
 
-
 # Add necessary flag for Mac:
 ifeq ($(detected_OS), Darwin)
 	CXXFLAGS += -std=c++11
@@ -48,6 +47,11 @@ ifeq ($(strip $(PARALLEL)), yes)
 endif
 
 
+compile_anal:
+	g++ -std=c++11 analytical.cpp src/*.cpp -I include -o analytical.exe -larmadillo  
+run_anal:
+	./analytical.exe $N $T $(fname)
+
 # General run command:
 all: compile link run
 # Aiming to have options here!
@@ -58,19 +62,19 @@ compile:
 
 # Link main.exe:
 link:
-	$(CXX) -o main.$(executable) *.o $(LDFLAGS) 
+	$(CXX) -o main$(executable) *.o $(LDFLAGS) 
 
 # Run main.exe:
 run:
-	./main.$(executable) 
+	./main$(executable)
 
 # Debug, not sure:
 debug_valgrind:
-	$(CXX) $(CXXFLAGS) -gmain.cpp $(EXTRA_FLAGS) -o  main.$(executable) $(LDFLAGS) && valgrind ./main.$(executable) 
+	$(CXX) $(CXXFLAGS) -gmain.cpp $(EXTRA_FLAGS) -o  main$(executable) $(LDFLAGS) && valgrind ./main$(executable) 
 
 # Debuh, not sure:
 debug_gdb:
-	$(CXX) $(CXXFLAGS) -gmain.cpp $(EXTRA_FLAGS) -o  main.$(executable) -$(LDFLAGS) && gdb --args ./main.$(executable)
+	$(CXX) $(CXXFLAGS) -gmain.cpp $(EXTRA_FLAGS) -o  main$(executable) -$(LDFLAGS) && gdb --args ./main$(executable)
 
 # Create and show all plots:
 plots:
