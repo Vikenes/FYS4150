@@ -7,10 +7,6 @@ std::string scientific_format(const double d, const int width, const int prec){
 }
 
 std::string float_to_string(const double d, const int prec){
-    /**
-     * Convert simple float to string with a given precision (default precision=2)
-     * Used to simplify file naming for different parameter choices.
-    */
     std::stringstream ss;
     ss << std::setprecision(prec) << d; 
     return ss.str();

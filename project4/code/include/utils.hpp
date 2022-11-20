@@ -12,6 +12,11 @@
 #include <typeinfo>
 
 std::string scientific_format(const double d, const int width=15, const int prec=10);
+
+/**
+     * Convert simple float to string with a given precision (default precision=2)
+     * Used to simplify file naming for different parameter choices.
+*/
 std::string float_to_string(const double d, const int prec=2);
 
 int write_to_file_scientific(std::vector<double> col1, std::vector<double> col2, std::string filename, int width=15, int prec=10);
