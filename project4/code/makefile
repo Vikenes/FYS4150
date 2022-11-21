@@ -50,7 +50,17 @@ endif
 compile_anal:
 	g++ -std=c++11 analytical.cpp src/*.cpp -I include -o analytical.exe -larmadillo  
 run_anal:
-	./analytical.exe $N $T $(fname)
+	./analytical.exe $N $(N_save) $T
+
+compile_equi:
+	g++ -std=c++11 equilibriation_time.cpp src/*.cpp -I include -o equilibriation_time.exe -larmadillo 
+run_equi:
+	./equilibriation_time.exe $N $T $(order)
+
+compile_pdf:
+	g++ -std=c++11 prob_distr.cpp src/*.cpp -I include -o prob_distr.exe -larmadillo
+run_pdf:
+	./prob_distr.exe $(N_samples) $(N_eq_steps) $T $(order)
 
 # General run command:
 all: compile link run
