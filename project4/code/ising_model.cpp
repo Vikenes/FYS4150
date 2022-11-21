@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <random> 
 #include "utils.hpp"
-#include <omp.h>
+// #include <omp.h>
 
 /**
  * PROJECT 4 FYS4150
@@ -15,7 +15,7 @@ inline int PBC(int idx, int L){
     return (idx + L) % (L);
 }
 
-arma::mat make_Lattice(int L=20, bool ordered=false){
+arma::mat make_Lattice(int L=20, unsigned int seed=0, bool ordered=false){
     /**
      * Create lattice of size LxL. 
      * Each element is +/- 1, for spin up/down.
@@ -24,7 +24,7 @@ arma::mat make_Lattice(int L=20, bool ordered=false){
     */
     arma::mat Lattice;
     if(ordered==false){
-        arma::arma_rng::set_seed(69);
+        arma::arma_rng::set_seed(seed); // CHECK THIS LATER!!!!
         Lattice = arma::randi<arma::mat>(L, L, arma::distr_param(0,1));
         Lattice *= 2;
         Lattice -= 1;
@@ -112,4 +112,33 @@ void MC_cycle(arma::mat& Lattice, const std::vector<double> dE, double&E, double
             }
         }
     }
+}
+
+arma::rowvec run_MC(const int L, const double T, const int N_samples, const int N_eq, unsigned int seed){
+    
+    arma::mat Lattice = make_Lattice(L, seed);
+    double E = 0;
+    double M = 0;
+    compute_E_and_M(Lattice, E, M);
+    const std::vector<double> dE = DeltaE(T);
+    arma::rowvec averages(5, arma::fill::zeros);
+
+    int N_tot_cycles = N_samples + N_eq; 
+    int count = 0;
+
+    for(int cycle=1; cycle <= N_tot_cycles; cycle++){
+        MC_cycle(Lattice, dE, E, M, seed);
+        if(cycle > N_eq){
+            averages(1) += E; 
+            averages(2) += std::pow(E,2);
+            averages(3) += abs(M);
+            averages(4) += M*M; 
+        }
+    } 
+
+    averages /= (double) (N_samples);
+    averages(0) = T;
+
+
+    return averages;
 }

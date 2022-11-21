@@ -160,20 +160,68 @@ def pdf_histogram(sp):
     plt.show()
 
 
+def PT(sp):
+
+    folder = data_path + "parallel/"
+
+    T1, e1, e12, m1, m12 = load("L20_nT50_NMC500000_Neq15000_para.csv", folder, skiprows=0)
+    Cv1 = (e12 - e1**2) / 400 / T1**2 
+    chi1= (m12 - m1**2) / 400 / T1 
+
+    T2, e2, e22, m2, m22 = load("L40_nT50_NMC500000_Neq15000_para.csv", folder, skiprows=0)
+    Cv2 = (e22 - e2**2) / 1600 / T2**2 
+    chi2= (m22 - m2**2) / 1600 / T2 
+
+    T3, e3, e32, m3, m32 = load("L20_nT10_NMC100000_Neq15000.csv", folder, skiprows=0)
+    Cv3 = (e32 - e3**2) / 400 / T3**2 
+    chi3= (m32 - m3**2) / 400 / T3
+
+    # T4, e4, e42, m4, m42 = load("L20_nT10_NMC100000_Neq15000_para.csv", folder, skiprows=0)
+    # Cv4 = (e42 - e4**2) / 400 / T4**2 
+    # chi4= (m42 - m4**2) / 400 / T4
+
+    # T5, e5, e52, m5, m52 = load("L20_nT10_NMC500000_Neq15000_para.csv", folder, skiprows=0)
+    # Cv5 = (e52 - e5**2) / 400 / T5**2 
+    # chi5= (m52 - m5**2) / 400 / T5
+    
+
+    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(12,7))
+    ax[0].plot(T1, Cv1, 'o-', label='para L20')
+    ax[0].plot(T2, Cv2, 'o-', label="para L40")
+    ax[0].plot(T3, Cv3, 'o-', label='OLD')
+    # ax[0].plot(T4, Cv4, 'o-', label="para 1e5")
+    # ax[0].plot(T5, Cv5, 'o-', label="para 5e5")
+
+
+
+    # ax[0].plot(T2, e2**2, 'o-', label='2')
+    # ax[0].plot(T2, e22, 'o-', label='22')
+    # ax[0].plot(T3, e3**2, 'o-', label='3')
+    # ax[0].plot(T3, e32, 'o-', label='32')
+
+
+    ax[1].plot(T1, chi1, 'o-', label='para L20')
+    ax[1].plot(T2, chi2, 'o-', label='para L40')
+    ax[1].plot(T3, chi3, 'o-', label='OLD')
+    # ax[1].plot(T4, chi4, 'o-')
+
+    # ax[1].plot(T2, m2**2, 'o-', label='22')
+    # ax[1].plot(T2, m22, 'o-', label='22')
+    # ax[1].plot(T3, m3**2, 'o-', label='3')
+    # ax[1].plot(T3, m32, 'o-', label='32')
+
+
+    ax[0].legend()
+    ax[1].legend()
+    plt.show()
+
+
+
 sp = False # only show plots
 
 
-compare_analytical(sp)
+# compare_analytical(sp)
 # equilibriation_time(sp)
 # pdf_histogram(sp)
-# N = 100001
-# dn = N // 5
-
-# nn = 10**np.arange(1, 6)
-# print(nn)
-# exit()
-# for i in range(1,N):
-    # if i%1000 == 0:
-        # print(i)
-
+PT(sp)
 

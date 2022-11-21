@@ -62,6 +62,15 @@ compile_pdf:
 run_pdf:
 	./prob_distr.exe $(N_samples) $(N_eq_steps) $T $(order)
 
+parallel_compile:
+	g++ -std=c++11 -O2 parallel_system.cpp src/*.cpp -I include -o parallel_system.exe -larmadillo -fopenmp
+unparallel_compile:
+	g++ -std=c++11 -O2 parallel_system.cpp src/*.cpp -I include -o unparallel_system.exe -larmadillo
+parallel_run:
+	./parallel_system.exe $L $(T0) $(T1) $(nT) $(NMC) $(Neq)
+unparallel_run:
+	./unparallel_system.exe $L $(T0) $(T1) $(nT) $(NMC) $(Neq)
+
 # General run command:
 all: compile link run
 # Aiming to have options here!
