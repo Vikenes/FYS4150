@@ -165,13 +165,15 @@ def PT(sp):
     chi = lambda var, L, T: var / L**2 / T 
     folder = data_path + "parallel/"
 
-    T1, e1, e12, m1, m12, ve1, vm1 = load("L20_nT10_NMC50000_Neq15000_serial.csv", folder, skiprows=0)
-    Cv1 = ve1 / 400 / T1**2
-    chi1 = vm1 / 400 / T1 
+    # file1 = load("L20_nT10_NMC50000_Neq15000_serial.csv", folder, skiprows=0)
+    # L1 = file1[0]
+    # T1, e1, e12, m1, m12, ve1, vm1 = load("L20_nT10_NMC50000_Neq15000_serial.csv", folder, skiprows=0)
+    # Cv1 = ve1 / 400 / T1**2
+    # chi1 = vm1 / 400 / T1 
 
-    T2, e2, e22, m2, m22, ve2, vm2 = load("L20_nT10_NMC50000_Neq15000_para.csv", folder, skiprows=0)
-    Cv2 = ve2 / 400 / T2**2
-    chi2= vm2 / 400 / T2 
+    # T2, e2, e22, m2, m22, ve2, vm2 = load("L20_nT10_NMC50000_Neq15000_para.csv", folder, skiprows=0)
+    # Cv2 = ve2 / 400 / T2**2
+    # chi2= vm2 / 400 / T2 
 
     T3, e3, e32, m3, m32, ve3, vm3 = load("L20_nT100_NMC100000_Neq15000_para.csv", folder, skiprows=0)
     Cv3 = ve3 / 400 / T3**2 
