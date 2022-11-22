@@ -63,9 +63,9 @@ run_pdf:
 	./prob_distr.exe $(N_samples) $(N_eq_steps) $T $(order)
 
 parallel_compile:
-	g++ -std=c++11 -O2 parallel_system.cpp src/*.cpp -I include -o parallel_system.exe -larmadillo -fopenmp
+	g++ -std=c++11 -O3 parallel_system.cpp src/*.cpp -I include -o parallel_system.exe -larmadillo -fopenmp
 serial_compile:
-	g++ -std=c++11 -O2 parallel_system.cpp src/*.cpp -I include -o serial.exe -larmadillo
+	g++ -std=c++11 -O3 parallel_system.cpp src/*.cpp -I include -o serial.exe -larmadillo
 parallel_run:
 	./parallel_system.exe $L $(T0) $(T1) $(nT) $(NMC) $(Neq)
 serial_run:

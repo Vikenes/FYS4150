@@ -37,22 +37,35 @@ arma::mat make_Lattice(int L=20, bool ordered=false){
     return Lattice;
 }
 
-void compute_E_and_M(arma::mat& Lattice, double& E, double& M){
+double initial_E(arma::mat Lattice){
     /**
          * Compute initial energy and magnetization of Lattice  
     */
-    int L = Lattice.n_rows; // From Morten's lecture notes. More appropriate name should be used 
+    double E = 0;
+    int L = Lattice.n_rows; 
     
     for(int x=0; x<L; x++){
         for(int y=0; y<L; y++){
-            M += (double) Lattice(x,y);
-            E -= (double) Lattice(x,y) * 
+            E -= Lattice(x,y) * 
                 (Lattice(x, PBC(y+1,L)) + Lattice(PBC(x+1,L),y));
         }
     }
+    return E;
 }
 
-std::vector<double> DeltaE(double T){
+double initial_M(arma::mat Lattice){
+    double M = 0;
+    int L = Lattice.n_rows;
+    for(int x=0; x < L; x++){
+        for(int y=0; y < L; y++){
+            M += Lattice(x,y);
+        }
+    }
+    return M;
+}
+
+
+std::vector<double> Boltzmann(double T){
     /**
      * Vector containing all five possible values of Delta E,
      * due to flipping a single spin in Lattice.  
@@ -63,28 +76,29 @@ std::vector<double> DeltaE(double T){
     for(int i=0; i<5; i++){
         dE[i] = exp(-beta * (4 * (i - 2)));
     }
-    // std::cout << "an" << exp(8*beta) << ", " << exp(4*beta) << ", ";
-    // std::cout << exp(0) << ", " << exp(-4*beta) << ", " << exp(-8*beta) << std::endl;
 
-    // dE[2] = 0; // For configurations that leave energy unchanged 
     return dE;
 }
 
 
 
-void MC_cycle(arma::mat& Lattice, const std::vector<double> dE, double&E, double& M, unsigned int seed){
+void MC_cycle(arma::mat& Lattice, std::vector<double> Boltz, double& E, double& M, 
+            std::mt19937_64& gen){
     /**
      * Perform one MC cycle for a given Lattice of size (LxL)
      * One cycle consists of N=L*L attempted spin flips.
      * Each spin flip attempt is performed on a random site in the Lattice  
     */
-    std::mt19937_64 generator(seed);
+
     int L = Lattice.n_rows;
-    int count = 0;
+    std::uniform_int_distribution<int> indx(0, L-1);
+    std::uniform_real_distribution<double> r(0.0, 1.0);
+
+
     for(int xy=0; xy<L*L; xy++){
         // Pick site to consider 
-        int ix = (unsigned int) generator() % L;
-        int iy = (unsigned int) generator() % L;
+        int ix =  indx(gen);
+        int iy =  indx(gen);
 
         // Compute energy change if site is flipped. 
         int deltaE = 2*Lattice(ix,iy) * 
@@ -92,11 +106,11 @@ void MC_cycle(arma::mat& Lattice, const std::vector<double> dE, double&E, double
                     Lattice(PBC(ix+1, L), iy) + 
                     Lattice(ix, PBC(iy-1, L)) + 
                     Lattice(PBC(ix-1, L), iy));
-        int dE_idx = deltaE/4 + 2; 
-        double w = dE[dE_idx];
-        std::uniform_real_distribution<double> r(0,1);
 
-        if(r(generator) <= w){
+        int dE_idx = deltaE/4 + 2; 
+        double w = Boltz[dE_idx];
+
+        if(r(gen) <= w){
             Lattice(ix,iy) *= -1;
             M += 2*Lattice(ix,iy);
             E += deltaE;
@@ -104,24 +118,25 @@ void MC_cycle(arma::mat& Lattice, const std::vector<double> dE, double&E, double
     }
 }
 
-arma::rowvec run_MC(int L, double T, int N_samples, int N_eq, unsigned int seed){
+arma::rowvec run_MC(int L, double T, int N_samples, int N_eq, 
+                unsigned int seed){
+    
+    std::mt19937_64 gen(seed);
     
     arma::mat Lattice = make_Lattice(L);
-    double E = 0;
-    double M = 0;
-    compute_E_and_M(Lattice, E, M);
-    std::vector<double> dE = DeltaE(T);
+    double E = initial_E(Lattice);
+    double M = initial_M(Lattice);
 
-    // std::cout << "st";
-    // for(int i=0; i<5; i++){std::cout << dE[i] << ", ";}
-    // std::cout << std::endl;
-
-    arma::rowvec averages(5, arma::fill::zeros);
-
+    std::vector<double> Boltzmann_ = Boltzmann(T);
     int N_tot_cycles = N_samples + N_eq; 
+
+    arma::rowvec averages(7, arma::fill::zeros);
+    double varE, varM;
+
+
     
     for(int cycle=1; cycle <= N_tot_cycles; cycle++){
-        MC_cycle(Lattice, dE, E, M, seed);
+        MC_cycle(Lattice, Boltzmann_, E, M, gen);
         if(cycle > N_eq){
             averages(1) += E; 
             averages(2) += E*E;
@@ -129,11 +144,14 @@ arma::rowvec run_MC(int L, double T, int N_samples, int N_eq, unsigned int seed)
             averages(4) += M*M; 
         }
     } 
-    // averages /= (double) (N_samples);
-    // averages(0) = T;
-    // std::cout << "en";
-    // for(int i=0; i<5; i++){std::cout << dE[i] << ", ";}
-    // std::cout << std::endl << std::endl;
+
+    averages /= (double) (N_samples);
+    varE = averages(2) - averages(1)*averages(1);
+    varM = averages(4) - averages(3)*averages(3);
+
+    averages(0) = T;
+    averages(5) = varE;
+    averages(6) = varM;
 
     return averages;
 }

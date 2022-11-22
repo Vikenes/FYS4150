@@ -161,52 +161,49 @@ def pdf_histogram(sp):
 
 
 def PT(sp):
-
+    cv  = lambda var, L, T: var / L**2 / T**2 
+    chi = lambda var, L, T: var / L**2 / T 
     folder = data_path + "parallel/"
 
-    T1, e1, e12, m1, m12 = load("L20_nT50_NMC500000_Neq15000_para.csv", folder, skiprows=0)
-    Cv1 = (e12 - e1**2) / 400 / T1**2 
-    chi1= (m12 - m1**2) / 400 / T1 
+    T1, e1, e12, m1, m12, ve1, vm1 = load("L20_nT10_NMC50000_Neq15000_serial.csv", folder, skiprows=0)
+    Cv1 = ve1 / 400 / T1**2
+    chi1 = vm1 / 400 / T1 
 
-    T2, e2, e22, m2, m22 = load("L40_nT50_NMC500000_Neq15000_para.csv", folder, skiprows=0)
-    Cv2 = (e22 - e2**2) / 1600 / T2**2 
-    chi2= (m22 - m2**2) / 1600 / T2 
+    T2, e2, e22, m2, m22, ve2, vm2 = load("L20_nT10_NMC50000_Neq15000_para.csv", folder, skiprows=0)
+    Cv2 = ve2 / 400 / T2**2
+    chi2= vm2 / 400 / T2 
 
-    T3, e3, e32, m3, m32 = load("L20_nT10_NMC100000_Neq15000.csv", folder, skiprows=0)
-    Cv3 = (e32 - e3**2) / 400 / T3**2 
-    chi3= (m32 - m3**2) / 400 / T3
+    T3, e3, e32, m3, m32, ve3, vm3 = load("L20_nT100_NMC100000_Neq15000_para.csv", folder, skiprows=0)
+    Cv3 = ve3 / 400 / T3**2 
+    chi3 = vm3 / 400 / T3 
 
-    T4, e4, e42, m4, m42 = load("L20_nT10_NMC75000_Neq10000_serial.csv", folder, skiprows=0)
-    Cv4 = (e42 - e4**2) / 400 / T4**2 
-    chi4= (m42 - m4**2) / 400 / T4
+    T4 = load("L40_nT100_NMC100000_Neq15000_para.csv", folder, skiprows=0)[0]
+    ve4, vm4 = load("L40_nT100_NMC100000_Neq15000_para.csv", folder, skiprows=0)[-2:]
+    Cv4 = cv(ve4,40,T4)
+    chi4 = chi(vm4,40,T4)
 
-    T5, e5, e52, m5, m52 = load("L20_nT10_NMC100000_Neq20000_serial.csv", folder, skiprows=0)
-    Cv5 = (e52 - e5**2) / (400 * T5**2) 
-    chi5= (m52 - m5**2) / 400 / T5
+    T5 = load("L60_nT100_NMC100000_Neq15000_para.csv", folder, skiprows=0)[0]
+    ve5, vm5 = load("L60_nT100_NMC100000_Neq15000_para.csv", folder, skiprows=0)[-2:]
+    Cv5 = cv(ve5,60,T5)
+    chi5 = chi(vm5,60,T5)
 
-    # print(e52)
+    # print(e42/400)
+    # print(T4.shape)
+    # print(ve4.shape, vm4.shape)
     # exit()
     
 
     fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(12,7))
-    # ax[0].plot(T1, Cv1, 'o-', label='para L20')
-    # ax[0].plot(T2, Cv2, 'o-', label="para L40")
-    ax[0].plot(T3, Cv3, 'o-', label='OLD')
-    ax[0].plot(T4, Cv4, 'o-', label="serial Eloi")
-    ax[0].plot(T5, Cv5, 'o-', label="serial Eloi 2")
+    # ax[0].plot(T1, Cv1, 'o-', label='parall L20')
+    # ax[0].plot(T2, Cv2, 'o-', label="serial L20")
+    ax[0].plot(T3, Cv3, 'o-', ms=3, lw=0.5, label="L20")
+    ax[0].plot(T4, Cv4, 'o-', ms=3, lw=0.5, label="L40")
+    ax[0].plot(T5, Cv5, 'o-', ms=3, lw=0.5, label="L60")
 
+    ax[1].plot(T3, chi3, 'o-', ms=3, lw=0.5, label="L20")
+    ax[1].plot(T4, chi4, 'o-', ms=3, lw=0.5, label="L40")
+    ax[1].plot(T5, chi5, 'o-', ms=3, lw=0.5, label="L60")
 
-    # ax[0].plot(T2, e2**2, 'o-', label='2')
-    # ax[0].plot(T2, e22, 'o-', label='22')
-    # ax[0].plot(T3, e3**2, 'o-', label='3')
-    # ax[0].plot(T3, e32, 'o-', label='32')
-
-
-    # ax[1].plot(T1, chi1, 'o-', label='para L20')
-    # ax[1].plot(T2, chi2, 'o-', label='para L40')
-    ax[1].plot(T3, chi3, 'o-', label='OLD')
-    ax[1].plot(T4, chi4, 'o-', label='serial Eloi')
-    ax[1].plot(T5, chi5, 'o-', label='serial Eloi 2')
 
     # ax[1].plot(T2, m2**2, 'o-', label='22')
     # ax[1].plot(T2, m22, 'o-', label='22')
