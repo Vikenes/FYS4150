@@ -26,58 +26,57 @@ int main(int argc, char* argv[]){
     const int N_cycles = atoi(argv[5]); // May opt for default value later 
     const int N_eq = atoi(argv[6]);     // May opt for default value later 
 
-    auto start_time = std::chrono::high_resolution_clock::now();
-    std::mt19937 generator(690);
-
-    arma::mat results = arma::mat(nTsteps, 5, arma::fill::zeros);
     const double delta_T = (T_max - T_min) / (nTsteps - 1);
 
+    arma::mat results = arma::mat(nTsteps, 5, arma::fill::zeros);
+
+    unsigned int base_seed = 690; 
+    // std::mt19937 generator(690);
+
     std::string build_type;
-            // arma::mat results = arma::mat(nTsteps, 5, arma::fill::zeros);
 
-    #ifdef _OPENMP
-    {
-        #pragma omp parallel
-        { 
-            // const int L = atoi(argv[1]);
-            // const double T_min = atof(argv[2]);
-            // const double T_max = atof(argv[3]);
-            // const int nTsteps = atoi(argv[4]);
-            // const int N_cycles = atoi(argv[5]); // May opt for default value later 
-            // const int N_eq = atoi(argv[6]);     // May opt for default value later 
+    auto start_time = std::chrono::high_resolution_clock::now();
 
-            // std::mt19937 generator(690);
 
-            // const double delta_T = (T_max - T_min) / (nTsteps - 1);
+    // #ifdef _OPENMP
+    // {
+        // #pragma omp parallel
+        // { 
+            // std::mt19937 generator; 
 
-            #pragma omp for 
-            for(int i=0; i<nTsteps; i++){
+            // int thread_id = omp_get_thread_num();
+            // unsigned int my_seed = base_seed + thread_id * 100; 
+            // generator.seed(my_seed);
+            
+
+            // #pragma omp for 
+            // for(int i=0; i<nTsteps; i++){
                 // Loop over temperature 
-                double T = T_min + i*delta_T;
-                arma::rowvec average_values = run_MC(L, T, N_cycles, N_eq, generator());
-                results.row(i) = average_values; 
-                }
-        }
-        build_type = "_para";
-    }
-    #else
-    {
-        // std::mt19937 generator(690);
+                // double T = T_min + i*delta_T;
+                // arma::rowvec average_values = run_MC(L, T, N_cycles, N_eq, generator());
+                // results.row(i) = average_values; 
+                // }
+        // }
+        // build_type = "_para";
+    // }
+    // #else
+    // {
+        std::mt19937_64 generator;
+        generator.seed(base_seed);
 
         for(int i=0; i<nTsteps; i++){
             // Loop over temperature 
             double T = T_min + i*delta_T;
-
+            // std::cout << generator() << std::endl;
             arma::rowvec average_values = run_MC(L, T, N_cycles, N_eq, generator());
 
-            results.row(i) = average_values; 
+            results.row(i) = average_values / (double (N_cycles));
+            results(i,0) = T;
         }
         build_type = "_serial";
-    }
-    #endif 
+    // }
+    // #endif 
     
-    // std::cout << results << std::endl;
-    // exit(1);
     
     std::string path = "../output/data/parallel/";
     std::string fname = "L" + std::to_string(L) + "_nT" + std::to_string(nTsteps);

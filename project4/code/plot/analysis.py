@@ -176,22 +176,24 @@ def PT(sp):
     Cv3 = (e32 - e3**2) / 400 / T3**2 
     chi3= (m32 - m3**2) / 400 / T3
 
-    # T4, e4, e42, m4, m42 = load("L20_nT10_NMC100000_Neq15000_para.csv", folder, skiprows=0)
-    # Cv4 = (e42 - e4**2) / 400 / T4**2 
-    # chi4= (m42 - m4**2) / 400 / T4
+    T4, e4, e42, m4, m42 = load("L20_nT10_NMC75000_Neq10000_serial.csv", folder, skiprows=0)
+    Cv4 = (e42 - e4**2) / 400 / T4**2 
+    chi4= (m42 - m4**2) / 400 / T4
 
-    # T5, e5, e52, m5, m52 = load("L20_nT10_NMC500000_Neq15000_para.csv", folder, skiprows=0)
-    # Cv5 = (e52 - e5**2) / 400 / T5**2 
-    # chi5= (m52 - m5**2) / 400 / T5
+    T5, e5, e52, m5, m52 = load("L20_nT10_NMC100000_Neq20000_serial.csv", folder, skiprows=0)
+    Cv5 = (e52 - e5**2) / (400 * T5**2) 
+    chi5= (m52 - m5**2) / 400 / T5
+
+    # print(e52)
+    # exit()
     
 
     fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(12,7))
-    ax[0].plot(T1, Cv1, 'o-', label='para L20')
-    ax[0].plot(T2, Cv2, 'o-', label="para L40")
+    # ax[0].plot(T1, Cv1, 'o-', label='para L20')
+    # ax[0].plot(T2, Cv2, 'o-', label="para L40")
     ax[0].plot(T3, Cv3, 'o-', label='OLD')
-    # ax[0].plot(T4, Cv4, 'o-', label="para 1e5")
-    # ax[0].plot(T5, Cv5, 'o-', label="para 5e5")
-
+    ax[0].plot(T4, Cv4, 'o-', label="serial Eloi")
+    ax[0].plot(T5, Cv5, 'o-', label="serial Eloi 2")
 
 
     # ax[0].plot(T2, e2**2, 'o-', label='2')
@@ -200,10 +202,11 @@ def PT(sp):
     # ax[0].plot(T3, e32, 'o-', label='32')
 
 
-    ax[1].plot(T1, chi1, 'o-', label='para L20')
-    ax[1].plot(T2, chi2, 'o-', label='para L40')
+    # ax[1].plot(T1, chi1, 'o-', label='para L20')
+    # ax[1].plot(T2, chi2, 'o-', label='para L40')
     ax[1].plot(T3, chi3, 'o-', label='OLD')
-    # ax[1].plot(T4, chi4, 'o-')
+    ax[1].plot(T4, chi4, 'o-', label='serial Eloi')
+    ax[1].plot(T5, chi5, 'o-', label='serial Eloi 2')
 
     # ax[1].plot(T2, m2**2, 'o-', label='22')
     # ax[1].plot(T2, m22, 'o-', label='22')
