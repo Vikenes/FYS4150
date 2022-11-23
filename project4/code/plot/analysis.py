@@ -12,6 +12,7 @@ import plot
 here = os.path.abspath(".")
 data_path = here + "/../../output/data/"
 latex_path = here + "/../../latex/"
+fig_path = here + "/../../output/plots/temp/"
 
 
 def analytical(T):
@@ -59,7 +60,7 @@ def compare_analytical(sp, filename="anal_Nsamples4_T1.csv"):
     # Cv_avg_array = Cv_avg[indices]
     # chi_avg_array = chi_avg[indices]
 
-    column_names = [r"$\langle \epsilon \rangle$", r"$\langle \abs{m} \rangle$", r"\langle C_V \rangle$", r"$\langle \chi \rangle$"]
+    column_names = [r"$\langle \epsilon \rangle$", r"$\langle \abs{m} \rangle$", r"$\langle C_V \rangle$", r"$\langle \chi \rangle$"]
     index_names = [r"$10^{%i}$"%(i) for i in (np.log10(N))]
     index_names.append("Analytical")
 
@@ -69,13 +70,14 @@ def compare_analytical(sp, filename="anal_Nsamples4_T1.csv"):
         r"$N$": index_names,
         r"$\langle \epsilon \rangle$": np.append(eps_avg, eps_avg_anal),
         r"$\langle \abs{m} \rangle$": np.append(absm_avg, absm_avg_anal),
-        r"\langle C_V \rangle$": np.append(Cv, Cv_anal),
+        r"$\langle C_V \rangle$": np.append(Cv, Cv_anal),
         r"$\langle \chi \rangle$": np.append(chi, chi_anal)
     }
 
 
     df = pd.DataFrame(data, index=None)
-    df.style.format("{:.2f}", subset=column_names).hide(axis="index").to_latex(latex_path+"tables/compare_analytical.tex")
+    if sp:
+        df.style.format("{:.3f}", subset=column_names).hide(axis="index").to_latex(latex_path+"tables/compare_analytical.tex", hrules=True)
 
 
 
@@ -106,6 +108,10 @@ def equilibriation_time(sp):
     ax1[0].set_title('T=1')
     ax1[1].set_title('T=2.4')
 
+    if sp:
+        fig1.savefig(fig_path + "equilibriation_time_energy.png")
+        plt.close()
+
 
 
     ### MAGNETIZATION
@@ -126,9 +132,12 @@ def equilibriation_time(sp):
     ax2[0].set_title('T=1')
     ax2[1].set_title('T=2.4')
 
+    if sp:
+        fig2.savefig(fig_path + "equilibriation_time_magnetization.png")
+        plt.close()
 
-
-    plt.show()
+    if not sp:
+        plt.show()
 
 
 def pdf_histogram(sp):
@@ -166,8 +175,12 @@ def pdf_histogram(sp):
     ax[0].set_ylabel('P(E) duh')    
     ax[1].set_ylabel('P(E) duh')        
 
+    if sp:
+        fig.savefig(fig_path + "histogram.png")
+        plt.close()
 
-    plt.show()
+    else:
+        plt.show()
 
 
 def PT(sp):
@@ -207,7 +220,11 @@ def PT(sp):
 
     ax[0].legend()
     ax[1].legend()
-    plt.show()
+    if sp:
+        fig.savefig(fig_path + "phase_transition.png")
+        plt.close()
+        exit()
+    # plt.show()
 
     
     #### OLD RESULTS WITH nT=100 
@@ -257,8 +274,8 @@ def PT(sp):
 sp = False # only show plots
 
 
-# compare_analytical(sp)
-# equilibriation_time(sp)
-# pdf_histogram(sp)
-PT(sp)
+compare_analytical(True)
+# equilibriation_time(True)
+# pdf_histogram(True)
+# PT(True)
 
