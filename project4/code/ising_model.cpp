@@ -119,9 +119,10 @@ void MC_cycle(arma::mat& Lattice, std::vector<double> Boltz, double& E, double& 
 }
 
 arma::rowvec run_MC(int L, double T, int N_samples, int N_eq, 
-                unsigned int seed){
+                    unsigned int seed){
     
     std::mt19937_64 gen(seed);
+    arma::rowvec averages(7, arma::fill::zeros);
     
     arma::mat Lattice = make_Lattice(L);
     double E = initial_E(Lattice);
@@ -130,7 +131,6 @@ arma::rowvec run_MC(int L, double T, int N_samples, int N_eq,
     std::vector<double> Boltzmann_ = Boltzmann(T);
     int N_tot_cycles = N_samples + N_eq; 
 
-    arma::rowvec averages(7, arma::fill::zeros);
     double varE, varM;
 
 
@@ -154,4 +154,42 @@ arma::rowvec run_MC(int L, double T, int N_samples, int N_eq,
     averages(6) = varM;
 
     return averages;
+}
+
+arma::mat run_MC_cumulative(int L, double T, int N_samples, int N_eq,
+                    bool ordered, unsigned int seed){
+
+    std::mt19937_64 gen(seed);
+    
+    arma::mat Lattice = make_Lattice(L, ordered);
+    double E = initial_E(Lattice);
+    double M = initial_M(Lattice);
+
+    std::vector<double> Boltzmann_ = Boltzmann(T);
+    int N_tot_cycles = N_samples + N_eq; 
+    arma::mat samples(N_samples, 4, arma::fill::zeros);
+
+    if(N_eq==0){
+        // Used for estimating equilibriation time 
+        // samples.insert_rows(0,1); // Add extra row on top 
+        // Store initial values 
+        N_tot_cycles -= 1;
+    }
+
+    for(int cycle=1; cycle <= N_tot_cycles; cycle++){
+        MC_cycle(Lattice, Boltzmann_, E, M, gen);
+        if(cycle > N_eq){
+            samples(cycle, 0) = E; 
+            samples(cycle, 1) = abs(M);
+            samples(cycle, 2) = cycle;
+
+        }
+    } 
+    samples.col(3) = arma::colvec (N_samples, arma::fill::value(T)); 
+
+    samples.col(0) /= (double) (L*L);
+    samples.col(1) /= (double) (L*L);
+
+
+    return samples;
 }

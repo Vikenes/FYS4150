@@ -109,27 +109,41 @@ def equilibriation_time(sp):
     n_T2, eps_T2_unord, m_T2_unord = load("equilibriate_L20_T2.4_unordered.txt") 
     n_T2, eps_T2_order, m_T2_order =  load("equilibriate_L20_T2.4_ordered.txt") 
 
-    # NEW 
-    N1, E1_unord, M1_unord = load("TESTequilibriate_L20_T1_unordered.txt")
-    N1, E1_ord, M1_ord = load("TESTequilibriate_L20_T1_ordered.txt")
-    N2, E2_unord, M2_unord = load("TESTequilibriate_L20_T2.4_unordered.txt")
-    N2, E2_ord, M2_ord = load("TESTequilibriate_L20_T2.4_ordered.txt")
-
-
+    e1un, m1un, cy1, T1 = load("equil_L20_N100000_T1_unordered.csv", skiprows=0)
+    e1o, m1o, cy2, T2 = load("equil_L20_N100000_T1_ordered.csv", skiprows=0)
+    e2un, m2un, cy3, T3 = load("equil_L20_N100000_T2.4_unordered.csv", skiprows=0)
+    e2o, m2o, cy4, T4 = load("equil_L20_N100000_T2.4_ordered.csv", skiprows=0)
 
     fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(12,7))
 
-    ax[0,0].plot(n_T1, eps_T1_order, color='red')
-    ax[0,0].plot(N1, E1_ord, '--', color='blue')
+    ax[0,0].plot(n_T1, eps_T1_unord, color='red')
+    ax[0,0].plot(cy1, e1un, ':', alpha=0.5, color='blue')
+    
+    ax[0,1].plot(n_T1, eps_T1_order, color='red')
+    ax[0,1].plot(cy2, e1o, ':', alpha=0.5, color='black')
 
-    ax[0,1].plot(n_T1, eps_T1_unord, color='red')
-    ax[0,1].plot(N1, E1_unord, '--', color='blue')
+    ax[1,0].plot(n_T2, eps_T2_unord, color='red')
+    ax[1,0].plot(cy3, e2un, ':', alpha=0.5, color='blue')
+    # ax[1,0].plot(cy3, e2un/cy3, ':', alpha=0.5, color='black')
 
-    ax[1,0].plot(n_T2, eps_T2_order, color='red')
-    ax[1,0].plot(N2, E2_ord, '--', color='blue')
+    ax[1,1].plot(n_T2, eps_T2_order, color='red')
+    ax[1,1].plot(cy4, e2o, ':', alpha=0.5, color='blue')
+    # ax[1,1].plot(cy4, e2o/cy3, ':', alpha=0.5, color='black')
 
-    ax[1,1].plot(n_T2, eps_T2_unord, color='red')
-    ax[1,1].plot(N2, E2_unord, '--', color='blue')
+    
+
+    ax[0,0].set_xscale('log')
+    ax[0,1].set_xscale('log')
+    ax[1,0].set_xscale('log')
+    ax[1,1].set_xscale('log')
+
+    ax[0,0].set_ylim(-2.1,0)
+    # ax[0,1].set_ylim(-2.1,0)
+    ax[1,0].set_ylim(-2.1,0)
+    ax[1,1].set_ylim(-2.1,0)
+
+
+    
 
     plt.show()
 
@@ -223,7 +237,7 @@ sp = False # only show plots
 
 
 # compare_analytical(sp)
-# equilibriation_time(sp)
+equilibriation_time(sp)
 # pdf_histogram(sp)
-PT(sp)
+# PT(sp)
 

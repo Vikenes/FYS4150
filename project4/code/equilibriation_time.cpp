@@ -31,55 +31,30 @@ int main(int argc, char* argv[]){
         return 1; 
     }
     
+    int L = 20;
+    unsigned int base_seed = 690;
+
     auto start_time = std::chrono::high_resolution_clock::now();
 
+    // Returns E/spin and abs(M) per spin at each iteration
+    arma::mat results = run_MC_cumulative(L, T, N_cycles, 0, ordered, base_seed);    
 
-    std::mt19937 generator(690);
-    arma::mat Lattice = make_Lattice(20, ordered);
-    std::vector<double> dE = DeltaE(T);
+    // Compute the cumulative averages
+    results.col(0) = arma::cumsum(results.col(0)) / results.col(2);
+    results.col(1) = arma::cumsum(results.col(1)) / results.col(2);
 
-    std::vector<double> average(2, 0.0);
-   
-    double E = 0;
-    double M = 0;
-    double N_spins = Lattice.n_rows * Lattice.n_cols;
-
-    compute_E_and_M(Lattice, E, M);
 
     std::string path = "../output/data/";
-    std::string name = "TESTequilibriate_L20_T" + float_to_string(T) + "_";
+    std::string fname = "equil_L20_N" + std::to_string(N_cycles) + "_T" + float_to_string(T) + "_";
+    if (ordered==false){fname += "un";}
+    fname += "ordered";
 
-    if (ordered==false){name += "un";}
-    name += "ordered";
-    std::string fname = path + name + ".txt";
-    std::cout << "Saving to: " << fname << std::endl;
+    std::string ofilename = path + fname + ".csv";
+    std::cout << "Saving to: " << ofilename << std::endl;
 
-    std::ofstream avg_values;
-    avg_values.open(fname.c_str());
+    results.save(ofilename, arma::csv_ascii);
     
-    avg_values << "step, eps, abs_m" << std::endl;
-
-
-    for(int cycle=1; cycle <= N_cycles; cycle++){
-        MC_cycle(Lattice, dE, E, M, generator());
-        average[0] += E / N_spins; 
-        average[1] += abs(M) / N_spins; 
-
-        avg_values << cycle << ", "
-                   << scientific_format(average[0]/cycle) << ", "
-                   << scientific_format(average[1]/cycle) << std::endl;
-        
-    }
-
-    std::cout << "Completed " << N_cycles << " Monte Carlo cycles" << std::endl;
-    std::cout << "  Wrote to file: " << name << std::endl;
-    avg_values.close();
-
-
-    
-
     auto stop_time = std::chrono::high_resolution_clock::now();
-
     double run_time = std::chrono::duration<double>(stop_time-start_time).count();
 
     std::cout << "Running time: " << run_time << " s (" << run_time/60.0 << " min)" << std::endl;
