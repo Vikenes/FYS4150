@@ -169,19 +169,21 @@ arma::mat run_MC_cumulative(int L, double T, int N_samples, int N_eq,
     int N_tot_cycles = N_samples + N_eq; 
     arma::mat samples(N_samples, 4, arma::fill::zeros);
 
-    if(N_eq==0){
+    // if(N_eq==0){
         // Used for estimating equilibriation time 
         // samples.insert_rows(0,1); // Add extra row on top 
         // Store initial values 
-        N_tot_cycles -= 1;
-    }
+        // N_tot_cycles -= 1;
+    // }
 
+    int sample_idx = 0;
     for(int cycle=1; cycle <= N_tot_cycles; cycle++){
         MC_cycle(Lattice, Boltzmann_, E, M, gen);
         if(cycle > N_eq){
-            samples(cycle, 0) = E; 
-            samples(cycle, 1) = abs(M);
-            samples(cycle, 2) = cycle;
+            samples(sample_idx, 0) = E; 
+            samples(sample_idx, 1) = abs(M);
+            samples(sample_idx, 2) = cycle;
+            sample_idx++;
 
         }
     } 
