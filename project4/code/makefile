@@ -50,7 +50,7 @@ endif
 compile_anal:
 	g++ -std=c++11 analytical.cpp src/*.cpp -I include -o analytical.exe -larmadillo  
 run_anal:
-	./analytical.exe $N $(N_save) $T
+	./analytical.exe $(Nlog0) $(Nlog1) $T
 
 compile_equi:
 	g++ -std=c++11 equilibriation_time.cpp src/*.cpp -I include -o equilibriation_time.exe -larmadillo 
