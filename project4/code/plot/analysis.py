@@ -149,28 +149,17 @@ def equilibriation_time(sp):
 
 
 def pdf_histogram(sp):
-    epsT1, eps2T1 = load("TESTsample_eps_L20_T1_unordered.txt")
-    epsT2, eps2T2 = load("TESTsample_eps_L20_T2.4_unordered.txt")
+   
+    f1 = load("pdf_T1_unordered.csv", skiprows=0)
+    f2 = load("pdf_T2.4_unordered.csv", skiprows=0)
 
-    epsT1_, eps2T1_ = load("sample_eps_L20_T1_unordered.txt")   ### WRONG!!! 
-    epsT2_, eps2T2_ = load("sample_eps_L20_T2.4_unordered.txt") ### WRONG!!! 
-
-    # eps, eps2 = load("sample_eps_L20_T1_unorderedtest.txt")
-    # print(len(epsT1))
-    # exit()
-
-    # bins = np.linspace(np.min(eps), np.max(eps), len(eps)) 
-
-    # print(np.min(eps), np.argmax(eps))
-    # eps_counts, eps_bins = np.histogram(eps)
-    # print(bins)
-    # print('--')
-    # print(eps_bins)
-    # print(eps_counts, eps_bins)
+    e1 = f1[0]
+    e2 = f2[0]
+        
     fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(12,7))
-    ax[0].hist(epsT2, bins=20)
-    ax[1].hist(epsT2_, bins=20)
-    # plt.plot(N, eps)
+
+    ax[0].hist(e1, bins=100)
+    ax[1].hist(e2, bins=100)
     plt.show()
 
 
@@ -237,7 +226,7 @@ sp = False # only show plots
 
 
 # compare_analytical(sp)
-equilibriation_time(sp)
-# pdf_histogram(sp)
+# equilibriation_time(sp)
+pdf_histogram(sp)
 # PT(sp)
 

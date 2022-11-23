@@ -60,7 +60,7 @@ run_equi:
 compile_pdf:
 	g++ -std=c++11 prob_distr.cpp src/*.cpp -I include -o prob_distr.exe -larmadillo
 run_pdf:
-	./prob_distr.exe $(N_samples) $(N_eq_steps) $T $(order)
+	./prob_distr.exe $(NMC) $(Neq) $T $(order)
 
 parallel_compile:
 	g++ -std=c++11 -O3 parallel_system.cpp src/*.cpp -I include -o parallel_system.exe -larmadillo -fopenmp
