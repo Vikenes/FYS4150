@@ -10,11 +10,23 @@ from scipy.stats import linregress
 import os 
 import plot 
 
-
+#   Paths
 here = os.path.abspath(".")
 data_path = here + "/../../output/data/"
 latex_path = here + "/../../latex/"
 fig_path = here + "/../../output/plots/temp/"
+
+#   rc-params
+
+plt.rc("legend", fontsize=25, fancybox=True, loc="best", frameon=True)
+plt.rc("font", size=25)
+plt.rc("axes", titlesize=25)
+plt.rc("xtick", labelsize=20)
+plt.rc("ytick", labelsize=20)
+plt.rc("lines", linewidth=2.5)
+# plt.rc("label", fontsize=20)
+
+plt.rcParams['savefig.bbox'] = 'tight'
 
 
 def analytical(T):
@@ -91,17 +103,15 @@ def equilibriation_time(sp):
     e1un, m1un, n2, T2 = load("equil_L20_N100000_T1_unordered.csv")     # T=1, unordered (random inital spins)
     e2or, m2or, n3, T4   = load("equil_L20_N100000_T2.4_ordered.csv")   # T=2.4, aligned initial spins 
     e2un, m2un, n4, T4 = load("equil_L20_N100000_T2.4_unordered.csv")   # T=2.4, unordered (random inital spins)
-
     
     ### ENERGY 
-    fig1, ax1 = plt.subplots(nrows=1, ncols=2, figsize=(12,7))
-    fig1.suptitle(r'$\langle \epsilon \rangle$')
+    fig1, ax1 = plt.subplots(nrows=1, ncols=2, figsize=(12,7), sharey=True)
+    fig1.suptitle('Energy')
 
     ax1[0].plot(n1, e1or, '--', color='red', label='Ordered')
     ax1[0].plot(n2, e1un, ':', color='blue', label='Unordered')
     ax1[1].plot(n3, e2or, '--', color='red', label='Ordered')
     ax1[1].plot(n4, e2un, ':', color='blue', label='Unordered')
-
     
     ax1[0].set_xscale('log')
     ax1[1].set_xscale('log')
@@ -109,18 +119,20 @@ def equilibriation_time(sp):
     ax1[1].set_ylim(-2.1, 0)
     ax1[0].legend()
     ax1[1].legend()
-    ax1[0].set_title('T=1')
-    ax1[1].set_title('T=2.4')
+    ax1[0].set_title(r'$T=1$')
+    ax1[1].set_title(r'$T=2.4$')
+
+    ax1[0].set_ylabel(r'$\langle \epsilon \rangle$', fontsize=25)
+    ax1[0].set_xlabel(r'$N$', fontsize=25)
+    ax1[1].set_xlabel(r'$N$', fontsize=25)
 
     if sp:
         fig1.savefig(fig_path + "equilibriation_time_energy.png")
         plt.close()
 
-
-
     ### MAGNETIZATION
-    fig2, ax2 = plt.subplots(nrows=1, ncols=2, figsize=(12,7))
-    fig2.suptitle(r'$\langle \vert m \vert \rangle$')
+    fig2, ax2 = plt.subplots(nrows=1, ncols=2, figsize=(12,7), sharey=True)
+    fig2.suptitle(r'Magnetization')
     
     ax2[0].plot(n1, m1or, '--', color='red', label='Ordered')
     ax2[0].plot(n2, m1un, ':', color='blue', label='Unordered')
@@ -133,8 +145,13 @@ def equilibriation_time(sp):
     ax2[1].set_ylim(0, 1.1)
     ax2[0].legend()
     ax2[1].legend()
-    ax2[0].set_title('T=1')
-    ax2[1].set_title('T=2.4')
+    ax2[0].set_title(r'$T=1$')
+    ax2[1].set_title(r'$T=2.4$')
+
+    ax2[0].set_ylabel(r'$\langle \vert m \vert \rangle$', fontsize=25)
+    ax2[0].set_xlabel(r'$N$', fontsize=25)
+    ax2[1].set_xlabel(r'$N$', fontsize=25)
+
 
     if sp:
         fig2.savefig(fig_path + "equilibriation_time_magnetization.png")
@@ -170,13 +187,19 @@ def pdf_histogram(sp):
     ax[0].hist(e1, bins=bins1, weights=weights1, facecolor='red', edgecolor='black', lw=2)
     ax[1].hist(e2, bins=bins2, weights=weights2, facecolor='red', edgecolor='black', lw=0.5)
 
-    ax[0].set_title(r'T=1, $\langle E \rangle =${:.2f}, $\sigma^2=${:.2e}'.format(mean1, var1))
-    ax[1].set_title(r'T=2.4, $\langle E \rangle =${:.2f}, $\sigma^2=${:.2e}'.format(mean2, var2))
+    ax[0].set_title(r'$T=1$')
+    ax[1].set_title(r'$T=2.4$')
     
-    ax[0].set_xlabel('E duh')
-    ax[1].set_xlabel('E duh')
-    ax[0].set_ylabel('P(E) duh')    
-    ax[1].set_ylabel('P(E) duh')        
+    textstr1 = '\n'.join((r'$\langle E \rangle = $ {:.2f}'.format(mean1), r'$\sigma^2 = $ {:.2e}'.format(var1)))
+    textstr2 = '\n'.join((r'$\langle E \rangle = $ {:.2f}'.format(mean2), r'$\sigma^2 = $ {:.2e}'.format(var2)))
+
+    ax[0].set_xlabel(r'$\epsilon$', fontsize=25)
+    ax[1].set_xlabel(r'$\epsilon$', fontsize=25)
+    ax[0].set_ylabel(r'$p_\epsilon(\epsilon; T)$', fontsize=25)    
+    # ax[1].set_ylabel('P(E) duh')        
+
+    ax[0].text(0.58, 0.95, textstr1, transform=ax[0].transAxes, fontsize=20, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white'))
+    ax[1].text(0.05, 0.95, textstr2, transform=ax[1].transAxes, fontsize=20, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white'))
 
     if sp:
         fig.savefig(fig_path + "histogram.png")
@@ -322,12 +345,10 @@ def PT(NT, sp=False):
     plt.show()
 
 
-
 sp = False # only show plots
-
 
 # compare_analytical(sp)
 # equilibriation_time(sp)
-# pdf_histogram(sp)
-PT(NT=101, sp=False)
+pdf_histogram(sp)
+# PT(NT=100, sp=False)
 
