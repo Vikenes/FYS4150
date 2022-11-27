@@ -78,7 +78,9 @@ def compare_analytical(sp, filename="anal_Nsamples4_T1.csv"):
     df = pd.DataFrame(data, index=None)
     if sp:
         df.style.format("{:.3f}", subset=column_names).hide(axis="index").to_latex(latex_path+"tables/compare_analytical.tex", hrules=True)
-
+    else:
+        df.style.format("{:.3f}", subset=column_names).hide(axis="index")
+        print(df.to_string())
 
 
 def equilibriation_time(sp):
@@ -148,7 +150,6 @@ def pdf_histogram(sp):
     e1 = f1[0]
     e2 = f2[0]
     
-    # print((np.max(e2) - np.min(e2))/len(e2))
     bins1 = np.arange(np.min(e1), np.max(e1)+0.01, 0.01)
     bins2 = np.arange(np.min(e2), np.max(e2)+0.01, 0.01)
     N1 = len(e1)
@@ -224,7 +225,6 @@ def PT(sp):
         fig.savefig(fig_path + "phase_transition.png")
         plt.close()
         exit()
-    # plt.show()
 
     
     #### OLD RESULTS WITH nT=100 
@@ -274,8 +274,8 @@ def PT(sp):
 sp = False # only show plots
 
 
-compare_analytical(True)
-# equilibriation_time(True)
-# pdf_histogram(True)
-# PT(True)
+# compare_analytical(sp)
+# equilibriation_time(sp)
+# pdf_histogram(sp)
+# PT(sp)
 
