@@ -16,7 +16,7 @@ fig_path = here + "/../../output/plots/temp/"
 
 #   rc-params
 
-plt.rc("legend", fontsize=25, fancybox=True, loc="best", frameon=True)
+plt.rc("legend", fontsize=25, fancybox=True, loc="best", frameon=True, edgecolor="black")
 plt.rc("font", size=25)
 plt.rc("axes", titlesize=25)
 plt.rc("xtick", labelsize=20)
@@ -188,8 +188,8 @@ def pdf_histogram(sp):
     ax[0].set_title(r'$T=1$')
     ax[1].set_title(r'$T=2.4$')
     
-    textstr1 = '\n'.join((r'$\langle E \rangle = $ {:.2f}'.format(mean1), r'$\sigma^2 = $ {:.2e}'.format(var1)))
-    textstr2 = '\n'.join((r'$\langle E \rangle = $ {:.2f}'.format(mean2), r'$\sigma^2 = $ {:.2e}'.format(var2)))
+    textstr1 = '\n'.join((r'$\langle \epsilon \rangle = $ {:.2f}'.format(mean1), r'$\sigma^2 = $ {:.2e}'.format(var1)))
+    textstr2 = '\n'.join((r'$\langle \epsilon \rangle = $ {:.2f}'.format(mean2), r'$\sigma^2 = $ {:.2e}'.format(var2)))
 
     ax[0].set_xlabel(r'$\epsilon$', fontsize=25)
     ax[1].set_xlabel(r'$\epsilon$', fontsize=25)
@@ -307,7 +307,7 @@ def PT(NT, sp=False):
 sp = False # only show plots
 
 # compare_analytical(sp)
-# equilibriation_time(sp)
+equilibriation_time(sp)
 pdf_histogram(sp)
 # PT(NT=100, sp=False)
 
