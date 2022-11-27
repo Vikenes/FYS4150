@@ -32,7 +32,7 @@ int main(int argc, char* argv[]){
     }
     
     int L = 20;
-    unsigned int base_seed = 690;
+    unsigned int base_seed = 6900;
 
     auto start_time = std::chrono::high_resolution_clock::now();
 
