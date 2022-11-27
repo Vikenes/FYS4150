@@ -5,6 +5,8 @@ from matplotlib import cm
 from IPython import embed
 import seaborn as sns 
 import pandas as pd 
+from scipy.interpolate import CubicSpline, UnivariateSpline
+from scipy.stats import linregress
 import os 
 import plot 
 
@@ -203,9 +205,23 @@ def PT(NT, sp=False):
         f4 = load("L100_nT100_NMC100000_Neq15000_para.csv", folder)
         # FFF5 = load("L60_nT100_NMC100000_Neq15000_para.csv", folder) # previous sim with nT=100 for comparison
 
+    if NT==101:
+        ### (T, E, E2, abs(M), M2, var(E), var(M))
+        f1 = load("L40_nT100_NMC1000000_Neq15000_para.csv", folder)
+        f2 = load("L60_nT100_NMC1000000_Neq15000_para.csv", folder)
+        f3 = load("L80_nT100_NMC1000000_Neq15000_para.csv", folder)
+        f4 = load("L100_nT100_NMC1000000_Neq15000_para.csv", folder)
+        # FFF5 = load("L60_nT100_NMC100000_Neq15000_para.csv", folder) # previous sim with nT=100 for comparison
+
+        
     files = [f1,f2,f3,f4]
     Ls = [40, 60, 80, 100]
     colors = ['blue', 'green', 'red', 'black', 'orange']
+
+    crit_T = []
+    crit_CV = []
+    
+
     fig, ax = plt.subplots(1,2,figsize=(12,7))
     for i, file in enumerate(files):
         T = file[0]
@@ -213,8 +229,21 @@ def PT(NT, sp=False):
         N = (Ls[i])**2 
         Cv = varE / (N * T**2)
         chi = varM / (N * T)
+
+        cv_spline = CubicSpline(T, Cv)
+        cv_uspline = UnivariateSpline(T, Cv)
+        t = np.linspace(T[0], T[-1], 1000)
+        cv_fit = cv_uspline(t)
+        crit_idx = np.argmax(cv_fit)
+        cv_crit = cv_fit[crit_idx]
+        t_crit = t[crit_idx]
+        crit_T.append(t_crit)
+        crit_CV.append(cv_crit)
+
         if i!=4:
             ax[0].plot(T, Cv, 'o--', ms=3, lw=0.5, color=colors[i], label=f'L={Ls[i]}')
+            ax[0].plot(t, cv_fit, '--',color=colors[i])
+            ax[0].plot(*[t_crit, cv_crit], 'o', color='orange')
             ax[1].plot(T, chi,'o--', ms=3, lw=0.5, color=colors[i], label=f'L={Ls[i]}')
         else:
             ax[0].plot(T, Cv,  lw=3, alpha=0.5, color=colors[i], label=f'L={Ls[i]}, comparing')
@@ -235,9 +264,21 @@ def PT(NT, sp=False):
         exit()
     else:
         plt.show()
-        exit()
+        # print('a')
+        plt.close()
 
-    
+    L_inv = 1/np.array(Ls)
+    lreg = linregress(L_inv, crit_T)
+    L_inv_array = np.linspace(0, 0.03, 100)
+    T_c_infty = lreg.intercept 
+    a = lreg.slope 
+    print(lreg)
+    print(f'a: {a:.4f}')
+    print(f"Tc_infty={T_c_infty:.5f}")
+    plt.plot(L_inv_array, T_c_infty + a*L_inv_array )
+    plt.plot(1/np.array(Ls), crit_T, 'o')
+    plt.show()
+    exit()
     #### OLD RESULTS WITH nT=100 
     cv  = lambda var, L, T: var / L**2 / T**2 
     chi = lambda var, L, T: var / L**2 / T 
@@ -288,5 +329,5 @@ sp = False # only show plots
 # compare_analytical(sp)
 # equilibriation_time(sp)
 # pdf_histogram(sp)
-PT(NT=100, sp=False)
+PT(NT=101, sp=False)
 
