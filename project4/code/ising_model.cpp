@@ -109,11 +109,12 @@ std::vector<double> Boltzmann(double T){
  * @param Boltz Vector containing possible Boltzmann factor due to single spin flip
  * @param E Energy of Lattice
  * @param M Magnetization of Lattice
- * @param gen mt19937_64 generator for generating random numbers   
+ * @param seed Seed used to create mt19937_64 generator for generating random numbers   
 */
 void MC_cycle(arma::mat& Lattice, std::vector<double> Boltz, double& E, double& M, 
-            std::mt19937_64& gen){
-
+            unsigned int seed){
+    
+    std::mt19937_64 gen(seed);
     int L = Lattice.n_rows;
     std::uniform_int_distribution<int> indx(0, L-1);    // Uniform distr of spin idices
     std::uniform_real_distribution<double> r(0.0, 1.0); // Acceptance prob. 
@@ -153,14 +154,12 @@ void MC_cycle(arma::mat& Lattice, std::vector<double> Boltz, double& E, double& 
  * @param T Temperature of the system 
  * @param N_samples Number of samples over which average values are computed 
  * @param N_eq Number of steps used to equilibriate the system 
- * @param seed Random seed used for the MC cycles. 
+ * @param base_seed Random seed used for the MC cycles. 
  * 
  * @return Temperature, average of E, E^2, abs(M) and M^2. Variance of E and abs(M)
 */
-arma::rowvec run_MC(int L, double T, int N_samples, int N_eq, unsigned int seed){
+arma::rowvec run_MC(int L, double T, int N_samples, int N_eq, unsigned int base_seed){
 
-
-    std::mt19937_64 gen(seed);
     arma::rowvec averages(7, arma::fill::zeros);
     
     arma::mat Lattice = make_Lattice(L);
@@ -175,7 +174,7 @@ arma::rowvec run_MC(int L, double T, int N_samples, int N_eq, unsigned int seed)
 
     
     for(int cycle=1; cycle <= N_tot_cycles; cycle++){
-        MC_cycle(Lattice, Boltzmann_, E, M, gen);
+        MC_cycle(Lattice, Boltzmann_, E, M, base_seed+cycle);
         if(cycle > N_eq){
             averages(1) += E; 
             averages(2) += E*E;
@@ -203,16 +202,14 @@ arma::rowvec run_MC(int L, double T, int N_samples, int N_eq, unsigned int seed)
  * @param N_samples Number of runs from which samples are stored 
  * @param N_eq Number of equilibriation steps to perform before storing values.  
  * @param ordered All spins aligned if true, oriented randomly if false.
- * @param seed Seed for random generator 
+ * @param base_seed Seed for random generator 
  * 
  * @return Energy and abs(Magnetization) per spin at each MC cycle and temperature.
  * Samples during equilibriation are not stored.  
 */
 arma::mat run_MC_cumulative(int L, double T, int N_samples, int N_eq,
-                    bool ordered, unsigned int seed){
+                    bool ordered, unsigned int base_seed){
 
-    std::mt19937_64 gen(seed);
-    
     arma::mat Lattice = make_Lattice(L, ordered);
     double E = initial_E(Lattice);
     double M = initial_M(Lattice);
@@ -224,7 +221,7 @@ arma::mat run_MC_cumulative(int L, double T, int N_samples, int N_eq,
 
     int sample_idx = 0;
     for(int cycle=1; cycle <= N_tot_cycles; cycle++){
-        MC_cycle(Lattice, Boltzmann_, E, M, gen);
+        MC_cycle(Lattice, Boltzmann_, E, M, base_seed+cycle);
         if(cycle > N_eq){
             samples(sample_idx, 0) = E; 
             samples(sample_idx, 1) = abs(M);

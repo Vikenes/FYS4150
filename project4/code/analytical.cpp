@@ -27,7 +27,7 @@ int main(int argc, char* argv[]){
     std::cout << "N0=" << Nlog_min << ", N1=" << Nlog_max << ", steps=" << N_meas << std::endl; 
     arma::mat results(N_meas, 7, arma::fill::zeros);
     
-    unsigned int base_seed = 690;
+    unsigned int base_seed = 6900;
 
    
     auto start_time = std::chrono::high_resolution_clock::now();

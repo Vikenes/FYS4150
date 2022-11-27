@@ -48,17 +48,17 @@ endif
 
 
 compile_anal:
-	g++ -std=c++11 analytical.cpp src/*.cpp -I include -o analytical.exe -larmadillo  
+	g++ -std=c++11 -O2 analytical.cpp src/*.cpp -I include -o analytical.exe -larmadillo  
 run_anal:
 	./analytical.exe $(Nlog0) $(Nlog1) $T
 
 compile_equi:
-	g++ -std=c++11 equilibriation_time.cpp src/*.cpp -I include -o equilibriation_time.exe -larmadillo 
+	g++ -std=c++11 -O2 equilibriation_time.cpp src/*.cpp -I include -o equilibriation_time.exe -larmadillo 
 run_equi:
 	./equilibriation_time.exe $N $T $(order)
 
 compile_pdf:
-	g++ -std=c++11 prob_distr.cpp src/*.cpp -I include -o prob_distr.exe -larmadillo
+	g++ -std=c++11 -O2 prob_distr.cpp src/*.cpp -I include -o prob_distr.exe -larmadillo
 run_pdf:
 	./prob_distr.exe $(NMC) $(Neq) $T $(order)
 
