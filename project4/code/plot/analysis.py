@@ -77,9 +77,9 @@ def compare_analytical(sp, filename="anal_Nsamples4_T1.csv"):
 
     df = pd.DataFrame(data, index=None)
     if sp:
-        df.style.format("{:.3f}", subset=column_names).hide(axis="index").to_latex(latex_path+"tables/compare_analytical.tex", hrules=True)
+        df.style.format("{:.4f}", subset=column_names).hide(axis="index").to_latex(latex_path+"tables/compare_analytical.tex", hrules=True)
     else:
-        df.style.format("{:.3f}", subset=column_names).hide(axis="index")
+        df.style.format("{:.4f}", subset=column_names).hide(axis="index")
         print(df.to_string())
 
 
@@ -184,19 +184,27 @@ def pdf_histogram(sp):
         plt.show()
 
 
-def PT(sp):
+def PT(NT, sp=False):
 
     folder = data_path + "parallel/"
+    if NT==50:
+        ### (T, E, E2, abs(M), M2, var(E), var(M))
+        f1 = load("L40_nT50_NMC100000_Neq15000_para.csv", folder)
+        f2 = load("L60_nT50_NMC100000_Neq15000_para.csv", folder)
+        f3 = load("L80_nT50_NMC100000_Neq15000_para.csv", folder)
+        f4 = load("L100_nT50_NMC100000_Neq15000_para.csv", folder)
+        # FFF5 = load("L60_nT100_NMC100000_Neq15000_para.csv", folder) # previous sim with nT=100 for comparison
+    
+    if NT==100:
+        ### (T, E, E2, abs(M), M2, var(E), var(M))
+        f1 = load("L40_nT100_NMC100000_Neq15000_para.csv", folder)
+        f2 = load("L60_nT100_NMC100000_Neq15000_para.csv", folder)
+        f3 = load("L80_nT100_NMC100000_Neq15000_para.csv", folder)
+        f4 = load("L100_nT100_NMC100000_Neq15000_para.csv", folder)
+        # FFF5 = load("L60_nT100_NMC100000_Neq15000_para.csv", folder) # previous sim with nT=100 for comparison
 
-    ### (T, E, E2, abs(M), M2, var(E), var(M))
-    f1 = load("L40_nT50_NMC100000_Neq15000_para.csv", folder)
-    f2 = load("L60_nT50_NMC100000_Neq15000_para.csv", folder)
-    f3 = load("L80_nT50_NMC100000_Neq15000_para.csv", folder)
-    f4 = load("L100_nT50_NMC100000_Neq15000_para.csv", folder)
-    FFF5 = load("L60_nT100_NMC100000_Neq15000_para.csv", folder) # previous sim with nT=100 for comparison
-
-    files = [f1,f2,f3,f4, FFF5]
-    Ls = [40, 60, 80, 100, 60]
+    files = [f1,f2,f3,f4]
+    Ls = [40, 60, 80, 100]
     colors = ['blue', 'green', 'red', 'black', 'orange']
     fig, ax = plt.subplots(1,2,figsize=(12,7))
     for i, file in enumerate(files):
@@ -224,6 +232,9 @@ def PT(sp):
     if sp:
         fig.savefig(fig_path + "phase_transition.png")
         plt.close()
+        exit()
+    else:
+        plt.show()
         exit()
 
     
@@ -277,5 +288,5 @@ sp = False # only show plots
 # compare_analytical(sp)
 # equilibriation_time(sp)
 # pdf_histogram(sp)
-# PT(sp)
+PT(NT=100, sp=False)
 
