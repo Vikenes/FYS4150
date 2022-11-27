@@ -17,24 +17,24 @@ The total magnetization of the system will be given by the sum over all spins
 \subsection{Phase transitions and critical phenomena}\label{subsec_theory:PT_critical_phenomena}
 \alert{This section is yet to be completed. I will write it more properly once I know we shall use it in practice.}
 
-One of the most peculiar features of continuous phase transitions is that thermodynamic quantities are found to exhibit similar behavior for a variety of different systems. These phase transitions can be characterized by \textit{critical exponents}, where physical quantities behave according to power laws near the critical point. \Vetle{Mention universality classes?} For a 2D Ising model of infinite size, the behavior of the \Vetle{fill in...}
-
+One of the most peculiar features of continuous phase transitions is that thermodynamic quantities are found to exhibit similar behavior for a variety of different systems. These phase transitions can be characterized by \textit{critical exponents}, where physical quantities behave according to power laws near the critical point, i.e. a critical temperature. \Vetle{Mention universality classes?} For a 2D Ising model of infinite size, we have the following power law behaviors near the critical temperature: 
 \begin{align}
     \expval{\abs{M}} & \propto \abs{T - T_c(L=\infty)}^\beta, \label{eq:crit_expo_mag} \\
     C_V & \propto \abs{T - T_c(L=\infty)}^{-\alpha}, \label{eq:crit_expo_heatcap} \\ 
     \chi & \propto \abs{T - T_c(L=\infty)}^{-\gamma}, \label{eq:crit_expo_mag_susc} \\ 
-    \xi & \propto \abs{T - T_c(L=\infty)}^{-\nu}, \label{eq:crit_expo_corr_length}
 \end{align}
 \Johan{This $\nu$ is different from the microstates right?}
 
 
-where the critical exponents are $\beta=1/8$, $\alpha=0$, $\gamma=7/4$ and $\nu=1$. For our finite system, the largest possible correlation length is $\xi=L$, associated with $T=T_c(L)$, which is the critical temperature of our finite system. Using the constraint on $\xi$ yields the following relation 
+where the critical exponents are $\beta=1/8$, $\alpha=0$ and $\gamma=7/4$. Both $C_V$ and $\chi$ diverge near the critical temperature. $T_c(L=\infty)$ is the critical temperature according to a square lattice Ising model of infinite size. Additionally, the correlation between spins is characterized by the correlation length, $xi$, which has the following power law behavior near the critical temperature 
+\begin{equation}
+    \xi \propto \abs{T - T_c(L=\infty)}^{-\nu}, \label{eq:crit_expo_corr_length}
+\end{equation}
+where $\nu=1$. Our analysis is limited to systems of finite extent, and it can be shown \Vetle{ref?} that the correlation length is proportional to the lattice size near the critical temperature. For $T=T_c(L)$, we then have $\xi\propto L$. Inserting this into Eq. \eqref{eq:crit_expo_corr_length}, we get a relation between the lattice size $L$ and the associated critical temperature, $T_c(L)$
 \begin{equation}
     T_c(L) - T_c(L=\infty) = aL^{-1}, \label{eq:finite_size_scaling_relation}
 \end{equation}  
-where $a$ is a proportionality constant. \Vetle{I will connect the dots when I know how we will do this.}\Johan{Nice, because there are some dots that need to be connected}
-
-The analytical value of $T_c(L=\infty)$ for the 2D Ising model with no external magnetic field has found to be \cite{Onsager_Ising2D}
+where $a$ is a proportionality constant. By estimating the critical temperature at different lattice sizes, we can perform linear regression to obtain an estimate of $T_c(L=\infty)$. This estimate can be compared to the analytical value of $T_c(L=\infty)$, which for the 2D Ising model with no external magnetic field is \cite{Onsager_Ising2D}
 \begin{equation}
     T_c(L=\infty) = \frac{2}{\ln(1+\sqrt{2})} J/k_B \approx 2.269\,J/k_B. \label{eq:onsager_critical_temperature}
 \end{equation}
@@ -165,11 +165,15 @@ To test our implementation, we will first consider a lattice of size $L=2$ for w
 \subsection{Equilibriation time}\label{subsec_methods:equilibriation_time}
 When initializing the system is unlikely to be in a state near equilibrium. This means that a majority of the cycles we run in the beginning will consist of transitions such that the system approaches an equilibrium. After a certain number of iterations the samples we draw are likely to oscillate around the equilibrium values. The number of cycles needed to reach this equilibrium is called the \textit{equilibriation time}, $t_\mathrm{eq}$. To reduce the number of cycles needed to obtain accurate estimates of thermal averages, we only include samples drawn after we have performed $t_\mathrm{eq}$ equilibriation steps. 
 
-To estimate $t_\mathrm{eq}$, we will consider a lattice with $L=20$, and plot $\avge$ and $\avgm$ as a function of cycles. From this we will choose a rough estimate of $t_\mathrm{eq}$. We will do this for $T=1$\Vetle{unit} and $T=2.4$, and in both cases study the result from a lattice that is initially ordered (all spins up) and a lattice that is unordered (random). \Vetle{Mention ordered/disordered}. 
+To estimate $t_\mathrm{eq}$, we will consider a lattice with $L=20$, and plot $\avge$ and $\avgm$ as a function of cycles. From this we will choose a rough estimate of $t_\mathrm{eq}$. We will do this for $T=1$\Vetle{unit} and $T=2.4$, and in both cases study the result from a lattice that is initially ordered (all spins up) and a lattice that is unordered (random). \Vetle{Describe ordered/disordered}. The equilibriation time is chosen as the approximate number of cycles performed until we see that the measured quantities oscillate around a somewhat stable value. This number of equilibriation steps will be used in the remaining methods, and unless stated otherwise, all the following methods concern drawing samples after we have equilibriated the system.     
+
+\Vetle{Should reference the analytical equilibriation result, and why we don't opt for it.}
 
 
 \subsection{Estimating the probability distribution}\label{subsec_methods:histogram}
-
+After the equilibriation time has been estimated we wish to estimate the probability distribution of the energy $p_\eps(T)$. To do this, we sample the $\eps$ from a total of $N=10^5$ cycles, and plot histogram of the sampled energies. We will consider a lattice of size $L=20$. From Eq. \eqref{eq:DeltaE_possible_values}, we know that the smallest change in energy per spin for a lattice with $N=400$ spins is $\min(\Delta\eps)=0.01\,\mathrm{J}$, which is the batch size we will consider for the histogram. We plot the normalized distribution for $T=1$ and $T=2.4$, and for both temperatures we compute and estimate of the mean and the variance of the two distributions.     
+\Vetle{Mention number of cycles etc.}
 
 
 \subsection{Phase transitions}\label{subsec_methods:PT}
+To estimate the critical temperature for the 2D Ising model of finite extent, $T_c(L)$, we will study  
