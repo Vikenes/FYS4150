@@ -162,11 +162,13 @@ To test our implementation, we will first consider a lattice of size $L=2$ for w
 \subsection{Equilibriation time}\label{subsec_methods:equilibriation_time}
 When initializing the system is unlikely to be in a state near equilibrium. This means that a majority of the cycles we run in the beginning will consist of transitions such that the system approaches an equilibrium. After a certain number of iterations the samples we draw are likely to oscillate around the equilibrium values. The number of cycles needed to reach this equilibrium is called the \textit{equilibriation time}, $t_\mathrm{eq}$. To reduce the number of cycles needed to obtain accurate estimates of thermal averages, we only include samples drawn after we have performed $t_\mathrm{eq}$ equilibriation steps. 
 
-To estimate $t_\mathrm{eq}$, we will consider a lattice with $L=20$, and plot $\avge$ and $\avgm$ as a function of cycles. From this we will choose a rough estimate of $t_\mathrm{eq}$. We will do this for $T=1$\Vetle{unit} and $T=2.4$, and in both cases study the result from a lattice that is initially ordered (all spins up) and a lattice that is unordered (random). \Vetle{Mention ordered/disordered}. 
+To estimate $t_\mathrm{eq}$, we will consider a lattice with $L=20$, and plot $\avge$ and $\avgm$ as a function of cycles. From this we will choose a rough estimate of $t_\mathrm{eq}$. We will do this for $T=1$\Vetle{unit} and $T=2.4$, and in both cases study the result from a lattice that is initially ordered (all spins up) and a lattice that is unordered (random). \Vetle{Describe ordered/disordered}. The equilibriation time is chosen as the approximate number of cycles performed until we see that the measured quantities oscillate around a somewhat stable value. This number of equilibriation steps will be used in the remaining methods, and unless stated otherwise, all the following methods concern drawing samples after we have equilibriated the system.     
+
+\Vetle{Should reference the analytical equilibriation result, and why we don't opt for it.}
 
 
 \subsection{Estimating the probability distribution}\label{subsec_methods:histogram}
-
+After the equilibriation time has been estimated we wish to estimate the probability distribution of the energy $p_\eps(T)$. To do this, we sample the $\eps$ from a total of $N=10^5$ cycles, and plot histogram of the sampled energies. We will consider a lattice of size $L=20$. From Eq. \eqref{eq:DeltaE_possible_values}, we know that the smallest change in energy per spin for a lattice with $N=400$ spins is $\min(\Delta\eps)=0.01\,\mathrm{J}$, which is the batch size we will consider for the histogram. We plot the normalized distribution for $T=1$ and $T=2.4$, and for both temperatures we compute and estimate of the mean and the variance of the two distributions.     
 
 
 \subsection{Phase transitions}\label{subsec_methods:PT}
