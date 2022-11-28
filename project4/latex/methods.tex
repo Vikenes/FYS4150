@@ -1,47 +1,20 @@
 \section{Theoretical background}\label{sec:theory}
 
-In this section we present a brief introduction to the 2D Ising model, as well some theoretical background of phase transition phenomena and statistical mechanics. Additionally, we briefly describe the overall ideas behind the workings of Markov chain Monte Carlo (MCMC) methods, in particular how this is implemented with the Metropolis algorithm. Details regarding our own implementation of an MCMC algorithm will be presented in \Vetle{Section 69}.    
+In this section we present a brief introduction to the 2D Ising model, as well some theoretical background of phase transition phenomena and statistical mechanics. Additionally, we briefly describe the overall ideas behind the workings of Markov chain Monte Carlo (MCMC) methods, in particular how this is implemented with the Metropolis algorithm. A more detailed explanation of our implementations will be presented in Sec. \ref{sec:implementations}.    
 
-\subsection{2D Ising model}\label{subsec_theory:ising_2d}
-The Ising model is a mathematical model used to model statistical properties of materials, such as ferromagnetism. It consists of discrete magnetic moments localized in a particular lattice. For simplicity, we will refer to the magnetic moments as "spins" throughout this report. Additionally, we will restrict our analysis to a square lattice in two dimensions without an external magnetic field. Each spin has a fixed position in the lattice, where they are allowed to interact with their immediate neighbors. We will denote a single spin as $s_i$, where the subscript $i$ refers to a certain position in the lattice. An individual spin can be in one of two possible states having a value of $s_i=+1$ or $s_i=-1$. We will refer to the \Vetle{(an arbitrary)} spin state of the entire lattice as a \textit{microstate}, which we will denote as $\nu$ \Vetle{(Don't want vector or hat/tilde, and other Greek letters may cause confusion)}. The lattice has dimension $(L\cross L)$, where we refer to $L$ as the lattice size. The number of \Vetle{(individual)} spins in the lattice is thus $N=L^2$. \Vetle{Explain that $\nu$ is a matrix?} The total energy of the system is given by 
+\subsection{The 2D Ising model}\label{subsec_theory:ising_2d}
+The Ising model is a mathematical model used to model statistical properties of materials, such as ferromagnetism. It consists of discrete magnetic moments localized in a particular lattice. For simplicity, we will refer to the magnetic moments as "spins" throughout this report. Additionally, we will consider a square lattice of dimension $(L\cross L)$, where we refer to $L$ as the lattice size. Each spin has a fixed position in the lattice, where they are allowed to interact with their immediate neighbors. We will denote a single spin as $s_i$, where the subscript $i$ refers to a certain position in the lattice. An individual spin can be in one of two possible states having a value of $s_i=+1$ or $s_i=-1$. We will refer to an arbitrary spin state of the entire lattice as a \textit{microstate}, which we will denote as $\nu$\footnote{In practice, $\nu$ can thus be viewed as an $L\cross L$ matrix.}. The number of individual spins in the lattice is thus $N=L^2$. We will limit our analysis to the case of no external magnetic field. The total energy of the system is given by 
 \begin{equation} \label{eq:energy}
     E(\nu) = -J \sum_{\langle kl \rangle}^N s_k s_l,
 \end{equation}
-where $\langle kl\rangle$ indicates that the sum is taken over the nearest neighboring pairs of spins. \Vetle{Explain which neighbors are summed over.} The parameter $J$ represents the strength of interactions between neighboring spins, and we assume a constant $J>0$, so that energy is minimized when neighboring spins are aligned \Vetle{(Energy minimization sentence should perhaps be removed...)}. 
+where $\langle kl\rangle$ indicates that the sum is taken over the nearest neighboring pairs of spins. We will in this report impose periodic boundary conditions, so all spins have exactly four neighbors (left, right, up and down). The parameter $J$ represents the strength of interactions between neighboring spins, and we assume a constant $J>0$, so that the energy is lower when neighboring spins are aligned. 
 
 The total magnetization of the system will be given by the sum over all spins 
 \begin{equation}\label{eq:total_magnetization}
     M(\nu) = \sum_{i}^N s_i.
 \end{equation}
 
-\subsection{Phase transitions and critical phenomena}\label{subsec_theory:PT_critical_phenomena}
-\alert{This section is yet to be completed. I will write it more properly once I know we shall use it in practice.}
-
-One of the most peculiar features of continuous phase transitions is that thermodynamic quantities are found to exhibit similar behavior for a variety of different systems. These phase transitions can be characterized by \textit{critical exponents}, where physical quantities behave according to power laws near the critical point, i.e. a critical temperature. \Vetle{Mention universality classes?} For a 2D Ising model of infinite size, we have the following power law behaviors near the critical temperature: 
-\begin{align}
-    \expval{\abs{M}} & \propto \abs{T - T_c(L=\infty)}^\beta, \label{eq:crit_expo_mag} \\
-    C_V & \propto \abs{T - T_c(L=\infty)}^{-\alpha}, \label{eq:crit_expo_heatcap} \\ 
-    \chi & \propto \abs{T - T_c(L=\infty)}^{-\gamma}, \label{eq:crit_expo_mag_susc}
-\end{align}
-\Johan{This $\nu$ is different from the microstates right?}
-
-
-where the critical exponents are $\beta=1/8$, $\alpha=0$ and $\gamma=7/4$. Both $C_V$ and $\chi$ diverge near the critical temperature. $T_c(L=\infty)$ is the critical temperature according to a square lattice Ising model of infinite size. Additionally, the correlation between spins is characterized by the correlation length, $xi$, which has the following power law behavior near the critical temperature 
-\begin{equation}
-    \xi \propto \abs{T - T_c(L=\infty)}^{-\nu}, \label{eq:crit_expo_corr_length}
-\end{equation}
-where $\nu=1$. Our analysis is limited to systems of finite extent, and it can be shown \Vetle{ref?} that the correlation length is proportional to the lattice size near the critical temperature. For $T=T_c(L)$, we then have $\xi\propto L$. Inserting this into Eq. \eqref{eq:crit_expo_corr_length}, we get a relation between the lattice size $L$ and the associated critical temperature, $T_c(L)$
-\begin{equation}
-    T_c(L) - T_c(L=\infty) = aL^{-1}, \label{eq:finite_size_scaling_relation}
-\end{equation}  
-where $a$ is a proportionality constant. By estimating the critical temperature at different lattice sizes, we can perform linear regression to obtain an estimate of $T_c(L=\infty)$. This estimate can be compared to the analytical value of $T_c(L=\infty)$, which for the 2D Ising model with no external magnetic field is \cite{Onsager_Ising2D}
-\begin{equation}
-    T_c(L=\infty) = \frac{2}{\ln(1+\sqrt{2})} J/k_B \approx 2.269\,J/k_B. \label{eq:onsager_critical_temperature}
-\end{equation}
-
-
 \subsection{Statistical mechanics}\label{subsec_theory:statistical_mechanics}
-
 The probability of the system being in a microstate $\nu$ at a given energy and a constant temperature, $T$, is governed by the Boltzmann distribution
 \begin{equation}\label{eq:boltzmann_distr}
     p_\nu (T) = \frac{1}{Z}e^{-\beta E(\nu)},
@@ -58,11 +31,40 @@ For an observable $Q(\nu)$, its expectation value is given by
 \end{equation}
 \Vetle{Should perhaps include a paragraph of estimated averages, and how these converge to the true thermal averages (ergodic hypothesis (not the same ``ergodic'' that is mentioned in the MCMC subsection))} 
 
+Two quantities we will focus on in this report are the specific heat capacity, $C_V$, and the magnetic susceptibility, $\chi$, both normalized to the number of spins, $N$, which are defined as 
+\begin{align}
+    C_V &= \frac{1}{N}\frac{1}{k_B T^2} \closed{\expval{E^2} - \expval{E}^2}, \label{eq:C_V} \\ 
+    \chi &= \frac{1}{N} \frac{1}{k_B T} \closed{\expval{M^2} - \expval{\abs{M}}^2}, \label{eq:chi}
+\end{align} 
+where the various average quantities are obtained from Eq. \eqref{eq:observable_exp_val}. 
+
+\subsection{Phase transitions and critical phenomena}\label{subsec_theory:PT_critical_phenomena}
+One of the most peculiar features of continuous phase transitions is that thermodynamic quantities are found to exhibit similar behavior for a variety of different systems. These phase transitions can be characterized by \textit{critical exponents}, where physical quantities behave according to power laws near the critical point, i.e. a critical temperature. Near the critical temperature, $\expval{\abs{M}},\,C_V$ and $\chi$ behave according to the following power laws: 
+\begin{align}
+    \expval{\abs{M}} & \propto \abs{T - T_c(L=\infty)}^\beta, \label{eq:crit_expo_mag} \\
+    C_V & \propto \abs{T - T_c(L=\infty)}^{-\alpha}, \label{eq:crit_expo_heatcap} \\ 
+    \chi & \propto \abs{T - T_c(L=\infty)}^{-\gamma}, \label{eq:crit_expo_mag_susc}
+\end{align}
+where the critical exponents of the 2D Ising model we consider are $\beta=1/8$\footnote{The exponent $\beta$ is not be confused with the inverse temperature.}, $\alpha=0$ and $\gamma=7/4$ \cite{crit_expo}. Both $C_V$ and $\chi$ will therefore diverge near the critical temperature\footnote{A critical exponent of $\alpha=0$ means that $C_V$ diverges logarithmically.}. $T_c(L=\infty)$ is the critical temperature according to a square lattice Ising model of infinite size. Additionally, the correlation between spins is characterized by the correlation length, $\xi$, which has the following power law behavior near the critical temperature 
+\begin{equation}
+    \xi \propto \abs{T - T_c(L=\infty)}^{-\nu}, \label{eq:crit_expo_corr_length}
+\end{equation}
+where $\nu=1$\footnote{Not to be confused with the microstate, $\nu$.}. Our analysis is limited to systems of finite extent, and it can be shown \Vetle{(ref?)} that the correlation length is proportional to the lattice size near the critical temperature. For $T=T_c(L)$, we then have $\xi\propto L$. Inserting this into Eq. \eqref{eq:crit_expo_corr_length}, we get a relation between the lattice size $L$ and the associated critical temperature, $T_c(L)$
+\begin{equation}
+    T_c(L) - T_c(L=\infty) = aL^{-1}, \label{eq:finite_size_scaling_relation}
+\end{equation}  
+where $a$ is a proportionality constant. By estimating the critical temperature at different lattice sizes, we can perform linear regression to obtain an estimate of $T_c(L=\infty)$. This estimate can be compared to the analytical value of $T_c(L=\infty)$, which for the 2D Ising model with no external magnetic field is \cite{Onsager_Ising2D}
+\begin{equation}
+    T_c(L=\infty) = \frac{2}{\ln(1+\sqrt{2})} J/k_B \approx 2.269\,J/k_B. \label{eq:onsager_critical_temperature}
+\end{equation}
+
+
+
 
 
 \subsection{Monte Carlo methods} \label{subsec_theory:MC_methods}
 
-To study thermodynamic properties of the Ising model, we need to compute the partition function in Eq. \eqref{eq:partition_function}. However, this would require a sum over all possible microstates. For a lattice of size $L$ the total number of \Vetle{unique} microstates are $2^{L^2}=2^N$. This becomes an impossible task for the lattice sizes we are going to consider. To overcome this problem we may draw random samples of the system and use these samples to estimate thermal averages. A common choice for sampling the system is the Markov chain Monte Carlo (MCMC) method. A Markov chain is a stochastic process in which the outcome of an event is independent of the process's history. Loosely speaking, it can be regarded as a random walk in (\Vetle{our x-dimensional}) state space. There are several algorithms for constructing these Markov chains, but the one we will consider is the \textit{Metropolis-Hastings} algorithm. 
+To study thermodynamic properties of the Ising model, we need to compute the partition function in Eq. \eqref{eq:partition_function}. However, this would require a sum over all possible microstates. For a lattice of size $L$ the total number of unique microstates are $2^{L^2}=2^N$. This becomes an impossible task for the lattice sizes we are going to consider. To overcome this problem we may draw random samples of the system and use these samples to estimate thermal averages. A common choice for sampling the system is the Markov chain Monte Carlo (MCMC) method. A Markov chain is a stochastic process in which the outcome of an event is independent of the process's history. Loosely speaking, it can be regarded as a random walk in (\Vetle{our x-dimensional}) state space. There are several algorithms for constructing these Markov chains, but the one we will consider is the \textit{Metropolis-Hastings} algorithm. 
 
 \subsection{Metropolis algorithm} \label{subsec_theory:metropolis_algorithm}
 The Metropolis algorithm uses a Markov process to generate multiple samples of microstates that approximate a Boltzmann weighted ensemble. A Markov process is defined by a transition probability, $W(\nu \to \nu')$, which is the probability of the system to transition from a state $\nu$ to any given state $\nu'$. For the Markov chain to reach the desired distribution we have to fulfill two conditions.  The first condition is \textit{ergodicity} (\Vetle{I will add a footnote here later}), which states that the system has a non-zero probability of going from any state to any other state with a finite sequence of transitions. The second condition is \textit{detailed balance}, meaning that we require each transition to be reversible. That is, the probability for the system to be in a state $\nu$ and transition to a state $\nu'$ is equal to the probability for the system to be in state $\nu'$ and transition to state $\nu$. Mathematically, this can be formulated as 
@@ -90,7 +92,8 @@ With Eq. \eqref{eq:metropolis_acceptance}, we will always transition to states w
 
 
 \section{Implementations}\label{sec:implementations}
-\alert{Have we mentioned PBC yet?}
+
+For our computations we will use $J$ and $J/k_B$ as the base units for energy and temperature, respectively.    
 
 
 \subsection{Energy change due to single spin flip}\label{subsec_implementations:de_from_single_flip}
@@ -165,18 +168,18 @@ To test our implementation, we will first consider a lattice of size $L=2$ for w
 \subsection{Equilibriation time}\label{subsec_methods:equilibriation_time}
 When initializing the system is unlikely to be in a state near equilibrium. This means that a majority of the cycles we run in the beginning will consist of transitions such that the system approaches an equilibrium. After a certain number of iterations the samples we draw are likely to oscillate around the equilibrium values. The number of cycles needed to reach this equilibrium is called the \textit{equilibriation time}, $t_\mathrm{eq}$. To reduce the number of cycles needed to obtain accurate estimates of thermal averages, we only include samples drawn after we have performed $t_\mathrm{eq}$ equilibriation steps. 
 
-To estimate $t_\mathrm{eq}$, we will consider a lattice with $L=20$, and plot $\avge$ and $\avgm$ as a function of cycles. From this we will choose a rough estimate of $t_\mathrm{eq}$. We will do this for $T=1$\Vetle{unit} and $T=2.4$, and in both cases study the result from a lattice that is initially ordered (all spins up) and a lattice that is unordered (random). \Vetle{Describe ordered/disordered}. The equilibriation time is chosen as the approximate number of cycles performed until we see that the measured quantities oscillate around a somewhat stable value. This number of equilibriation steps will be used in the remaining methods, and unless stated otherwise, all the following methods concern drawing samples after we have equilibriated the system.     
+To estimate $t_\mathrm{eq}$, we will consider a lattice with $L=20$, and plot $\avge$ and $\avgm$ as a function of cycles. From this we will choose a rough estimate of $t_\mathrm{eq}$. We will do this for $T=1\tunit$ and $T=2.4\tunit$, and in both cases study the result from a lattice that is initially ordered (all spins up) and a lattice that is unordered (random). \Vetle{Describe ordered/disordered}. The equilibriation time is chosen as the approximate number of cycles performed until we see that the measured quantities oscillate around a somewhat stable value. This number of equilibriation steps will be used in the remaining methods, and unless stated otherwise, all the following methods concern drawing samples after we have equilibriated the system.     
 
 \Vetle{Should reference the analytical equilibriation result, and why we don't opt for it.}
 
 
 \subsection{Estimating the probability distribution}\label{subsec_methods:histogram}
-After the equilibriation time has been estimated we wish to estimate the probability distribution of the energy $p_\eps(T)$. To do this, we sample the $\eps$ from a total of $N=10^5$ cycles, and plot histogram of the sampled energies. We will consider a lattice of size $L=20$. From Eq. \eqref{eq:DeltaE_possible_values}, we know that the smallest change in energy per spin for a lattice with $N=400$ spins is $\min(\Delta\eps)=0.01\,\mathrm{J}$, which is the batch size we will consider for the histogram. We plot the normalized distribution for $T=1$ and $T=2.4$, and for both temperatures we compute and estimate of the mean and the variance of the two distributions.     
+After the equilibriation time has been estimated we wish to estimate the probability distribution of the energy $p_\eps(T)$. To do this, we sample the $\eps$ from a total of $N=10^5$ cycles, and plot histogram of the sampled energies. We will consider a lattice of size $L=20$. From Eq. \eqref{eq:DeltaE_possible_values}, we know that the smallest change in energy per spin for a lattice with $N=400$ spins is $\min(\Delta\eps)=0.01\,\mathrm{J}$, which is the batch size we will consider for the histogram. We plot the normalized distribution for $T=1\tunit$ and $T=2.4\tunit$, and for both temperatures we compute and estimate of the mean and the variance of the two distributions.     
 \Vetle{Mention number of cycles etc.}
 
 
 \subsection{Phase transitions}\label{subsec_methods:PT}
-To estimate the critical temperature for the 2D Ising model of finite extent, $T_c(L)$, we will first study the temperature behavior of $C_V$ and $\chi$ for systems of different sizes. From Eq. \eqref{eq:onsager_critical_temperature} we know the analytical critical temperature in terms of an infinite sized lattice. To estimate the critical temperature of finite sized lattices, we begin by computing $C_V$ and $\chi$ for fifty equally spaced values of $T\in[2,\,2.5]$, corresponding to $\Delta T = 0.01$. We do this for lattices of size $L=40,60,80,100$, using $N_\mathrm{cycles}=10^5$ cycles at each temperature for all lattice sizes. According to Eqs. \eqref{eq:crit_expo_heatcap} and \eqref{eq:crit_expo_mag_susc}, we expect a diverging behavior of $C_V$ and $\chi$ near the critical temperatures. From our initial result, we get a rough estimate of the temperature range in which phase transition occurs, by seeing where $C_V$ and $\chi$ exhibit diverging behavior. We then proceed by computing $C_V$ and $\chi$ for $100$ temperatures in range near the critical temperature. We will then increase the number of cycles by a factor of $10$ in order to suppress large variations between subsequent temperature steps. 
+To estimate the critical temperature for the 2D Ising model of finite extent, $T_c(L)$, we will first study the temperature behavior of $C_V$ and $\chi$ for systems of different sizes. From Eq. \eqref{eq:onsager_critical_temperature} we know the analytical critical temperature in terms of an infinite sized lattice. To estimate the critical temperature of finite sized lattices, we begin by computing $C_V$ and $\chi$ for fifty equally spaced values of $T\in[2,\,2.5]\tunit$, corresponding to $\Delta T = 0.01\tunit$. We do this for lattices of size $L=40,60,80,100$, using $N_\mathrm{cycles}=10^5$ cycles at each temperature for all lattice sizes. According to Eqs. \eqref{eq:crit_expo_heatcap} and \eqref{eq:crit_expo_mag_susc}, we expect a diverging behavior of $C_V$ and $\chi$ near the critical temperatures. From our initial result, we get a rough estimate of the temperature range in which phase transition occurs, by seeing where $C_V$ and $\chi$ exhibit diverging behavior. We then proceed by computing $C_V$ and $\chi$ for $100$ temperatures in range near the critical temperature. We will then increase the number of cycles by a factor of $10$ in order to suppress large variations between subsequent temperature steps. 
 
 \Vetle{Mention how we extract the point of divergence}
 
