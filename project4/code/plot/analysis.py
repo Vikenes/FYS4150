@@ -352,3 +352,13 @@ equilibriation_time(sp)
 pdf_histogram(sp)
 # PT(NT=100, sp=False)
 
+"""
+Timing parameters:
+T0=2
+T1=2.5
+N_temperature_steps=20
+L=10,20,30,...,80
+NMC=100 000
+Neq=15 000
+Parallel: OMP_NUM_THREADS=5
+"""
