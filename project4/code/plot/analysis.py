@@ -468,12 +468,34 @@ def PT_NT101():
     save_push(fig2, pdfname2)
 
 
+def titsplot(): #(.)(.)
+    folder = data_path + "parallel/"
+    parallel = load('run_times_parallel.csv', folder)
+    series = load('run_times_serial.csv', folder)
+    L = parallel[0]
+    t_par = parallel[1]
+    t_ser = series[1]
+
+    fig, ax = plt.subplots(figsize=(12,7))
+    ax.plot(L, t_par, "o--", color="blue", ms=5, lw=1.5, label="Parallel")
+    ax.plot(L, t_ser, "o--", color="red", ms=5, lw=1.5, label="Series")
+    ax.set_xlabel(r'$L$')
+    ax.set_ylabel(r'$t$ [s]')
+    ax.set_title('Estimated efficiency')
+    ax.legend()
+    
+    pdfname = 'eficiency'
+
+    save_push(fig, pdfname)
+
+
 if __name__=="__main__":
     compare_analytical()
     equilibriation_time()
     pdf_histogram()
     PT_NT50()
     PT_NT101()
+    titsplot()
 """
 Timing parameters:
 T0=2
