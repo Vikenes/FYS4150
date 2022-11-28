@@ -40,7 +40,7 @@ temp = True     # makes temporary .png files instead of .pdf
 
 #   Global setting commands
 SAVE = True
-PUSH = False
+PUSH = True
 SHOW = False
 
 def save_push(fig, pdf_name, save=SAVE, push=PUSH, show=SHOW, tight=False, png_duplicate=temp):
