@@ -40,8 +40,8 @@ temp = True     # makes temporary .png files instead of .pdf
 
 #   Global setting commands
 SAVE = True
-PUSH = True
-SHOW = True
+PUSH = False
+SHOW = False
 
 def save_push(fig, pdf_name, save=SAVE, push=PUSH, show=SHOW, tight=False, png_duplicate=temp):
     """
@@ -120,7 +120,7 @@ def load(file, folder=data_path, skiprows=0):
     return np.loadtxt(folder + file, unpack=True, delimiter=",", skiprows=skiprows)
     
 
-def compare_analytical(sp, filename="anal_Nsamples4_T1.csv"):
+def compare_analytical(filename="anal_Nsamples4_T1.csv"):
     T, E, E2, absM, M2, N = load(filename)
 
     eps_avg = E/4 
@@ -166,9 +166,13 @@ def compare_analytical(sp, filename="anal_Nsamples4_T1.csv"):
 
 
     df = pd.DataFrame(data, index=None)
-    if sp:
+    if SAVE:
         df.style.format("{:.4f}", subset=column_names).hide(axis="index").to_latex(latex_path+"tables/compare_analytical.tex", hrules=True)
-    else:
+        if PUSH:
+            os.system(f"git add {latex_path+'tables/compare_analytical.tex'}")
+            os.system("git commit -m 'upload plot'")
+            os.system("git push")
+    if SHOW:
         df.style.format("{:.4f}", subset=column_names).hide(axis="index")
         print(df.to_string())
 
@@ -279,16 +283,6 @@ def PT_NT50():
         N = (Ls[i])**2 
         Cv = varE / (N * T**2)
         chi = varM / (N * T)
-
-        # cv_spline = CubicSpline(T, Cv)
-        # cv_uspline = UnivariateSpline(T, Cv)
-        # t = np.linspace(T[0], T[-1], 1000)
-        # cv_fit = cv_uspline(t)
-        # crit_idx = np.argmax(cv_fit)
-        # cv_crit = cv_fit[crit_idx]
-        # t_crit = t[crit_idx]
-        # crit_T.append(t_crit)
-        # crit_CV.append(cv_crit)
 
         if i!=4:
             ax[0].plot(T, Cv, 'o--', ms=4, lw=1, color=colors[i], label=f'L={Ls[i]}')
@@ -433,6 +427,28 @@ def PT_NT101():
 
     linear_func = lambda xx: T_c_infty + a * xx 
 
+    crit_temp_linreg = linear_func(L_inv)
+    crit_temp_act = np.array(crit_T)
+    crit_temp_linreg = np.append(crit_temp_linreg, T_c_infty)
+    crit_temp_act = np.append(crit_temp_act, np.nan)
+
+    data = {
+        r'$L$': np.append(np.array(Ls), r'$\infty$'),
+        r'$T_c$ from curve fit': crit_temp_act,
+        r'$T_c$ from regression': crit_temp_linreg
+    }
+
+    df = pd.DataFrame(data, index=None)
+    if SAVE:
+        df.style.format("{:.4f}", subset=[r'$T_c$ from curve fit',r'$T_c$ from regression']).hide(axis='index').to_latex(latex_path+"tables/critical_temperatures.tex", hrules=True)
+        if PUSH:
+            os.system(f"git add {latex_path+'tables/critical_temperatures.tex'}")
+            os.system("git commit -m 'upload plot'")
+            os.system("git push")
+    if SHOW:
+        df.style.format("{:.4f}", subset=[r'$T_c$ from curve fit',r'$T_c$ from regression']).hide(axis='index')
+        print(df.to_string())
+
     fig2, ax2 = plt.subplots(figsize=(12,7))
     ax2.plot(L_inv_array, linear_func(L_inv_array), color="blue", label="Linear fit")
     ax2.scatter(1/np.array(Ls), crit_T, marker='X', s=100, c='orange', edgecolors="black", zorder=3, label=r"$T_C$")
@@ -451,12 +467,10 @@ def PT_NT101():
 
     save_push(fig2, pdfname2)
 
-# compare_analytical(sp)
-# equilibriation_time()
-# pdf_histogram()
-# PT(NT=50, sp=False)
-PT_NT50()
-PT_NT100()
-PT_NT101()
 
-
+if __name__=="__main__":
+    compare_analytical()
+    equilibriation_time()
+    pdf_histogram()
+    PT_NT50()
+    PT_NT101()
