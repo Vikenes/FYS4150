@@ -98,6 +98,7 @@ def set_ax_info(ax, xlabel, ylabel=False, zlabel='none', style='plain', title=No
         ax.legend()
     
 
+
 # -----------------------------------------------------------------------------
 #   General plot code above
 #   XXX
