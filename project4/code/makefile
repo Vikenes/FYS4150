@@ -71,6 +71,17 @@ parallel_run:
 serial_run:
 	./serial.exe $L $(T0) $(T1) $(nT) $(NMC) $(Neq)
 
+time_parallel_compile:
+	g++ -std=c++11 -O3 timing.cpp src/*.cpp -I include -o timing_parallel.exe -larmadillo -fopenmp
+time_serial_compile:
+	g++ -std=c++11 -O3 timing.cpp src/*.cpp -I include -o timing_serial.exe -larmadillo
+timing_parallel:
+	./timing_parallel.exe $(nL) $(T0) $(T1) $(nT) $(NMC) $(Neq)
+timing_serial:
+	./timing_serial.exe $(nL) $(T0) $(T1) $(nT) $(NMC) $(Neq)
+
+
+
 # General run command:
 all: compile link run
 # Aiming to have options here!
