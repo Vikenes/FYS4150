@@ -1,6 +1,7 @@
 \appendix 
 
 \section{Analytical results} \label{app:analytical_expressions}
+To derive the analytical expression for the $(2\cross2)$ Ising model, we consider the number of spins with $+1$, and compute the energy, magnetization and degeneracy of the system for each of these. The resulting values are given in table \ref{tab:2d_configurations}. For all positive or all negative spins, the energy of the system is $E=-8J$. For $N_\uparrow=2$ there the only configuration yielding a non-negative energy is when the spins on the diagonal have the same orientation. In that case, we have $E=+8J$. Otherwise, the remaining configurations all have $E=0$.    
 
 \begin{table}[h!]
     \begin{tabular}{crrc}
@@ -12,22 +13,21 @@
     $1$ & $0$ & $-2$ & $4$ \\
     $0$ & $-8\,\mathrm{J}$ & $-4$ & $1$
     \end{tabular}
-    \caption{}
+    \caption{penis}
     \label{tab:2d_configurations}
 \end{table}
-
+The partition function can now be calculated with Eq. \eqref{eq:partition_function}, using the degeneracy associated with the three possible energy values from table \ref{tab:2d_configurations},
 \begin{equation}\label{eq:analytical_partition_func}
-    Z = 12 + 2 e^{-8\bj} + 2 e^{8\bj} = 12 + 4 \cosh(8\bj)
+    Z = 12 + 2 e^{-8\bj} + 2 e^{8\bj} = 12 + 4 \cosh(8\bj).
 \end{equation}
-
+Using Eq. \eqref{eq:observable_exp_val}, we get the following analytical expectation values for the lattice 
 \begin{align}
-    \expval{\eps} &= -\pdv{\ln Z}{\beta} = -\frac{8J}{Z}\sinh(8\bj), \label{eq:analytical_avg_energy} \\ 
+    \expval{\eps} &= \sum_s \eps(s) \frac{1}{Z} e^{-\beta E(s)} = -\frac{8J}{Z}\sinh(8\bj), \label{eq:analytical_avg_energy} \\ 
     \expval{\eps^2} &= \sum_s \eps(s)^2 \frac{1}{Z} e^{-\beta E(s)} = \frac{16 J^2}{Z}\cosh(8\bj),\label{eq:analytical_avg_energy_squared} \\ 
     \expval{\abs{m}} &= \sum_s \abs{m(s)} \frac{1}{Z}e^{-\beta E(s)} = \frac{2}{Z}\closed{2 + e^{8\bj}},\label{eq:analytical_avg_absolute_mag} \\ 
     \expval{m^2} &= \sum_s m(s)^2 \frac{1}{Z} e^{-\beta E(s)} = \frac{2}{Z}\closed{1 + e^{8\bj}}. \label{eq:analytical_avg_mag_squared}
 \end{align}
-
-
+The resulting expressions for $C_V$ and $\chi$ are thus 
 \begin{align}
     C_V &= \frac{\beta}{N T}\closed{\expval{E^2} - \expval{E}^2} \nonumber \\ 
     &= \frac{64\beta J^2}{Z T} \bracket{\cosh(8\bj) - \frac{4}{Z}\sinh^2(8\bj)}, \label{eq:analytical_CV} \\ 
