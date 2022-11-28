@@ -59,12 +59,9 @@ where $a$ is a proportionality constant. By estimating the critical temperature 
 \end{equation}
 
 
-
-
-
 \subsection{Monte Carlo methods} \label{subsec_theory:MC_methods}
 
-To study thermodynamic properties of the Ising model, we need to compute the partition function in Eq. \eqref{eq:partition_function}. However, this would require a sum over all possible microstates. For a lattice of size $L$ the total number of unique microstates are $2^{L^2}=2^N$. This becomes an impossible task for the lattice sizes we are going to consider. To overcome this problem we may draw random samples of the system and use these samples to estimate thermal averages. A common choice for sampling the system is the Markov chain Monte Carlo (MCMC) method. A Markov chain is a stochastic process in which the outcome of an event is independent of the process's history. Loosely speaking, it can be regarded as a random walk in (\Vetle{our x-dimensional}) state space. There are several algorithms for constructing these Markov chains, but the one we will consider is the \textit{Metropolis-Hastings} algorithm. 
+To study thermodynamic properties of the Ising model, we need to compute the partition function in Eq. \eqref{eq:partition_function}. However, this would require a sum over all possible microstates. For a lattice of size $L$ the total number of unique microstates are $2^{L^2}=2^N$. This becomes an impossible task for the lattice sizes we are going to consider. To overcome this problem we may draw random samples of the system and use these samples to estimate thermal averages. A common choice for sampling the system is the Markov chain Monte Carlo (MCMC) method. A Markov chain is a stochastic process in which the outcome of an event is independent of the process's history. Loosely speaking, it can be regarded as a random walk in (\Vetle{our x-dimensional}) state space. There are several algorithms for constructing these Markov chains, but the one we will consider is the \textit{Metropolis-Hastings} algorithm.
 
 \subsection{Metropolis algorithm} \label{subsec_theory:metropolis_algorithm}
 The Metropolis algorithm uses a Markov process to generate multiple samples of microstates that approximate a Boltzmann weighted ensemble. A Markov process is defined by a transition probability, $W(\nu \to \nu')$, which is the probability of the system to transition from a state $\nu$ to any given state $\nu'$. For the Markov chain to reach the desired distribution we have to fulfill two conditions.  The first condition is \textit{ergodicity} (\Vetle{I will add a footnote here later}), which states that the system has a non-zero probability of going from any state to any other state with a finite sequence of transitions. The second condition is \textit{detailed balance}, meaning that we require each transition to be reversible. That is, the probability for the system to be in a state $\nu$ and transition to a state $\nu'$ is equal to the probability for the system to be in state $\nu'$ and transition to state $\nu$. Mathematically, this can be formulated as 
@@ -88,13 +85,12 @@ Since energy tends to be minimized, a natural choice is to always accept new sta
 \begin{equation} \label{eq:metropolis_acceptance}
     A(\nu\to\nu') = \min\closed{1,e^{-\beta \Delta E}}.
 \end{equation}  
-With Eq. \eqref{eq:metropolis_acceptance}, we will always transition to states with lower energies. Since ergodicity must be fulfilled, we may not reject any transition that doesn't lower the energy. In \Vetle{Section 420} we discuss how we implement this in practice.    
+With Eq. \eqref{eq:metropolis_acceptance}, we will always transition to states with lower energies. Since ergodicity must be fulfilled, we may not reject any transition that doesn't lower the energy. In Sec. \ref{subsec_implementations:metropolis} we discuss how we implement this in practice.    
 
 
 \section{Implementations}\label{sec:implementations}
 
-For our computations we will use $J$ and $J/k_B$ as the base units for energy and temperature, respectively.    
-
+For our computations we will use $J$ and $J/k_B$ as the base units for energy and temperature, respectively. \Vetle{(Move this paragraph to theory maybe?)}. 
 
 \subsection{Energy change due to single spin flip}\label{subsec_implementations:de_from_single_flip}
 When flipping a single spin there is a limited number of possible values $\Delta E$ can take. Consider an arbitrary spin, $s_k$, in a lattice with $L>2$. The energy contribution from this spin's interaction with its neighbors is 
@@ -108,75 +104,54 @@ Flipping this spin corresponds to $s_k\to -s_k$. The change in energy from this 
 \end{align}
 Since each of the spins $s_l$ takes a value of $-1$ or $+1$, taking the sum over four spins can only yield a value of $\sum_{\langle l \rangle}s_l=\{-4,-2,0,2,4\}$. With $s_k=\pm1$, it's evident that flipping a single spin results in five possible values of $\Delta E$, which are 
 \begin{equation}\label{eq:DeltaE_possible_values}
-    \Delta E = \{-8J,-4J,0,4J,8J\}. 
+    \Delta E = \{-8,-4,0,4,8\}\eunit. 
 \end{equation}  
-
-\Vetle{Relate this to metropolis.}
-
-Flipping a spin also yields a change in magnetization, $\Delta M\equiv M(\nu')-M(\nu)$, from the transition $s_k\to s_k'=-s_k$. The new magnetization is easily seen to be 
-\begin{equation} \label{eq:magnetization_from_single_flip}
-    M(\nu') = M(\nu) + 2 s_k',
+Flipping a single spin also yields a change in magnetization, $\Delta M\equiv M(\nu')-M(\nu)$, from the transition $s_k\to s_k'=-s_k$. The new magnetization due to this transition is easily seen to be $M(\nu') = M(\nu) + 2 s_k'$, where the possible values of $\Delta M$ are  
+\begin{equation} \label{eq:DeltaM_possible_values}
+    \Delta M=\{-2,+2\},
 \end{equation} 
-with $\Delta M={-2,+2}$ as the only possibilities, corresponding to initial spin values of $s_k={+1,-1}$, respectively.   
+corresponding to initial spin values of $s_k=\{+1,-1\}$, respectively.   
+
+Eqs. \eqref{eq:DeltaE_possible_values} and \eqref{eq:DeltaM_possible_values} allow for increased efficiency in our numerical implementation of the Metropolis algorithm, which we will discuss in the following section.  
 
 \subsection{Metropolis algorithm}\label{subsec_implementations:metropolis}
 To implement the Metropolis algorithm we determine whether to accept a spin flip by comparing $A(\nu\to\nu')$ from Eq. \eqref{eq:metropolis_acceptance} with a random number $r\sim \mathcal{U}(0,1)$ \Vetle{(should it be r in U(0,1)?)}. This method guarantees that the proposed spin flip is accepted if $\Delta E<0$. Additionally, transitions yielding $\Delta E>0$ have a higher probability of being accepted if the associated reduction of the Boltzmann distribution is small. 
 
-\alert{w in the enumeration below must be defined/introduced.}
-
-To sample spins, we will draw spins in the lattice according to a uniform random distribution. The basic outline of our MCMC algorithm is as follows:
+To sample spins, we will draw spins in the lattice according to a uniform random distribution. Below, we present a simple outline of the Metropolis algorithm we use to sample spins. 
 \begin{enumerate}
     \item Pick a random spin in the lattice, $s_k$.
-    \item Compute $w=\exp(-\beta \Delta E)$ resulting from spin flip  
-    \item If $w \geq r$: Accept flip, update $E$ and $M$. 
-    \item If $w<r$: Reject proposed flip.
+    \item Compute resulting $\Delta E$ if spin is flipped, according to Eq. \eqref{eq:DeltaE_from_single_spin_flip}.  
+    \item If $\exp(-\beta\Delta E) \geq r$: Accept flip, 
+    \subitem $s_k\to-s_k$, 
+    \subitem $E\to E+\Delta E$, 
+    \subitem$M\to M+\Delta M$. 
+    \item If $\exp(-\beta\Delta E)<r$: Reject flip.
     \item Repeat.   
 \end{enumerate} 
-Repeating this process $N=L^2$ number of times constitutes one MC \textit{cycle}. After each cycle, we use the final values $E$ and $M$ to store as our samples. 
+Repeating this process $N=L^2$ number of times constitutes one MC \textit{cycle}. Using Eq. \eqref{eq:DeltaE_possible_values}, we compute the five possible values of $\exp(-\beta\Delta E)$ before we begin flipping the spins, rather than evaluating the exponential factor for each spin flip we consider. After one cycle is completed, we store the final energy and magnetization of our lattice, giving is one sample. The average energy and magnetization of the lattice are thus obtained by summing up the energies and magnetizations from each cycle, and divide by the number of cycles we have run, which we denote as $\nmc$. 
 
-and we accept the flip, and proceed by picking a new spin at random.   
-
-\Vetle{The algorithm will be changed later.}
-\begin{algorithm}[H]
-    \caption{Flip}\label{algo:flip}
-    \begin{algorithmic}
-        \State Pick $s_k$ on a random position in the lattice.
-        \State Compute $\Delta E$
-        \If{$\Delta E\leq0$}
-            \State $s_k = s_k * (-1)$
-            \State $E = E + \Delta E$
-            \State $M = M + 2 * s_k$
-        \Else
-            \State $w=\exp(-\beta \Delta E)$
-            \State $r\in\mathcal{U}(0,1)$
-            \If{$r\leq w$}
-                \State $s_k = s_k * (-1)$
-                \State $E = E + \Delta E$
-                \State $M = M + 2 * s_k$
-            \EndIf
-        \EndIf
-    \end{algorithmic}
-\end{algorithm}
-
+\subsection{Parallelization}\label{subsec_implementations:parallelization}
+When we are going to investigate phase transitions, we will have to run MC simulations for multiple temperature values. In order to speed up the process, we will in that case resort to parallelization, where we use the \Vetle{Fancy text format} OpenMP parallelization method. \Vetle{Briefly describe the workings of OMP}. We have the freedom to implement parallelization at different levels in our simulations, but the one will consider is to parallelize the temperature iterations, meaning that individual threads are used to run MC simulations at one temperature simultaneously.    
 
 
 \section{Methods}\label{sec:methods}
+\alert{epsilon and little m is not defined yet. Don't know where to put them.}
 
 \subsection{Analytical comparison}\label{subsec_methods:analytical_test}
-To test our implementation, we will first consider a lattice of size $L=2$ for which we can compute the analytical solution. The quantities we will consider are $\avge,\avgm,C_V$ and $\chi$. The analytical derivation of these quantities for $L=2$ is given in Appendix \ref{app:analytical_expressions}. These analytical quantities will be compared to the numerical estimates after different number of cycles have been run. \Vetle{Bleh, drittforklaring.}
+To test our implementation, we will first consider a lattice of size $L=2$ for which we can compute the analytical solution. The quantities we will consider are $\avge,\avgm,C_V$ and $\chi$. The analytical derivation of these quantities for $L=2$ is given in Appendix \ref{app:analytical_expressions}. We will estimate the average values numerically for $\nmc=10^2,10^3,10^4,10^5$, and compare to the analytical results.
 
 \subsection{Equilibriation time}\label{subsec_methods:equilibriation_time}
-When initializing the system is unlikely to be in a state near equilibrium. This means that a majority of the cycles we run in the beginning will consist of transitions such that the system approaches an equilibrium. After a certain number of iterations the samples we draw are likely to oscillate around the equilibrium values. The number of cycles needed to reach this equilibrium is called the \textit{equilibriation time}, $t_\mathrm{eq}$. To reduce the number of cycles needed to obtain accurate estimates of thermal averages, we only include samples drawn after we have performed $t_\mathrm{eq}$ equilibriation steps. 
+When initializing the system is unlikely to be in a state near equilibrium. This means that a majority of the cycles we run in the beginning will consist of transitions such that the system approaches an equilibrium. After a certain number of iterations the samples we draw are likely to oscillate around the equilibrium values. The number of cycles needed to reach this equilibrium is called the \textit{equilibriation time}. For the sake of consistency however, we will denote it with $N_\mathrm{eq}$, to emphasize that we're referring to a number of MC cycles. To reduce the total number of cycles needed to obtain accurate estimates of thermal averages, we only include samples drawn after we have performed $N_\mathrm{eq}$ cycles initially. \Vetle{Mention time independent thermal averages?}. 
 
-To estimate $t_\mathrm{eq}$, we will consider a lattice with $L=20$, and plot $\avge$ and $\avgm$ as a function of cycles. From this we will choose a rough estimate of $t_\mathrm{eq}$. We will do this for $T=1\tunit$ and $T=2.4\tunit$, and in both cases study the result from a lattice that is initially ordered (all spins up) and a lattice that is unordered (random). \Vetle{Describe ordered/disordered}. The equilibriation time is chosen as the approximate number of cycles performed until we see that the measured quantities oscillate around a somewhat stable value. This number of equilibriation steps will be used in the remaining methods, and unless stated otherwise, all the following methods concern drawing samples after we have equilibriated the system.     
+To determine a reasonable choice for $N_\mathrm{eq}$, we will consider a lattice with $L=20$, and plot $\avge$ and $\avgm$ as a function of cycles. We will do this for $T=1\tunit$ and $T=2.4\tunit$. For both temperatures, we study the result from a lattice with an ordered initialization (all spins pointing up) and a lattice with an unordered initialization (spins aligned with a uniform random distribution). Based on these plots, we estimate a reasonable choice for $\nequi$ by roughly considering the number of $\nmc$ required for the estimated averages to stabilize. The value of $\nequi$ we obtain from this analysis is the value we will choose for further analysis, unless stated otherwise. When we later refer to sampling the system, all discussions will concern drawing samples after we have equilibriated the system.     
 
-\Vetle{Should reference the analytical equilibriation result, and why we don't opt for it.}
+\Vetle{Should reference the analytical equilibriation result, and why we don't opt for it. In discussion?}
 
 
 \subsection{Estimating the probability distribution}\label{subsec_methods:histogram}
-After the equilibriation time has been estimated we wish to estimate the probability distribution of the energy $p_\eps(T)$. To do this, we sample the $\eps$ from a total of $N=10^5$ cycles, and plot histogram of the sampled energies. We will consider a lattice of size $L=20$. From Eq. \eqref{eq:DeltaE_possible_values}, we know that the smallest change in energy per spin for a lattice with $N=400$ spins is $\min(\Delta\eps)=0.01\,\mathrm{J}$, which is the batch size we will consider for the histogram. We plot the normalized distribution for $T=1\tunit$ and $T=2.4\tunit$, and for both temperatures we compute and estimate of the mean and the variance of the two distributions.     
-\Vetle{Mention number of cycles etc.}
+Next, we wish to estimate the probability distribution of the energy, $p_\eps(T)$, for a lattice with $L=20$. To do this, we sample $\eps$ from a total of $\nmc=10^5$ subsequent cycles, for $T=1\tunit$ and $T=2.4\tunit$. From Eq. \eqref{eq:DeltaE_possible_values} we know that the smallest change in $\eps$ with $N=400$ spins is $\min(\Delta\eps)=0.01\,\mathrm{J}$. We estimate the probability distributions for the two energies by creating normalized histograms, using $\eps=0.01\eunit$ for the bin width. For both temperatures, we also estimate the mean and variance of the distributions.  
 
+\alert{Where to put methods regarding parallelization time tests?}
 
 \subsection{Phase transitions}\label{subsec_methods:PT}
 To estimate the critical temperature for the 2D Ising model of finite extent, $T_c(L)$, we will first study the temperature behavior of $C_V$ and $\chi$ for systems of different sizes. From Eq. \eqref{eq:onsager_critical_temperature} we know the analytical critical temperature in terms of an infinite sized lattice. To estimate the critical temperature of finite sized lattices, we begin by computing $C_V$ and $\chi$ for fifty equally spaced values of $T\in[2,\,2.5]\tunit$, corresponding to $\Delta T = 0.01\tunit$. We do this for lattices of size $L=40,60,80,100$, using $N_\mathrm{cycles}=10^5$ cycles at each temperature for all lattice sizes. According to Eqs. \eqref{eq:crit_expo_heatcap} and \eqref{eq:crit_expo_mag_susc}, we expect a diverging behavior of $C_V$ and $\chi$ near the critical temperatures. From our initial result, we get a rough estimate of the temperature range in which phase transition occurs, by seeing where $C_V$ and $\chi$ exhibit diverging behavior. We then proceed by computing $C_V$ and $\chi$ for $100$ temperatures in range near the critical temperature. We will then increase the number of cycles by a factor of $10$ in order to suppress large variations between subsequent temperature steps. 
