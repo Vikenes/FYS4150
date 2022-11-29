@@ -60,7 +60,9 @@ def save_push(fig, pdf_name, save=SAVE, push=PUSH, show=SHOW, tight=False, png_d
         print(f'Saving plot: {file}')
         fig.savefig(file)
         if png_duplicate:
-            fig.savefig(temp_path + pdfname.replace('.pdf', '.png'))
+            png_fname = temp_path + pdfname.replace('.pdf', '.png')
+            fig.savefig(png_fname)
+            os.system(f"git add {png_fname}")
     if push:
         os.system(f"git add {file}")
         os.system("git commit -m 'upload plot'")
@@ -256,7 +258,7 @@ def pdf_histogram():
     var1 = np.var(e1)
     var2 = np.var(e2)
 
-    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(12,7))
+    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(14,7))
     
     ax[0].hist(e1, bins=bins1, weights=weights1, facecolor='red', edgecolor='black', lw=2)
     ax[1].hist(e2, bins=bins2, weights=weights2, facecolor='red', edgecolor='black', lw=0.5)
@@ -272,8 +274,11 @@ def pdf_histogram():
     ax[0].set_ylabel(r'$p_\epsilon(\epsilon; T)$', fontsize=25)    
     # ax[1].set_ylabel('P(E) duh')        
 
-    ax[0].text(0.58, 0.95, textstr1, transform=ax[0].transAxes, fontsize=20, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white'))
+    ax[0].text(0.55, 0.95, textstr1, transform=ax[0].transAxes, fontsize=20, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white'))
     ax[1].text(0.05, 0.95, textstr2, transform=ax[1].transAxes, fontsize=20, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white'))
+
+    fig.subplots_adjust(wspace=0.25)
+    ax[0].set_xticks(bins1[::2])
 
     pdfname = "histogram"
     save_push(fig, pdfname)
@@ -509,11 +514,11 @@ def titsplot(): #(.)(.)
 
 if __name__=="__main__":
     # compare_analytical()
-    equilibriation_time()
+    # equilibriation_time()
     pdf_histogram()
     # PT_NT50()
-    PT_NT101()
-    titsplot()
+    # PT_NT101()
+    # titsplot()
 """
 Timing parameters:
 T0=2
