@@ -316,7 +316,7 @@ def PT_NT50():
 
     # ax[0].set_title("Heat capacity for different")
     # ax[1].set_title("Susceptibility")
-    fig.suptitle('Heat capacity and susceptibility per spin for different lattize sizes')
+    fig.suptitle('Heat capacity and susceptibility per spin for different lattice sizes')
     ax[0].set_xlabel(r'$T / J k_B^{-1}$')
     ax[1].set_xlabel(r'$T / J k_B^{-1}$')
 
@@ -515,8 +515,8 @@ def titsplot(): #(.)(.)
 if __name__=="__main__":
     # compare_analytical()
     # equilibriation_time()
-    pdf_histogram()
-    # PT_NT50()
+    # pdf_histogram()
+    PT_NT50()
     # PT_NT101()
     # titsplot()
 """

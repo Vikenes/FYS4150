@@ -3,6 +3,7 @@
 \section{Analytical results} \label{app:analytical_expressions}
 To derive the analytical expression for the $(2\cross2)$ Ising model, we consider the number of spins with $+1$, and compute the energy, magnetization and degeneracy of the system for each of these. The resulting values are given in table \ref{tab:2d_configurations}. For all positive or all negative spins, the energy of the system is $E=-8J$. For $N_\uparrow=2$ there the only configuration yielding a non-negative energy is when the spins on the diagonal have the same orientation. In that case, we have $E=+8J$. Otherwise, the remaining configurations all have $E=0$.    
 
+\Johan{Check this, two times where 2 spins point up, and is $s$ supposed to be $\nu$?}
 \begin{table}[h!]
     \begin{tabular}{crrc}
     $N_\uparrow$ & $E(s)$ & $M(s)$ & Degeneracy \\ \hline
@@ -13,7 +14,7 @@ To derive the analytical expression for the $(2\cross2)$ Ising model, we conside
     $1$ & $0$ & $-2$ & $4$ \\
     $0$ & $-8\,\mathrm{J}$ & $-4$ & $1$
     \end{tabular}
-    \caption{penis}
+    \caption{Analytical solutions to the $(2\cross2)$ Ising model, where features of the system is tabulated as a function of the number of spins pointing up (being $+1$): $N_\uparrow$.}
     \label{tab:2d_configurations}
 \end{table}
 The partition function can now be calculated with Eq. \eqref{eq:partition_function}, using the degeneracy associated with the three possible energy values from table \ref{tab:2d_configurations},
