@@ -12,9 +12,8 @@ The comparison between the numerical and analytical values of various quantities
 \subsection{Equilibration time}\label{subsec_results:equilibriation_time}
 Figure \ref{fig:equil_energy} and \ref{fig:equil_magn} shows the evolution of $\avge$ for an ordered and unordered initial lattice configuration. A logarithmic scale is used on the $x$-axis. The result for $T=1\tunit$ and $T=2.4\tunit$ are shown in the left and right panel, respectively. For $T=1\tunit$ we see that an ordered initial configuration quickly approaches the equilibrium value, as aligned spins are favored at low temperature. We see that $\nmc>10^3$ is required for the unordered configuration to reach close to the equilibrium value. For $T=2.4\tunit$ we see that both lattice configurations require an approximate value of $10^4$ cycles in order to equilibrate the system, as higher temperatures favor less alignment of spins.    
 \begin{figure}[!ht]
-    \includegraphics[width=\linewidth]{temp/equilibriation_time_energy.png}
+    \includegraphics[width=\linewidth]{pdfs/equilibriation_time_energy.pdf}
     \caption{Equilibration time for the mean energy $\langle \epsilon \rangle $ as function of the number of Monte Carlo cycles, $\nmc$, for $T=1\tunit$ and $T=2.4\tunit$. The red line correspond to an ordered initial state in which all the spins point in the same direction. The blue line correspond to an unordered initial state with random initialization of the spins.}
-
     \label{fig:equil_energy}
 \end{figure}
 The evolution of $\avgm$ in Fig. \ref{fig:equil_magn} shows a similar behavior to that of $\avge$ in Fig. \ref{fig:equil_energy}. An ordered lattice configuration reaches the equilibrium values after very few iterations for $T=1\tunit$, compared to the unordered configuration. At $T=2.4\tunit$ both configurations require $\nmc\approx10^4$ for equilibrium to be reached. 
@@ -22,7 +21,7 @@ The evolution of $\avgm$ in Fig. \ref{fig:equil_magn} shows a similar behavior t
 Based on these plots we choose $\nequi=1.5\cdot10^4$ for further analysis. In Figs. \ref{fig:equil_energy} and \ref{fig:equil_magn} we saw that an approximate equilibrium was reached after $10^4$ cycles. There are statistical uncertainties in our results due to considering one sample only, and we therefore choose the slightly higher value of $\nequi=1.5\cdot10^4$. This value is also small enough for the simulations to be computationally efficient.
 
 \begin{figure}[!ht]
-    \includegraphics[width=\linewidth]{temp/equilibriation_time_magnetization.png}
+    \includegraphics[width=\linewidth]{pdfs/equilibriation_time_magnetization.pdf}
     \caption{Equilibration time for the mean magnetization $\langle \vert m \vert \rangle$ as function of the number of Monte Carlo cycles, $\nmc$, for $T=1\tunit$ and $T=2.4\tunit$. The red line correspond to an ordered initial state in which all the spins point in the same direction. The blue line correspond to an unordered initial state with random initialization of the spins.}
     \label{fig:equil_magn}
 \end{figure}
@@ -32,7 +31,7 @@ We generate samples of $\eps$ from $\nmc=10^5$ cycles for $T=1\tunit$ and $T=2.4
 
 For $T=2.4\tunit$, we see in the right panel of Fig. \ref{fig:histogram} that the energy of the system is distributed over a larger range, with $\avge\approx-1.24\eunit$ and $\sigma(\eps)^2 \approx2.03\cdot10^{-2}\eunit$. \Vetle{Elaborate a bit more: more microstates with same energy, blablabla}
 \begin{figure}[!ht]
-    \includegraphics[width=\linewidth]{temp/histogram.png}
+    \includegraphics[width=\linewidth]{pdfs/histogram.pdf}
     \caption{Estimates of the probability distribution $p_e(\epsilon; T)$ for $T=1\tunit$ and $T=2.4$. For $T=1\tunit$ the expectation value is $\langle \epsilon \rangle = -2.00 \; J$ with variance $\sigma^2 = 5.91\cdot 10^{-5}$, while for $T=2.4$ the expectation value is $\langle \epsilon \rangle = -1.24 \; J$ with variance $\sigma^2=2.03\cdot 10^{-2}$.}
     \label{fig:histogram}
 \end{figure}
@@ -40,21 +39,21 @@ For $T=2.4\tunit$, we see in the right panel of Fig. \ref{fig:histogram} that th
 \subsection{Phase transition}\label{subsec_results:phase_transition}
 Using $\nmc=10^5$ and $\nequi=1.5\cdot10^4$, the estimated value of $C_V$ and $\chi$ are plotted for $T\in[2,2.5]\tunit$ in the left and right panel of Fig. \ref{fig:phase_transition}, respectively. We see a clear indication of a phase transition taking place, as both quantities shows diverging behavior near $T\sim2.3\tunit$. Since $C_V$ is expected to diverge logarithmically, the maximum values differ little as we increase lattice size, compared to the maximum values we see for $\chi$. With large variations of $\chi$ near the critical temperature, with respect to both lattice size and temperature, small statistical fluctuations can have a great impact on the predicted values of $T_C(L)$. To extract estimates of $T_C(L)$ we will therefore consider the heat capacity only in further investigations. 
 \begin{figure*}[!ht]
-    \includegraphics[width=\linewidth]{temp/phase_transitionNT50.png} 
+    \includegraphics[width=\linewidth]{pdfs/phase_transitionNT50.pdf} 
     \caption{Heat capacity $C_V$ and magnetic susceptibility $\chi$ for lattices of different sizes $L\in\{40,60,80,100\}$ for temperatures $T\in[2.0,2.5]\tunit$. In both panels we see clear indications of the power rule behavior these properties exhibit around their critical temperatures.}
     \label{fig:phase_transition}
 \end{figure*} 
 
 We estimate $C_V$ for $T\in[2.25,2.35]\tunit$, with a spacing of $\Delta T=10^{-3}$. To reduce the uncertainty of the measured averages, we now run $\nmc=10^6$ cycles for each temperature value, using $\nequi=1.5\cdot10^4$ still. The result is shown in Fig. \ref{fig:phase_transition_zoomed}, where dots represent the measured value of $C_V$ for individual lattice sizes at each temperature, and the dashed lines represent the resulting fit from a cubic spline. The maximum points of the fitted function for the different lattice sizes is shown in the figure. \Vetle{Masse spredning i data rundt kritisk temperatur for L=100}   
 \begin{figure}[!ht]
-    \includegraphics[width=\linewidth]{temp/phase_transitionNT101.png} 
+    \includegraphics[width=\linewidth]{pdfs/phase_transitionNT101.pdf} 
     \caption{Close up analysis for the heat capacity $C_V$ for $T\in[2.25, 2.35]$ with maximum points estimated from an interpolation of the data points for each lattice size. These are shown as orange markers in the plot.}
     \label{fig:phase_transition_zoomed}
 \end{figure} 
 
 Using the estimated values of $T_C(L)$, we perform linear regression with respect to inverse lattice sizes, and estimate approximate values for $a$ and $T_C(L=\infty)$ from Eq. \eqref{eq:onsager_critical_temperature}. The result of the linear regression is shown in Fig. \ref{fig:critical_temperatures}, with the individual estimates of $T_C(L)$ included in the figure. The points corresponding to the lattice of size $L=\infty$ is also shown in the figure. We emphasize that the negative values on the $x$-axis in Fig. \ref{fig:critical_temperatures} is un-physical, and is only included to better see the estimated value of the critical temperature. The linear regression resulted in a slope of $a=0.888$ and an intercept of $T_C(L=\infty)=2.2651\tunit$.     
 \begin{figure}[!ht]
-    \includegraphics[width=\linewidth]{temp/critical_temperatures.png} 
+    \includegraphics[width=\linewidth]{pdfs/critical_temperatures.pdf} 
     \caption{Linear fit of the critical temperatures. The fit is made from the orange markers in the plot, as a function of the inverse lattice size. The critical temperature for an infinite lattice is found as the intercept of this linear fit and is marked with red in the plot. }
     \label{fig:critical_temperatures}
 \end{figure} 
