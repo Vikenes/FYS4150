@@ -491,6 +491,66 @@ def PT_NT101():
     save_push(fig2, pdfname2)
 
 
+def PT_uncertainties():
+    folder = data_path + "parallel/"
+
+    ### (T, E, E2, abs(M), M2, var(E), var(M))
+    f1 = load("L40_nT100_NMC1000000_Neq15000_para.csv", folder)
+    f2 = load("L60_nT100_NMC1000000_Neq15000_para.csv", folder)
+    f3 = load("L80_nT100_NMC1000000_Neq15000_para.csv", folder)
+    f4 = load("L100_nT100_NMC1000000_Neq15000_para.csv", folder)
+
+    files = [f1,f2,f3,f4]
+    Ls = [40, 60, 80, 100]
+    colors = ['blue', 'green', 'red', 'black', 'orange']
+
+    crit_T = []
+    crit_CV = []
+    crit_T_std = []
+
+    # fig1, ax1 = plt.subplots(figsize=(12,7))
+    for i, file in enumerate(files):
+        T = file[0]
+        varE, varM = file[-2:]
+        N = (Ls[i])**2 
+        Cv = varE / (N * T**2)
+
+        cv_std = np.std(Cv)
+        print(f"L={Ls[i]}, stddev={cv_std:.4f}")
+
+        cv_uspline = UnivariateSpline(T, Cv)
+        t = np.linspace(T[0], T[-1], 1000)
+        cv_fit = cv_uspline(t)
+
+        crit_idx = np.argmax(cv_fit)
+        cv_crit = cv_fit[crit_idx]
+        t_crit = t[crit_idx]
+        crit_T.append(t_crit)
+        crit_CV.append(cv_crit)
+
+
+
+    #   Critical temperature analysis
+
+    L_inv = 1/np.array(Ls)
+    lreg = linregress(L_inv, crit_T)
+    L_inv_array = np.linspace(-0.01, 0.03, 100)
+    T_c_infty = lreg.intercept 
+    a = lreg.slope 
+    # print(lreg)
+    print(f'a: {a:.4f}')
+    print(f"Tc_infty={T_c_infty:.5f}")
+
+    linear_func = lambda xx: T_c_infty + a * xx 
+
+    crit_temp_linreg = linear_func(L_inv)
+    crit_temp_act = np.array(crit_T)
+    crit_temp_linreg = np.append(crit_temp_linreg, T_c_infty)
+    crit_temp_act = np.append(crit_temp_act, np.nan)
+
+    
+
+
 def titsplot(): #(.)(.)
     folder = data_path + "parallel/"
     parallel = load('run_times_parallel.csv', folder)
@@ -516,8 +576,9 @@ if __name__=="__main__":
     # compare_analytical()
     # equilibriation_time()
     # pdf_histogram()
-    PT_NT50()
+    # PT_NT50()
     # PT_NT101()
+    PT_uncertainties()
     # titsplot()
 """
 Timing parameters:
