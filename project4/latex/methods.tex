@@ -36,7 +36,11 @@ Two quantities we will focus on in this report are the specific heat capacity, $
     C_V &= \frac{1}{N}\frac{1}{k_B T^2} \closed{\expval{E^2} - \expval{E}^2}, \label{eq:C_V} \\ 
     \chi &= \frac{1}{N} \frac{1}{k_B T} \closed{\expval{M^2} - \expval{\abs{M}}^2}, \label{eq:chi}
 \end{align} 
-where the various average quantities are obtained from Eq. \eqref{eq:observable_exp_val}. 
+where the various average quantities are obtained from Eq. \eqref{eq:observable_exp_val}. We will later be concerned with the energy and magnetization of our system per spin, which we define as 
+\begin{align}
+    \eps(\nu) &= \frac{E(\nu)}{N}, \label{eq:eps_} \\ 
+    m(\nu) &= \frac{M(\nu)}{N}. \label{eq:m_}
+\end{align}   
 
 \subsection{Phase transitions and critical phenomena}\label{subsec_theory:PT_critical_phenomena}
 One of the most peculiar features of continuous phase transitions is that thermodynamic quantities are found to exhibit similar behavior for a variety of different systems. These phase transitions can be characterized by \textit{critical exponents}, where physical quantities behave according to power laws near the critical point, i.e. a critical temperature. Near the critical temperature, $\expval{\abs{M}},\,C_V$ and $\chi$ behave according to the following power laws: 
