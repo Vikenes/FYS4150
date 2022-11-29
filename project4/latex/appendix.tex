@@ -37,7 +37,11 @@ The resulting expressions for $C_V$ and $\chi$ are thus
 
 \section{Parallel}\label{app:parallel}
 
-Figure \ref{fig:efficiency} show the run times for a simulation of $\nmc=10^6$ Monte Carlo cycles, with $N_\mathrm{eq} = 1.5\cdot 10^4$ equilibration cycles for 20 temperatures on the interval $T\in[2.0, 2.5]$ as function of the lattice size $L$, both using \texttt{OpenMP} parallelization and standard serial runs of our code. We clearly deduce from the figure that a parallelized code runs faster, especially when the lattice size increase. This could be explained by the time it takes the computer to divide the tasks among the 5 threads used for this comparison. This time would be more or less the same for all lattice sizes, since we parallelize the temperatures. Thus, the main gain with parallelization in our case is the run time over the lattices, which is greatly reduced for larger lattices by parallelizing the temperatures, as is evident from the figure.
+Figure \ref{fig:efficiency} show the run times for a simulation of $\nmc=10^5$ Monte Carlo cycles, with $N_\mathrm{eq} = 1.5\cdot 10^4$ equilibration cycles for 20 temperatures on the interval $T\in[2.0, 2.5]$ as function of the lattice size $L$, both using \texttt{OpenMP} parallelization and standard serial runs of our code. We clearly deduce from the figure that a parallelized code runs faster, especially when the lattice size increase. This is a result of the large number of computations required for large lattices at each temperature step. For $L=80$ the ratio between the computation times of serial and parallel, $t_s$ and $t_p$ are approximately
+\begin{equation}
+    \frac{t_s}{t_p}=\frac{582.82}{207.01}\approx2.82, 
+\end{equation}  
+which is less than the ideal speedup factor of five. A proper estimation of the speedup factor would be obtained by plotting the ratio $t_s/t_p$ as a function of lattice sizes, obtained from average computational times over several measurements\footnote{This was planned, but could not be executed properly, due to a human brain-memory leakage during parallelization of the project work.}.
 
 \begin{figure}[!ht]
     \includegraphics[width=\linewidth]{pdfs/eficiency.pdf} 
