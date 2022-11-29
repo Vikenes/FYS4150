@@ -6,32 +6,22 @@ The project report is found as `latex/project4.pdf`, or [here](https://github.co
 
 ## The code
 
-All code is in C++ or Python and is found in the `code` directory.
+All code is in C++ or Python and is found in the `code` directory, and include the following files:
 
-### Dependencies
-In order to run the C++ code the following libraries are needed:
+C++:
 
-* sstream
-* string
-* iomanip
-* vector
-* fstream
-* iostream
-* cmath
-* armadillo
-* typeinfo
-* random
-* algorithm
-* omp
+* `analytical.cpp`
+* `equilibriation_time.cpp`
+* `ising_model.cpp`
+* `parallel_system.cpp`
+* `prob_distr.cpp`
+* `timing.cpp`
 
-In order to run the python code the following libraries are needed:
+In addition, there is a source file `src/utils.cpp` with appropriate header file `include/utils.hpp`.
 
-* numpy
-* matplotlib.pyplot
-* pandas
-* scipy.interpolate
-* scipy.stats
-* os
+Python:
+
+* `analysis.py`
 
 
 ### How to run
@@ -55,7 +45,7 @@ with arguments:
 
 * arg1: Starting point of MC-runs, $N=10^\mathrm{arg1}$
 * arg2: End point of MC-runs, $N=10^\mathrm{arg2}$
-* arg3: Temperature of the simulation.
+* arg3: Temperature: $T=\mathrm{arg3}$
 
 #### Equilibration
 Compile with
@@ -148,3 +138,30 @@ In order to only show the plots, make sure the global variable in the script are
 Additional files from previous runs (`.csv`-files) can be found the `output/data` folder. 
 
 Plots, both as `.png` and `.pdf` can be found in the `output/plots` folder.
+
+
+
+### Dependencies
+In order to run the C++ code the following libraries are needed:
+
+* `sstream`
+* `string`
+* `iomanip`
+* `vector`
+* `fstream`
+* `iostream`
+* `cmath`
+* `armadillo`
+* `typeinfo`
+* `random`
+* `algorithm`
+* `omp`
+
+In order to run the python code the following libraries are needed:
+
+* `numpy`
+* `matplotlib.pyplot`
+* `pandas`
+* `scipy.interpolate`
+* `scipy.stats`
+* `os`
