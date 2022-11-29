@@ -36,12 +36,12 @@ plt.rc('text', usetex=True)
 plt.rcParams['savefig.bbox'] = 'tight'
 plt.rcParams['font.family'] = 'Times New Roman'
 
-temp = True     # makes temporary .png files instead of .pdf
 
 #   Global setting commands
-SAVE = True
-PUSH = True
-SHOW = False
+temp = True     # makes temporary .png files instead of .pdf
+SAVE = False
+PUSH = False
+SHOW = True
 
 def save_push(fig, pdf_name, save=SAVE, push=PUSH, show=SHOW, tight=False, png_duplicate=temp):
     """

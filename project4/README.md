@@ -10,20 +10,29 @@ All code is in C++ or Python and is found in the `code` directory.
 
 ### Dependencies
 In order to run the C++ code the following libraries are needed:
-```
-sstream
-string
-iomanip
-vector
-fstream
-iostream
-cmath
-armadillo
-typeinfo
-random
-algorithm
 
-```
+* sstream
+* string
+* iomanip
+* vector
+* fstream
+* iostream
+* cmath
+* armadillo
+* typeinfo
+* random
+* algorithm
+* omp
+
+In order to run the python code the following libraries are needed:
+
+* numpy
+* matplotlib.pyplot
+* pandas
+* scipy.interpolate
+* scipy.stats
+* os
+
 
 ### How to run
 It is important to move into the `code` directory for the following to work. One may write:
@@ -127,4 +136,15 @@ make plots
 ```
 This command runs the script `code/plot/analysis.py`
 
+In order to only show the plots, make sure the global variable in the script are (they should be so by default):
 
+    temp = True
+    SAVE = False
+    PUSH = False
+    SHOW = True
+
+
+### Results and files
+Additional files from previous runs (`.csv`-files) can be found the `output/data` folder. 
+
+Plots, both as `.png` and `.pdf` can be found in the `output/plots` folder.
