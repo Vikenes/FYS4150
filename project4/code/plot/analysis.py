@@ -16,7 +16,7 @@ plot_path = here +"/../../output/plots/pdfs/"
 
 #   rc and plot params
 
-TICKLABELSIZE = 20
+TICKLABELSIZE = 25
 LABELSIZE = 25
 LEGENDSIZE = 20
 TITLESIZE = 30
@@ -60,7 +60,9 @@ def save_push(fig, pdf_name, save=SAVE, push=PUSH, show=SHOW, tight=False, png_d
         print(f'Saving plot: {file}')
         fig.savefig(file)
         if png_duplicate:
-            fig.savefig(temp_path + pdfname.replace('.pdf', '.png'))
+            png_fname = temp_path + pdfname.replace('.pdf', '.png')
+            fig.savefig(png_fname)
+            os.system(f"git add {png_fname}")
     if push:
         os.system(f"git add {file}")
         os.system("git commit -m 'upload plot'")
@@ -178,7 +180,7 @@ def compare_analytical(filename="anal_Nsamples4_T1.csv"):
         print(df.to_string())
 
 
-def equilibriation_time(sp):
+def equilibriation_time():
 
     e1or, m1or, n1, T1   = load("equil_L20_N100000_T1_ordered.csv")     # T=1, aligned initial spins 
     e1un, m1un, n2, T2 = load("equil_L20_N100000_T1_unordered.csv")     # T=1, unordered (random initial spins)
@@ -201,8 +203,8 @@ def equilibriation_time(sp):
     fig1.subplots_adjust(wspace=0.05,top=0.9)
     
 
-    textstr1 = r'$T = 1\,\mathrm{J/k_B}$ '
-    textstr2 = r'$T = 2.4\,\mathrm{J/k_B}$ '
+    textstr1 = r'$T = 1\,J/k_B$ '
+    textstr2 = r'$T = 2.4\,J/k_B$ '
     ax1[0].text(0.25, 0.95, textstr1, transform=ax1[0].transAxes, fontsize=20, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white'))
     ax1[1].text(0.25, 0.95, textstr2, transform=ax1[1].transAxes, fontsize=20, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white'))
 
@@ -224,18 +226,15 @@ def equilibriation_time(sp):
     set_ax_info(ax2[1], xlabel=r'$N_\mathrm{MC}$')#, title=r'$T=2.4\,\mathrm{J/k_B}$')
     fig2.subplots_adjust(wspace=0.05, top=0.9)
 
-    textstr1 = r'$T = 1\,\mathrm{J/k_B}$ '
-    textstr2 = r'$T = 2.4\,\mathrm{J/k_B}$ '
+    textstr1 = r'$T = 1\,J/k_B$ '
+    textstr2 = r'$T = 2.4\,J/k_B$ '
     ax2[0].text(0.65, 0.65, textstr1, transform=ax2[0].transAxes, fontsize=20, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white'))
     ax2[1].text(0.63, 0.65, textstr2, transform=ax2[1].transAxes, fontsize=20, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white'))
 
     pdfname2 = "equilibriation_time_magnetization"
 
-    if sp:
-        save_push(fig1, pdfname1)
-        save_push(fig2, pdfname2)
-    else:
-        plt.show()
+    save_push(fig1, pdfname1)
+    save_push(fig2, pdfname2)
 
 
 def pdf_histogram():
@@ -259,24 +258,27 @@ def pdf_histogram():
     var1 = np.var(e1)
     var2 = np.var(e2)
 
-    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(12,7))
+    fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(14,7))
     
     ax[0].hist(e1, bins=bins1, weights=weights1, facecolor='red', edgecolor='black', lw=2)
     ax[1].hist(e2, bins=bins2, weights=weights2, facecolor='red', edgecolor='black', lw=0.5)
 
-    ax[0].set_title(r'$T=1$')
-    ax[1].set_title(r'$T=2.4$')
+    ax[0].set_title(r'$T=1\,J/k_B$')
+    ax[1].set_title(r'$T=2.4\,J/k_B$')
     
-    textstr1 = '\n'.join((r'$\langle \epsilon \rangle = $ {:.2f}'.format(mean1), r'$\sigma^2 = $ {:.2e}'.format(var1)))
-    textstr2 = '\n'.join((r'$\langle \epsilon \rangle = $ {:.2f}'.format(mean2), r'$\sigma^2 = $ {:.2e}'.format(var2)))
+    textstr1 = '\n'.join((r'$\langle \epsilon \rangle = $ {:.2f}$\,J$'.format(mean1), r'$\sigma^2 = $ {:.2e}$\,J$'.format(var1)))
+    textstr2 = '\n'.join((r'$\langle \epsilon \rangle = $ {:.2f}$\,J$'.format(mean2), r'$\sigma^2 = $ {:.2e}$\,J$'.format(var2)))
 
-    ax[0].set_xlabel(r'$\epsilon$', fontsize=25)
-    ax[1].set_xlabel(r'$\epsilon$', fontsize=25)
+    ax[0].set_xlabel(r'$\epsilon/J$', fontsize=25)
+    ax[1].set_xlabel(r'$\epsilon/J$', fontsize=25)
     ax[0].set_ylabel(r'$p_\epsilon(\epsilon; T)$', fontsize=25)    
     # ax[1].set_ylabel('P(E) duh')        
 
-    ax[0].text(0.58, 0.95, textstr1, transform=ax[0].transAxes, fontsize=20, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white'))
+    ax[0].text(0.55, 0.95, textstr1, transform=ax[0].transAxes, fontsize=20, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white'))
     ax[1].text(0.05, 0.95, textstr2, transform=ax[1].transAxes, fontsize=20, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white'))
+
+    fig.subplots_adjust(wspace=0.25)
+    ax[0].set_xticks(bins1[::2])
 
     pdfname = "histogram"
     save_push(fig, pdfname)
@@ -295,7 +297,7 @@ def PT_NT50():
     Ls = [40, 60, 80, 100]
     colors = ['blue', 'green', 'red', 'black', 'orange']
 
-    fig, ax = plt.subplots(1,2,figsize=(12,7))
+    fig, ax = plt.subplots(1,2,figsize=(16,8))
     for i, file in enumerate(files):
         T = file[0]
         varE, varM = file[-2:]
@@ -312,17 +314,19 @@ def PT_NT50():
             ax[0].plot(T, Cv,  lw=3, alpha=0.5, color=colors[i], label=f'L={Ls[i]}, comparing')
             ax[1].plot(T, chi, lw=3, alpha=0.5, color=colors[i], label=f'L={Ls[i]}, comparing')
 
-    ax[0].set_title("Heat capacity")
-    ax[1].set_title("Susceptibility")
+    # ax[0].set_title("Heat capacity for different")
+    # ax[1].set_title("Susceptibility")
+    fig.suptitle('Heat capacity and susceptibility per spin for different lattize sizes')
+    ax[0].set_xlabel(r'$T / J k_B^{-1}$')
+    ax[1].set_xlabel(r'$T / J k_B^{-1}$')
 
-    ax[0].set_xlabel(r'$T$')
-    ax[1].set_xlabel(r'$T$')
-
-    ax[0].set_ylabel(r'$C_V$')
-    ax[1].set_ylabel(r'$\chi$')
+    ax[0].set_ylabel(r'$C_V / J k_B$')
+    ax[1].set_ylabel(r'$\chi / J^{-1}$')
 
     ax[0].legend()
     ax[1].legend()
+
+    fig.subplots_adjust(wspace=0.25, top=0.9)
 
 
     pdfname = "phase_transitionNT50"
@@ -424,9 +428,9 @@ def PT_NT101():
 
     ax1.set_title("Heat capacity")
 
-    ax1.set_xlabel(r'$T$')
+    ax1.set_xlabel(r'$T / J k_B^{-1}$')
 
-    ax1.set_ylabel(r'$C_V$')
+    ax1.set_ylabel(r'$C_V / J k_B$')
 
     ax1.legend()
 
@@ -470,7 +474,7 @@ def PT_NT101():
 
     fig2, ax2 = plt.subplots(figsize=(12,7))
     ax2.plot(L_inv_array, linear_func(L_inv_array), color="blue", label="Linear fit")
-    ax2.scatter(1/np.array(Ls), crit_T, marker='X', s=100, c='orange', edgecolors="black", zorder=3, label=r"$T_C$")
+    ax2.scatter(1/np.array(Ls), crit_T, marker='X', s=100, c='orange', edgecolors="black", zorder=3, label=r"$T_C(L)$")
     ax2.scatter(*[0, linear_func(0)], marker='X', s=100, c='red', edgecolors="black", zorder=3, label=r"$T_C(L=\infty)$")
     ax2.hlines(T_c_infty, xmin= -0.02, xmax=0, color="red", ls='--', lw=0.7)
     ax2.vlines(0, ymin=np.min(linear_func(L_inv_array))-1, ymax=linear_func(0), colors='red', lw=0.7, ls='--')
@@ -479,7 +483,7 @@ def PT_NT101():
 
     ax2.set_title("Critical temperatures")
     ax2.set_xlabel(r'$L^{-1}$')
-    ax2.set_ylabel(r'$T$')
+    ax2.set_ylabel(r'$T / J k_B^{-1}$')
     ax2.legend()
 
     pdfname2 = 'critical_temperatures'
@@ -509,12 +513,12 @@ def titsplot(): #(.)(.)
 
 
 if __name__=="__main__":
-    compare_analytical()
-    equilibriation_time()
+    # compare_analytical()
+    # equilibriation_time()
     pdf_histogram()
-    PT_NT50()
-    PT_NT101()
-    titsplot()
+    # PT_NT50()
+    # PT_NT101()
+    # titsplot()
 """
 Timing parameters:
 T0=2
