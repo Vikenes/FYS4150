@@ -16,7 +16,7 @@ plot_path = here +"/../../output/plots/pdfs/"
 
 #   rc and plot params
 
-TICKLABELSIZE = 20
+TICKLABELSIZE = 25
 LABELSIZE = 25
 LEGENDSIZE = 20
 TITLESIZE = 30
@@ -178,7 +178,7 @@ def compare_analytical(filename="anal_Nsamples4_T1.csv"):
         print(df.to_string())
 
 
-def equilibriation_time(sp):
+def equilibriation_time():
 
     e1or, m1or, n1, T1   = load("equil_L20_N100000_T1_ordered.csv")     # T=1, aligned initial spins 
     e1un, m1un, n2, T2 = load("equil_L20_N100000_T1_unordered.csv")     # T=1, unordered (random initial spins)
@@ -231,11 +231,8 @@ def equilibriation_time(sp):
 
     pdfname2 = "equilibriation_time_magnetization"
 
-    if sp:
-        save_push(fig1, pdfname1)
-        save_push(fig2, pdfname2)
-    else:
-        plt.show()
+    save_push(fig1, pdfname1)
+    save_push(fig2, pdfname2)
 
 
 def pdf_histogram():
@@ -512,11 +509,11 @@ def titsplot(): #(.)(.)
 
 if __name__=="__main__":
     # compare_analytical()
-    # equilibriation_time()
-    # pdf_histogram()
-    PT_NT50()
-    # PT_NT101()
-    # titsplot()
+    equilibriation_time()
+    pdf_histogram()
+    # PT_NT50()
+    PT_NT101()
+    titsplot()
 """
 Timing parameters:
 T0=2
