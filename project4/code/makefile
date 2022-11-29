@@ -16,35 +16,35 @@ EXTRA_FLAGS =  # dunno
 LDFLAGS =  # linker
 
 
+# Experimented with this, look away from it for now:
+# # Add necessary flag for Mac:
+# ifeq ($(detected_OS), Darwin)
+# 	CXXFLAGS += -std=c++11
+# endif
 
-# Add necessary flag for Mac:
-ifeq ($(detected_OS), Darwin)
-	CXXFLAGS += -std=c++11
-endif
+# # Add larmadillo flag:
+# ifeq  ($(strip $(ARMA)),yes)
+#     LDFLAGS += -larmadillo
+# endif
 
-# Add larmadillo flag:
-ifeq  ($(strip $(ARMA)),yes)
-    LDFLAGS += -larmadillo
-endif
+# # For header files:
+# ifeq  ($(strip $(SRC)),yes)
+#     EXTRA_FLAGS += src/*.cpp -I include
+# endif
 
-# For header files:
-ifeq  ($(strip $(SRC)),yes)
-    EXTRA_FLAGS += src/*.cpp -I include
-endif
+# # Add O3 flag:
+# ifeq  ($(strip $(OPTIMISE)),yes)
+#     CXXFLAGS += -O3
+# endif
 
-# Add O3 flag:
-ifeq  ($(strip $(OPTIMISE)),yes)
-    CXXFLAGS += -O3
-endif
-
-# Add OpenMP flags:
-ifeq ($(strip $(PARALLEL)), yes)
-	ifeq ($(detected_OS), Darwin)
-		EXTRA_FLAGS += -Xpreprocessor
-	endif
-	EXTRA_FLAGS += -fopenmp
-	LDFLAGS += -lomp
-endif
+# # Add OpenMP flags:
+# ifeq ($(strip $(PARALLEL)), yes)
+# 	ifeq ($(detected_OS), Darwin)
+# 		EXTRA_FLAGS += -Xpreprocessor
+# 	endif
+# 	EXTRA_FLAGS += -fopenmp
+# 	LDFLAGS += -lomp
+# endif
 
 
 compile_anal:
@@ -82,29 +82,29 @@ timing_serial:
 
 
 
-# General run command:
-all: compile link run
-# Aiming to have options here!
+# # General run command:
+# all: compile link run
+# # Aiming to have options here!
 
-# Compile main.cpp:
-compile:
-	$(CXX) $(CXXFLAGS) -c main.cpp $(EXTRA_FLAGS)
+# # Compile main.cpp:
+# compile:
+# 	$(CXX) $(CXXFLAGS) -c main.cpp $(EXTRA_FLAGS)
 
-# Link main.exe:
-link:
-	$(CXX) -o main$(executable) *.o $(LDFLAGS) 
+# # Link main.exe:
+# link:
+# 	$(CXX) -o main$(executable) *.o $(LDFLAGS) 
 
-# Run main.exe:
-run:
-	./main$(executable)
+# # Run main.exe:
+# run:
+# 	./main$(executable)
 
-# Debug, not sure:
-debug_valgrind:
-	$(CXX) $(CXXFLAGS) -gmain.cpp $(EXTRA_FLAGS) -o  main$(executable) $(LDFLAGS) && valgrind ./main$(executable) 
+# # Debug, not sure:
+# debug_valgrind:
+# 	$(CXX) $(CXXFLAGS) -gmain.cpp $(EXTRA_FLAGS) -o  main$(executable) $(LDFLAGS) && valgrind ./main$(executable) 
 
-# Debuh, not sure:
-debug_gdb:
-	$(CXX) $(CXXFLAGS) -gmain.cpp $(EXTRA_FLAGS) -o  main$(executable) -$(LDFLAGS) && gdb --args ./main$(executable)
+# # Debuh, not sure:
+# debug_gdb:
+# 	$(CXX) $(CXXFLAGS) -gmain.cpp $(EXTRA_FLAGS) -o  main$(executable) -$(LDFLAGS) && gdb --args ./main$(executable)
 
 # Create and show all plots:
 plots:
