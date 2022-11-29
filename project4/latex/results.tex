@@ -12,7 +12,7 @@ The comparison between the numerical and analytical values of various quantities
 \subsection{Equilibration time}\label{subsec_results:equilibriation_time}
 Figure \ref{fig:equil_energy} and \ref{fig:equil_magn} shows the evolution of $\avge$ for an ordered and unordered initial lattice configuration. A logarithmic scale is used on the $x$-axis. The result for $T=1\tunit$ and $T=2.4\tunit$ are shown in the left and right panel, respectively. For $T=1\tunit$ we see that an ordered initial configuration quickly approaches the equilibrium value, as aligned spins are favored at low temperature. We see that $\nmc>10^3$ is required for the unordered configuration to reach close to the equilibrium value. For $T=2.4\tunit$ we see that both lattice configurations require an approximate value of $10^4$ cycles in order to equilibrate the system, as higher temperatures favor less alignment of spins.    
 \begin{figure}[!ht]
-    \includegraphics[width=0.9\linewidth]{temp/equilibriation_time_energy.png}
+    \includegraphics[width=\linewidth]{temp/equilibriation_time_energy.png}
     \caption{Equilibration time for the mean energy $\langle \epsilon \rangle $ as function of the number of Monte Carlo cycles, $\nmc$, for $T=1\tunit$ and $T=2.4\tunit$. The red line correspond to an ordered initial state in which all the spins point in the same direction. The blue line correspond to an unordered initial state with random initialization of the spins.}
 
     \label{fig:equil_energy}
@@ -22,15 +22,15 @@ The evolution of $\avgm$ in Fig. \ref{fig:equil_magn} shows a similar behavior t
 Based on these plots we choose $\nequi=1.5\cdot10^4$ for further analysis. In Figs. \ref{fig:equil_energy} and \ref{fig:equil_magn} we saw that an approximate equilibrium was reached after $10^4$ cycles. There are statistical uncertainties in our results due to considering one sample only, and we therefore choose the slightly higher value of $\nequi=1.5\cdot10^4$. This value is also small enough for the simulations to be computationally efficient.
 
 \begin{figure}[!ht]
-    \includegraphics[width=0.9\linewidth]{temp/equilibriation_time_magnetization.png}
+    \includegraphics[width=\linewidth]{temp/equilibriation_time_magnetization.png}
     \caption{Equilibration time for the mean magnetization $\langle \vert m \vert \rangle$ as function of the number of Monte Carlo cycles, $\nmc$, for $T=1\tunit$ and $T=2.4\tunit$. The red line correspond to an ordered initial state in which all the spins point in the same direction. The blue line correspond to an unordered initial state with random initialization of the spins.}
     \label{fig:equil_magn}
 \end{figure}
 
 \subsection{Energy histograms}\label{subsec_results:histogram}
-We generate samples of $\eps$ from $\nmc=10^5$ cycles for $T=1\tunit$ and $T=2.4\tunit$, with resulting histograms shown in Fig. \ref{fig:histogram}.  
+We generate samples of $\eps$ from $\nmc=10^5$ cycles for $T=1\tunit$ and $T=2.4\tunit$, with resulting histograms shown in Fig. \ref{fig:histogram}. 
 \begin{figure}[!ht]
-    \includegraphics[width=0.9\linewidth]{temp/histogram.png}
+    \includegraphics[width=\linewidth]{temp/histogram.png}
     \caption{Estimates of the probability distribution $p_e(\epsilon; T)$ for $T=1\tunit$ and $T=2.4$. For $T=1\tunit$ the expectation value is $\langle \epsilon \rangle = -2.00 \; J$ with variance $\sigma^2 = 5.91\cdot 10^{-5}$, while for $T=2.4$ the expectation value is $\langle \epsilon \rangle = -1.24 \; J$ with variance $\sigma^2=2.03\cdot 10^{-2}$.}
     \label{fig:histogram}
 \end{figure}
@@ -49,13 +49,13 @@ We generate samples of $\eps$ from $\nmc=10^5$ cycles for $T=1\tunit$ and $T=2.4
 \end{figure} 
 
 \begin{figure}[!ht]
-    \includegraphics[width=0.9\linewidth]{temp/critical_temperatures.png} 
+    \includegraphics[width=\linewidth]{temp/critical_temperatures.png} 
     \caption{Linear fit of the critical temperatures. The fit is made from the orange markers in the plot, as a function of the inverse lattice size. The critical temperature for an infinite lattice is found as the intercept of this linear fit and is marked with red in the plot. }
     \label{fig:critical_temperatures}
 \end{figure} 
 
 \begin{figure}[!ht]
-    \includegraphics[width=0.9\linewidth]{temp/eficiency.png} 
+    \includegraphics[width=\linewidth]{temp/eficiency.png} 
     \caption{Duration as function of lattice size for running $\nmc=10^6$ Monte Carlo cycles with $N_\mathrm{eq}=1.5\cdot 10^4$ equilibration cycles for 20 temperatures on the interval $T\in[2.0,2.5]$. The parallelization is done using 5 threads and is shown in blue in the plot, against the serial implementation in red.} 
     \label{fig:efficiency}
 \end{figure} 
