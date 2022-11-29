@@ -12,8 +12,9 @@ The comparison between the numerical and analytical values of various quantities
 \subsection{Equilibration time}\label{subsec_results:equilibriation_time}
 Figure \ref{fig:equil_energy} and \ref{fig:equil_magn} shows the evolution of $\avge$ for an ordered and unordered initial lattice configuration. A logarithmic scale is used on the $x$-axis. The result for $T=1\tunit$ and $T=2.4\tunit$ are shown in the left and right panel, respectively. For $T=1\tunit$ we see that an ordered initial configuration quickly approaches the equilibrium value, as aligned spins are favored at low temperature. We see that $\nmc>10^3$ is required for the unordered configuration to reach close to the equilibrium value. For $T=2.4\tunit$ we see that both lattice configurations require an approximate value of $10^4$ cycles in order to equilibrate the system, as higher temperatures favor less alignment of spins.       
 \begin{figure}[!ht]
-    \includegraphics[width=\linewidth]{temp/equilibriation_time_energy.png}
-    \caption{Hei}
+    \includegraphics[width=0.9\linewidth]{temp/equilibriation_time_energy.png}
+    \caption{Equilibration time for the mean energy $\langle \epsilon \rangle$ as function of the number of Monte Carlo cycles, $\nmc$, for $T=1$ and $T=2.4$. The red line correspond to an ordered initial state in which all the spins point in the same direction. The blue line correspond to an unordered initial state with random initialization of the spins.}
+
     \label{fig:equil_energy}
 \end{figure}
 The evolution of $\avgm$ in Fig. \ref{fig:equil_magn} shows a similar behavior to that of $\avge$ in Fig. \ref{fig:equil_energy}. An ordered lattice configuration reaches the equilibrium values after very few iterations for $T=1\tunit$, compared to the unordered configuration. At $T=2.4\tunit$ both configurations require $\nmc\approx10^4$ for equilibrium to be reached. 
@@ -21,15 +22,15 @@ The evolution of $\avgm$ in Fig. \ref{fig:equil_magn} shows a similar behavior t
 Based on these plots we choose $\nequi=1.5\cdot10^4$ for further analysis. In Figs. \ref{fig:equil_energy} and \ref{fig:equil_magn} we saw that an approximate equilibrium was reached after $10^4$ cycles. There are statistical uncertainties in our results due to considering one sample only, and we therefore choose the slightly higher value of $\nequi=1.5\cdot10^4$. This value is also small enough for the simulations to be computationally efficient. 
 
 \begin{figure}[!ht]
-    \includegraphics[width=\linewidth]{temp/equilibriation_time_magnetization.png}
-    \caption{Sug meg}
+    \includegraphics[width=0.9\linewidth]{temp/equilibriation_time_magnetization.png}
+    \caption{Equilibration time for the mean magnetization $\langle \vert m \vert \rangle$ as function of the number of Monte Carlo cycles, $\nmc$, for $T=1$ and $T=2.4$. The red line correspond to an ordered initial state in which all the spins point in the same direction. The blue line correspond to an unordered initial state with random initialization of the spins.}
     \label{fig:equil_magn}
 \end{figure}
 
 \subsection{Energy histograms}\label{subsec_results:histogram}
 \begin{figure}[!ht]
-    \includegraphics[width=\linewidth]{temp/histogram.png}
-    \caption{Ser man det }
+    \includegraphics[width=0.9\linewidth]{temp/histogram.png}
+    \caption{Estimates of the probability distribution $p_e(\epsilon; T)$ for $T=1$ and $T=2.4$}
     \label{fig:histogram}
 \end{figure}
 
