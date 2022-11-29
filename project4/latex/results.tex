@@ -1,6 +1,6 @@
 \section{Results}\label{sec:results}
-
-The comparison between the numerical and analytical values of various quantities is given in table \ref{tab:compare_analytical}. The first column shows the total number of cycles run for each of the measured quantities, i.e. these results are obtained \textit{without} equilibriating the system first. Here, we see that we get reasonable good estimates of the average quantities, even for $\nmc=10^2$.  
+\subsection{Analytical comparison}\label{subsec_results:analytical}
+The comparison between the numerical and analytical values of various quantities is given in table \ref{tab:compare_analytical}. The first column shows the total number of cycles run for each of the measured quantities, i.e. these results are obtained \textit{without} equilibriating the system first. Here, we see that we get reasonable good estimates of the average quantities, even for $\nmc=10^2$. For $nmc=10^4$ and $10^5$ we obtain reasonable approximation of the estimates. \Vetle{Mention briefly that some fluctuations are expected.} 
 
 \begin{table}[!ht]
     \input{tables/compare_analytical.tex}
@@ -8,11 +8,14 @@ The comparison between the numerical and analytical values of various quantities
     \label{tab:compare_analytical}
 \end{table}
 
+
+\subsection{Equilibriation time}\label{subsec_results:equilibriation_time}
+Figure \ref{fig:equil_energy} and \ref{fig:equil_magn} shows the evolution of $\avge$ for $T=1\tunit$ and $T=2.4\tunit$ for 
 \begin{figure}[!ht]
     \includegraphics[width=\linewidth]{temp/equilibriation_time_energy.png}
     \caption{Hei}
     \label{fig:equil_energy}
-\end{figure} 
+\end{figure}
 
 
 
