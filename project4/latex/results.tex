@@ -1,8 +1,15 @@
 \section{Results}\label{sec:results}
 
+The comparison between the numerical and analytical values of various quantities is given in table \ref{tab:compare_analytical}. The first column shows the total number of cycles run for each of the measured quantities, i.e. these results are obtained \textit{without} equilibriating the system first. Here, we see that we get reasonable good estimates of the average quantities, even for $\nmc=10^2$.  
+
+\begin{table}[!ht]
+    \input{tables/compare_analytical.tex}
+    \caption{Comparison of analytical results. }
+    \label{tab:compare_analytical}
+\end{table}
 
 \begin{figure}[!ht]
-    \includegraphics[width=0.9\linewidth]{temp/equilibriation_time_energy.png}
+    \includegraphics[width=\linewidth]{temp/equilibriation_time_energy.png}
     \caption{Hei}
     \label{fig:equil_energy}
 \end{figure} 
@@ -10,27 +17,27 @@
 
 
 \begin{figure}[!ht]
-    \includegraphics[width=0.9\linewidth]{temp/equilibriation_time_magnetization.png}
+    \includegraphics[width=\linewidth]{temp/equilibriation_time_magnetization.png}
     \caption{Sug meg}
     \label{fig:equil_magn}
 \end{figure}
 
 
 \begin{figure}[!ht]
-    \includegraphics[width=0.9\linewidth]{temp/histogram.png}
+    \includegraphics[width=\linewidth]{temp/histogram.png}
     \caption{Ser man det }
     \label{fig:histogram}
 \end{figure}
 
 
-\begin{figure}[!ht]
-    \includegraphics[width=0.9\linewidth]{temp/phase_transitionNT50.png} 
+\begin{figure*}[!ht]
+    \includegraphics[width=\linewidth]{temp/phase_transitionNT50.png} 
     \caption{Hvem vinner VM?}
     \label{fig:phase_transition}
-\end{figure} 
+\end{figure*} 
 
 \begin{figure}[!ht]
-    \includegraphics[width=0.9\linewidth]{temp/phase_transitionNT101.png} 
+    \includegraphics[width=\linewidth]{temp/phase_transitionNT101.png} 
     \caption{Spania?}
     \label{fig:phase_transition_zoomed}
 \end{figure} 
@@ -50,11 +57,6 @@
 
 
 
-\begin{table}[!ht]
-    \input{tables/compare_analytical.tex}
-    \caption{Comparison of analytical results. }
-    \label{tab:compare_analytical}
-\end{table}
 
 \begin{table}[!ht]
     \input{tables/critical_temperatures.tex}
