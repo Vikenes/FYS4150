@@ -178,7 +178,7 @@ def compare_analytical(filename="anal_Nsamples4_T1.csv"):
         print(df.to_string())
 
 
-def equilibriation_time():
+def equilibriation_time(sp):
 
     e1or, m1or, n1, T1   = load("equil_L20_N100000_T1_ordered.csv")     # T=1, aligned initial spins 
     e1un, m1un, n2, T2 = load("equil_L20_N100000_T1_unordered.csv")     # T=1, unordered (random initial spins)
@@ -186,23 +186,31 @@ def equilibriation_time():
     e2un, m2un, n4, T4 = load("equil_L20_N100000_T2.4_unordered.csv")   # T=2.4, unordered (random initial spins)
     
     ### ENERGY 
-    fig1, ax1 = plt.subplots(nrows=1, ncols=2, figsize=(12,7), sharey=True)
-    fig1.suptitle('Energy')
+    fig1, ax1 = plt.subplots(nrows=1, ncols=2, figsize=(14,7), sharey=True)
+    fig1.suptitle(r'Equilibration of energy')
     ax1[0].plot(n1, e1or, '--', color='red', label='Ordered')
     ax1[0].plot(n2, e1un, ':', color='blue', label='Unordered')
     ax1[1].plot(n3, e2or, '--', color='red', label='Ordered')
     ax1[1].plot(n4, e2un, ':', color='blue', label='Unordered')
     ax1[0].set_xscale('log')
     ax1[1].set_xscale('log')
-    ax1[0].set_ylim(-2.1, 0)
-    ax1[1].set_ylim(-2.1, 0)
-    set_ax_info(ax1[0], xlabel=r'$N$', ylabel=r'$\langle \epsilon \rangle$', title=r'$T=1$')
-    set_ax_info(ax1[1], xlabel=r'$N$', title=r'$T=2.4$')
+    ax1[0].set_ylim(-2.1, -0.5)
+    ax1[1].set_ylim(-2.1, -0.5)
+    set_ax_info(ax1[0], xlabel=r'$N_\mathrm{MC}$', ylabel=r'$\langle \epsilon \rangle/J$')#, title=r'$T=1\,\mathrm{J/k_B}$')
+    set_ax_info(ax1[1], xlabel=r'$N_\mathrm{MC}$')#, title=r'$T=2.4\,\mathrm{J/k_B}$')
+    fig1.subplots_adjust(wspace=0.05,top=0.9)
+    
+
+    textstr1 = r'$T = 1\,\mathrm{J/k_B}$ '
+    textstr2 = r'$T = 2.4\,\mathrm{J/k_B}$ '
+    ax1[0].text(0.25, 0.95, textstr1, transform=ax1[0].transAxes, fontsize=20, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white'))
+    ax1[1].text(0.25, 0.95, textstr2, transform=ax1[1].transAxes, fontsize=20, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white'))
+
     pdfname1 = "equilibriation_time_energy"
 
     ### MAGNETIZATION
-    fig2, ax2 = plt.subplots(nrows=1, ncols=2, figsize=(12,7), sharey=True)
-    fig2.suptitle(r'Magnetization')
+    fig2, ax2 = plt.subplots(nrows=1, ncols=2, figsize=(14,7), sharey=True)
+    fig2.suptitle(r'Equilibration of magnetization')
     
     ax2[0].plot(n1, m1or, '--', color='red', label='Ordered')
     ax2[0].plot(n2, m1un, ':', color='blue', label='Unordered')
@@ -212,12 +220,22 @@ def equilibriation_time():
     ax2[1].set_xscale('log')
     ax2[0].set_ylim(0, 1.1)
     ax2[1].set_ylim(0, 1.1)
-    set_ax_info(ax2[0], xlabel=r'$N$', ylabel=r'$\langle \vert m \vert \rangle$', title=r'$T=1$')
-    set_ax_info(ax2[1], xlabel=r'$N$', title=r'$T=2.4$')
+    set_ax_info(ax2[0], xlabel=r'$N_\mathrm{MC}$', ylabel=r'$\langle \vert m \vert \rangle$')#, title=r'$T=1\,\mathrm{J/k_B}$')
+    set_ax_info(ax2[1], xlabel=r'$N_\mathrm{MC}$')#, title=r'$T=2.4\,\mathrm{J/k_B}$')
+    fig2.subplots_adjust(wspace=0.05, top=0.9)
+
+    textstr1 = r'$T = 1\,\mathrm{J/k_B}$ '
+    textstr2 = r'$T = 2.4\,\mathrm{J/k_B}$ '
+    ax2[0].text(0.65, 0.65, textstr1, transform=ax2[0].transAxes, fontsize=20, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white'))
+    ax2[1].text(0.63, 0.65, textstr2, transform=ax2[1].transAxes, fontsize=20, verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white'))
+
     pdfname2 = "equilibriation_time_magnetization"
 
-    save_push(fig1, pdfname1)
-    save_push(fig2, pdfname2)
+    if sp:
+        save_push(fig1, pdfname1)
+        save_push(fig2, pdfname2)
+    else:
+        plt.show()
 
 
 def pdf_histogram():
