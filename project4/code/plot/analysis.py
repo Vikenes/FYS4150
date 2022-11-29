@@ -516,11 +516,13 @@ def PT_uncertainties():
         Cv = varE / (N * T**2)
 
         cv_std = np.std(Cv)
-        print(f"L={Ls[i]}, stddev={cv_std:.4f}")
 
         cv_uspline = UnivariateSpline(T, Cv)
         t = np.linspace(T[0], T[-1], 1000)
         cv_fit = cv_uspline(t)
+        CV_fit_Tdata = cv_uspline(T)
+        cv_mse = np.mean((CV_fit_Tdata - Cv)**2)
+        print(f"L={Ls[i]}, stddev={cv_mse:.4f}")
 
         crit_idx = np.argmax(cv_fit)
         cv_crit = cv_fit[crit_idx]
