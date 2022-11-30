@@ -1,0 +1,65 @@
+\documentclass[english,notitlepage,reprint,nofootinbib]{revtex4-1}  % defines the basic parameters of the document
+% For preview: skriv i terminal: latexmk -pdf -pvc filnavn
+% If you want a single-column, remove "reprint"
+
+% Allows special characters (including æøå)
+\usepackage[utf8]{inputenc}
+% \usepackage[english]{babel}
+
+
+\usepackage{physics,amssymb}  % mathematical symbols (physics imports amsmath)
+\usepackage{graphicx}         % include graphics such as plots
+\usepackage{xcolor}           % set colors
+\usepackage{hyperref}         % automagic cross-referencing
+\usepackage{listings}         % display code
+\usepackage{subfigure}        % imports a lot of cool and useful figure commands
+% \usepackage{float}
+%\usepackage[section]{placeins}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{subfigure}
+\usepackage{tikz}
+\usepackage{nth}
+\usepackage{silence}
+\WarningFilter{revtex4-1}{Repair the float}
+\usetikzlibrary{quantikz}
+% defines the color of hyperref objects
+% Blending two colors:  blue!80!black  =  80% blue and 20% black
+\hypersetup{ % this is just my personal choice, feel free to change things
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}}
+
+
+% ===========================================
+% New commands here:
+\newcommand{\closed}[1]{\left( #1 \right)}
+\newcommand{\bracket}[1]{\left[ #1 \right]}
+\newcommand{\eps}{\epsilon}
+\renewcommand{\vec}{\mathbf}
+\newcommand{\CC}{C\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf +}\nolinebreak\hspace{-.10em}\raisebox{.4ex}{\tiny\bf +}}
+
+\newcommand{\mum}{\mathrm{\text{\textmu}m}}
+\newcommand{\mus}{\mathrm{\text{\textmu}s}}
+\newcommand{\mums}{\mathrm{\text{\textmu}m}/ \mathrm{\text{\textmu}s}}
+
+\newcommand{\Johan}[1]{\textcolor{blue}{#1}}
+\newcommand{\Vetle}[1]{\textcolor{orange}{#1}}
+\newcommand{\Nanna}[1]{\textcolor{green}{#1}}
+\newcommand{\alert}[1]{\textcolor{red}{\textbf{#1}}}
+
+\newcommand{\unit}[1]{\,\mathrm{#1}}
+\newcommand{\tunit}{\,J/k_B}
+\newcommand{\eunit}{\,J}
+\newcommand{\bj}{\beta J}
+\newcommand{\avge}{\expval{\epsilon}}
+\newcommand{\avgm}{\expval{\abs{m}}}
+\newcommand{\nmc}{N_\mathrm{MC}}
+\newcommand{\nequi}{N_\mathrm{eq}}
+
+\newcommand{\midrule}{\colrule}
+\newcommand{\bottomrule}{\botrule}
+% ===========================================
+
+\graphicspath{{../output/plots/}}
