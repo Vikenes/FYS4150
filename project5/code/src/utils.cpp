@@ -87,3 +87,20 @@ int write_arma_to_file_scientific(arma::cube R, std::string filename, int width,
 
     return 0;
 }
+
+int idx_k(int i, int j, int M){
+    int k = j*(M-2) +1;
+    return k;
+}
+
+arma::cx_mat submatrix_diag(int idx, int M, arma::cx_vec vec, std::complex<double> r){
+    // Better way of doing this by slicing incoming vector.
+    // Could also take a large matrix as reference and fill it with a routine. 
+    int idx0 = idx * (M-2);
+    int idx1 = idx0 + (M-3);
+    arma::cx_mat ret_mat = arma::cx_mat(M-2, M-2);
+    ret_mat.diag() = vec.subvec(idx0, idx1);
+    ret_mat.diag(1).fill(r);
+    ret_mat.diag(-1).fill(r);
+    
+}

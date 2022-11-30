@@ -1,0 +1,28 @@
+\section*{Nomenclature}
+
+    \subsection*{Basics}
+        \begin{itemize*}
+            \item[] $x\in[0,1]$; $x\to x_i = ih$ with $i=0,1,\dots,M-1$. \\
+            \item[] $y\in[0,1]$; $y\to y_j = jh$ with $j=0,1,\dots,M-1$. \\
+            \item[] $t\in[0,T]$; $t\to t_n=n\Delta t$ with $n=0,1\dots,N_t-1$.\\
+            \item[] $u(x,y,z) \to u(ih,jh, n\Delta t) \equiv u^n_{ij}$.\\
+            \item[] $U^n$ is a matrix with elements $u^n_{ij}$.\\
+            \item[] $v(x,y) \to v(ih,jh) \equiv v_{ij}$.\\
+            \item[] $V$ is a matrix with elements $v_{ij}$.
+        \end{itemize*}
+
+    \subsection*{NB}
+        \begin{itemize*}
+            \item[] $M$ is the number of points along $x$ and $y$ axis.\\
+            \item[] $M-1$ is the number of steps.\\
+            \item[] $M-2$ is the number of internal points (excluding boundary points).\\
+            \item[] $u_{ij}$ is the same as $u_{i,j}$.
+        \end{itemize*}
+
+    \subsection*{Dirichlet boundary conditions}
+        \begin{itemize*}
+            \item[] $u(x=0, y, t) = 0$. \\
+            \item[] $u(x=1, y, t) = 0$. \\
+            \item[] $u(x, y=0, t) = 0$. \\
+            \item[] $u(x, y=1, t) = 0$.
+        \end{itemize*}

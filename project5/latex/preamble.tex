@@ -62,4 +62,16 @@
 \newcommand{\bottomrule}{\botrule}
 % ===========================================
 
+
+
+%   New environments here:
+
+\newenvironment{itemize*}{
+    \begin{itemize}
+        \setlength{\itemsep}{0pt}
+        \setlength{\parskip}{0pt}
+}{
+\end{itemize}
+}
+
 \graphicspath{{../output/plots/}}
