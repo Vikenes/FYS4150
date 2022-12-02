@@ -39,4 +39,7 @@ void initialise_state(arma::cx_mat &u0, int M, double h, double xc, double yc, d
 
 std::complex<double> unnormalised_gaussian(double x, double y, double xc, double yc, double sigma_x, double sigma_y, double p_x, double p_y);
 
+void set_up_walls(arma::sp_mat &V, double v0, int M, double h, int Ns=2, double T=0.02, double xc=0.5, double yc=0.5, double Sw=0.05, double Sa=0.05);
+
+
 #endif

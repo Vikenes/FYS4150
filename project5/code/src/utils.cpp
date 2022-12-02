@@ -198,17 +198,72 @@ std::complex<double> unnormalised_gaussian(double x, double y, double xc, double
 }
 
 void initialise_state(arma::cx_mat &u0, int M, double h, double xc, double yc, double sigma_x, double sigma_y, double p_x, double p_y){
+    double sqrt_norm = 0.0;
     for(int i=1; i<=M-2; i++){
         for(int j=1; i<=M-2;j++){
             double x = i*h;
             double y = j*h;
             u0(i,j) = unnormalised_gaussian(x, y, xc, yc, sigma_x, sigma_y, p_x, p_y);
-        }
+            sqrt_norm += sqrt(norm(u0(i,j)));
+        }   
     }
     // Boundary conditions 
     // Not sure if this will work
     u0.col(0).fill(0);
-    u0.col(-1).fill(0);
+    u0.col(M-1).fill(0);
     u0.row(0).fill(0);
-    u0.row(-1).fill(0);
+    u0.row(M-1).fill(0);
+
+    // Normalise
+    u0 = u0/sqrt_norm;
 }
+
+
+void set_up_walls(arma::sp_mat &V, double v0, int M, double h, int Ns, double T, double xc, double yc, double Sw, double Sa){
+    /**
+     * @brief Sets up the wall used to generate the slit apertures.
+     * @param V reference to potential matrix V.
+     * @param v0 constant potential value of wall.
+     * @param M number of points in x and y direction.
+     * @param h step length between points.
+     * @param Ns number of slits.
+     * @param T thickness of slits.
+     * @param xc slit wall x-centre.
+     * @param yc slit wall y-centre.
+     * @param Sw slit wall segment length in y-direction
+     * @param Sa slit aperture width in y-direction
+     * 
+     */
+    // std::cout<<M<<std::endl;
+    for(int i=1; i<=M-2; i++){
+        for(int j=1; j<=M-2; j++){
+            double x = i*h;
+            double y = j*h;
+            // Ignore number of slits for now, just assume that it is two
+            
+            // First set x-criterion
+            if(x<=xc+T/2 && x>xc-T/2){
+                // Then set the various y-criteria
+                // Will be a loop here if you include varying number of slits (must differ between odd and even)
+                // First slit wall in centre
+                if(y<=yc+Sw/2 && y>yc-Sw/2){
+                    V(i,j) = v0;
+                }
+                // Wall on side of larger y-vals
+                else if(y<=yc+3/2*Sw+Sa && y>yc+1/2*Sw+Sa){
+                    V(i,j) = v0;
+                }
+                // Wall on side of smaller y-vals
+                else if(y<=yc-1/2*Sw-Sa && y>yc-3/2*Sw-Sa){
+                    V(i,j) = v0;
+                }
+            }
+        }
+    }
+    // Not sure if this needs to be imposed here
+    V.col(0).fill(0);
+    V.col(M-1).fill(0);
+    V.row(0).fill(0);
+    V.row(M-1).fill(0);
+}
+
