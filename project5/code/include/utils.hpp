@@ -33,7 +33,7 @@ arma::sp_cx_mat get_AB_matrix(int M, arma::cx_vec cvec, std::complex<double> r);
 
 void get_AB_matrix(arma::sp_cx_mat &AB, int M, arma::cx_vec cvec, std::complex<double> r);
 
-void fill_AB_matrix(int M, double h, double Dt, const arma::mat &V, arma::sp_cx_mat &A, arma::sp_cx_mat &B);
+void fill_AB_matrix(int M, double h, double Dt, const arma::sp_mat &V, arma::sp_cx_mat &A, arma::sp_cx_mat &B);
 
 void initialise_state(arma::cx_mat &u0, int M, double h, double xc, double yc, double sigma_x, double sigma_y, double p_x, double p_y);
 
@@ -41,5 +41,6 @@ std::complex<double> unnormalised_gaussian(double x, double y, double xc, double
 
 void set_up_walls(arma::sp_mat &V, double v0, int M, double h, int Ns=2, double T=0.02, double xc=0.5, double yc=0.5, double Sw=0.05, double Sa=0.05);
 
+arma::cx_cube simulation(double h, double Dt, double T, double xc, double sigma_x, double p_x, double yc, double sigma_y, double p_y, double v0);
 
 #endif

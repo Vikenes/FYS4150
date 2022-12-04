@@ -9,7 +9,21 @@
  * 
  */
 
-// void simulation()
+void no_slit(void){
+    double h = 0.005;
+    double Dt = 2.5e-5;
+    double T = 0.008;
+    double xc = 0.25;
+    double sigma_x = 0.05;
+    double p_x = 200;
+    double yc = 0.5;
+    double sigma_y = 0.05;
+    double p_y = 0;
+    double v0 = 0;
+    
+    std::cout<<"Her"<<std::endl;
+    arma::cx_cube U = simulation(h, Dt, T, xc, sigma_x, p_x, yc, sigma_y, p_y, v0);
+}
 
 
 
@@ -49,12 +63,14 @@ int main(){
     // std::cout << sqrt(real(conj(z1)*z1)) << std::endl;
     // std::cout << sqrt(norm(z1)) << std::endl;
 
-    int M = 100;
-    double h = 1.0/(M-1);
-    double v0 = 1.0;
-    std::cout<<h<<std::endl;
-    arma::sp_mat V = arma::sp_mat(M,M);
-    std::cout << V << std::endl;
-    set_up_walls(V, v0, M, h);
-    std::cout << V << std::endl;
+    // int M = 100;
+    // double h = 1.0/(M-1);
+    // double v0 = 1.0;
+    // std::cout<<h<<std::endl;
+    // arma::sp_mat V = arma::sp_mat(M,M);
+    // std::cout << V << std::endl;
+    // set_up_walls(V, v0, M, h);
+    // std::cout << V << std::endl;
+
+    no_slit();
 }

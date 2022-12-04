@@ -173,7 +173,7 @@ void get_AB_matrix(arma::sp_cx_mat &AB, int M, arma::cx_vec cvec, std::complex<d
 //     return AB;
 // }
 
-void fill_AB_matrix(int M, double h, double Dt, const arma::mat &V, arma::sp_cx_mat &A, arma::sp_cx_mat &B){
+void fill_AB_matrix(int M, double h, double Dt, const arma::sp_mat &V, arma::sp_cx_mat &A, arma::sp_cx_mat &B){
     // Define r, a and b
     std::complex<double> r = std::complex<double>(0,Dt/(2*h*h));
     arma::cx_vec a((M-2)*(M-2));
@@ -200,7 +200,7 @@ std::complex<double> unnormalised_gaussian(double x, double y, double xc, double
 void initialise_state(arma::cx_mat &u0, int M, double h, double xc, double yc, double sigma_x, double sigma_y, double p_x, double p_y){
     double sqrt_norm = 0.0;
     for(int i=1; i<=M-2; i++){
-        for(int j=1; i<=M-2;j++){
+        for(int j=1; j<=M-2;j++){
             double x = i*h;
             double y = j*h;
             u0(i,j) = unnormalised_gaussian(x, y, xc, yc, sigma_x, sigma_y, p_x, p_y);
@@ -266,4 +266,54 @@ void set_up_walls(arma::sp_mat &V, double v0, int M, double h, int Ns, double T,
     V.row(0).fill(0);
     V.row(M-1).fill(0);
 }
+
+arma::cx_cube simulation(double h, double Dt, double T, double xc, double sigma_x, double p_x, double yc, double sigma_y, double p_y, double v0){
+    //  (1) find M and Nt:
+    int M = int(1/h)+1;
+    int Nt = int(T/Dt)+1;
+
+    std::cout<<"M: "<< M <<std::endl;
+    std::cout<<"Nt: "<< Nt <<std::endl;
+    
+
+    //  (2) set up potential V:
+    arma::sp_mat V = arma::sp_mat(M,M);
+    set_up_walls(V, v0, M, h);
+    std::cout<<"Wall set up"<<std::endl;
+
+
+    //  (3) set up initial state U0:
+    arma::cx_mat U0 = arma::cx_mat(M,M);
+    initialise_state(U0, M, h, xc, yc, sigma_x, sigma_y, p_x, p_y);
+    std::cout<<"U0 initialised"<<std::endl;
+
+
+    //  (4) set up the matrices A and B:
+    arma::sp_cx_mat A = arma::sp_cx_mat((M-2)*(M-2), (M-2)*(M-2));
+    arma::sp_cx_mat B = arma::sp_cx_mat((M-2)*(M-2), (M-2)*(M-2));
+    fill_AB_matrix(M, h, Dt, V, A, B);
+    std::cout<<"Matrix filled"<<std::endl;
+
+
+
+    // set up and initialise the U cube:
+    arma::cx_cube U = arma::cx_cube(M,M,Nt);
+    U.slice(0) = U0;
+    std::cout<<"U slice initialised"<<std::endl;
+
+
+    //  Solve the system in time:
+    for(int n=0; n<Nt-1; n++){
+        // t = n*Dt;
+        // std::cout<<n<<std::endl;
+        // fix this
+        arma::cx_vec bvec = B*U.slice(n);
+        U.slice(n+1) = arma::spsolve(A,bvec);
+        // U.slice(n+1) = arma::spsolve(A,B*U.slice(n));
+
+    }
+
+    return U;
+}
+
 
