@@ -1,18 +1,19 @@
 import numpy as np 
 import matplotlib.pyplot as plt 
 import pandas as pd 
+import os
 
 plt.style.use("seaborn")
 
 #   Paths
 here = os.path.abspath(".")
-data_path = here + "/../../output/data/"
+binfile_path = here + "/../../output/binfiles/"
 latex_path = here + "/../../latex/"
 temp_path = here + "/../../output/plots/temp/"
 plot_path = here +"/../../output/plots/pdfs/"
+video_path = here +"/../../output/videos/"
 
 #   rc and plot params
-
 TICKLABELSIZE = 25
 LABELSIZE = 25
 LEGENDSIZE = 20
