@@ -25,6 +25,8 @@
 
 int idx_k(int i, int j, int M);
 
+std::tuple<int, int> idx_ij(int k, int M);
+
 // void submatrix_diag(arma::sp_cx_mat &AB, int idx, int M, arma::cx_vec vec, std::complex<double> r);
 
 arma::sp_cx_mat get_AB_matrix(int M, arma::cx_vec cvec, std::complex<double> r);
@@ -34,6 +36,10 @@ arma::sp_cx_mat get_AB_matrix(int M, arma::cx_vec cvec, std::complex<double> r);
 void get_AB_matrix(arma::sp_cx_mat &AB, int M, arma::cx_vec cvec, std::complex<double> r);
 
 void fill_AB_matrix(int M, double h, double Dt, const arma::sp_mat &V, arma::sp_cx_mat &A, arma::sp_cx_mat &B);
+
+arma::cx_vec make_column_vector(arma::cx_mat U, int M);
+
+arma::cx_mat make_matrix(arma::cx_vec column_vector, int M);
 
 void initialise_state(arma::cx_mat &u0, int M, double h, double xc, double yc, double sigma_x, double sigma_y, double p_x, double p_y);
 

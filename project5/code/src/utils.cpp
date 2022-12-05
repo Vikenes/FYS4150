@@ -91,8 +91,13 @@
 int idx_k(int i, int j, int M){
     // Valid for i,j in [1,M-2]
     // (j-1)->j for i,j in [0, M-2)
-    int k = (j-1)*(M-2) +i-1;
-    return k;
+    // int k = (j-1)*(M-2) +i-1;
+    // return k;
+    return (j-1)*(M-2) + (i-1);
+}
+
+std::tuple<int, int> idx_ij(int k, int M){
+    return std::make_tuple(k%(M-2)+1, k/(M-2)+1);
 }
 
 // void submatrix_diag(arma::sp_cx_mat &AB, int idx, int M, arma::cx_vec vec, std::complex<double> r){
@@ -190,6 +195,32 @@ void fill_AB_matrix(int M, double h, double Dt, const arma::sp_mat &V, arma::sp_
     get_AB_matrix(B, M, b, r);
 }
 
+arma::cx_vec make_column_vector(arma::cx_mat matrix, int M){
+    arma::cx_vec column_vector = arma::cx_vec((M-2)*(M-2));
+    for(int i=1;i<=M-2;i++){
+        for(int j=1;j<=M-2;j++){
+            int k = idx_k(i,j, M);
+            column_vector(k) = matrix(i,j);
+        }
+    }
+    return column_vector;
+}
+
+arma::cx_mat make_matrix(arma::cx_vec column_vector, int M){
+    arma::cx_mat matrix = arma::cx_mat(M,M);
+    for(int k=0;k<(M-2)*(M-2);k++){
+        int i,j;
+        std::tie(i,j) = idx_ij(k, M);
+        matrix(i,j) = column_vector(k);
+    }
+    // Impose boundary conditions
+    matrix.col(0).fill(0);
+    matrix.col(M-1).fill(0);
+    matrix.row(0).fill(0);
+    matrix.row(M-1).fill(0);
+    return matrix;
+}
+
 std::complex<double> unnormalised_gaussian(double x, double y, double xc, double yc, double sigma_x, double sigma_y, double p_x, double p_y){
     double real_exp_part = -((x-xc)*(x-xc)/(2*sigma_x*sigma_x))-((y-yc)*(y-yc)/(2*sigma_y*sigma_y));
     double imag_exp_part = p_x*(x-xc) + p_y*(y-yc);
@@ -198,13 +229,14 @@ std::complex<double> unnormalised_gaussian(double x, double y, double xc, double
 }
 
 void initialise_state(arma::cx_mat &u0, int M, double h, double xc, double yc, double sigma_x, double sigma_y, double p_x, double p_y){
-    double sqrt_norm = 0.0;
+    double pnorm = 0.0;
     for(int i=1; i<=M-2; i++){
         for(int j=1; j<=M-2;j++){
             double x = i*h;
             double y = j*h;
-            u0(i,j) = unnormalised_gaussian(x, y, xc, yc, sigma_x, sigma_y, p_x, p_y);
-            sqrt_norm += sqrt(norm(u0(i,j)));
+            u0(i,j) = unnormalised_gaussian(x, y, xc, yc, sigma_x, sigma_y, p_x, p_y)/314.16;
+            // sqrt_norm += sqrt(conj(u0(i,j))*u0(i,j));
+            pnorm += std::norm(u0(i,j));
         }   
     }
     // Boundary conditions 
@@ -215,7 +247,10 @@ void initialise_state(arma::cx_mat &u0, int M, double h, double xc, double yc, d
     u0.row(M-1).fill(0);
 
     // Normalise
-    u0 = u0/sqrt_norm;
+    // std::cout<<sqrt_norm<<std::endl;
+    u0 /= sqrt(pnorm);
+    // normalise(u0);
+    // u0 = normalise(u0);
 }
 
 
@@ -270,7 +305,7 @@ void set_up_walls(arma::sp_mat &V, double v0, int M, double h, int Ns, double T,
 arma::cx_cube simulation(double h, double Dt, double T, double xc, double sigma_x, double p_x, double yc, double sigma_y, double p_y, double v0){
     //  (1) find M and Nt:
     int M = int(1/h)+1;
-    int Nt = int(T/Dt)+1;
+    int Nt = int(T/Dt)+1; // Number of time points
 
     std::cout<<"M: "<< M <<std::endl;
     std::cout<<"Nt: "<< Nt <<std::endl;
@@ -287,30 +322,28 @@ arma::cx_cube simulation(double h, double Dt, double T, double xc, double sigma_
     initialise_state(U0, M, h, xc, yc, sigma_x, sigma_y, p_x, p_y);
     std::cout<<"U0 initialised"<<std::endl;
 
-
     //  (4) set up the matrices A and B:
     arma::sp_cx_mat A = arma::sp_cx_mat((M-2)*(M-2), (M-2)*(M-2));
     arma::sp_cx_mat B = arma::sp_cx_mat((M-2)*(M-2), (M-2)*(M-2));
     fill_AB_matrix(M, h, Dt, V, A, B);
     std::cout<<"Matrix filled"<<std::endl;
 
-
+    // (5) convert U matrix to column vector u;
+    arma::cx_vec u = make_column_vector(U0, M);
 
     // set up and initialise the U cube:
+    // arma::cx_cube U = arma::cx_cube((M-2)*(M-2),1,Nt);
     arma::cx_cube U = arma::cx_cube(M,M,Nt);
     U.slice(0) = U0;
     std::cout<<"U slice initialised"<<std::endl;
 
-
     //  Solve the system in time:
     for(int n=0; n<Nt-1; n++){
-        // t = n*Dt;
-        // std::cout<<n<<std::endl;
-        // fix this
-        arma::cx_vec bvec = B*U.slice(n);
-        U.slice(n+1) = arma::spsolve(A,bvec);
-        // U.slice(n+1) = arma::spsolve(A,B*U.slice(n));
+        std::cout<<"Time step: "<<n+1<<" of "<<Nt-1<<std::endl;
 
+        arma::cx_vec bvec = B*u;
+        u = arma::spsolve(A,bvec);
+        U.slice(n+1) = make_matrix(u, M);
     }
 
     return U;
