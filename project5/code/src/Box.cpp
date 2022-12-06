@@ -2,9 +2,9 @@
 // #include "Simulation.hpp"
 // #include "utils.hpp"
 
-Box::Box(double h){
-    h = h;
-    M = int(1/h) +1;
+Box::Box(double ha){
+    h = ha;
+    M = int(1/ha) +1;
     V = arma::sp_mat(M,M);
 }
 
@@ -28,7 +28,7 @@ void Box::set_up_walls(double v0, int Ns, double Th, double wxc, double wyc, dou
      * @param aperture slit aperture width in y-direction
      * 
      */
-    // std::cout<<M<<std::endl;
+    std::cout<<"Setting up wall with "<< Ns << " slits, and v0: "<<v0<<std::endl;
     for(int i=1; i<=M-2; i++){
         for(int j=1; j<=M-2; j++){
             double x = i*h;
@@ -59,4 +59,5 @@ void Box::set_up_walls(double v0, int Ns, double Th, double wxc, double wyc, dou
     V.col(M-1).fill(0);
     V.row(0).fill(0);
     V.row(M-1).fill(0);
+    std::cout<<"-> potential wall set up"<<std::endl;
 }

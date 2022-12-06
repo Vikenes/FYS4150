@@ -13,13 +13,14 @@
 #include <complex>
 #include <utils.hpp>
 #include <Box.hpp>
+#include <chrono>
 
 class Simulation{
     // member variables:
     public:
 
         // Constructor
-        Simulation(Box BBX, double Dt=2.5e-5, double T=0.008, double xc=0.25, double sigma_x=0.05, double p_x=200, double yc=0.5, double sigma_y=0.05, double p_y=0);
+        Simulation(Box BBXa, double Dta=2.5e-5, double Ta=0.008, double xca=0.25, double sigma_xa=0.05, double p_xa=200, double yca=0.5, double sigma_ya=0.05, double p_ya=0);
 
         double Dt;
         double T;
