@@ -234,7 +234,7 @@ void initialise_state(arma::cx_mat &u0, int M, double h, double xc, double yc, d
         for(int j=1; j<=M-2;j++){
             double x = i*h;
             double y = j*h;
-            u0(i,j) = unnormalised_gaussian(x, y, xc, yc, sigma_x, sigma_y, p_x, p_y)/314.16;
+            u0(i,j) = unnormalised_gaussian(x, y, xc, yc, sigma_x, sigma_y, p_x, p_y);
             // sqrt_norm += sqrt(conj(u0(i,j))*u0(i,j));
             pnorm += std::norm(u0(i,j));
         }   
