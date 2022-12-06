@@ -1,6 +1,8 @@
 // Include stuff
 #include <iostream>
-#include <utils.hpp>
+#include "utils.hpp"
+#include "Box.hpp"
+#include "Simulation.hpp"
 
 
 /**
@@ -10,38 +12,42 @@
  */
 
 void no_slit(void){
-    double h = 0.005;
-    double Dt = 2.5e-5;
-    double T = 0.008;
-    double xc = 0.25;
-    double sigma_x = 0.05;
-    double p_x = 200;
-    double yc = 0.5;
-    double sigma_y = 0.05;
-    double p_y = 0;
+    // double h = 0.005;
+    // double Dt = 2.5e-5;
+    // double T = 0.008;
+    // double xc = 0.25;
+    // double sigma_x = 0.05;
+    // double p_x = 200;
+    // double yc = 0.5;
+    // double sigma_y = 0.05;
+    // double p_y = 0;
     double v0 = 0;
+    Box b1 = Box(0.005);
+    b1.set_up_walls(v0);
+    // Simulation s1 = Simulation(b1);
+    // s1.initialise();
     
-    std::cout<<"Running no slit experiment"<<std::endl;
-    arma::cx_cube U = simulation(h, Dt, T, xc, sigma_x, p_x, yc, sigma_y, p_y, v0);
-    U.save("../output/binfiles/no_slit_arma_cube.bin");
+    // std::cout<<"Running no slit experiment"<<std::endl;
+    // arma::cx_cube U = s1.run_simulation();
+    // U.save("../output/binfiles/no_slit_arma_cube.bin");
 }
 
-void double_slit_broad_sigma_y(void){
-    double h = 0.005;
-    double Dt = 2.5e-5;
-    double T = 0.008;
-    double xc = 0.25;
-    double sigma_x = 0.05;
-    double p_x = 200;
-    double yc = 0.5;
-    double sigma_y = 0.10;  //  Broader sigma
-    double p_y = 0;
-    double v0 = 1e10;   // High potential to set up the slits
+// void double_slit_broad_sigma_y(void){
+//     double h = 0.005;
+//     double Dt = 2.5e-5;
+//     double T = 0.008;
+//     double xc = 0.25;
+//     double sigma_x = 0.05;
+//     double p_x = 200;
+//     double yc = 0.5;
+//     double sigma_y = 0.10;  //  Broader sigma
+//     double p_y = 0;
+//     double v0 = 1e10;   // High potential to set up the slits
 
-    std::cout<<"Running double slit experiment"<<std::endl;
-    arma::cx_cube U = simulation(h, Dt, T, xc, sigma_x, p_x, yc, sigma_y, p_y, v0);
-    U.save("../output/binfiles/double_slit_arma_cube.bin");
-}
+//     std::cout<<"Running double slit experiment"<<std::endl;
+//     arma::cx_cube U = simulation(h, Dt, T, xc, sigma_x, p_x, yc, sigma_y, p_y, v0);
+//     U.save("../output/binfiles/double_slit_arma_cube.bin");
+// }
 
 
 
@@ -91,7 +97,7 @@ int main(){
     // std::cout << V << std::endl;
 
     no_slit();
-    double_slit_broad_sigma_y();
+    // double_slit_broad_sigma_y();
 
 
     // Testing index functions

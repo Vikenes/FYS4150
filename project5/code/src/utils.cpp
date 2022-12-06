@@ -1,4 +1,6 @@
 #include "utils.hpp"
+#include "Box.hpp"
+#include "Simulation.hpp"
 
 // std::string scientific_format(const double d, const int width, const int prec){
 //     std::stringstream ss;
@@ -254,99 +256,99 @@ void initialise_state(arma::cx_mat &u0, int M, double h, double xc, double yc, d
 }
 
 
-void set_up_walls(arma::sp_mat &V, double v0, int M, double h, int Ns, double T, double xc, double yc, double Sw, double Sa){
-    /**
-     * @brief Sets up the wall used to generate the slit apertures.
-     * @param V reference to potential matrix V.
-     * @param v0 constant potential value of wall.
-     * @param M number of points in x and y direction.
-     * @param h step length between points.
-     * @param Ns number of slits.
-     * @param T thickness of slits.
-     * @param xc slit wall x-centre.
-     * @param yc slit wall y-centre.
-     * @param Sw slit wall segment length in y-direction
-     * @param Sa slit aperture width in y-direction
-     * 
-     */
-    // std::cout<<M<<std::endl;
-    for(int i=1; i<=M-2; i++){
-        for(int j=1; j<=M-2; j++){
-            double x = i*h;
-            double y = j*h;
-            // Ignore number of slits for now, just assume that it is two
+// void set_up_walls_utils(arma::sp_mat &V, double v0, int M, double h, int Ns, double T, double xc, double yc, double Sw, double Sa){
+//     /**
+//      * @brief Sets up the wall used to generate the slit apertures.
+//      * @param V reference to potential matrix V.
+//      * @param v0 constant potential value of wall.
+//      * @param M number of points in x and y direction.
+//      * @param h step length between points.
+//      * @param Ns number of slits.
+//      * @param T thickness of slits.
+//      * @param xc slit wall x-centre.
+//      * @param yc slit wall y-centre.
+//      * @param Sw slit wall segment length in y-direction
+//      * @param Sa slit aperture width in y-direction
+//      * 
+//      */
+//     // std::cout<<M<<std::endl;
+//     for(int i=1; i<=M-2; i++){
+//         for(int j=1; j<=M-2; j++){
+//             double x = i*h;
+//             double y = j*h;
+//             // Ignore number of slits for now, just assume that it is two
             
-            // First set x-criterion
-            if(x<=xc+T/2 && x>xc-T/2){
-                // Then set the various y-criteria
-                // Will be a loop here if you include varying number of slits (must differ between odd and even)
-                // First slit wall in centre
-                if(y<=yc+Sw/2 && y>yc-Sw/2){
-                    V(i,j) = v0;
-                }
-                // Wall on side of larger y-vals
-                else if(y<=yc+3/2*Sw+Sa && y>yc+1/2*Sw+Sa){
-                    V(i,j) = v0;
-                }
-                // Wall on side of smaller y-vals
-                else if(y<=yc-1/2*Sw-Sa && y>yc-3/2*Sw-Sa){
-                    V(i,j) = v0;
-                }
-            }
-        }
-    }
-    // Not sure if this needs to be imposed here
-    V.col(0).fill(0);
-    V.col(M-1).fill(0);
-    V.row(0).fill(0);
-    V.row(M-1).fill(0);
-}
+//             // First set x-criterion
+//             if(x<=xc+T/2 && x>xc-T/2){
+//                 // Then set the various y-criteria
+//                 // Will be a loop here if you include varying number of slits (must differ between odd and even)
+//                 // First slit wall in centre
+//                 if(y<=yc+Sw/2 && y>yc-Sw/2){
+//                     V(i,j) = v0;
+//                 }
+//                 // Wall on side of larger y-vals
+//                 else if(y<=yc+3/2*Sw+Sa && y>yc+1/2*Sw+Sa){
+//                     V(i,j) = v0;
+//                 }
+//                 // Wall on side of smaller y-vals
+//                 else if(y<=yc-1/2*Sw-Sa && y>yc-3/2*Sw-Sa){
+//                     V(i,j) = v0;
+//                 }
+//             }
+//         }
+//     }
+//     // Not sure if this needs to be imposed here
+//     V.col(0).fill(0);
+//     V.col(M-1).fill(0);
+//     V.row(0).fill(0);
+//     V.row(M-1).fill(0);
+// }
 
-arma::cx_cube simulation(double h, double Dt, double T, double xc, double sigma_x, double p_x, double yc, double sigma_y, double p_y, double v0){
-    //  (1) find M and Nt:
-    int M = int(1/h)+1;
-    int Nt = int(T/Dt)+1; // Number of time points
+// arma::cx_cube simulation(double h, double Dt, double T, double xc, double sigma_x, double p_x, double yc, double sigma_y, double p_y, double v0){
+//     //  (1) find M and Nt:
+//     int M = int(1/h)+1;
+//     int Nt = int(T/Dt)+1; // Number of time points
 
-    std::cout<<"M: "<< M <<std::endl;
-    std::cout<<"Nt: "<< Nt <<std::endl;
+//     std::cout<<"M: "<< M <<std::endl;
+//     std::cout<<"Nt: "<< Nt <<std::endl;
     
 
-    //  (2) set up potential V:
-    arma::sp_mat V = arma::sp_mat(M,M);
-    set_up_walls(V, v0, M, h);
-    std::cout<<"Wall set up"<<std::endl;
+//     //  (2) set up potential V:
+//     arma::sp_mat V = arma::sp_mat(M,M);
+//     set_up_walls(V, v0, M, h);
+//     std::cout<<"Wall set up"<<std::endl;
 
 
-    //  (3) set up initial state U0:
-    arma::cx_mat U0 = arma::cx_mat(M,M);
-    initialise_state(U0, M, h, xc, yc, sigma_x, sigma_y, p_x, p_y);
-    std::cout<<"U0 initialised"<<std::endl;
+//     //  (3) set up initial state U0:
+//     arma::cx_mat U0 = arma::cx_mat(M,M);
+//     initialise_state(U0, M, h, xc, yc, sigma_x, sigma_y, p_x, p_y);
+//     std::cout<<"U0 initialised"<<std::endl;
 
-    //  (4) set up the matrices A and B:
-    arma::sp_cx_mat A = arma::sp_cx_mat((M-2)*(M-2), (M-2)*(M-2));
-    arma::sp_cx_mat B = arma::sp_cx_mat((M-2)*(M-2), (M-2)*(M-2));
-    fill_AB_matrix(M, h, Dt, V, A, B);
-    std::cout<<"Matrix filled"<<std::endl;
+//     //  (4) set up the matrices A and B:
+//     arma::sp_cx_mat A = arma::sp_cx_mat((M-2)*(M-2), (M-2)*(M-2));
+//     arma::sp_cx_mat B = arma::sp_cx_mat((M-2)*(M-2), (M-2)*(M-2));
+//     fill_AB_matrix(M, h, Dt, V, A, B);
+//     std::cout<<"Matrix filled"<<std::endl;
 
-    // (5) convert U matrix to column vector u;
-    arma::cx_vec u = make_column_vector(U0, M);
+//     // (5) convert U matrix to column vector u;
+//     arma::cx_vec u = make_column_vector(U0, M);
 
-    // set up and initialise the U cube:
-    // arma::cx_cube U = arma::cx_cube((M-2)*(M-2),1,Nt);
-    arma::cx_cube U = arma::cx_cube(M,M,Nt);
-    U.slice(0) = U0;
-    std::cout<<"U slice initialised"<<std::endl;
+//     // set up and initialise the U cube:
+//     // arma::cx_cube U = arma::cx_cube((M-2)*(M-2),1,Nt);
+//     arma::cx_cube U = arma::cx_cube(M,M,Nt);
+//     U.slice(0) = U0;
+//     std::cout<<"U slice initialised"<<std::endl;
 
-    //  Solve the system in time:
-    for(int n=0; n<Nt-1; n++){
-        std::cout<<"Time step: "<<n+1<<" of "<<Nt-1<<std::endl;
+//     //  Solve the system in time:
+//     for(int n=0; n<Nt-1; n++){
+//         std::cout<<"Time step: "<<n+1<<" of "<<Nt-1<<std::endl;
 
-        arma::cx_vec bvec = B*u;
-        u = arma::spsolve(A,bvec);
-        U.slice(n+1) = make_matrix(u, M);
-    }
+//         arma::cx_vec bvec = B*u;
+//         u = arma::spsolve(A,bvec);
+//         U.slice(n+1) = make_matrix(u, M);
+//     }
 
-    return U;
-}
+//     return U;
+// }
 
 
