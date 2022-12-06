@@ -22,3 +22,10 @@ run:
 
 plots:
 	cd plot && python3 analysis.py && cd ..
+
+
+
+
+# Clean folder for .c, .o, .exe, .out and .o.tmp files: (should all of these be included?)
+clean:
+	rm -f *.c *.o *.exe *.out *.o.tmp
