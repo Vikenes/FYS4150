@@ -5,9 +5,9 @@ Blah blah
 
 
 
-For a single, non-relativistic particle with mass $m_\mathrm{P}$ in a two-dimensional potential $V(t, \vec{x})$, the Schrödinger equation reads\footnote{In position space, that is. \Nanna{Should we comment on this?}}
+For a single, non-relativistic particle with mass $m_\mathrm{P}$ in a two-dimensional potential $\mathcal{V}(t, \vec{x})$, the Schrödinger equation reads\footnote{In position space, that is. \Nanna{Should we comment on this?}}
 \begin{equation}\label{eq:2d_schrodinger}
-    \im \hbar \pdv{}{t}\Psi(t, \vec{x}) = -\frac{\hbar^2}{2m_\mathrm{P}}\nabla^{\!2} \Psi(t, \vec{x})  + V(t, \vec{x}) \Psi(t, \vec{x}).
+    \im \hbar \pdv{}{t}\Psi(t, \vec{x}) = -\frac{\hbar^2}{2m_\mathrm{P}}\nabla^{\!2} \Psi(t, \vec{x})  + \mathcal{V}(t, \vec{x}) \Psi(t, \vec{x}).
 \end{equation}
 For a set of initial and boundary conditions, the partial differential equation (PDE) describes the temporal and spatial evolution of the complex-valued function $\Psi(t, \vec{x})$ related to the quantum state of the aforementioned particle. In such a case, at a time $t$, the probability density for an experimentalist to locate the particle at $\vec{x}$ \Nanna{("for detecting ..." is better, but I don't want to copy Anders)} is \Nanna{large P or small p???}
 \begin{equation}\label{2d_bornrule}
@@ -15,7 +15,7 @@ For a set of initial and boundary conditions, the partial differential equation 
 \end{equation} 
 originating from the Born rule; \Nanna{fill me}
 
-In this paper we will consider a dimensionless time-independent potential, i.e. we let $V(t, \vec{x}) \to v(\vec{x})$. The specifics of the scaling do not concern us in this paper, and we simply rewrite equation \eqref{eq:2d_schrodinger} to the dimensionless equation
+In this paper we will consider a dimensionless time-independent potential, i.e. we let $\mathcal{V}(t, \vec{x}) \to v(\vec{x})$. The specifics of the scaling do not concern us in this paper, and we simply rewrite equation \eqref{eq:2d_schrodinger} to the dimensionless equation
 \begin{equation}\label{eq:2d_schrodinger_dimless}
     \im \pdv{}{t}u(t, \vec{x}) = - \nabla^{\!2}u(t, \vec{x})+ v(\vec{x})u(t, \vec{x}),
 \end{equation}
@@ -32,26 +32,5 @@ where we substituted $\Psi(t, \vec{x}) \to u(t, \vec{x})$. In equation \eqref{eq
 
 
 % ===========================================
-
-% Let $x^\mu = (x^0,x^j)=(t, \vec{x})$ be the (2+1)-dimensional Lorentz vector describing a position $\vec{x}\in \mathbb{R}^2$ at a time $t$. That is, we let Greek indices run form 0 to 2 and Latin indices run from 1 to 2. \Nanna{Rephrase}
-
-
-% \begin{equation}\label{eq:2d_schrodinger}
-%     \im \hbar \partial^0 \Psi(x) = -\frac{\hbar^2}{2m} \partial^j\partial^j \Psi(x)  + V(x) \Psi(x)
-% \end{equation}
-
-
-% \begin{equation}\label{2d_bornrule}
-%     p(x) = \abs{\Psi(x)}^2 = \Psi^{*}(x) \Psi(x) 
-% \end{equation}
-
-% \begin{equation}\label{eq:2d_schrodinger_dimless}
-%     \im \partial^0 u(x) = - \partial^j \partial^j u(x)+ v(\vec{x})u(x)
-% \end{equation}
-
-
-% \begin{equation}\label{eq:2d_bornrule_dimless}
-%     p(x) = \abs{u(x)}^2 = u^{*} (x)u(x)
-% \end{equation}
 
 

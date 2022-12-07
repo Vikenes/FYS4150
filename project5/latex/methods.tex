@@ -3,16 +3,94 @@
 
 
 
-\Nanna{choose one of these:}
-\begin{equation}\label{eq:p4_initial_condition}
-\begin{split}
-    u(t\!=\!0, \vec{x}) = & \exp{-(\vec{x}-\vec{x}_\mathrm{c})^\mathrm{T}\Sigma^{-1}(\vec{x}-\vec{x}_\mathrm{c}) + \im \vec{p}^\mathrm{T}(\vec{x}-\vec{x}_\mathrm{c})} \,;  \\ 
-    &\quad\Sigma = \mathrm{diag}(\svec{\sigma}^2) 
-\end{split}
-\end{equation}
+\subsection{Slit configuration}\label{sec:method:slit_config}
+    \Nanna{About walls, barriers, slits, potential}
 
-\begin{equation}\label{eq:p4_initial_condition_scalarform}
-    u(t\!=\!0, \vec{x}) = \exp{-\frac{(x-x_\mathrm{c})^2}{2\sigma_x^2} -\frac{(y-y_\mathrm{c})^2}{2\sigma_y^2} + \im \vec{p}\cdot (\vec{x}-\vec{x}_\mathrm{c})}
+
+
+\subsection{Initial wave packet}\label{sec:method:initial_wave}
+
+
+    \Nanna{choose one of these:}
+    \begin{equation}\label{eq:p4_initial_condition}
+    \begin{split}
+        u(t\!=\!0, \vec{x}) = & \exp{-(\vec{x}-\vec{x}_\mathrm{c})^\mathrm{T}\Sigma^{-1}(\vec{x}-\vec{x}_\mathrm{c}) + \im \vec{p}^\mathrm{T}(\vec{x}-\vec{x}_\mathrm{c})} \,;  \\ 
+        &\quad\Sigma = \mathrm{diag}(\svec{\sigma}^2) 
+    \end{split}
+    \end{equation}
+
+    \begin{equation}\label{eq:p4_initial_condition_scalarform}
+        u(t\!=\!0, \vec{x}) = \exp{-\frac{(x-x_\mathrm{c})^2}{2\sigma_x^2} -\frac{(y-y_\mathrm{c})^2}{2\sigma_y^2} + \im \vec{p}\cdot (\vec{x}-\vec{x}_\mathrm{c})}
+    \end{equation}
+
+
+
+
+\subsection{Artificial detector screen}\label{sec:method:screen}
+
+To reduce the dimensionality of the problem, we can assume to measure a particle with a detector screen at some horisontal position $x=x_\mathrm{sc}$ and time $t=t_\mathrm{sc}$, so that the screen spans of the vertical axis $y$. With a smart choice of pairing ($t_\mathrm{sc}$ \& $x_\mathrm{sc}$), we can safely assume that the particle is located somewhere along this line. Thus, it makes sense to consider a normalised one-dimensional probability function $p_{x=x_\mathrm{sc}}(y;\, t)$ (read: probability of $y$ given $x=x_\mathrm{sc}$, at $t$) such that
+\begin{equation}
+    p^\mathrm{tot}_{x=x_\mathrm{sc}}(t) =\sum_{j\in [0, M)} p_{x=x_\mathrm{sc}}(y_j;\, t) = 1.
 \end{equation}
+\Nanna{Do we have to explain how we find this?}
+
+
+
+\subsection{Simulation parameters}\label{sec:method:simulation_parameters}
+
+    \begin{table}[ht!]
+        \centering
+        \begin{tabular}{l|c}
+            \hline
+            \multicolumn{2}{l}{\textbf{Simulation parameters} \Nanna{??}} \\
+            \hline
+            Spatial step size ($h$)         & $5.0 \cdot 10^{-3}$   \\
+            Temporal step size ($\Delta t$) & $2.5 \cdot 10^{-5}$   \\
+            Total time ($T$)                & $*$                   \\
+            \hline
+            \multicolumn{2}{l}{\textbf{Slit configuration} (following section \ref{sec:method:slit_config})} \\
+            \hline
+            Number of slits ($\#\mathrm{slits}$)    & $*$                           \\
+            Number of identical walls               & $\#\mathrm{slits} + 1 \geq 2$ \\
+            Wall dimensions; width$\cross$height    & $0.02\cross 0.05$             \\
+            Wall centre position                    & $(0.5,\, \sim\!0.5)$\footnote{Slit setup symmetric around $y=0.5$.}   \\
+            Slit aperture (separation between walls)& $0.05$                        \\
+            Potential inside barrier ($v_0$)        & $1.0\cdot 10^{10}$            \\
+            \hline
+            \multicolumn{2}{l}{\textbf{Initial wave packet} (the Gaussian in equation \eqref{eq:p4_initial_condition})} \\
+            \hline
+            Centre position ($\vec{x}_\mathrm{c}$)  & $(0.25,\,0.50)$           \\
+            Spatial extent ($\svec{\sigma}$)        & $(0.05, \,*)$             \\
+            Momentum ($\vec{p}$)                    & $(200,\, 0)$              \\
+            \hline
+            \multicolumn{2}{l}{\textbf{Vertical screen} (following section \ref{sec:method:screen})} \\
+            \hline
+            Horisontal position ($x_\mathrm{sc}$)   & $0.8$     \\
+            Time point ($t_\mathrm{sc}$)            & $0.002$   \\
+            \hline
+        \end{tabular}
+        \caption{Numerical values for static simulation parameters. Simulation-specific values are denoted "$*$".}
+        \label{tab:simulation_parameters}
+    \end{table}
+
+
+
+    \begin{table}[ht!]
+        \centering
+        \begin{tabular}{clr|ccc}
+            \hline
+            & Simulation name & (label\footnote{Prefix to look for in \Nanna{link to animations etc.}}) & $\#\mathrm{slits}$ & $T$ & $\svec{\sigma}\cdot \hat{\vec{e}}_y$ \\
+            \hline
+            1. & No slits        & (NS)   & $0$   & $0.008$   & $0.05$ \\
+            2. & Double-slit (1) & (DS1)  & $2$   & $0.008$   & $0.10$ \\
+            3. & Double-slit (2) & (DS2)  & $2$   & $0.002$   & $0.20$ \\
+            4. & ...             & (SS)   & $1$   & $0.002$   & $0.20$ \\
+            5. & ...             & (TS)   & $3$   & $0.002$   & $0.20$ \\
+            \hline
+        \end{tabular}
+        \caption{Supplement to table \ref{tab:simulation_parameters}. Additional information about the simulations considered in this paper.}
+        \label{tab:simulations_info}
+    \end{table}
+
 
 % ===========================================
