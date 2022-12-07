@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt 
 import pandas as pd 
 import os
-# import pyarma as pa
 from IPython import embed
 from matplotlib.animation import FuncAnimation
 from matplotlib import cm as colourmaps
@@ -10,7 +9,7 @@ from matplotlib import cm as colourmaps
 
 plt.style.use("seaborn")
 
-#   Paths
+### Paths
 here = os.path.abspath(".")
 binfile_path = here + "/../../output/binfiles/"
 latex_path = here + "/../../latex/"
@@ -18,17 +17,22 @@ temp_path = here + "/../../output/plots/temp/"
 plot_path = here +"/../../output/plots/pdf/"
 video_path = here +"/../../output/videos/"
 
-#   rc and plot params
+### rc and plot params
+# for figures that are small ?
 TICKLABELSIZE = 25
 LABELSIZE = 25
 LEGENDSIZE = 20
 TITLESIZE = 30
-SMALLER_TICKLABELSIZE = 20
+# for figures that are large ?
+SMALLER_TICKLABELSIZE = 14
+SMALLER_LABELSIZE = 18
+SMALLER_LEGENDSIZE = 16
+SMALLER_TITLESIZE = 20
 
-#   Set rc-params
+### Set rc-params
 
 plt.rc("legend", fontsize=LEGENDSIZE, fancybox=True, loc="best", frameon=True, edgecolor="black")
-plt.rc("font", size=25)
+plt.rc("font", size=LABELSIZE)
 plt.rc("axes", titlesize=TITLESIZE, labelsize=LABELSIZE)
 plt.rc("xtick", labelsize=TICKLABELSIZE)
 plt.rc("ytick", labelsize=TICKLABELSIZE)
@@ -41,11 +45,14 @@ plt.rcParams['savefig.bbox'] = 'tight'
 plt.rcParams['font.family'] = 'Times New Roman'
 
 
-#   Global setting commands
+### Global setting commands
 TEMP = True     # makes temporary .png files instead of .pdf
-SAVE = True
-PUSH = False
-SHOW = False
+SAVE = True     # saves .pdf files
+PUSH = False    # git stuff
+SHOW = False    # show plots
+
+
+### Functions for saving etc.
 
 def save_push(fig, pdf_name, save=SAVE, push=PUSH, show=SHOW, tight=False, png_duplicate=TEMP):
     """
@@ -100,24 +107,55 @@ def set_ax_info(ax, xlabel, ylabel=False, zlabel='none', style='plain', title=No
         pass
     if legend:
         ax.legend()
-    
+
+
+### "Local" functions
+
+
+def make_colourmap(ax, transposed_data, timestamp, cmap, norm, spatial_extent=(0,1,0,1), stamp_colour="white"):
+    img = ax.imshow(transposed_data, extent=spatial_extent, cmap=plt.get_cmap(cmap), norm=norm)
+    # img.set_norm(norm)
+    time_txt = ax.text(0.95, 0.95, r"$t = %.3f$"%timestamp, color=stamp_colour, ha="right", va="top", fontsize=LEGENDSIZE)
+    ax.grid(False)
+    ax.set_aspect("equal")
+    return img, ax
+
+def default_mapfigure(timepoints, data, cmap="gnuplot", num_maps=3, vmin=None, vmax=None):
+    fig, axes = plt.subplots(nrows=1, ncols=num_maps, sharey=True, figsize=(15, 10))
+
+    axes.flat[0].set_ylabel(r"$y$")
+
+    for j, ax in enumerate(axes.flat):
+        vmax = vmax or np.max(data[j])
+        vmin = vmin or np.min(data[j])
+        norm = colourmaps.colors.Normalize(vmin=vmin, vmax=vmax)
+        img, ax = make_colourmap(ax, data[j].T, timepoints[j], cmap, norm)
+        ax.set_xlabel(r"$x$")
+        ax.tick_params("both", labelsize=SMALLER_TICKLABELSIZE)
+
+    # cbar = fig.colorbar(img, ax=axes, location="right", shrink=0.5)
+    # cbar.ax.tick_params(labelsize=SMALLER_TICKLABELSIZE)
+    plt.subplots_adjust(hspace=0.01, wspace=0.10, left=0.06, right=0.96, bottom=0.06, top=0.96)
+
+    return fig, axes.flat
+
+def draw_walls(ax, yc_list):
+    xc = 0.5
+    h = 0.05
+    w = 0.02
+    for yc in yc_list:
+        ax.add_patch(plt.Rectangle((xc-w/2, yc-h/2), w, h, fc='yellow', ec='yellow', lw=1, alpha=0.6, clip_on=False))
 
 
 
+### Functions to be called in 'analysis.py'
 
-
-
-'''
-Plotting functions
-'''
-
-def animate_probability_density(t, P, title=None, mp4name="animation", spatial_extent=(0,1,0,1), save=SAVE, show=SHOW):
+def animate_probability_density(t, P, title=None, wall_y=[], mp4name="animation", spatial_extent=(0,1,0,1), save=SAVE, show=SHOW):
 
     # Fill p_data
     p_data = []
     for image in P:
         p_data.append(image.T)
-
 
     # Create figure
     fig = plt.figure(figsize=(12, 9))
@@ -143,6 +181,7 @@ def animate_probability_density(t, P, title=None, mp4name="animation", spatial_e
 
     # Add a text element showing the time
     time_txt = ax.text(0.95, 0.95, r"$t = %.3e$"%t[0], color="white", ha="right", va="top", fontsize=LEGENDSIZE)
+    draw_walls(ax, wall_y)
 
     # Function that takes care of updating the z data and other things for each frame
     def animation(i):
@@ -168,46 +207,21 @@ def animate_probability_density(t, P, title=None, mp4name="animation", spatial_e
         # Save the animation
         anim.save(video_path + mp4name.split(".")[0] + '.mp4', writer="ffmpeg", bitrate=-1, fps=30)
 
-
-
-
-def make_colourmap(ax, transposed_data, timestamp, cmap, norm, spatial_extent=(0,1,0,1)):
-    img = ax.imshow(transposed_data, extent=spatial_extent, cmap=plt.get_cmap(cmap), norm=norm)
-    # img.set_norm(norm)
-    time_txt = ax.text(0.95, 0.95, r"$t = %.3f$"%timestamp, color="white", ha="right", va="top", fontsize=LEGENDSIZE)
-    ax.grid(False)
-    ax.set_aspect("equal")
-    return img, ax
-
-def default_mapfigure(timepoints, data, cmap="gnuplot", num_maps=3, vmin=None, vmax=None):
-    fig, axes = plt.subplots(nrows=1, ncols=num_maps, sharey=True, figsize=(12, 7))
-
-    vmax = vmax or np.max(data)
-    vmin = vmin or np.min(data)
-    norm = colourmaps.colors.Normalize(vmin=vmin, vmax=vmax)
-    axes.flat[0].set_ylabel(r"$y$")
-
-    for j, ax in enumerate(axes.flat):
-        img, ax = make_colourmap(ax, data[j].T, timepoints[j], cmap, norm)
-        ax.set_xlabel(r"$x$")
-
-    cbar = fig.colorbar(img, ax=axes, location="right", shrink=0.5)
-    cbar.ax.tick_params(labelsize=SMALLER_TICKLABELSIZE)
-    plt.subplots_adjust(hspace=0.01, wspace=0.06, left=0.06, right=0.76, bottom=0.06, top=0.96)
-
-    return cbar, fig, axes
-
-
-def snapshot_probability_density(t, P, Pmax=None, title=None, pdfname="snapshot_P", spatial_extent=(0,1,0,1), vline=0.8, num_rows=1, save=SAVE, png_duplicate=TEMP, show=SHOW):
+def snapshot_probability_density(t, P, Pmax=None, title=None, wall_y=None, pdfname="snapshot_P", spatial_extent=(0,1,0,1), vline=0.8, num_rows=1, save=SAVE, png_duplicate=TEMP, show=SHOW):
     num_maps = len(t) # 3?
 
-    cbar, fig, axes = default_mapfigure(t, P, cmap="gnuplot", num_maps=len(t), vmin=0, vmax=Pmax)
-    if title is not None:
-        fig.suptitle(title)
-    cbar.set_label(r"$p(\mathbf{x}; \, t)$")
+    fig, axes = default_mapfigure(t, P, cmap="gnuplot", num_maps=len(t))#, vmin=0, vmax=Pmax)
+    # if title is not None:
+    # fig.suptitle(r"$p(\mathbf{x}; \, t)$")
+    axes[1].set_title(r"$p(\mathbf{x}; \, t)$")
+    # cbar.set_label(r"$p(\mathbf{x}; \, t)$")
+
+    if wall_y is not None:
+        for ax in axes:
+            draw_walls(ax, wall_y)
 
     ### plot the screening line:
-    ax = axes.flat[-1]
+    ax = axes[-1]
     ax.axvline(vline, ls=':', lw=0.9, c='lime', alpha=0.8)
 
     if save:
@@ -217,12 +231,18 @@ def snapshot_probability_density(t, P, Pmax=None, title=None, pdfname="snapshot_
     if show:
         plt.show()
     
-def snapshot_real_wavefunction(t, ReU, Ulim=(None, None), title=None, pdfname="snapshot_ReU", spatial_extent=(0,1,0,1), num_rows=1, save=SAVE, png_duplicate=TEMP, show=SHOW):
+def snapshot_real_wavefunction(t, ReU, Ulim=(None, None), title=None, wall_y=None, pdfname="snapshot_ReU", spatial_extent=(0,1,0,1), num_rows=1, save=SAVE, png_duplicate=TEMP, show=SHOW):
     num_maps = len(t)
-    cbar, fig, axes = default_mapfigure(t, ReU, cmap="PiYG", num_maps=len(t), vmin=Ulim[0], vmax=Ulim[1])
-    if title is not None:
-        fig.suptitle(title)
-    cbar.set_label(r"$\mathrm{Re}(U)$")
+
+    # fix these!
+    fig, axes = default_mapfigure(t, ReU, cmap="magma", num_maps=len(t))#, vmin=Ulim[0], vmax=Ulim[1])
+    # if title is not None:
+    # fig.suptitle(r"$\mathrm{Re}(u(t, \vec{x}))$")
+    axes[1].set_title(r"$\mathrm{Re}\{u(t, \vec{x})\}$")
+    # cbar.set_label(r"$\mathrm{Re}(U)$")
+    if wall_y is not None:
+        for ax in axes:
+            draw_walls(ax,wall_y)
 
     if save:
         fig.savefig(plot_path + pdfname.split(".")[0] + ".pdf")
@@ -231,14 +251,18 @@ def snapshot_real_wavefunction(t, ReU, Ulim=(None, None), title=None, pdfname="s
     if show:
         plt.show()
 
-def snapshot_imaginary_wavefunction(t, ImU, Ulim=(None, None), title=None, pdfname="snapshot_ImU", spatial_extent=(0,1,0,1), num_rows=1, save=SAVE, png_duplicate=TEMP, show=SHOW):
+def snapshot_imaginary_wavefunction(t, ImU, Ulim=(None, None), title=None, wall_y=None, pdfname="snapshot_ImU", spatial_extent=(0,1,0,1), num_rows=1, save=SAVE, png_duplicate=TEMP, show=SHOW):
     num_maps = len(t)
     
+    fig, axes = default_mapfigure(t, ImU, cmap="magma", num_maps=len(t))#, vmin=Ulim[0], vmax=Ulim[1])
+    # if title is not None:
+    # fig.suptitle(r"$\mathrm{Im}(u(t, \vec{x}))$")
+    axes[1].set_title(r"$\mathrm{Im}\{u(t, \vec{x})\}$")
+    # cbar.set_label()
+    if wall_y is not None:
+        for ax in axes:
+            draw_walls(ax, wall_y)
 
-    cbar, fig, axes = default_mapfigure(t, ImU, cmap="PiYG", num_maps=len(t),vmin=Ulim[0], vmax=Ulim[1])
-    if title is not None:
-        fig.suptitle(title)
-    cbar.set_label(r"$\mathrm{Im}(U)$")
 
     if save:
         fig.savefig(plot_path + pdfname.split(".")[0] + ".pdf")
@@ -246,17 +270,16 @@ def snapshot_imaginary_wavefunction(t, ImU, Ulim=(None, None), title=None, pdfna
         fig.savefig(temp_path + pdfname.split(".")[0] + ".png")
     if show:
         plt.show()
-
 
 def total_probability_deviation(t, P_tot, title=None, label=None, pdfname="Ptot_deviation", save=SAVE, png_duplicate=TEMP, show=SHOW):
 
     fig, ax = plt.subplots()
     ax.set_yscale("log")
     ax.axhline(0, ls='--', lw=0.9, alpha=0.8, c="orangered")
-    ax.plot(t, np.asarray(P_tot)-1, lw=2, c="dodgerblue", label=label)
+    ax.plot(t, np.abs(1-p.asarray(P_tot)), lw=2.5, c="dodgerblue", label=label)
     ax.set_xlabel(r"$t$")
-    # ax.set_ylabel(r"$1 - \sum p$")
-    ax.set_ylabel(r"$\sum_{i, j} p(\mathbf{x}_{i,j}; \, t)-1$")
+    ax.set_ylabel(r"$|1-p^\mathrm{tot}(t)|$")
+    # ax.set_ylabel(r"$\sum_{i, j} p(\mathbf{x}_{i,j}; \, t)-1$")
     if label is not None:
         ax.legend()
 
@@ -267,13 +290,12 @@ def total_probability_deviation(t, P_tot, title=None, label=None, pdfname="Ptot_
     if show:
         plt.show()
 
-
 def probability_density_along_screen(y, p, x=0.8, t=0.002, title=None, label=None, xlabel=r"$y$", pdfname="P_along_sceen", save=SAVE, png_duplicate=TEMP, show=SHOW):
     fig, ax = plt.subplots()
 
-    ax.plot(y, np.asarray(p), lw=2, c="dodgerblue", label=label)
+    ax.plot(y, np.asarray(p), lw=2.5, c="orangered", label=label)
     ax.set_xlabel(xlabel) 
-    ax.set_ylabel(r"$p((%.1f,\, y); \, t=%.3f)$"%(x, t)) # fix this
+    ax.set_ylabel(r"$p^\mathrm{tot}_{x=%.1f}(y; \, t=%.3f)$"%(x, t)) # fix this
     if label is not None:
         ax.legend()
 
