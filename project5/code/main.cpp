@@ -29,7 +29,7 @@ void no_slit(void){
     
     std::cout<<"\nExperiment: NO SLIT\n"<<std::endl;
     arma::cx_cube U1 = s1.run_simulation();
-    U1.save("../output/binfiles/no_slit_arma_cube.bin");
+    U1.save("../output/binfiles/NS_arma_cube.bin");
 }
 
 void double_slit_broad_sigma_y(void){
@@ -51,7 +51,7 @@ void double_slit_broad_sigma_y(void){
 
     std::cout<<"\nExperiment: DOUBLE SLIT\n"<<std::endl;
     arma::cx_cube U2 = s2.run_simulation();
-    U2.save("../output/binfiles/double_slit_arma_cube.bin");
+    U2.save("../output/binfiles/DS1_arma_cube.bin");
 }
 
 void double_slit_broader_sigma_y_short_time(void){
@@ -73,7 +73,7 @@ void double_slit_broader_sigma_y_short_time(void){
 
     std::cout<<"\nExperiment: DOUBLE SLIT with broader sigma_y and chorter time\n"<<std::endl;
     arma::cx_cube U3 = s3.run_simulation();
-    U3.save("../output/binfiles/double_slit_short_time_arma_cube.bin");
+    U3.save("../output/binfiles/DS2_arma_cube.bin");
 }
 
 
