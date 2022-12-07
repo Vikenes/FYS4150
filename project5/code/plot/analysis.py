@@ -6,52 +6,108 @@ import matplotlib.pyplot as plt
 import os
 import plot as PLOT
 import pyarma as pa
+import sys
 
-here = os.path.abspath(".")
-binfile_path = here + "/../../output/binfiles/"
 
+binfile_path = os.path.abspath(".") + "/../../output/binfiles/"
 
 class Analysis:
-    def __init__(self, filename="no_slit_arma_cube", title="No slit", total_time=0.008, time_step_size=2.5e-5, space_step_size=0.005, num_of_slits=0):
+    def __init__(self, binary_filename, title, label, total_time=0.008, num_of_slits=0):
         U_arma = pa.cx_cube()
-        U_arma.load(binfile_path+filename+".bin")
+        U_arma.load(binfile_path+binary_filename+".bin")
         self.U = np.asarray(U_arma)
         self.P = np.abs(self.U)**2
+        self.Nt, self.M, _ = np.shape(self.P)
         self.title = title
-        self.h = space_step_size
+        self.label = label
         self.T = total_time
-        self.dt = time_step_size
         self.set_up()
-       
-    def set_params(self, **params):
-        pass
+        self.num_of_slits = num_of_slits
+        self.set_params()
 
+    def set_params(self, xc=(0.25,0.5), sigma=(0.05,0.05), p=(200,0), v0=1e10):
+        self.xc = xc
+        self.sigma = sigma
+        self.p = p
+        self.v0 = v0
+        if self.num_of_slits == 0:
+            self.v0 = 0
+        
     def set_up(self):
-        x_points = np.arange(0, 1+self.h, self.h)
-        y_points = np.arange(0, 1+self.h, self.h)
+        x_points = np.linspace(0, 1, self.M)
+        y_points = np.linspace(0, 1, self.M)
+        self.h = x_points[1]-x_points[0]
         self.x, self.y = np.meshgrid(x_points, y_points, sparse=True)
-        self.t = np.arange(0, self.T+self.dt, self.dt)
 
-    def animate(self, mp4name="animation", total_time=None):
+        self.t = np.linspace(0, self.T, self.Nt)
+        self.dt = self.t[1]-self.t[0]
+
+    def animate(self, mp4name=None, total_time=None):
         T = total_time or self.T
+        mp4name =  mp4name or self.label + "_anim"
         PLOT.animate_probability_density(self.t[self.t<=T], self.P, title=self.title, mp4name=mp4name)
+
+    def snapshots(self, time_points, pdfnames=[None, None, None]):
+        num_maps = len(time_points)
+        t_points = np.zeros(num_maps)
+        P_points = np.zeros((num_maps, self.M, self.M))
+        ReU_points = np.zeros((num_maps, self.M, self.M))
+        ImU_points = np.zeros((num_maps, self.M, self.M))
+
+        for j, time in enumerate(time_points):
+            diff = np.abs(self.t-time)
+            idx = np.argmin(diff)
+            t_points[j] = self.t[idx]
+            P_points[j] = self.P[idx]
+            ReU_points[j] = np.real(self.U[idx])
+            ImU_points[j] = np.imag(self.U[idx])
+
+        Umax = np.max([ReU_points, ImU_points])
+        Umin = np.min([ReU_points, ImU_points])
+
+        ### Prob. density:
+        pdfname = pdfnames[0] or self.label + "_snapshots_P"
+        PLOT.snapshot_probability_density(t_points, P_points, pdfname=pdfname)
+        ### Real part of U:
+        pdfname = pdfnames[1] or self.label + "_snapshots_ReU"
+        PLOT.snapshot_real_wavefunction(t_points, ReU_points, (Umin,Umax), pdfname=pdfname)
+        ### Imag. part of U:
+        pdfname = pdfnames[2] or self.label + "_snapshots_ImU"
+        PLOT.snapshot_imaginary_wavefunction(t_points, ImU_points, (Umin,Umax), pdfname=pdfname)
+
 
     def __str__(self):
         l = 50
         s = "-"*l + "\n" + self.title + "\n"
-        s += "\n" + f" h = {self.h:5.2e}"
-        s += "\n" + f"dt = {self.dt:5.2e}"
-        s += "\n" + f" T = {self.T:5.2e}"
-        s += "\n" + "-"*l
+        s += f"(labeled: '{self.label}')" + "\n"
+        s += f"\n> System configuration:"
+        s += "\n   " + f" h = {self.h:5.1e}"
+        s += "\n   " + f" M = {self.M:5.0f}"
+        s += "\n   " + f"dt = {self.dt:5.1e}"
+        s += "\n   " + f" T = {self.T:5.1e}"
+        s += "\n> Slits:" 
+        s += "\n   " + f"#slits = {self.num_of_slits:5}"
+        s += "\n   " + f"    v0 = {self.v0:5.1e}"
+        s += "\n> Initial wavepacket:" 
+        s += "\n   " + f"xc = ({self.xc[0]:5.2f}, {self.xc[1]:5.2f})"
+        s += "\n   " + f" σ = ({self.sigma[0]:5.2f}, {self.sigma[1]:5.2f})"
+        s += "\n   " + f" p = ({self.p[0]:5.1f}, {self.p[1]:5.1f})"
+        s += "\n" + "-"*l + "\n"
         return s
 
-        
 
 
-NOSLIT = Analysis()
-DSLIT = Analysis("double_slit_arma_cube", "Double slit (1)", num_of_slits=2)
-DSLIT2 = Analysis("double_slit_short_time_arma_cube", "Double slit (2)", num_of_slits=2)
 
-NOSLIT.animate(mp4name="no_slit")
-DSLIT.animate(mp4name="double_slit")
-DSLIT2.animate(mp4name="double_slit2")
+NOSLIT = Analysis("no_slit_arma_cube", "No slit", label="NS")
+DSLIT1 = Analysis("double_slit_arma_cube", "Double slit (1)", label="DS1", num_of_slits=2)
+DSLIT1.set_params(sigma=(0.05, 0.10))
+DSLIT2 = Analysis("double_slit_short_time_arma_cube", "Double slit (2)", label="DS2", num_of_slits=2, total_time=0.002)
+DSLIT2.set_params(sigma=(0.05, 0.20))
+
+print(NOSLIT)
+print(DSLIT1)
+print(DSLIT2)
+# NOSLIT.animate()
+# DSLIT1.animate()
+# DSLIT2.animate()
+DSLIT2.snapshots((0, 0.001, 0.002))
