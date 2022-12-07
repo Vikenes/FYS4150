@@ -59,6 +59,14 @@ class Analysis:
             yc[j] = yc_first + j*sep
         return yc
 
+    def get_total_probability(self):
+        # Wack method, but struggeled with dimesions
+        # Feel free to fix
+        Ptot = []
+        for j in range(self.Nt):
+            Ptot.append(np.sum(self.P[j]))
+        return Ptot
+
         
     def set_grid(self):
         self.x = np.linspace(0, 1, self.M)
@@ -87,8 +95,8 @@ class Analysis:
             ReU_points[j] = np.real(self.U[idx])
             ImU_points[j] = np.imag(self.U[idx])
 
-        Umax = np.max([ReU_points, ImU_points])
-        Umin = np.min([ReU_points, ImU_points])
+        # Umax = np.max([ReU_points, ImU_points])
+        # Umin = np.min([ReU_points, ImU_points])
         yc = self.get_walls_ycoords()
 
         ### Prob. density:
@@ -96,18 +104,24 @@ class Analysis:
         PLOT.snapshot_probability_density(t_points, P_points, wall_y=yc, pdfname=pdfname)
         ### Real part of U:
         pdfname = pdfnames[1] or self.label + "_snapshots_ReU"
-        PLOT.snapshot_real_wavefunction(t_points, ReU_points, (Umin,Umax), wall_y=yc, pdfname=pdfname)
+        PLOT.snapshot_real_wavefunction(t_points, ReU_points,  wall_y=yc, pdfname=pdfname)
         ### Imag. part of U:
         pdfname = pdfnames[2] or self.label + "_snapshots_ImU"
-        PLOT.snapshot_imaginary_wavefunction(t_points, ImU_points, (Umin,Umax), wall_y=yc, pdfname=pdfname)
+        PLOT.snapshot_imaginary_wavefunction(t_points, ImU_points, wall_y=yc, pdfname=pdfname)
 
-    def deviation(self, pdfname=None):
-        # Wack method, but struggeled with dimesions
+    def deviation(self, pdfname=None, others=[]):
+        experiments = [self] + others
+        label = ""
         Ptot = []
-        for j in range(self.Nt):
-            Ptot.append(np.sum(self.P[j]))
-        pdfname = pdfname or self.label + "_Ptot_deviation"
-        PLOT.total_probability_deviation(self.t, Ptot, label=self.title, pdfname=pdfname)
+        titles = []
+        for exp in experiments:
+            label += exp.label + "_"
+            Ptot.append(exp.get_total_probability())
+            titles.append(exp.title)
+        
+        pdfname = pdfname or label + "Ptot_deviation"
+        PLOT.total_probability_deviation(self.t, Ptot, labels=titles, pdfname=pdfname)
+
 
     def probability_vertical_screen(self, time_point=0.002, horisontal_point=0.8, pdfname=None):
         idx_x = np.argmin(np.abs(self.x-horisontal_point))
@@ -117,7 +131,7 @@ class Analysis:
         p = self.P[idx_t, idx_x, :]
 
         pdfname = pdfname or self.label + "_P_along_screen"
-        PLOT.probability_density_along_screen(self.y, p/np.sum(p), pdfname=pdfname)
+        PLOT.probability_density_along_screen(self.y, p/np.sum(p), label=self.title, pdfname=pdfname)
 
     def __str__(self):
         l = 50
@@ -131,7 +145,7 @@ class Analysis:
         s += "\n> Slits:" 
         s += "\n   " + f"#slits = {self.num_of_slits:5}"
         s += "\n   " + f"    v0 = {self.v0:5.1e}"
-        s += "\n> Initial wavepacket:" 
+        s += "\n> Initial wave packet:" 
         s += "\n   " + f"xc = ({self.xc[0]:5.2f}, {self.xc[1]:5.2f})"
         s += "\n   " + f" σ = ({self.sigma[0]:5.2f}, {self.sigma[1]:5.2f})"
         s += "\n   " + f" p = ({self.p[0]:5.1f}, {self.p[1]:5.1f})"
@@ -153,7 +167,8 @@ print(DSLIT2)
 # NOSLIT.animate()
 # DSLIT1.animate()
 # DSLIT2.animate()
-DSLIT2.snapshots((0, 0.001, 0.002))
+# DSLIT2.snapshots((0, 0.001, 0.002))
 # NOSLITS.deviation() 
 # DSLIT1.deviation()  
+NOSLITS.deviation(others=[DSLIT1])
 DSLIT2.probability_vertical_screen()

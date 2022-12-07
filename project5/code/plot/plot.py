@@ -19,7 +19,7 @@ video_path = here +"/../../output/videos/"
 
 ### rc and plot params
 # for figures that are small ?
-TICKLABELSIZE = 25
+TICKLABELSIZE = 22
 LABELSIZE = 25
 LEGENDSIZE = 20
 TITLESIZE = 30
@@ -213,7 +213,7 @@ def snapshot_probability_density(t, P, Pmax=None, title=None, wall_y=None, pdfna
     fig, axes = default_mapfigure(t, P, cmap="gnuplot", num_maps=len(t))#, vmin=0, vmax=Pmax)
     # if title is not None:
     # fig.suptitle(r"$p(\mathbf{x}; \, t)$")
-    axes[1].set_title(r"$p(\mathbf{x}; \, t)$")
+    axes[1].set_title(r"$\propto p(\mathbf{x}; \, t)$")
     # cbar.set_label(r"$p(\mathbf{x}; \, t)$")
 
     if wall_y is not None:
@@ -222,7 +222,7 @@ def snapshot_probability_density(t, P, Pmax=None, title=None, wall_y=None, pdfna
 
     ### plot the screening line:
     ax = axes[-1]
-    ax.axvline(vline, ls=':', lw=0.9, c='lime', alpha=0.8)
+    ax.axvline(vline, ls=':', lw=0.9, c="orangered", alpha=0.8)
 
     if save:
         fig.savefig(plot_path + pdfname.split(".")[0] + ".pdf")
@@ -235,10 +235,10 @@ def snapshot_real_wavefunction(t, ReU, Ulim=(None, None), title=None, wall_y=Non
     num_maps = len(t)
 
     # fix these!
-    fig, axes = default_mapfigure(t, ReU, cmap="magma", num_maps=len(t))#, vmin=Ulim[0], vmax=Ulim[1])
+    fig, axes = default_mapfigure(t, ReU, cmap="ocean", num_maps=len(t))#, vmin=Ulim[0], vmax=Ulim[1])
     # if title is not None:
     # fig.suptitle(r"$\mathrm{Re}(u(t, \vec{x}))$")
-    axes[1].set_title(r"$\mathrm{Re}\{u(t, \vec{x})\}$")
+    axes[1].set_title(r"$\propto \mathrm{Re}\{u(t, \vec{x})\}$")
     # cbar.set_label(r"$\mathrm{Re}(U)$")
     if wall_y is not None:
         for ax in axes:
@@ -254,10 +254,10 @@ def snapshot_real_wavefunction(t, ReU, Ulim=(None, None), title=None, wall_y=Non
 def snapshot_imaginary_wavefunction(t, ImU, Ulim=(None, None), title=None, wall_y=None, pdfname="snapshot_ImU", spatial_extent=(0,1,0,1), num_rows=1, save=SAVE, png_duplicate=TEMP, show=SHOW):
     num_maps = len(t)
     
-    fig, axes = default_mapfigure(t, ImU, cmap="magma", num_maps=len(t))#, vmin=Ulim[0], vmax=Ulim[1])
+    fig, axes = default_mapfigure(t, ImU, cmap="ocean", num_maps=len(t))#, vmin=Ulim[0], vmax=Ulim[1])
     # if title is not None:
     # fig.suptitle(r"$\mathrm{Im}(u(t, \vec{x}))$")
-    axes[1].set_title(r"$\mathrm{Im}\{u(t, \vec{x})\}$")
+    axes[1].set_title(r"$\propto \mathrm{Im}\{u(t, \vec{x})\}$")
     # cbar.set_label()
     if wall_y is not None:
         for ax in axes:
@@ -271,16 +271,18 @@ def snapshot_imaginary_wavefunction(t, ImU, Ulim=(None, None), title=None, wall_
     if show:
         plt.show()
 
-def total_probability_deviation(t, P_tot, title=None, label=None, pdfname="Ptot_deviation", save=SAVE, png_duplicate=TEMP, show=SHOW):
+def total_probability_deviation(t, P_tot_list, title=None, labels=None, pdfname="Ptot_deviation", save=SAVE, png_duplicate=TEMP, show=SHOW):
 
     fig, ax = plt.subplots()
     ax.set_yscale("log")
-    ax.axhline(0, ls='--', lw=0.9, alpha=0.8, c="orangered")
-    ax.plot(t, np.abs(1-p.asarray(P_tot)), lw=2.5, c="dodgerblue", label=label)
+    # ax.axhline(0, ls='--', lw=0.9, alpha=0.8, c="orangered")
+    colours = ["dodgerblue", "violet", "seagreen"]
+    for j, Ptot in enumerate(P_tot_list):
+        ax.plot(t, np.abs(1-np.asarray(Ptot)), lw=2.5, c=colours[j], label=labels[j])
     ax.set_xlabel(r"$t$")
     ax.set_ylabel(r"$|1-p^\mathrm{tot}(t)|$")
     # ax.set_ylabel(r"$\sum_{i, j} p(\mathbf{x}_{i,j}; \, t)-1$")
-    if label is not None:
+    if labels[0] is not None:
         ax.legend()
 
     if save:
