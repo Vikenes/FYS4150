@@ -1,12 +1,26 @@
 
 \section{Methods}\label{sec:methods}
 
+We will use the Schrödinger equation to simulate a particle inside a two-dimensional quadratic box of size $L^2$. The use of periodic boundary conditions gives rise to the confinement of the particle \Nanna{or something like that}. We will place two or more walls inside the box to create one or more slits. The specifics of such configurations is elaborated in section \ref{sec:method:slit_config}. A position inside if the box is called $\vec{x} =(x, y)$ and a time $t\in$, all unit less. Now $x, y \in [0,\,L]$ and $t\in[0,\,T]$ if we let $T$ be the time we simulate for. In this paper, we will use $L=1$.
 
+\subsection{Numerical scheme}
 
-\subsection{Slit configuration}\label{sec:method:slit_config}
-    \Nanna{About walls, barriers, slits, potential}
+    \Nanna{How to solve etc.} 
+    \subsubsection{Discretisation}
+        We discretise the position $\vec{x} \to \vec{x}_{i,j} = (x_i, y_j) = h(i,j)$, where $h$ is the spatial separation between two points on the grid. We consider $M$ points in each direction, giving $i, j \in [0,\, M)$. The lattice is then made up of $(M-2) \cross (M-2)$ internal points and boundary points. The time points become $t\to t_n=n\Delta t$, $n\in[0, N_t)$, where $\Delta t$ is the time step size and $N_t = T/\Delta t$ is the number of time points. Further, we find the wave function as
+        \begin{equation}
+            u(t, \vec{x}) \to u(t_n, \vec{x}_{i,j}) \equiv u_{i,j}^{(n)},
+        \end{equation}
+        and subsequently the probability density,
+        \begin{equation}
+            p(\vec{x};\, t) \to p(\vec{x}_{i,j};\, t_n) \equiv p_{i,j}^{(n)}.
+        \end{equation}
+        The potential is discretised as $v(\vec{x}) \to v(\vec{x}_{i,j})\equiv v_{i,j}$. 
 
+    
 
+\subsection{Periodic boundaries}\label{sec:method:periodic_boundaries}
+    \Nanna{Dirichlet}
 
 \subsection{Initial wave packet}\label{sec:method:initial_wave}
 
@@ -24,15 +38,28 @@
     \end{equation}
 
 
+\subsection{Slit configuration}\label{sec:method:slit_config}
+    To create a single slit, we need \textit{two} objects with the property that the particle cannot propagate through it. Said objects are to have a separation between them, a \textit{slit}, perpendicular to the dominating motion of the particle \Nanna{Pls send help, cannot write proper sentences any more:(}. A natural choice for the shape is the rectangular with the longer side parallel to the slit, \Nanna{(Some theory about interference??)} hence the name "wall". Three such walls give rise to two slits, etcetera. Therefore, 
+    \begin{equation}
+        \#\mathrm{walls} = \begin{cases}
+            \#\mathrm{slits} + 1 \quad &\mathrm{if}\,\, \#\mathrm{slits} \geq 1 \\
+            0 \quad                     &\mathrm{if}\,\, \#\mathrm{slits} =0 
+        \end{cases}.
+    \end{equation}
+    % OK, I admit, this was unnecessary...
+
+    To give the Schrödinger equation information about these walls, we simply create a very large potential in the walls. These potential barriers will resemble concrete \Nanna{(mener egt ikke betong, men konkrete... hva er ordet??)} walls in the sense that the particle will have to navigate around it in order to get through to the other side.
+
+    In particular, we will set up a number of such walls in the middle of our box, the separation between which is the aperture, aligned perpendicular to the initial momentum $\vec{p}$ in equation \eqref{eq:p4_initial_condition}. We will make sure that the slit setup is symmetric around the box centre in both directions.
 
 
 \subsection{Artificial detector screen}\label{sec:method:screen}
 
-To reduce the dimensionality of the problem, we can assume to measure a particle with a detector screen at some horisontal position $x=x_\mathrm{sc}$ and time $t=t_\mathrm{sc}$, so that the screen spans of the vertical axis $y$. With a smart choice of pairing ($t_\mathrm{sc}$ \& $x_\mathrm{sc}$), we can safely assume that the particle is located somewhere along this line. Thus, it makes sense to consider a normalised one-dimensional probability function $p_{x=x_\mathrm{sc}}(y;\, t)$ (read: probability of $y$ given $x=x_\mathrm{sc}$, at $t$) such that
-\begin{equation}
-    p^\mathrm{tot}_{x=x_\mathrm{sc}}(t) =\sum_{j\in [0, M)} p_{x=x_\mathrm{sc}}(y_j;\, t) = 1.
-\end{equation}
-\Nanna{Do we have to explain how we find this?}
+    To reduce the dimensionality of the problem, we can assume to measure a particle with a detector screen at some horisontal position $x=x_\mathrm{sc}$ and time $t=t_\mathrm{sc}$, so that the screen spans of the vertical axis $y$. With a smart choice of pairing ($t_\mathrm{sc}$ \& $x_\mathrm{sc}$), we can safely assume that the particle is located somewhere along this line. Thus, it makes sense to consider a normalised one-dimensional probability function $p_{x=x_\mathrm{sc}}(y;\, t)$ (read: probability of $y$ given $x=x_\mathrm{sc}$, at $t$) such that
+    \begin{equation}
+        p^\mathrm{tot}_{x=x_\mathrm{sc}}(t) =\sum_{j\in [0, M)} p_{x=x_\mathrm{sc}}(y_j;\, t) = 1.
+    \end{equation}
+    \Nanna{Do we have to explain how we find this?}
 
 
 

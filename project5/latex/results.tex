@@ -9,17 +9,19 @@
     \begin{equation}\label{eq:total_probability_deviation}
         \abs{1- p^\mathrm{tot}(t)}\,; \quad p^\mathrm{tot}(t) = \sum_{i,j\in [0, M)} p(\vec{x}_{i,j};\, t)
     \end{equation}
-    as a function of time in figure \ref{fig:ptot_deviation_NS}, where we see that the deviation ($\sim 10^{-14}$) is close to machine precision.
+    as a function of time in figure \ref{fig:ptot_deviation_NS_DS1}, where we see that the deviation ($\sim 10^{-14}$) is close to machine precision.
+
+    The next simulation\footnote{Animation available here \Nanna{link to anim}.} we consider has a double-slit barrier and a somewhat broader initial wave packet in the vertical direction (DS1 in \ref{tab:simulations_info}). We perform the same sanity check as above and once again get deviations of order $ 10^{-14}$, also shown in figure \ref{fig:ptot_deviation_NS_DS1}.
+
     \begin{figure}[ht!]
         \centering
-        \includegraphics[width=\linewidth]{temp/NS_Ptot_deviation.png}
+        \includegraphics[width=\linewidth]{temp/NS_DS1_Ptot_deviation.png}
         \caption{Some stupid caption. Fix ticks on this plot}
-        \label{fig:ptot_deviation_NS}
+        \label{fig:ptot_deviation_NS_DS1}
     \end{figure}
 
     % should this be in appendix?
-    The next simulation\footnote{Animation available here \Nanna{link to anim}.} we consider has a double-slit barrier and a somewhat broader initial wave packet in the vertical direction (DS1 in \ref{tab:simulations_info}). We perform the same sanity check as above and once again get deviations of order $\sim 10^{-14}$.
-
+    
     We change the settings of our simulations so that they are only run for a fourth of the duration and with an even larger initial wave packet. Still two slits considered, our third simulation\footnote{Animation available here \Nanna{link to anim}.} is run with parameters in accordance with \ref{tab:simulation_parameters} and \ref{tab:simulations_info} (DS2). Snapshots of the probability distribution $p(\vec{x};\, t)$ at $t=0$, $T/2$ and $T$, $T=0.002$, are presented in figure \ref{fig:snapshots_p_DS2}. \Nanna{COMMENT ON NORMALISATION OF COLOURMAP!} In addition, the real and imaginary part of $u(t, \vec{x})$ at the same time points are presented in figures \ref{fig:snapshots_ReU_DS2} and \ref{fig:snapshots_ImU_DS2}, respectively.
 
     \clearpage
@@ -53,6 +55,8 @@
 
 
     \twocolumngrid
+
+\subsection{\Nanna{DS2 - idk}}
 
     Take note of the dotted vertical line in the right panel of figure \ref{fig:snapshots_p_DS2}. Following the method described in section \ref{sec:method:screen}, we find the probability density along this screen for detecting the particle. \Nanna{Is this clear?} The distribution is plotted as a function of $y$ in figure \ref{fig:p_along_y_DS2}.
 
