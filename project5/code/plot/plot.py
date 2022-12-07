@@ -111,7 +111,7 @@ def set_ax_info(ax, xlabel, ylabel=False, zlabel='none', style='plain', title=No
 Plotting functions
 '''
 
-def animate_probability_density(t, P, title=None, mp4name="animation", spatial_extent=(0,1,0,1), save=SAVE):
+def animate_probability_density(t, P, title=None, mp4name="animation", spatial_extent=(0,1,0,1), save=SAVE, show=SHOW):
 
     # Fill p_data
     p_data = []
@@ -160,10 +160,10 @@ def animate_probability_density(t, P, title=None, mp4name="animation", spatial_e
 
     # Use matplotlib.animation.FuncAnimation to put it all together
     anim = FuncAnimation(fig, animation, interval=1, frames=np.arange(0, len(p_data), 2), repeat=True, blit=0)
-
-    # Run the animation!
-    plt.show()
-
+    
+    if show:
+        # Run the animation!
+        plt.show()
     if save:
         # Save the animation
         anim.save(video_path + mp4name.split(".")[0] + '.mp4', writer="ffmpeg", bitrate=-1, fps=30)
@@ -195,25 +195,31 @@ def default_mapfigure(timepoints, data, cmap="gnuplot", num_maps=3, vmin=None, v
     cbar.ax.tick_params(labelsize=SMALLER_TICKLABELSIZE)
     plt.subplots_adjust(hspace=0.01, wspace=0.06, left=0.06, right=0.76, bottom=0.06, top=0.96)
 
-    return cbar, fig
+    return cbar, fig, axes
 
 
-def snapshot_probability_density(t, P, Pmax=None, title=None, pdfname="snapshot_P", spatial_extent=(0,1,0,1), num_rows=1, save=SAVE, png_duplicate=TEMP):
+def snapshot_probability_density(t, P, Pmax=None, title=None, pdfname="snapshot_P", spatial_extent=(0,1,0,1), vline=0.8, num_rows=1, save=SAVE, png_duplicate=TEMP, show=SHOW):
     num_maps = len(t) # 3?
 
-    cbar, fig = default_mapfigure(t, P, cmap="gnuplot", num_maps=len(t), vmin=0, vmax=Pmax)
+    cbar, fig, axes = default_mapfigure(t, P, cmap="gnuplot", num_maps=len(t), vmin=0, vmax=Pmax)
     if title is not None:
         fig.suptitle(title)
     cbar.set_label(r"$p(\mathbf{x}; \, t)$")
+
+    ### plot the screening line:
+    ax = axes.flat[-1]
+    ax.axvline(vline, ls=':', lw=0.9, c='lime', alpha=0.8)
 
     if save:
         fig.savefig(plot_path + pdfname.split(".")[0] + ".pdf")
     if png_duplicate:
         fig.savefig(temp_path + pdfname.split(".")[0] + ".png")
+    if show:
+        plt.show()
     
-def snapshot_real_wavefunction(t, ReU, Ulim=(None, None), title=None, pdfname="snapshot_ReU", spatial_extent=(0,1,0,1), num_rows=1, save=SAVE, png_duplicate=TEMP):
+def snapshot_real_wavefunction(t, ReU, Ulim=(None, None), title=None, pdfname="snapshot_ReU", spatial_extent=(0,1,0,1), num_rows=1, save=SAVE, png_duplicate=TEMP, show=SHOW):
     num_maps = len(t)
-    cbar, fig = default_mapfigure(t, ReU, cmap="PiYG", num_maps=len(t), vmin=Ulim[0], vmax=Ulim[1])
+    cbar, fig, axes = default_mapfigure(t, ReU, cmap="PiYG", num_maps=len(t), vmin=Ulim[0], vmax=Ulim[1])
     if title is not None:
         fig.suptitle(title)
     cbar.set_label(r"$\mathrm{Re}(U)$")
@@ -222,12 +228,14 @@ def snapshot_real_wavefunction(t, ReU, Ulim=(None, None), title=None, pdfname="s
         fig.savefig(plot_path + pdfname.split(".")[0] + ".pdf")
     if png_duplicate:
         fig.savefig(temp_path + pdfname.split(".")[0] + ".png")
+    if show:
+        plt.show()
 
-def snapshot_imaginary_wavefunction(t, ImU, Ulim=(None, None), title=None, pdfname="snapshot_ImU", spatial_extent=(0,1,0,1), num_rows=1, save=SAVE, png_duplicate=TEMP):
+def snapshot_imaginary_wavefunction(t, ImU, Ulim=(None, None), title=None, pdfname="snapshot_ImU", spatial_extent=(0,1,0,1), num_rows=1, save=SAVE, png_duplicate=TEMP, show=SHOW):
     num_maps = len(t)
     
 
-    cbar, fig = default_mapfigure(t, ImU, cmap="PiYG", num_maps=len(t),vmin=Ulim[0], vmax=Ulim[1])
+    cbar, fig, axes = default_mapfigure(t, ImU, cmap="PiYG", num_maps=len(t),vmin=Ulim[0], vmax=Ulim[1])
     if title is not None:
         fig.suptitle(title)
     cbar.set_label(r"$\mathrm{Im}(U)$")
@@ -236,8 +244,42 @@ def snapshot_imaginary_wavefunction(t, ImU, Ulim=(None, None), title=None, pdfna
         fig.savefig(plot_path + pdfname.split(".")[0] + ".pdf")
     if png_duplicate:
         fig.savefig(temp_path + pdfname.split(".")[0] + ".png")
+    if show:
+        plt.show()
 
 
-def plot_probability_density_1d():
-    pass
+def total_probability_deviation(t, P_tot, title=None, label=None, pdfname="Ptot_deviation", save=SAVE, png_duplicate=TEMP, show=SHOW):
 
+    fig, ax = plt.subplots()
+    ax.set_yscale("log")
+    ax.axhline(0, ls='--', lw=0.9, alpha=0.8, c="orangered")
+    ax.plot(t, np.asarray(P_tot)-1, lw=2, c="dodgerblue", label=label)
+    ax.set_xlabel(r"$t$")
+    # ax.set_ylabel(r"$1 - \sum p$")
+    ax.set_ylabel(r"$\sum_{i, j} p(\mathbf{x}_{i,j}; \, t)-1$")
+    if label is not None:
+        ax.legend()
+
+    if save:
+        fig.savefig(plot_path + pdfname.split(".")[0] + ".pdf")
+    if png_duplicate:
+        fig.savefig(temp_path + pdfname.split(".")[0] + ".png")
+    if show:
+        plt.show()
+
+
+def probability_density_along_screen(y, p, x=0.8, t=0.002, title=None, label=None, xlabel=r"$y$", pdfname="P_along_sceen", save=SAVE, png_duplicate=TEMP, show=SHOW):
+    fig, ax = plt.subplots()
+
+    ax.plot(y, np.asarray(p), lw=2, c="dodgerblue", label=label)
+    ax.set_xlabel(xlabel) 
+    ax.set_ylabel(r"$p((%.1f,\, y); \, t=%.3f)$"%(x, t)) # fix this
+    if label is not None:
+        ax.legend()
+
+    if save:
+        fig.savefig(plot_path + pdfname.split(".")[0] + ".pdf")
+    if png_duplicate:
+        fig.savefig(temp_path + pdfname.split(".")[0] + ".png")
+    if show:
+        plt.show()

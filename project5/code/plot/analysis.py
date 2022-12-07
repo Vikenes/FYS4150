@@ -17,6 +17,7 @@ class Analysis:
         U_arma.load(binfile_path+binary_filename+".bin")
         self.U = np.asarray(U_arma)
         self.P = np.abs(self.U)**2
+
         self.Nt, self.M, _ = np.shape(self.P)
         self.title = title
         self.label = label
@@ -34,10 +35,10 @@ class Analysis:
             self.v0 = 0
         
     def set_up(self):
-        x_points = np.linspace(0, 1, self.M)
-        y_points = np.linspace(0, 1, self.M)
-        self.h = x_points[1]-x_points[0]
-        self.x, self.y = np.meshgrid(x_points, y_points, sparse=True)
+        self.x = np.linspace(0, 1, self.M)
+        self.y = np.linspace(0, 1, self.M)
+        self.h = self.x[1]-self.x[0]
+        # self.x, self.y = np.meshgrid(x_points, y_points, sparse=True)
 
         self.t = np.linspace(0, self.T, self.Nt)
         self.dt = self.t[1]-self.t[0]
@@ -75,6 +76,23 @@ class Analysis:
         pdfname = pdfnames[2] or self.label + "_snapshots_ImU"
         PLOT.snapshot_imaginary_wavefunction(t_points, ImU_points, (Umin,Umax), pdfname=pdfname)
 
+    def deviation(self, pdfname=None):
+        # Wack method, but struggeled with dimesions
+        Ptot = []
+        for j in range(self.Nt):
+            Ptot.append(np.sum(self.P[j]))
+        pdfname = pdfname or self.label + "_Ptot_deviation"
+        PLOT.total_probability_deviation(self.t, Ptot, label=self.title, pdfname=pdfname)
+
+    def probability_vertical_screen(self, time_point=0.002, horisontal_point=0.8, pdfname=None):
+        idx_x = np.argmin(np.abs(self.x-horisontal_point))
+        x = self.x[idx_x]
+        idx_t = np.argmin(np.abs(self.t-time_point))
+        t = self.t[idx_t]
+        p = self.P[idx_t, idx_x, :]
+
+        pdfname = pdfname or self.label + "_P_along_screen"
+        PLOT.probability_density_along_screen(self.y, p/np.sum(p), pdfname=pdfname)
 
     def __str__(self):
         l = 50
@@ -98,10 +116,10 @@ class Analysis:
 
 
 
-NOSLIT = Analysis("no_slit_arma_cube", "No slit", label="NS")
-DSLIT1 = Analysis("double_slit_arma_cube", "Double slit (1)", label="DS1", num_of_slits=2)
+NOSLIT = Analysis("NS_arma_cube", "No slit", label="NS")
+DSLIT1 = Analysis("DS1_arma_cube", "Double slit (1)", label="DS1", num_of_slits=2)
 DSLIT1.set_params(sigma=(0.05, 0.10))
-DSLIT2 = Analysis("double_slit_short_time_arma_cube", "Double slit (2)", label="DS2", num_of_slits=2, total_time=0.002)
+DSLIT2 = Analysis("DS2_arma_cube", "Double slit (2)", label="DS2", num_of_slits=2, total_time=0.002)
 DSLIT2.set_params(sigma=(0.05, 0.20))
 
 print(NOSLIT)
@@ -110,4 +128,8 @@ print(DSLIT2)
 # NOSLIT.animate()
 # DSLIT1.animate()
 # DSLIT2.animate()
-DSLIT2.snapshots((0, 0.001, 0.002))
+# DSLIT2.snapshots((0, 0.001, 0.002))
+# NOSLIT.deviation() 
+# DSLIT1.deviation() 
+
+DSLIT2.probability_vertical_screen()
