@@ -232,13 +232,14 @@ def snapshot_probability_density(t, P, Pmax=None, title=None, wall_y=None, pdfna
         plt.show()
     
 def snapshot_real_wavefunction(t, ReU, Ulim=(None, None), title=None, wall_y=None, pdfname="snapshot_ReU", spatial_extent=(0,1,0,1), num_rows=1, save=SAVE, png_duplicate=TEMP, show=SHOW):
+
     num_maps = len(t)
 
     # fix these!
     fig, axes = default_mapfigure(t, ReU, cmap="ocean", num_maps=len(t))#, vmin=Ulim[0], vmax=Ulim[1])
     # if title is not None:
     # fig.suptitle(r"$\mathrm{Re}(u(t, \vec{x}))$")
-    axes[1].set_title(r"$\propto \mathrm{Re}\{u(t, \vec{x})\}$")
+    axes[1].set_title(r"$\propto \mathrm{Re}\{u(t, \mathbf{x})\}$")
     # cbar.set_label(r"$\mathrm{Re}(U)$")
     if wall_y is not None:
         for ax in axes:
@@ -257,7 +258,7 @@ def snapshot_imaginary_wavefunction(t, ImU, Ulim=(None, None), title=None, wall_
     fig, axes = default_mapfigure(t, ImU, cmap="ocean", num_maps=len(t))#, vmin=Ulim[0], vmax=Ulim[1])
     # if title is not None:
     # fig.suptitle(r"$\mathrm{Im}(u(t, \vec{x}))$")
-    axes[1].set_title(r"$\propto \mathrm{Im}\{u(t, \vec{x})\}$")
+    axes[1].set_title(r"$\propto \mathrm{Im}\{u(t, \mathbf{x})\}$")
     # cbar.set_label()
     if wall_y is not None:
         for ax in axes:
