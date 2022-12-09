@@ -1,7 +1,6 @@
 #Please place all analysis here
 
 import numpy as np
-import matplotlib
 import matplotlib.pyplot as plt
 import os
 import plot as PLOT
@@ -26,6 +25,8 @@ class Analysis:
         self.default_setup(default)
         self.set_grid()
 
+        self.wall_y = self.get_walls_ycoords()
+
     def set_params(self, xc=(0.25,0.5), sigma=(0.05,0.05), p=(200,0), v0=1e10, T=0.002):
         self.xc = xc
         self.sigma = sigma
@@ -48,15 +49,17 @@ class Analysis:
     
     def get_walls_ycoords(self, num_of_slits=None):
         Ns = num_of_slits or self.num_of_slits
-        assert Ns != 0
-        Nw = Ns + 1 # num of walls
-        h = 0.05 # height of wall
-        a = 0.05 # aperture
-        yc = np.zeros(Nw)
-        sep = (a+h)
-        yc_first = 0.5 - sep*(Nw//2)
-        for j in range(Nw):
-            yc[j] = yc_first + j*sep
+        if Ns == 0:
+            yc = []
+        else:
+            Nw = Ns + 1 # num of walls
+            h = 0.05 # height of wall
+            a = 0.05 # aperture
+            yc = np.zeros(Nw)
+            sep = (a+h)
+            yc_first = 0.5 - sep*(Ns/2)
+            for j in range(Nw):
+                yc[j] = yc_first + j*sep
         return yc
 
     def get_total_probability(self):
@@ -78,7 +81,7 @@ class Analysis:
     def animate(self, mp4name=None, total_time=None):
         T = total_time or self.T
         mp4name =  mp4name or self.label + "_anim"
-        PLOT.animate_probability_density(self.t[self.t<=T], self.P, title=self.title, mp4name=mp4name)
+        PLOT.animate_probability_density(self.t[self.t<=T], self.P, title=self.title, wall_y=self.wall_y, mp4name=mp4name)
 
     def snapshots(self, time_points, pdfnames=[None, None, None]):
         num_maps = len(time_points)
@@ -97,7 +100,7 @@ class Analysis:
 
         # Umax = np.max([ReU_points, ImU_points])
         # Umin = np.min([ReU_points, ImU_points])
-        yc = self.get_walls_ycoords()
+        yc = self.wall_y
 
         ### Prob. density:
         pdfname = pdfnames[0] or self.label + "_snapshots_P"
@@ -167,13 +170,24 @@ print(DSLIT1)
 print(DSLIT2)
 print(SSLIT)
 print(TSLIT)
-# NOSLIT.animate()
-# DSLIT1.animate()
-# DSLIT2.animate()
+
+
+try:
+    if sys.argv[1].lower() in ["animate", "anim", "video"]:
+        NOSLIT.animate()
+        DSLIT1.animate()
+        DSLIT2.animate()
+except IndexError:
+    pass
+
+
 DSLIT2.snapshots((0, 0.001, 0.002))
+# TSLIT.snapshots((0, 0.001, 0.002))
 # NOSLITS.deviation() 
 # DSLIT1.deviation()  
-# NOSLITS.deviation(others=[DSLIT1])
+NOSLITS.deviation(others=[DSLIT1])
 DSLIT2.probability_vertical_screen()
 SSLIT.probability_vertical_screen()
 TSLIT.probability_vertical_screen()
+
+PLOT.show_all()

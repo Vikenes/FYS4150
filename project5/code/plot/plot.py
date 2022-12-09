@@ -46,8 +46,8 @@ plt.rcParams['font.family'] = 'Times New Roman'
 
 
 ### Global setting commands
-TEMP = True     # makes temporary .png files instead of .pdf
-SAVE = True     # saves .pdf files
+TEMP = True    # makes temporary .png files instead of .pdf
+SAVE = True    # saves .pdf files
 PUSH = False    # git stuff
 SHOW = False    # show plots
 
@@ -139,12 +139,12 @@ def default_mapfigure(timepoints, data, cmap="gnuplot", num_maps=3, vmin=None, v
 
     return fig, axes.flat
 
-def draw_walls(ax, yc_list):
+def draw_walls(ax, yc_list, colour="palegreen"):
     xc = 0.5
     h = 0.05
     w = 0.02
     for yc in yc_list:
-        ax.add_patch(plt.Rectangle((xc-w/2, yc-h/2), w, h, fc='yellow', ec='yellow', lw=1, alpha=0.6, clip_on=False))
+        ax.add_patch(plt.Rectangle((xc-w/2, yc-h/2), w, h, fc=colour, ec=colour, lw=0.2, alpha=0.6, clip_on=False))
 
 
 
@@ -181,7 +181,7 @@ def animate_probability_density(t, P, title=None, wall_y=[], mp4name="animation"
 
     # Add a text element showing the time
     time_txt = ax.text(0.95, 0.95, r"$t = %.3e$"%t[0], color="white", ha="right", va="top", fontsize=LEGENDSIZE)
-    draw_walls(ax, wall_y)
+    
 
     # Function that takes care of updating the z data and other things for each frame
     def animation(i):
@@ -196,6 +196,7 @@ def animate_probability_density(t, P, title=None, wall_y=[], mp4name="animation"
         time_txt.set_text(r"$t = %.3e$" %t[i])
 
         return img
+    draw_walls(ax, wall_y)
 
     # Use matplotlib.animation.FuncAnimation to put it all together
     anim = FuncAnimation(fig, animation, interval=1, frames=np.arange(0, len(p_data), 2), repeat=True, blit=0)
@@ -285,6 +286,8 @@ def total_probability_deviation(t, P_tot_list, title=None, labels=None, pdfname=
     # ax.set_ylabel(r"$\sum_{i, j} p(\mathbf{x}_{i,j}; \, t)-1$")
     if labels[0] is not None:
         ax.legend()
+    
+    fig.tight_layout()
 
     if save:
         fig.savefig(plot_path + pdfname.split(".")[0] + ".pdf")
@@ -298,13 +301,21 @@ def probability_density_along_screen(y, p, x=0.8, t=0.002, title=None, label=Non
 
     ax.plot(y, np.asarray(p), lw=2.5, c="orangered", label=label)
     ax.set_xlabel(xlabel) 
-    ax.set_ylabel(r"$p^\mathrm{tot}_{x=%.1f}(y; \, t=%.3f)$"%(x, t)) # fix this
+    ax.set_ylabel(r"$p^\mathrm{tot}_{x=%.1f}(y; \, t=%.3f)$"%(x, t))
     if label is not None:
         ax.legend()
-
+    
+    fig.tight_layout()
     if save:
         fig.savefig(plot_path + pdfname.split(".")[0] + ".pdf")
     if png_duplicate:
         fig.savefig(temp_path + pdfname.split(".")[0] + ".png")
     if show:
         plt.show()
+    
+
+
+
+
+def show_all():
+    plt.show()

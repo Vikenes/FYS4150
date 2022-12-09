@@ -76,6 +76,47 @@ void double_slit_broader_sigma_y_short_time(void){
     U3.save("../output/binfiles/DS2_arma_cube.bin");
 }
 
+
+
+
+// Må "rydde opp", er noe som ikke helt stemmer:
+
+
+void no_slits(){
+    Box b1 = Box();
+    Simulation s1 = Simulation(b1, 2.5e-5, 0.008, 0.25, 0.05, 200.0, 0.5, 0.05, 0.0);
+    s1.initialise();
+
+    std::cout<<"\n1st experiment: NO SLITS\n"<<std::endl;
+    arma::cx_cube U1 = s1.run_simulation();
+    U1.save("../output/binfiles/NS_arma_cube.bin");
+}
+
+
+void double_slit_first(){
+    Box b2 = Box();
+    b2.create_slits(2);
+    Simulation s2 = Simulation(b2, 2.5e-5, 0.008, 0.25, 0.05, 200.0, 0.5, 0.10, 0.0);
+    s2.initialise();
+
+    std::cout<<"\n2nd experiment: DOUBLE-SLIT (1)\n"<<std::endl;
+    arma::cx_cube U2 = s2.run_simulation();
+    U2.save("../output/binfiles/DS1_arma_cube.bin");
+}
+
+void double_slit_second(){
+    Box b3 = Box();
+    b3.create_slits(2);
+    Simulation s3 = Simulation(b3, 2.5e-5, 0.002, 0.25, 0.05, 200.0, 0.5, 0.20, 0.0);
+    s3.initialise();
+
+    std::cout<<"\n3rd experiment: DOUBLE-SLIT (2)\n"<<std::endl;
+    arma::cx_cube U3 = s3.run_simulation();
+    U3.save("../output/binfiles/DS2_arma_cube.bin");
+}
+
+
+
 void single_slit(){
 
     Box b4 = Box();
@@ -83,7 +124,7 @@ void single_slit(){
     Simulation s4 = Simulation(b4, 2.5e-5, 0.002, 0.25, 0.05, 200.0, 0.5, 0.20, 0.0);
     s4.initialise();
 
-    std::cout<<"\nExperiment: SINGLE-SLIT with broader sigma_y and shorter time\n"<<std::endl;
+    std::cout<<"\n4th experiment: SINGLE-SLIT \n"<<std::endl;
     arma::cx_cube U4 = s4.run_simulation();
     U4.save("../output/binfiles/SS_arma_cube.bin");
 
@@ -96,7 +137,7 @@ void triple_slit(){
     Simulation s5 = Simulation(b5, 2.5e-5, 0.002, 0.25, 0.05, 200.0, 0.5, 0.20, 0.0);
     s5.initialise();
 
-    std::cout<<"\nExperiment: TRIPLE-SLIT with broader sigma_y and shorter time\n"<<std::endl;
+    std::cout<<"\n5th experiment: TRIPLE-SLIT \n"<<std::endl;
     arma::cx_cube U5 = s5.run_simulation();
     U5.save("../output/binfiles/TS_arma_cube.bin");
 
@@ -109,6 +150,10 @@ int main(){
     // no_slit();
     // double_slit_broad_sigma_y();
     // double_slit_broader_sigma_y_short_time();
+
+    // no_slits();
+    double_slit_first();
+    double_slit_second();
     // single_slit();
-    triple_slit();
+    // triple_slit();
 }

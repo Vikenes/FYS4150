@@ -66,7 +66,7 @@ void Box::set_up_walls(double v0, int Ns, double Th, double wxc, double wyc, dou
 }
 
 
-void Box::create_slits(int num_of_slits, double v0=1e10, double aperture=0.05, double wall_width=0.02, double wall_height=0.05, double horisontal_centre=0.5, double vertical_centre=0.5){
+void Box::create_slits(int num_of_slits, double v0, double aperture, double wall_width, double wall_height, double horisontal_centre, double vertical_centre){
 
     assert(num_of_slits > 0);
 

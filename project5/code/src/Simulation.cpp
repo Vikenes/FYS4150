@@ -2,6 +2,13 @@
 #include "Simulation.hpp"
 // #include "utils.hpp"
 
+/*
+Forslag: 
+    - Hva med å gjøre klassen mer brukervennlig ved å gir argumentene lengre navn?
+    - Gjøre det mulig å bare endre på en eller to parametre? F.eks. lage to default-settinger? Jeg kan sikkert fikse noe slikt, men idk.
+klem fra Nanna
+*/
+
 Simulation::Simulation(Box BBXa, double Dta, double Ta, double xca, double sigma_xa, double p_xa, double yca, double sigma_ya, double p_ya){
     Dt = Dta;
     T = Ta;
