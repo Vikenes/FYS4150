@@ -77,6 +77,7 @@ void Box::create_slits(int num_of_slits, double v0, double aperture, double wall
     double x_c = horisontal_centre;
     /*
     Stupid way of solving this problem:
+    (There has to be a smoother way??)
     */
     std::vector<double> y_c(num_of_walls); 
     std::vector<double> y_ll(num_of_walls); 
@@ -96,11 +97,22 @@ void Box::create_slits(int num_of_slits, double v0, double aperture, double wall
     arma::vec x = arma::linspace(0, 1, M);
     arma::vec y = arma::linspace(0, 1, M);
 
-    arma::uvec x_indices = arma::find(x >= x_ll && x <= x_ur);
-    int x_idx = x_indices[0];
+    arma::uvec x_indices = arma::find(x >= x_ll && x <= x_ur); // <= gives right dimensions!
+    // check actual width:
+    arma::vec xwall = x(x_indices);
+    arma::vec ywall;
+    double width = xwall(x_indices.n_elem-1) - xwall(0);
+    double height;
 
+    // arma::uvec y_indices = arma::find(y >= y_ll[0] && y <= y_ur[0]);
+
+    /* 
+    If somebody could help me find a way to run through these uvec-s, that would be sprutnice :p
+    */
     for(int w=0; w<num_of_walls; w++){
         arma::uvec y_indices = arma::find(y >= y_ll[w] && y <= y_ur[w]);
+        ywall = y(y_indices);
+        height = ywall(y_indices.index_max()) - ywall(y_indices.index_min());
         for(int i=0; i<x_indices.n_elem; i++){
             for(int j=0; j<y_indices.n_elem; j++){
                 V(x_indices[i],y_indices[j]) = v0;
@@ -109,6 +121,8 @@ void Box::create_slits(int num_of_slits, double v0, double aperture, double wall
     }
     
     std::cout << "Sat up " << num_of_slits << " slits using " << num_of_walls << " walls." << std::endl;
+    std::cout << "  -> width  (x-dir): " << width  << std::endl;
+    std::cout << "  -> height (y-dir): " << height << std::endl;
 
 
 }
