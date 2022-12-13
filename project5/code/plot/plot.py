@@ -30,7 +30,6 @@ SMALLER_LEGENDSIZE = 16
 SMALLER_TITLESIZE = 20
 
 ### Set rc-params
-
 plt.rc("legend", fontsize=LEGENDSIZE, fancybox=True, loc="best", frameon=True, edgecolor="black")
 plt.rc("font", size=LABELSIZE)
 plt.rc("axes", titlesize=TITLESIZE, labelsize=LABELSIZE)
@@ -46,8 +45,8 @@ plt.rcParams['font.family'] = 'Times New Roman'
 
 
 ### Global setting commands
-TEMP = True    # makes temporary .png files instead of .pdf
-SAVE = True    # saves .pdf files
+TEMP = False    # makes temporary .png files instead of .pdf
+SAVE = False    # saves .pdf files
 PUSH = False    # git stuff
 SHOW = False    # show plots
 
@@ -119,9 +118,6 @@ def make_colourmap(ax, transposed_data, timestamp, cmap, norm, spatial_extent=(0
     ax.grid(False)
     ax.set_aspect("equal")
     return img, ax
-
-
-
 
 def default_mapfigure(timepoints, data, cmap="gnuplot", num_maps=3, vmin=-1, vmax=1):
     fig, axes = plt.subplots(nrows=1, ncols=num_maps, sharey=True, figsize=(15, 10))
