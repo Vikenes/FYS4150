@@ -1,9 +1,12 @@
 \section{Results}\label{sec:results}
 
+\Nanna{What to name these sections?}
+
+\Nanna{Maybe put links to animations here?}
 
 
 
-\subsection{\Nanna{dunno what to call this section}}
+\subsection{Sanity check}\label{sec:results:sanity}
 
     The first simulation\footnote{Animation available here \Nanna{link to anim}.}, where there are no slits, is run with parameters according to tables~\ref{tab:simulation_parameters} and~\ref{tab:simulations_info} (\textit{NS}). By rights, at any time $t$, the probabilities $p(\vec{x}_{i,j}; \, t)$ should sum up to one, as the particle is present inside the box. As a sanity check, we plot 
     \begin{equation}\label{eq:total_probability_deviation}
@@ -16,26 +19,34 @@
     \begin{figure}[ht!]
         \centering
         \includegraphics[width=\linewidth]{temp/NS_DS1_Ptot_deviation.png}
-        \caption{Some stupid caption. Fix ticks on this plot}
+        \caption{\textit{NS} \& \textit{DS1}: The total probability's deviation from the theoretical value, following equation \eqref{eq:total_probability_deviation}, for the two initial experiments. The vertical axis is logarithmic.}
         \label{fig:ptot_deviation_NS_DS1}
     \end{figure}
 
+
+\subsection{Two-dimensional problem}
     % should this be in appendix?
     
-    We change the settings of our simulations so that they are only run for a fourth of the duration and with an even larger initial wave packet. Still two slits considered, our third simulation\footnote{Animation available here \Nanna{link to anim}.} is run with parameters in accordance with~\ref{tab:simulation_parameters} and~\ref{tab:simulations_info} (\textit{DS2}). Snapshots of the probability distribution $p(\vec{x};\, t)$ at $t=0$, $T/2$ and $T$, $T=0.002$, are presented in figure~\ref{fig:snapshots_p_DS2}. \Nanna{COMMENT ON NORMALISATION OF COLOUR MAP!} In addition, the real and imaginary part of $u(t, \vec{x})$ at the same time points are presented in figures~\ref{fig:snapshots_ReU_DS2} and~\ref{fig:snapshots_ImU_DS2}, respectively.
+    We change the settings of our simulations so that they are only run for a fourth of the duration and with an even larger initial wave packet. Still two slits considered, our third simulation\footnote{Animation available here \Nanna{link to anim}.} is run with parameters in accordance with~\ref{tab:simulation_parameters} and~\ref{tab:simulations_info} (\textit{DS2}). Snapshots of the probability distribution $p(\vec{x};\, t)$ at $t=0$, $T/2$ and $T$, $T=0.002$, are presented in figure~\ref{fig:snapshots_p_DS2}. In addition, the real and imaginary part of $u(t, \vec{x})$ at the same time points are presented in figures~\ref{fig:snapshots_ReU_DS2} and~\ref{fig:snapshots_ImU_DS2}, respectively.
+
+    The scaling of the colour maps is such that the colour bars in figure~\ref{fig:snapshots_DS2} follow
+    \begin{equation}\label{eq:normalisation_cmaps}
+        Q(\vec{x};\, t_n) \to \frac{Q(\vec{x};\, t_n)}{\max{\abs{Q(\vec{x};\, t_n)}}},
+    \end{equation}
+    where $Q(\vec{x};\, t_n)$ is the spatial distribution of a quantity at time $t=t_n$. \Nanna{Still not sure about this...}
 
 
     \begin{figure*}
         \centering
         \begin{subfigure}{0.96\textwidth}
             \includegraphics[width=\linewidth]{temp/DS2_snapshots_P.png}
-            \caption{\textit{DS2}: Snapshots representing the evolution of the probability density.}
+            \caption{\textit{DS2}: Snapshots representing the evolution of the probability density. The dotted vertical line represents the screen we consider in figure~\ref{fig:p_along_y}. The yellow areas are where we are most likely to detect the particle at the relevant time, whereas in the dark areas we are very unlikely to find it.}
             \label{fig:snapshots_p_DS2}
         \end{subfigure}
         \hfill
         \begin{subfigure}{0.96\textwidth}
             \includegraphics[width=\linewidth]{temp/DS2_snapshots_ReU.png}
-            \caption{\textit{DS2}: Snapshots representing the evolution of the real part of the wave function in space.}
+            \caption{\textit{DS2}: Snapshots representing the evolution of the real part of the wave function in space. }
             \label{fig:snapshots_ReU_DS2}
         \end{subfigure}
         \hfill
@@ -44,29 +55,31 @@
             \caption{\textit{DS2}: Snapshots representing the evolution of the imaginary part of the wave function in space.}
             \label{fig:snapshots_ImU_DS2}
         \end{subfigure}
-        \caption{Colour maps showing the solution of the Schrödinger equation for the \textit{DS2} setup at times $t=0.000,\, 0.001, \,0.002$. The walls that set up the slits are illustrated by the green rectangles. Each map have been normalised using the absolute maximum of the quantity at the current time point. \Nanna{Idk how to explain}}
+        \caption{Colour maps showing the solution of the Schrödinger equation for the \textit{DS2} setup at times $t=0.000,\, 0.001, \,0.002$. The walls that set up the slits are illustrated by the green rectangles. Each map have been scaled using the absolute maximum of the quantity at the current time point. \Nanna{Idk how to explain}}
         \label{fig:snapshots_DS2}
     \end{figure*}
 
 
 
 
-\subsection{\Nanna{Screen? idk}}
+\subsection{One-dimensional problem}
 
-    Take note of the dotted vertical line in the right panel of figure \ref{fig:snapshots_p_DS2}. Following the method described in section \ref{sec:method:screen}, we find the probability density along this screen for detecting the particle. \Nanna{Is this clear?} The distribution is plotted as a function of $y$ in figure \ref{fig:p_along_y_DS2}.
+    Using the same parameters, we run two additional simulations (\textit{SS} and \textit{TS}), except that we vary the number of slits (see tables~\ref{tab:simulation_parameters} and~\ref{tab:simulations_info}). In the following, we study the system further by removing a dimension.
 
-    \begin{figure*}
+    Take note of the dotted vertical line in the right panel of figure~\ref{fig:snapshots_p_DS2}. Following the method described in section~\ref{sec:method:screen}, we find the probability density along this screen for detecting the particle. \Nanna{Is this clear?} The distribution for this particular experiment is plotted as a function of $y$ in figure~\ref{fig:p_along_y_DS2}. The same screen is used for the single- and triple-slit experiments, resulting in the graphs in figures~\ref{fig:p_along_y_SS} and~\ref{fig:p_along_y_TS}, respectively. %The resulting one-dimensional probability distributions are presented in figure~\ref{fig:p_along_y}.
+
+    \begin{figure}
         \centering
-        \begin{subfigure}{0.46\textwidth}
-            \includegraphics[width=\linewidth]{temp/SS_P_along_screen.png}
-            \caption{\textit{SS}: The probability density for the single-slit experiment.}
-            \label{fig:p_along_y_SS}
-        \end{subfigure}
-        \hfill
         \begin{subfigure}{0.46\textwidth}
             \includegraphics[width=\linewidth]{temp/DS2_P_along_screen.png}
             \caption{\textit{DS2}: The probability density for the double-slit (2) experiment.}
             \label{fig:p_along_y_DS2}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}{0.46\textwidth}
+            \includegraphics[width=\linewidth]{temp/SS_P_along_screen.png}
+            \caption{\textit{SS}: The probability density for the single-slit experiment.}
+            \label{fig:p_along_y_SS}
         \end{subfigure}
         \hfill
         \begin{subfigure}{0.46\textwidth}
@@ -76,7 +89,9 @@
         \end{subfigure}
         \caption{The amplitude for detecting the particle at vertical positions $y$ at time $t=0.002$ given that it is located at horisontal position $x=0.8$, that is the quantity $p_{x=0.8}(y;\, 0.002)$ obeying equation~\eqref{eq:tot_probability_along_y}, for simulations with one, two and three slits, but otherwise equal parameters.}
         \label{fig:p_along_y}
-    \end{figure*}
+    \end{figure}
+
+
 
 
 

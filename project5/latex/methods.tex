@@ -76,7 +76,7 @@ We will use the Schrödinger equation to simulate a particle inside a two-dimens
 
 
 \subsection{Slit configuration}\label{sec:method:slit_config}
-    To create a single slit, we need \textit{two} objects with the property that the particle cannot propagate through it. Said objects are to have a separation between them, a \textit{slit}, perpendicular to the dominating motion of the particle \Nanna{Pls send help, cannot write proper sentences any more:}. A natural choice for the shape is the rectangular with the longer side parallel to the slit, \Nanna{(Some theory about interference??)} hence the name "wall". Three such walls give rise to two slits, etcetera. Therefore, 
+    To create a single slit, we need \textit{two} objects with the property that the particle cannot propagate through it. Said objects are to have a separation between them, a \textit{slit}, perpendicular to the dominating motion of the particle \Nanna{Pls send help, cannot write proper sentences any more:}. A natural choice for the shape is the rectangular with the longer side parallel to the slit, \Nanna{(Some theory about interference??)} hence the name ``wall''. Three such walls give rise to two slits, etcetera. Therefore, 
     \begin{equation}
         \#\mathrm{walls} = \begin{cases}
             \#\mathrm{slits} + 1 \quad &\mathrm{if}\,\, \#\mathrm{slits} \geq 1 \\
@@ -148,8 +148,8 @@ We will use the Schrödinger equation to simulate a particle inside a two-dimens
             1. & No slits        & (\textit{NS})   & $0$   & $0.008$   & $0.05$ \\
             2. & Double-slit (1) & (\textit{DS1})  & $2$   & $0.008$   & $0.10$ \\
             3. & Double-slit (2) & (\textit{DS2})  & $2$   & $0.002$   & $0.20$ \\
-            4. & \dots             & (\textit{SS})   & $1$   & $0.002$   & $0.20$ \\
-            5. & \dots             & (\textit{TS})   & $3$   & $0.002$   & $0.20$ \\
+            4. & Single-slit     & (\textit{SS})   & $1$   & $0.002$   & $0.20$ \\
+            5. & Triple-slit     & (\textit{TS})   & $3$   & $0.002$   & $0.20$ \\
             \hline
         \end{tabular}
         \caption{Supplement to table \ref{tab:simulation_parameters}. Additional information about the simulations considered in this paper.}
