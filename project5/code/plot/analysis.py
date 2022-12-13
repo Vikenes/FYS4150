@@ -98,13 +98,14 @@ class Analysis:
             ReU_points[j] = np.real(self.U[idx])
             ImU_points[j] = np.imag(self.U[idx])
 
+
         # Umax = np.max([ReU_points, ImU_points])
         # Umin = np.min([ReU_points, ImU_points])
         yc = self.wall_y
 
         ### Prob. density:
         pdfname = pdfnames[0] or self.label + "_snapshots_P"
-        PLOT.snapshot_probability_density(t_points, P_points, wall_y=yc, pdfname=pdfname)
+        PLOT.snapshot_probability_density(t_points, P_points, Pmax=np.max(P_points[1]), wall_y=yc, pdfname=pdfname)
         ### Real part of U:
         pdfname = pdfnames[1] or self.label + "_snapshots_ReU"
         PLOT.snapshot_real_wavefunction(t_points, ReU_points,  wall_y=yc, pdfname=pdfname)
@@ -126,15 +127,16 @@ class Analysis:
         PLOT.total_probability_deviation(self.t, Ptot, labels=titles, pdfname=pdfname)
 
 
-    def probability_vertical_screen(self, time_point=0.002, horisontal_point=0.8, pdfname=None):
+    def probability_vertical_screen(self, time_point=0.002, horisontal_point=0.8, pdfname=None, label="auto"):
         idx_x = np.argmin(np.abs(self.x-horisontal_point))
         x = self.x[idx_x]
         idx_t = np.argmin(np.abs(self.t-time_point))
         t = self.t[idx_t]
         p = self.P[idx_t, idx_x, :]
-
+        if label=="auto":
+            label = self.title
         pdfname = pdfname or self.label + "_P_along_screen"
-        PLOT.probability_density_along_screen(self.y, p/np.sum(p), label=self.title, pdfname=pdfname)
+        PLOT.probability_density_along_screen(self.y, p/np.sum(p), label=label, pdfname=pdfname)
 
     def __str__(self):
         l = 50
@@ -174,20 +176,20 @@ print(TSLIT)
 
 try:
     if sys.argv[1].lower() in ["animate", "anim", "video"]:
-        NOSLIT.animate()
+        NOSLITS.animate()
         DSLIT1.animate()
         DSLIT2.animate()
 except IndexError:
     pass
 
 
-DSLIT2.snapshots((0, 0.001, 0.002))
+# DSLIT2.snapshots((0, 0.001, 0.002))
 # TSLIT.snapshots((0, 0.001, 0.002))
 # NOSLITS.deviation() 
 # DSLIT1.deviation()  
-NOSLITS.deviation(others=[DSLIT1])
-DSLIT2.probability_vertical_screen()
-SSLIT.probability_vertical_screen()
-TSLIT.probability_vertical_screen()
+# NOSLITS.deviation(others=[DSLIT1])
+DSLIT2.probability_vertical_screen(label=None)
+SSLIT.probability_vertical_screen(label=None)
+TSLIT.probability_vertical_screen(label=None)
 
 PLOT.show_all()
