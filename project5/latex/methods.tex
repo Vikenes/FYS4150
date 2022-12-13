@@ -66,10 +66,10 @@ We will use the Schrödinger equation to simulate a particle inside a two-dimens
     \begin{equation}\label{eq:p4_initial_condition}
     \begin{split}
         u(t\!=\!0, \vec{x}) = & \exp{-(\vec{x}-\vec{x}_\mathrm{c})^\mathrm{T}\Sigma^{-1}(\vec{x}-\vec{x}_\mathrm{c}) + \im \vec{p}^\mathrm{T}(\vec{x}-\vec{x}_\mathrm{c})} \,;  \\ 
-        &\quad\Sigma = \mathrm{diag}(\svec{\sigma}^2) 
+        &\quad\Sigma = \mathrm{diag}(\svec{\sigma}^2)  
     \end{split}
     \end{equation}
-
+ 
     \begin{equation}\label{eq:p4_initial_condition_scalarform}
         u(t\!=\!0, \vec{x}) = \exp{-\frac{(x-x_\mathrm{c})^2}{2\sigma_x^2} -\frac{(y-y_\mathrm{c})^2}{2\sigma_y^2} + \im \vec{p}\cdot (\vec{x}-\vec{x}_\mathrm{c})}
     \end{equation}
