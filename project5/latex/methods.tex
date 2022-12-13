@@ -92,9 +92,9 @@ We will use the Schrödinger equation to simulate a particle inside a two-dimens
 
 \subsection{Artificial detector screen}\label{sec:method:screen}
 
-    To reduce the dimensionality of the problem, we can assume to measure a particle with a detector screen at some horisontal position $x=x_\mathrm{sc}$ and time $t=t_\mathrm{sc}$, so that the screen spans of the vertical axis $y$. With a smart choice of pairing ($t_\mathrm{sc}$ \& $x_\mathrm{sc}$), we can safely assume that the particle is located somewhere along this line. Thus, it makes sense to consider a normalised one-dimensional probability function $p_{x=x_\mathrm{sc}}(y;\, t)$ (read: probability of $y$ given $x=x_\mathrm{sc}$, at $t$) such that
-    \begin{equation}
-        p^\mathrm{tot}_{x=x_\mathrm{sc}}(t) =\sum_{j\in [0, M)} p_{x=x_\mathrm{sc}}(y_j;\, t) = 1.
+    To reduce the dimensionality of the problem, we can assume to measure a particle with a detector screen at some horisontal position $x=x_\mathrm{sc}$ and time $t=t_\mathrm{sc}$, so that the screen spans of the vertical axis $y$. With a smart choice of pairing ($t_\mathrm{sc}$ \& $x_\mathrm{sc}$), we can safely assume that the particle is located somewhere along this line. Thus, it makes sense to consider a normalised one-dimensional probability function $p_{x=x_\mathrm{sc}}(y;\, t_\mathrm{sc})$ (read: probability of $y$ given $x=x_\mathrm{sc}$, at $t=t_\mathrm{sc}$) such that
+    \begin{equation}\label{eq:tot_probability_along_y}
+        p^\mathrm{tot}_{x=x_\mathrm{sc}}(t\!=\!t_\mathrm{sc}) =\sum_{j\in [0, M)} p_{x=x_\mathrm{sc}}(y_j;\, t_\mathrm{sc}) = 1.
     \end{equation}
     \Nanna{Do we have to explain how we find this?}
 
@@ -145,11 +145,11 @@ We will use the Schrödinger equation to simulate a particle inside a two-dimens
             \hline
             & Simulation name & (label\footnote{Prefix to look for in \Nanna{link to animations etc.}}) & $\#\mathrm{slits}$ & $T$ & $\svec{\sigma}\cdot \hat{\vec{e}}_y$ \\
             \hline
-            1. & No slits        & (NS)   & $0$   & $0.008$   & $0.05$ \\
-            2. & Double-slit (1) & (DS1)  & $2$   & $0.008$   & $0.10$ \\
-            3. & Double-slit (2) & (DS2)  & $2$   & $0.002$   & $0.20$ \\
-            4. & ...             & (SS)   & $1$   & $0.002$   & $0.20$ \\
-            5. & ...             & (TS)   & $3$   & $0.002$   & $0.20$ \\
+            1. & No slits        & (\textit{NS})   & $0$   & $0.008$   & $0.05$ \\
+            2. & Double-slit (1) & (\textit{DS1})  & $2$   & $0.008$   & $0.10$ \\
+            3. & Double-slit (2) & (\textit{DS2})  & $2$   & $0.002$   & $0.20$ \\
+            4. & \dots             & (\textit{SS})   & $1$   & $0.002$   & $0.20$ \\
+            5. & \dots             & (\textit{TS})   & $3$   & $0.002$   & $0.20$ \\
             \hline
         \end{tabular}
         \caption{Supplement to table \ref{tab:simulation_parameters}. Additional information about the simulations considered in this paper.}
