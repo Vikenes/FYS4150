@@ -1,3 +1,5 @@
+
+\newpage
 \appendix
 
 \section{Discretisation}\label{app:discretisation}
@@ -32,10 +34,50 @@ Define $r\equiv \frac{\im \Delta t}{2h^2}$. Further, let
     \mathcal{F}_{i,j}^{(n)} = \quad&r\closed{ u_{i\!+\!1, j}-2u_{i,j} + u_{i\!-\!1, j}}^{(n)}  \\
     +\,&  r\closed{u_{i,j\!+\!1}-2u_{i,j} + u_{i,j\!-\!1}}^{(n)}\\ 
     -\,& \frac{\im \Delta t}{2} v_{i,j}\,u_{i,j}^{(n)}.
-    \end{split} 
+    \end{split}
 \end{equation}
 Equation \eqref{eq:2d_CN} becomes:
 \begin{equation}\label{eq:final_CN_scheme}
     u_{i,j}^{(n+1)} - \mathcal{F}_{i,j}^{(n+1)} = u_{i, j}^{(n)} + \mathcal{F}_{i,j}^{(n)} \, ;
 \end{equation}
 The final discretisation \eqref{eq:final_CN_scheme} is valid for any step in time within the time range ($n\in[0, N_t-2]$) and all internal points on the grid ($i,j \in [1, M-2]$).
+
+\section{$A$ and $B$ matrices}\label{app:A_and_B}
+    In order to generalise the Crank-Nicolson approximation to the Schrödinger equation as a matrix equation $A\vec{u}^{(n+1)} = B\vec{u}^{(n)}$, that satisfy the Dirichlet boundary conditions on a discretised grid, we require $A$ and $B$ to take specific forms. We need both of them to be square matrices with dimensions $((M-2)^2\cross(M-2)^2)$, with vectors $\vec{a}$ and $\vec{b}$ as diagonal. These are given by:
+    \begin{equation}
+        \begin{split}
+            a_k &= 1+4r +\frac{\im\Delta t}{2}v_{i,j} \\
+            b_k &= 1-4r -\frac{\im\Delta t}{2}v_{i,j},
+        \end{split}
+    \end{equation}
+    where $r$ is still $r\equiv \frac{\im\Delta t}{2h^2}$. We fill the matrices $A$ and $B$ with $\pm r$-values along the first and third super- and subdiagonal; $A$ with $-r$ and $B$ with $+r$. The $(M-2)$-th element along the first super- and subdiagonal for each matrix must be zero. For demonstrative purposes, if $(M-2)=3$, $A$ and $B$ would look like the following:
+
+    \begin{equation}
+        A = 
+        \begin{bmatrix} 
+            a_0 & -r  & 0 & -r & 0 & 0 & 0 & 0 & 0 \\
+            -r  & a_1 & -r & 0 & -r & 0 & 0 & 0 & 0 \\
+             0  & -r  & a_2 & 0 & 0 & -r & 0 & 0 & 0 \\
+            -r  & 0   & 0 & a_3 & -r & 0 & -r & 0 & 0 \\
+             0  & -r  & 0 & -r & a_4 & -r & 0 & -r & 0 \\ 
+             0  & 0   & -r & 0 & -r & a_5 & 0 & 0 & -r \\
+             0  & 0   & 0 & -r & 0 & 0 & a_6 & -r & 0 \\
+             0  & 0   & 0 & 0 & -r & 0 & -r & a_7 & -r \\
+             0  & 0   & 0 & 0 & 0 & -r & 0 & -r & a_8  
+        \end{bmatrix}
+    \end{equation}
+
+    \begin{equation}
+        B = 
+        \begin{bmatrix} 
+            b_0 & r & 0 & r & 0 & 0 & 0 & 0 & 0 \\
+            r & b_1 & r & 0 & r & 0 & 0 & 0 & 0 \\
+            0 & r & b_2 & 0 & 0 & r & 0 & 0 & 0 \\
+            r & 0 & 0 & b_3 & r & 0 & r & 0 & 0 \\
+            0 & r & 0 & r & b_4 & r & 0 & r & 0 \\
+            0 & 0 & r & 0 & r & b_5 & 0 & 0 & r \\
+            0 & 0 & 0 & r & 0 & 0 & b_6 & r & 0 \\
+            0 & 0 & 0 & 0 & r & 0 & r & b_7 & r \\
+            0 & 0 & 0 & 0 & 0 & r & 0 & r & b_8
+        \end{bmatrix}
+    \end{equation}
