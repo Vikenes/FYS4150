@@ -12,20 +12,29 @@
 #include <typeinfo>
 #include <complex>
 #include <assert.h>
-// #include <Simulation.hpp>
 
 
 class Box{
     private:
-        friend class Simulation;
-    //  member variables
-    public:
-        int M;
-        arma::sp_mat V;
-        double h;
+        // Member variables
 
-        // constructor
-        Box(double ha=0.005);
+        int M;              //  number of points in each direction
+        arma::sp_mat V;     //  potential 
+        double h;           //  spatial step size
+
+        friend class Simulation;
+    public:
+        
+        // Contructor
+
+        /**
+         * Construct the 'Box' object that considers a grid of length 1 in each direction.
+         * @param spatial_step_size separation between two aligned points on the grid 
+        */
+        Box(double spatial_step_size=0.005);
+
+        // Member functions
+
         // old:
         void set_up_walls(double v0, int Ns=2, double Th=0.02, double wxc=0.5, double wyc=0.5, double wall_piece_length=0.05, double aperture=0.05);
 
