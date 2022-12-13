@@ -11,7 +11,7 @@ import sys
 binfile_path = os.path.abspath(".") + "/../../output/binfiles/"
 
 class Analysis:
-    def __init__(self, binary_filename, title, label, num_of_slits=0, total_time=.008, default=1):
+    def __init__(self, binary_filename, title, label, num_of_slits=0, total_time=None, default=1):
         U_arma = pa.cx_cube()
         U_arma.load(binfile_path+binary_filename+".bin")
         self.U = np.asarray(U_arma)
@@ -21,8 +21,7 @@ class Analysis:
         self.title = title
         self.label = label
         self.num_of_slits = num_of_slits
-        self.T = total_time
-        self.default_setup(default)
+        self.default_setup(default, total_time=total_time)
         self.set_grid()
 
         self.wall_y = self.get_walls_ycoords()
@@ -35,13 +34,13 @@ class Analysis:
         if self.num_of_slits == 0:
             self.v0 = 0
     
-    def default_setup(self, which="first", num_of_slits=None):
+    def default_setup(self, which="first", num_of_slits=None, total_time=None):
         self.num_of_slits = num_of_slits or self.num_of_slits
         if str(which) in ["1", "first", "normal", "usual", "long"]:
-            self.T = 0.008
+            self.T = total_time or 0.008
             self.set_params()
         elif str(which) in ["2", "second", "other", "short"]:
-            self.T = 0.002
+            self.T = total_time or 0.002
             self.set_params(sigma=(0.05, 0.20))
         else:
             print("No default params set.")
@@ -167,8 +166,8 @@ NOSLITS = Analysis("NS_arma_cube", "No slits", label="NS")
 DSLIT1 = Analysis("DS1_arma_cube", "Double-slit (1)", label="DS1", num_of_slits=2)
 DSLIT1.set_params(sigma=(0.05, 0.10))
 DSLIT2 = Analysis("DS2_arma_cube", "Double-slit (2)", label="DS2", num_of_slits=2, default=2)
-SSLIT = Analysis("SS_arma_cube", "Single-slit", label="SS", num_of_slits=1, default=2)
-TSLIT = Analysis("TS_arma_cube", "Triple-slit", label="TS", num_of_slits=3, default=2)
+SSLIT = Analysis("SS_arma_cube", "Single-slit", label="SS", num_of_slits=1, total_time=0.004, default=2)
+TSLIT = Analysis("TS_arma_cube", "Triple-slit", label="TS", num_of_slits=3, total_time=0.004, default=2)
 
 print(NOSLITS)
 print(DSLIT1)
@@ -182,14 +181,23 @@ try:
         NOSLITS.animate()
         DSLIT1.animate()
         DSLIT2.animate()
+        SSLIT.animate()
+        TSLIT.animate()
+
+        PLOT.show_all()
 except IndexError:
     pass
 
 
+NOSLITS.animate()
+DSLIT1.animate()
+DSLIT2.animate()
+SSLIT.animate()
+TSLIT.animate()
+
+# DSLIT2.animate()
 DSLIT2.snapshots((0, 0.001, 0.002))
 # TSLIT.snapshots((0, 0.001, 0.002))
-# NOSLITS.deviation() 
-# DSLIT1.deviation()  
 # NOSLITS.deviation(others=[DSLIT1])
 # DSLIT2.probability_vertical_screen(label=None)
 # SSLIT.probability_vertical_screen(label=None)

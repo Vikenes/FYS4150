@@ -91,6 +91,8 @@ void Box::create_slits(int num_of_slits, double v0, double aperture, double wall
         y_ur[k] = y_c[k] + wall_height/2;   // (y) upper right corner
     }
 
+    
+
     double x_ll = x_c-wall_width/2;     // (x) lower left corner
     double x_ur = x_c+wall_width/2;     // (x) upper right corner
 
@@ -103,6 +105,9 @@ void Box::create_slits(int num_of_slits, double v0, double aperture, double wall
     arma::vec ywall;
     double width = xwall(x_indices.n_elem-1) - xwall(0);
     double height;
+
+    y_ll[0] = 0;
+    y_ur[num_of_slits] = 1;
 
     // arma::uvec y_indices = arma::find(y >= y_ll[0] && y <= y_ur[0]);
 
@@ -119,6 +124,8 @@ void Box::create_slits(int num_of_slits, double v0, double aperture, double wall
             }
         }
     }
+    // Fill in rest of wall 
+
     
     std::cout << "Sat up " << num_of_slits << " slits using " << num_of_walls << " walls." << std::endl;
     std::cout << "  -> width  (x-dir): " << width  << std::endl;

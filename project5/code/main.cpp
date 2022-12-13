@@ -151,9 +151,9 @@ int main(){
     // double_slit_broad_sigma_y();
     // double_slit_broader_sigma_y_short_time();
 
-    no_slits();
+    // no_slits();
     double_slit_first();
-    double_slit_second();
+    // double_slit_second();
     single_slit();
     triple_slit();
 }

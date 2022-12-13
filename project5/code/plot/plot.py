@@ -148,8 +148,19 @@ def draw_walls(ax, yc_list, colour="palegreen"):
     xc = 0.5
     h = 0.05
     w = 0.02
-    for yc in yc_list:
-        ax.add_patch(plt.Rectangle((xc-w/2, yc-h/2), w, h, fc=colour, ec=colour, lw=0.2, alpha=0.6, clip_on=False))
+    # quick fix
+    # ymin = np.min(yc_list)
+    # if len(yc_list) > 2:
+    #     ymin = np.min(yc_list)+h/2
+    #     ymax = np.max(yc_list)+h/2
+
+    #     ax.add_patch(plt.Rectangle((xc-w/2, yc-h/2), w, h, fc=colour, ec=colour, lw=0.2, alpha=0.6, clip_on=False))
+
+    #     for yc in yc_list[1:-1]:
+    #         ax.add_patch(plt.Rectangle((xc-w/2, yc-h/2), w, h, fc=colour, ec=colour, lw=0.2, alpha=0.6, clip_on=False))
+    # else:
+    #     pass
+    pass
 
 
 def min_max_scale(x, a=-1, b=1, axis=1):
