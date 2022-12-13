@@ -121,7 +121,7 @@ void single_slit(){
 
     Box b4 = Box();
     b4.create_slits(1);
-    Simulation s4 = Simulation(b4, 2.5e-5, 0.002, 0.25, 0.05, 200.0, 0.5, 0.20, 0.0);
+    Simulation s4 = Simulation(b4, 2.5e-5, 0.004, 0.25, 0.05, 200.0, 0.5, 0.20, 0.0);
     s4.initialise();
 
     std::cout<<"\n4th experiment: SINGLE-SLIT \n"<<std::endl;
@@ -134,7 +134,7 @@ void triple_slit(){
 
     Box b5 = Box();
     b5.create_slits(3);
-    Simulation s5 = Simulation(b5, 2.5e-5, 0.002, 0.25, 0.05, 200.0, 0.5, 0.20, 0.0);
+    Simulation s5 = Simulation(b5, 2.5e-5, 0.004, 0.25, 0.05, 200.0, 0.5, 0.20, 0.0);
     s5.initialise();
 
     std::cout<<"\n5th experiment: TRIPLE-SLIT \n"<<std::endl;
@@ -151,9 +151,9 @@ int main(){
     // double_slit_broad_sigma_y();
     // double_slit_broader_sigma_y_short_time();
 
-    // no_slits();
+    no_slits();
     double_slit_first();
     double_slit_second();
-    // single_slit();
-    // triple_slit();
+    single_slit();
+    triple_slit();
 }

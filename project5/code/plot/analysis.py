@@ -181,13 +181,15 @@ except IndexError:
     pass
 
 
-DSLIT2.snapshots((0, 0.001, 0.002))
-# TSLIT.snapshots((0, 0.001, 0.002))
-# NOSLITS.deviation() 
-# DSLIT1.deviation()  
-NOSLITS.deviation(others=[DSLIT1])
-DSLIT2.probability_vertical_screen()
-SSLIT.probability_vertical_screen()
-TSLIT.probability_vertical_screen()
+# DSLIT2.snapshots((0, 0.001, 0.002))
+# # TSLIT.snapshots((0, 0.001, 0.002))
+# # NOSLITS.deviation() 
+# # DSLIT1.deviation()  
+# NOSLITS.deviation(others=[DSLIT1])
+# DSLIT2.probability_vertical_screen()
+# SSLIT.probability_vertical_screen()
+# TSLIT.probability_vertical_screen()
+# SSLIT.animate()
+TSLIT.animate()
 
 PLOT.show_all()
