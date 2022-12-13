@@ -17,5 +17,5 @@ The project report is found as `latex/project5.pdf`, or [here](https://github.co
 | NS        | 0                 | 0.008                 | 0.10              |
 | DS1       | 2                 | 0.008                 | 0.15              |
 | DS2       | 2                 | 0.002                 | 0.20              |
-| SS        | 1                 | 0.xxx                 | 0.20              |
-| TS        | 3                 | 0.xxx                 | 0.20              |
+| SS        | 1                 | 0.004                 | 0.20              |
+| TS        | 3                 | 0.004                 | 0.20              |
