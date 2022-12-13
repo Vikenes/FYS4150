@@ -131,7 +131,7 @@ def default_mapfigure(timepoints, data, cmap="gnuplot", num_maps=3, vmin=-1, vma
     # data /= np.max(np.abs(data), axis=1, keepdims=True)
 
     for j, ax in enumerate(axes.flat):
-        data[j] /= np.max(np.abs(data[j]))
+        # data[j] /= np.max(np.abs(data[j]))
         if np.any(data[j]) > vmax or np.any(data[j]) < vmin:
             print("Some values outside of range!")
         img, ax = make_colourmap(ax, data[j].T, timepoints[j], cmap, norm)
@@ -243,11 +243,11 @@ def snapshot_probability_density(t, P, Pmax=None, title=None, wall_y=None, pdfna
     if show:
         plt.show()
     
-def snapshot_real_wavefunction(t, ReU, Ulim=(None, None), title=None, wall_y=None, pdfname="snapshot_ReU", spatial_extent=(0,1,0,1), num_rows=1, save=SAVE, png_duplicate=TEMP, show=SHOW):
+def snapshot_real_wavefunction(t, ReU, Umax=None, title=None, wall_y=None, pdfname="snapshot_ReU", spatial_extent=(0,1,0,1), num_rows=1, save=SAVE, png_duplicate=TEMP, show=SHOW):
 
     num_maps = len(t)
     # fix these!
-    fig, axes, cbar = default_mapfigure(t, ReU, cmap="ocean", num_maps=len(t))
+    fig, axes, cbar = default_mapfigure(t, ReU, cmap="ocean", num_maps=len(t))#, vmax=Umax)
     # if title is not None:
     # fig.suptitle(r"$\mathrm{Re}(u(t, \vec{x}))$")
     # axes[1].set_title(r"$\propto \mathrm{Re}\{u(t, \mathbf{x})\}$")

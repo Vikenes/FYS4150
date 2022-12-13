@@ -97,10 +97,13 @@ class Analysis:
             P_points[j] = self.P[idx]
             ReU_points[j] = np.real(self.U[idx])
             ImU_points[j] = np.imag(self.U[idx])
+            absUmax = np.max(np.abs(self.U[idx]))
+            ReU_points[j] /= absUmax
+            ImU_points[j] /= absUmax
+            P_points[j] /= np.max(P_points[j])
 
+ 
 
-        # Umax = np.max([ReU_points, ImU_points])
-        # Umin = np.min([ReU_points, ImU_points])
         yc = self.wall_y
 
         ### Prob. density:
@@ -183,13 +186,13 @@ except IndexError:
     pass
 
 
-# DSLIT2.snapshots((0, 0.001, 0.002))
+DSLIT2.snapshots((0, 0.001, 0.002))
 # TSLIT.snapshots((0, 0.001, 0.002))
 # NOSLITS.deviation() 
 # DSLIT1.deviation()  
 # NOSLITS.deviation(others=[DSLIT1])
-DSLIT2.probability_vertical_screen(label=None)
-SSLIT.probability_vertical_screen(label=None)
-TSLIT.probability_vertical_screen(label=None)
+# DSLIT2.probability_vertical_screen(label=None)
+# SSLIT.probability_vertical_screen(label=None)
+# TSLIT.probability_vertical_screen(label=None)
 
 PLOT.show_all()
