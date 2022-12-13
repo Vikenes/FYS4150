@@ -2,7 +2,7 @@
 #define __utils_hpp__
 
 #include <sstream> 
-#include <string>
+#include <string.h>
 #include <iomanip>
 #include <vector>
 #include <fstream>
@@ -11,6 +11,7 @@
 #include <armadillo>
 #include <typeinfo>
 #include <complex>
+// #include<stdio.h>
 
 // std::string scientific_format(const double d, const int width=15, const int prec=10);
 
