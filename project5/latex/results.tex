@@ -4,17 +4,19 @@
 
 \Nanna{Maybe put links to animations here?}
 
+We present animations of the probability density resulting from each simulation listed in table~\ref{tab:simulations_info} \href{\animlink}{here}. 
+
 
 
 \subsection{Sanity check}\label{sec:results:sanity}
 
-    The first simulation\footnote{Animation available \href{\animlink/NS_anim.mp4}{here}.}, where there are no slits, is run with parameters according to tables~\ref{tab:simulation_parameters} and~\ref{tab:simulations_info} (\textit{NS}). By rights, at any time $t$, the probabilities $p(\vec{x}_{i,j}; \, t)$ should sum up to one, as the particle is present inside the box. As a sanity check, we plot 
+    The first simulation, where there are no slits, is run with parameters according to tables~\ref{tab:simulation_parameters} and~\ref{tab:simulations_info} (\textit{NS}). By rights, at any time $t$, the probabilities $p(\vec{x}_{i,j}; \, t)$ should sum up to one, as the particle is present inside the box. As a sanity check, we plot 
     \begin{equation}\label{eq:total_probability_deviation}
         \abs{1- p^\mathrm{tot}(t)}\,; \quad p^\mathrm{tot}(t) = \sum_{i,j\in [0, M)} p(\vec{x}_{i,j};\, t)
     \end{equation}
     as a function of time in figure~\ref{fig:ptot_deviation_NS_DS1}, where we see that the deviation ($\sim 10^{-14}$) is close to machine precision.
 
-    The next simulation\footnote{Animation available \href{\animlink/DS1_anim.mp4}{here}.} we consider has a double-slit barrier and a somewhat broader initial wave packet in the vertical direction (\textit{DS1} in table~\ref{tab:simulations_info}). We perform the same sanity check as above and once again get deviations of order $ 10^{-14}$, also shown in figure~\ref{fig:ptot_deviation_NS_DS1}.
+    The next simulation we consider has a double-slit barrier and a somewhat broader initial wave packet in the vertical direction (\textit{DS1} in table~\ref{tab:simulations_info}). We perform the same sanity check as above and once again get deviations of order $ 10^{-14}$, also shown in figure~\ref{fig:ptot_deviation_NS_DS1}.
 
     \begin{figure}[ht!]
         \centering
@@ -26,7 +28,7 @@
 
 \subsection{Two-dimensional problem}
     
-    We change the settings of our simulations so that they are only run for a fourth of the duration and with an even larger initial wave packet. Still two slits considered, our third simulation\footnote{Animation available \href{\animlink/DS2_anim.mp4}{here}.} is run with parameters in accordance with~\ref{tab:simulation_parameters} and~\ref{tab:simulations_info} (\textit{DS2}). Snapshots of the probability distribution $p(\vec{x};\, t)$ at $t=0$, $T/2$ and $T$, $T=0.002$, are presented in figure~\ref{fig:snapshots_p_DS2}. In addition, the real and imaginary part of $u(t, \vec{x})$ at the same time points are presented in figures~\ref{fig:snapshots_ReU_DS2} and~\ref{fig:snapshots_ImU_DS2}, respectively.
+    We change the settings of our simulations so that they are only run for a fourth of the duration and with an even larger initial wave packet. Still two slits considered, our third simulation is run with parameters in accordance with~\ref{tab:simulation_parameters} and~\ref{tab:simulations_info} (\textit{DS2}). Snapshots of the probability distribution $p(\vec{x};\, t)$ at $t=0$, $T/2$ and $T$, $T=0.002$, are presented in figure~\ref{fig:snapshots_p_DS2}. In addition, the real and imaginary part of $u(t, \vec{x})$ at the same time points are presented in figures~\ref{fig:snapshots_ReU_DS2} and~\ref{fig:snapshots_ImU_DS2}, respectively.
 
     The scaling of the colour maps is such that the colour bars in figure~\ref{fig:snapshots_DS2} follow
     \begin{equation}\label{eq:normalisation_cmaps}
@@ -63,7 +65,7 @@
 
 \subsection{One-dimensional problem}
 
-    Using the same parameters, we run two additional simulations\footnote{Animations available \href{\animlink/SS_anim.mp4}{here} and \href{\animlink/TS_anim.mp4}{here}.} (\textit{SS} and \textit{TS}), except that we vary the number of slits (see tables~\ref{tab:simulation_parameters} and~\ref{tab:simulations_info}). In the following, we study the system further by removing one dimension.
+    Using the same parameters, we run two additional simulations (\textit{SS} and \textit{TS}), except that we vary the number of slits (see tables~\ref{tab:simulation_parameters} and~\ref{tab:simulations_info}). In the following, we study the system further by removing one dimension.
 
     Take note of the dotted vertical line in the right panel of figure~\ref{fig:snapshots_p_DS2}. Following the method described in section~\ref{sec:methods:screen}, we find the probability density along this screen for detecting the particle. \Nanna{Is this clear?} The distribution for this particular experiment is plotted as a function of $y$ in figure~\ref{fig:p_along_y_DS2}. The same screen is used for the single- and triple-slit experiments, resulting in the graphs in figures~\ref{fig:p_along_y_SS} and~\ref{fig:p_along_y_TS}, respectively. %The resulting one-dimensional probability distributions are presented in figure~\ref{fig:p_along_y}.
 

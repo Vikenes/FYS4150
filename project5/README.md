@@ -112,8 +112,8 @@ The simulations are characterised by a code that will be the prefix in the names
 |4. |Single-slit        | SS        | 1                 | 0.004                 | 0.20              |
 |5. |Triple-slit        | TS        | 3                 | 0.004                 | 0.20              |
 
-**Important**: Due to the large sizes of the binary files resulting from the simulations, none of them is present in the repository. However, by running the code as explained above, the raw data is saved as `output/binfiles/XX_arma_cube.bin`.
+==**Important**==: Due to the large sizes of the binary files resulting from the simulations, none of them is present in the repository. However, by running the code as explained above, the raw data is saved as `output/binfiles/XX_arma_cube.bin`.
 
 The figures we have produced are available in `output/plots/temp/` as `.png`-files and in `output/plots/pdf/` as `.pdf`-files.
 
-The animations are found as `output/videos/XX_anim.mp4`. Appreciate the dynamic colour bar; the probability density value on this bar has not been altered with, with the limits deciding the colour scale change with each time step.
+The animations are found as `output/videos/XX_anim.mp4`. Appreciate the dynamic colour bar; the probability density value on this bar has not been altered with, whilst the limits deciding the colour scale change with each time step.
