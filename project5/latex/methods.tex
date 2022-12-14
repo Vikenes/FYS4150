@@ -53,7 +53,7 @@ We will use the Schrödinger equation to simulate a particle inside a two-dimens
                 A\vec{u}^{(n+1)} &= \vec{b},
             \end{split}
         \end{equation}
-        where we solve for $u^{(n+1)}$. When solving equation \eqref{eq:matrix_equation_to_solve} we can use the structure of $A$ to our advantage. $A$ arise from a boundary value problem. We could use direct methods, such as Gaussian elimination or LU-decomposition to find $A^{-1}$. It could be beneficial to find this inverse since we solve for many time instances without changing $A$. We could also use iterative methods such as the Jacobi method or Gauss-Seidel. $A$ is by construction diagonally dominant\footnote{See appendix \ref{app:A_and_B}}, we are thus guaranteed convergence with the Jacobi method\citep{lecture_notes}. However, noticing that the vast majority of the entries in $A$ are zeros, we represent it numerically as a \textit{sparse matrix}, only saving the indices and values of non-zero entries. We thus use a build in solver in Armadillo to solve equation \eqref{eq:matrix_equation_to_solve}.
+        where we solve for $u^{(n+1)}$. When solving equation \eqref{eq:matrix_equation_to_solve} we can use the structure of $A$ to our advantage. $A$ arise from a boundary value problem. We could use direct methods, such as Gaussian elimination or LU-decomposition to find $A^{-1}$. It could be beneficial to find this inverse since we solve for many time instances without changing $A$. We could also use iterative methods such as the Jacobi method or Gauss-Seidel. $A$ is by construction diagonally dominant\footnote{See appendix \ref{app:A_and_B}}, we are thus guaranteed convergence with the Jacobi method\citep{lecture_notes}. However, noticing that the vast majority of the entries in $A$ are zeros, we represent it numerically as a \textit{sparse matrix}, only saving the indices and values of non-zero entries. We thus use a build-in solver in Armadillo to solve equation \eqref{eq:matrix_equation_to_solve}.
         
 \subsection{Simulation}
     When simulating a system that evolves in time, we have to know how the system is before the simulation, at time $t=0$.
@@ -64,11 +64,11 @@ We will use the Schrödinger equation to simulate a particle inside a two-dimens
         u(t\!=\!0, \vec{x}) = & \exp{-(\vec{x}-\vec{x}_\mathrm{c})^\mathrm{T}\Sigma^{-1}(\vec{x}-\vec{x}_\mathrm{c}) + \im \vec{p}^\mathrm{T}(\vec{x}-\vec{x}_\mathrm{c})}  
     \end{split}
     \end{equation}
-    where $\Sigma = \mathrm{diag}(\svec{\sigma}^2)$, $\vec{x}_c$ and $\vec{p}$ are the spatial variance, spatial centre location and momentum of the initial wave packet. This is a two dimensional complex Gaussian function. We normalise this initial state so that:
+    where $\Sigma = \mathrm{diag}(\svec{\sigma}^2)$, $\vec{x}_c$ and $\vec{p}$ are the spatial variance, spatial centre location and momentum of the initial wave packet. This is a two dimensional complex Gaussian function. The parameters for different initialisations can be found in tables \ref{tab:simulation_parameters} and \ref{tab:simulations_info}. We normalise this initial state so that:
     \begin{equation}
-        \sum_{i,j}u_{i,j}^{(0)*}u_{i,j}^{(0)} = 1,
+        \sum_{i,j}u_{i,j}^{(0)*}u_{i,j}^{(0)} = 1, 
     \end{equation}
-    which enables us to interpret $p_{i,j}^{n} = u_{i,j}^{(n)*}u_{i,j}^{(n)}$ as the probability that the particle is located in a small grid cell of size $h^2$, 
+    which enables us to interpret $p_{i,j}^{n} = u_{i,j}^{(n)*}u_{i,j}^{(n)}$ as the probability that the particle is located in a small grid cell of size $h^2$, centred at $(x_i, y_i)$, which is in accordance with the Born rule from equation \eqref{eq:2d_bornrule_dimless}.
  
     % \begin{equation}\label{eq:p4_initial_condition_scalarform}
     %     u(t\!=\!0, \vec{x}) = \exp{-\frac{(x-x_\mathrm{c})^2}{2\sigma_x^2} -\frac{(y-y_\mathrm{c})^2}{2\sigma_y^2} + \im \vec{p}\cdot (\vec{x}-\vec{x}_\mathrm{c})}
@@ -77,11 +77,11 @@ We will use the Schrödinger equation to simulate a particle inside a two-dimens
 
     \subsubsection{Slit configuration}\label{sec:methods:slit_config}
 
-        To create a single slit, we need \textit{two} objects with the property that the particle cannot propagate through it. Said objects are to have a separation between them, a \textit{slit}, perpendicular to the dominating motion of the particle \Nanna{Pls send help, cannot write proper sentences any more:}. A natural choice for the shape is the rectangular with the longer side parallel to the slit, \Nanna{(Some theory about interference??)} hence the name ``wall''. Three such walls give rise to two slits, etcetera. However, to achieve proper $n$-slit experiments, we should make sure that the two outermost walls of this setup are as long as they need to be to reach the edges of the box.
+        To create a \textit{single} slit, we need \textit{two} objects with the property that the particle cannot propagate through it. Said objects are to have a separation between them, a \textit{slit}, perpendicular to the dominating motion of the wave packet. A natural choice for the shape of these objects are rectangles. The separation of these rectangles, or ``walls'', then give rise to the slits. Three such walls give rise to two slits, and so on. However, to achieve proper $n$-slit experiments, we should make sure that the two outermost walls of this setup reach the edges of the grid, so that the only way of bypassing the wall is through the slits.
 
-        To give the Schrödinger equation information about these walls, we simply create a very large potential in the walls. These potential barriers will resemble concrete \Nanna{(mener egt ikke betong, men konkrete... hva er ordet??)} walls in the sense that the particle will have to navigate between them in order to get through to the other side.
-    
-        In particular, we will set up a number of such walls in the middle of our box, the separation between which is the aperture, aligned perpendicular to the initial momentum $\vec{p}$ in equation~\eqref{eq:p4_initial_condition}. We will make sure that the slit setup is symmetric around the box centre in both directions. Thus, say we want $n$ slits, we would need $n-1$ identical wall pieces and two identical walls that closes the gap between the outer slits and the box edges. \Nanna{Does this make sense?}
+        A significantly large potential will cause problems for the propagating wave. Hence, these walls may be simulated easily by creating large potential at the wall positions. This effectively set up a potential barrier where the walls are supposed to be, and the slits are represented as zero-potential gateways through the otherwise large potential.
+
+        We will make sure that the slit setup is symmetric around the box centre in both directions. Thus, say we want $n$ slits, we would need $n-1$ identical wall pieces and two identical walls that closes the gap between the outer slits and the box edges.
     
 
 
@@ -91,7 +91,7 @@ We will use the Schrödinger equation to simulate a particle inside a two-dimens
         \begin{equation}\label{eq:tot_probability_along_y}
             p^\mathrm{tot}_{x=x_\mathrm{sc}}(t\!=\!t_\mathrm{sc}) =\sum_{j\in [0, M)} p_{x=x_\mathrm{sc}}(y_j;\, t_\mathrm{sc}) = 1.
         \end{equation}
-        To study the infamous diffraction pattern, it will be \Nanna{appropriate} to choose a time and place right after the particle has passed through the slit(s). In the case with two slits, this \Nanna{analysis} imitates the double-slit experiment.
+        To study the expected diffraction pattern, it will be appropriate to choose a time and place right after the particle has passed through the slit(s). In the case with two slits, the setup imitates the famous double-slit experiment.
 
 
 
