@@ -16,7 +16,6 @@ Simulation::Simulation(Box box, double duration, double time_step_size, std::tup
     A_ = arma::sp_cx_mat((box_.M-2)*(box_.M-2), (box_.M-2)*(box_.M-2));
     B_ = arma::sp_cx_mat((box_.M-2)*(box_.M-2), (box_.M-2)*(box_.M-2));
     U_ = arma::cx_cube(box_.M, box_.M, Nt_);
-
 }
 
 void Simulation::gaussian_wavepacket(std::tuple<double,double> extent, std::tuple<double,double> centre_position, std::tuple<double,double> momentum){
