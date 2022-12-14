@@ -73,15 +73,13 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
 
     \subsubsection{Slit configuration}\label{sec:methods:simulation:slit_config}
 
-        To create a \textit{single} slit, we need \textit{two} objects with the property that the particle cannot propagate through it. Said objects are to have a separation between them, a \textit{slit}, perpendicular to the dominating motion of the wave packet. A natural choice for the shape of these objects are rectangles. The separation of these rectangles, or ``walls'', then give rise to the slits. Three such walls give rise to two slits, and so on. However, to achieve proper $n$-slit experiments, we should make sure that the two outermost walls of this setup reach the edges of the grid, so that the only way of bypassing the wall is through the slits.
+        To create a \textit{single} slit, we need \textit{two} objects with the property that the particle \Vetle{(Wave rather than particle?)} cannot propagate through it. Said objects are to have a separation between them, a \textit{slit}, perpendicular to the dominating motion of the wave packet. A natural choice for the shape of these objects are rectangles. The separation of these rectangles, or ``walls'', then give rise to the slits. Three such walls give rise to two slits, and so on. However, to achieve proper $n$-slit experiments, we should make sure that the two outermost walls of this setup reach the edges of the grid, so that the only way of bypassing the wall is through the slits. 
 
-        A significantly large potential will cause problems for the propagating wave. Hence, these walls may be simulated easily by creating large potential at the wall positions. This effectively set up a potential barrier where the walls are supposed to be, and the slits are represented as zero-potential gateways through the otherwise large potential.
-
-        We will make sure that the slit setup is symmetric around the box centre in both directions. Thus, say we want $n$ slits, we would need $n-1$ identical wall pieces and two identical walls that closes the gap between the outer slits and the box edges.
+        A natural choice for modelling such walls is to set the potential at their grid positions to a high constant value. The slits can then be represented as zero-potential gateways through the large potential. We also set the potential to zero everywhere else in the box, meaning that the walls are the only place inside the box with a non-zero potential. We will make sure that the slit setup is symmetric around the box centre in both directions. Thus, say we want $n$ slits, we would need $n-1$ identical wall pieces and two identical walls that closes the gap between the outer slits and the box edges.
     
     \subsubsection{Artificial detector screen}\label{sec:methods:simulation:screen}
 
-        To reduce the dimensionality of the problem, we can assume to measure a particle with a detector screen at some horisontal position $x=x_\mathrm{sc}$ and time $t=t_\mathrm{sc}$, so that the screen spans of the vertical axis $y$. With a smart choice of pairing ($t_\mathrm{sc}$ \& $x_\mathrm{sc}$), we can safely assume that the particle is located somewhere along this line. Thus, it makes sense to consider a normalised one-dimensional probability function $p_{x=x_\mathrm{sc}}(y;\, t_\mathrm{sc})$ (read: probability of $y$ given $x=x_\mathrm{sc}$, at $t=t_\mathrm{sc}$) such that
+        To reduce the dimensionality of the problem, we can assume to measure a particle with a detector screen at some horizontal position $x=x_\mathrm{sc}$ and time $t=t_\mathrm{sc}$, so that the screen spans of the vertical axis $y$. With a smart choice of pairing ($t_\mathrm{sc}$ \& $x_\mathrm{sc}$), we can safely assume that the particle is located somewhere along this line. Thus, it makes sense to consider a normalised one-dimensional probability function $p_{x=x_\mathrm{sc}}(y;\, t_\mathrm{sc})$ (read: probability of $y$ given $x=x_\mathrm{sc}$, at $t=t_\mathrm{sc}$) such that
         \begin{equation}\label{eq:tot_probability_along_y}
             p^\mathrm{tot}_{x=x_\mathrm{sc}}(t\!=\!t_\mathrm{sc}) =\sum_{j\in [0, M)} p_{x=x_\mathrm{sc}}(y_j;\, t_\mathrm{sc}) = 1.
         \end{equation}
@@ -89,7 +87,7 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
 
     \subsubsection{Simulations}\label{sec:methods:simulation:simulations}
 
-        We aim to run a few experiments and their common setup is presented in table~\ref{tab:simulation_parameters}. The parameters specific to the simulations are presented in table~\ref{tab:simulations_info}. Our initial experiment box will have no slits or wall.
+        We aim to run a few experiments and their common setup is presented in table~\ref{tab:simulation_parameters}, where an asterisk is used to indicate that a certain parameter is related to a specific setup. The simulation specific parameters are presented in table~\ref{tab:simulations_info}, where we also define the names that we will use to refer to each simulation. 
 
         \begin{table}[ht!]
             \centering
@@ -118,7 +116,7 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
                 \hline
                 \multicolumn{2}{l}{\textbf{Vertical screen} (following section~\ref{sec:methods:simulation:screen})} \\
                 \hline
-                Horisontal position ($x_\mathrm{sc}$)   & $0.8$     \\
+                Horizontal position ($x_\mathrm{sc}$)   & $0.8$     \\
                 Time point ($t_\mathrm{sc}$)            & $0.002$   \\
                 \hline
             \end{tabular}
@@ -146,4 +144,13 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
         \end{table}
 
 
+    \subsection{Initial validation}\label{sec:methods:sanity}
+
+        To  at any time $t$, the probabilities $p(\vec{x}_{i,j}; \, t)$ should sum up to one, as the particle is present inside the box. As a sanity check, we plot 
+        \begin{equation}\label{eq:total_probability_deviation}
+            \abs{1- p^\mathrm{tot}(t)}\,; \quad p^\mathrm{tot}(t) = \sum_{i,j\in [0, M)} p(\vec{x}_{i,j};\, t)
+        \end{equation}
+        as a function of time in figure~\ref{fig:ptot_deviation_NS_DS1}, where we see that the deviation ($\sim 10^{-14}$) is close to machine precision, i.e. negligible deviations.
+    
+        The next simulation we consider has a double-slit barrier and a somewhat broader initial wave packet in the vertical direction (\textit{DS1} in table~\ref{tab:simulations_info}). We perform the same sanity check as above and once again get deviations of order $ 10^{-14}$, also shown in figure~\ref{fig:ptot_deviation_NS_DS1}.        
 % ===========================================
