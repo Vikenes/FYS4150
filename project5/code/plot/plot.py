@@ -123,7 +123,7 @@ def make_colourmap(ax, transposed_data, timestamp, cmap, norm, levels=False, spa
     return img, ax
 
 def default_mapfigure(timepoints, data, c_label=lambda t:"", cmap="gnuplot", num_maps=3, levels=False, vmin=None, vmax=None):
-    fig, axes = plt.subplots(nrows=1, ncols=num_maps, sharey=True, figsize=(15, 10))
+    fig, axes = plt.subplots(nrows=1, ncols=num_maps, sharey=True, figsize=(16, 10))
 
     axes.flat[0].set_ylabel(r"$y$")
 
