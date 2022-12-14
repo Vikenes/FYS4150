@@ -5,7 +5,7 @@
 \section{Discretisation}\label{app:discretisation}
 
 Suppose you have the (1+1)-dimensional PDE $\pdv*{u}{t}=F$ where $u=u(t,x)$ and $F = F(t, x, u, \pdv*{u}{x}, \pdv*[2]{u}{x})$. 
-The Crank-Nicolson scheme reads \Nanna{ref} 
+The Crank-Nicolson scheme reads \citep{Crank-Nicolson}: 
 \begin{equation}\label{eq:general_CN}
     \frac{u_i^{(n+1)}- u_{i}^{(n)} }{\Delta t} = \frac{1}{2} \closed{F_i^{(n+1)}+F_i^{(n)}},
 \end{equation}
@@ -84,3 +84,4 @@ The final discretisation \eqref{eq:final_CN_scheme} is valid for any step in tim
             0 & 0 & 0 & 0 & 0 & r & 0 & r & b_8
         \end{bmatrix}
     \end{equation}
+By construction (and inspection), we notice that $B$ is the complex conjugate of $A$. 

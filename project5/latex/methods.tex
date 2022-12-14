@@ -1,9 +1,7 @@
 
 \section{Methods}\label{sec:methods}
 
-\sout{We will use the Schrödinger equation to simulate a particle inside a two-dimensional quadratic box of size $L^2$. The use of  boundary conditions gives rise to the confinement of the particle \Nanna{or something like that}. We will place two or more walls inside the box to create one or more slits. The specifics of such configurations is elaborated in section \ref{sec:methods:simulation:slit_config}. A position inside if the box is called $\vec{x} =(x, y)$ and a time $t\in$, all unit less. Now $x, y \in [0,\,L]$ and $t\in[0,\,T]$ if we let $T$ be the time we simulate for. In this paper, we will use $L=1$.}
-
-We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodinger_dimless} on a two-dimensional grid. Through the Born rule, equation~\eqref{eq:2d_bornrule_dimless}, we may interpret this solution to be proportional to the probability of finding a particle somewhere on this grid. We confine the particle by imposing Dirichlet boundary conditions. In order to investigate the behaviour of the wave function we place two or more walls inside the box to create one or more slits. The specifics of such configurations is elaborated in section \ref{sec:methods:simulation:slit_config}. A position \Vetle{(position perhaps not the best erm)}inside if the box is called $\vec{x} =(x, y)$ and a time $t\in$, all unit less. Now $x, y \in [0,\,L]$ and $t\in[0,\,T]$ if we let $T$ be the time we simulate for. In this paper, we will use $L=1$. \Vetle{(Last sentence confusing)}
+We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodinger_dimless} on a two-dimensional grid. Through the Born rule, equation~\eqref{eq:2d_bornrule_dimless}, we may from the wave function construct the probability of finding a particle somewhere on this grid. We confine the particle by imposing Dirichlet boundary conditions. In order to investigate the behaviour of the wave function we place two or more walls inside the box to create one or more slits. The specifics of such configurations is elaborated in section \ref{sec:methods:simulation:slit_config}. A position \Vetle{(position perhaps not the best erm)}inside if the box is called $\vec{x} =(x, y)$ and a time $t\in$, all unit less. Now $x, y \in [0,\,L]$ and $t\in[0,\,T]$ if we let $T$ be the time we simulate for. In this paper, we will use $L=1$. \Vetle{(Last sentence confusing)}
 
 \subsection{Numerical scheme}\label{sec:methods:numerical_scheme}
 
@@ -53,20 +51,21 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
         where $u^{(n+1)}$ is the unknown we solve for. When solving equation \eqref{eq:matrix_equation_to_solve} we can use the structure of $A$ to our advantage. $A$ arise from a boundary value problem. We could use direct methods, such as Gaussian elimination or LU-decomposition. The latter may be used to compute the inverse, $A^{-1}$. This could be beneficial, since the constant $A^{-1}$ would apply at all time steps. We could also use iterative methods such as the Jacobi method or Gauss-Seidel. $A$ is diagonally dominant\footnote{See appendix \ref{app:A_and_B}}, and we are thus guaranteed convergence with the Jacobi method\citep{lecture_notes}. However, noticing that the vast majority of the entries in $A$ are zeros, we represent it numerically as a \textit{sparse matrix}, only saving the indices and values of non-zero entries. This allows us to use the ``spsolve()'' method of the Armadillo to solve equation \eqref{eq:matrix_equation_to_solve}. The method solves the system of sparse linear equations by a special algorithm for performing LU decomposition, called a Supernoidal LU decomposition (SuperLU) \cite{SuperLU}. We refer to their article for a more detailed description of the algorithm. \Vetle{(Formatting of "Armadillo" and "spsolve()" needs to be fixed!)} 
         
 \subsection{Initialisation and simulation}\label{sec:methods:simulation}
-    When simulating a system that evolves in time, we have to know how the system is before the simulation, at time $t=0$.
+    Having addressed methods for advancing the system in time, we now turn our attention to how we initialise the system. Additionally, we describe how we model the slits in our simulation box. \Vetle{(Rewrote paragraph, not sure if the last sentence is akhtschually "correct")}  
     
     \subsubsection{Initial wave packet}\label{sec:methods:simulation:initial_wave}
         The initialisation is done by imposing the following initial condition. 
         \begin{equation}\label{eq:p4_initial_condition}
         \begin{split}
-            u(t\!=\!0, \vec{x}) = & \exp{-(\vec{x}-\vec{x}_\mathrm{c})^\mathrm{T}\Sigma^{-1}(\vec{x}-\vec{x}_\mathrm{c}) + \im \vec{p}^\mathrm{T}(\vec{x}-\vec{x}_\mathrm{c})}  
+            u(t\!=\!0, \vec{x}) = \exp\{ &-(\vec{x}-\vec{x}_\mathrm{c})^\mathrm{T}\Sigma^{-1}(\vec{x}-\vec{x}_\mathrm{c}) \\ 
+            &+ \im \vec{p}^\mathrm{T}(\vec{x}-\vec{x}_\mathrm{c})\}  
         \end{split}
         \end{equation}
-        where $\Sigma = \mathrm{diag}(\svec{\sigma}^2)$, $\vec{x}_c$ and $\vec{p}$ are the spatial variance, spatial centre location and momentum of the initial wave packet. This is a two dimensional complex Gaussian function. The parameters for different initialisations can be found in tables \ref{tab:simulation_parameters} and \ref{tab:simulations_info}. We normalise this initial state so that:
+        where $\Sigma$, $\vec{x}_c$ and $\vec{p}$ are the spatial variance, spatial centre location and momentum of the initial wave packet, respectively, where we have defined $\Sigma \equiv \mathrm{diag}(\svec{\sigma}^2)$. This is a two-dimensional complex Gaussian wave packet. The parameters for different initialisations can be found in tables \ref{tab:simulation_parameters} and \ref{tab:simulations_info}. We normalise this initial state so that:
         \begin{equation}
             \sum_{i,j}u_{i,j}^{(0)*}u_{i,j}^{(0)} = 1, 
         \end{equation}
-        which enables us to interpret $p_{i,j}^{n} = u_{i,j}^{(n)*}u_{i,j}^{(n)}$ as the probability that the particle is located in a small grid cell of size $h^2$, centred at $(x_i, y_i)$, which is in accordance with the Born rule from equation \eqref{eq:2d_bornrule_dimless}.
+        which enables us to interpret $p_{i,j}^{n} = u_{i,j}^{(n)*}u_{i,j}^{(n)}$ as the probability that the particle is located in a small grid cell of size $h^2$, centred at $(x_i, y_i)$, which is in accordance with the Born rule from equation \eqref{eq:2d_bornrule_dimless}. \Vetle{(Mention that we ensure/test that BC's are satisfied for this?)}
     
         % \begin{equation}\label{eq:p4_initial_condition_scalarform}
         %     u(t\!=\!0, \vec{x}) = \exp{-\frac{(x-x_\mathrm{c})^2}{2\sigma_x^2} -\frac{(y-y_\mathrm{c})^2}{2\sigma_y^2} + \im \vec{p}\cdot (\vec{x}-\vec{x}_\mathrm{c})}
