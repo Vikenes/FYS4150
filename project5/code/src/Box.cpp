@@ -1,18 +1,14 @@
 #include "Box.hpp"
-// #include "Simulation.hpp"
-// #include "utils.hpp"
 
-Box::Box(double ha){
-    h = ha;
-    M = int(1/ha) +1;
+
+Box::Box(double spatial_step_size){
+    h = spatial_step_size;
+    M = int(1/h) + 1; 
     V = arma::sp_mat(M,M);
 }
 
 
-// void Box::set_up_walls(void){
-//     set_up_walls_utils(V, v0, M, h);
-// }
-
+// Delete ? 
 void Box::set_up_walls(double v0, int Ns, double Th, double wxc, double wyc, double ws_length, double aperture){
     /**
      * @brief Sets up the wall used to generate the slit apertures.
@@ -84,7 +80,7 @@ void Box::create_slits(int num_of_slits, double v0, double aperture, double wall
     std::vector<double> y_ur(num_of_walls); 
 
     y_c[0] = vertical_centre - sep*num_of_slits/2;
-    // std::cout << y_c[0] << std::endl;
+
     for(int k=0; k<num_of_walls; k++){
         y_c[k] = y_c[0] + k*sep;
         y_ll[k] = y_c[k] - wall_height/2;   // (y) lower left corner
@@ -103,8 +99,11 @@ void Box::create_slits(int num_of_slits, double v0, double aperture, double wall
     arma::vec ywall;
     double width = xwall(x_indices.n_elem-1) - xwall(0);
     double height;
+    
 
-    // arma::uvec y_indices = arma::find(y >= y_ll[0] && y <= y_ur[0]);
+    // Woops, correct misunderstanding:
+    y_ll[0] = 0;
+    y_ur[num_of_slits] = 1;
 
     /* 
     If somebody could help me find a way to run through these uvec-s, that would be sprutnice :p
@@ -119,6 +118,7 @@ void Box::create_slits(int num_of_slits, double v0, double aperture, double wall
             }
         }
     }
+
     
     std::cout << "Sat up " << num_of_slits << " slits using " << num_of_walls << " walls." << std::endl;
     std::cout << "  -> width  (x-dir): " << width  << std::endl;

@@ -6,10 +6,13 @@
 
 
 /**
- * @brief Main (testing) program for FYS4150 project5 code.
+ * @brief Main program for FYS4150 project 5 code.
  * Vetle A. Vikenes, Nanna Bryne, Johan Mylius Kroken
- * 
  */
+
+
+// delete ???
+
 
 void no_slit(void){
     // double h = 0.005;
@@ -92,7 +95,6 @@ void no_slits(){
     U1.save("../output/binfiles/NS_arma_cube.bin");
 }
 
-
 void double_slit_first(){
     Box b2 = Box();
     b2.create_slits(2);
@@ -114,8 +116,6 @@ void double_slit_second(){
     arma::cx_cube U3 = s3.run_simulation();
     U3.save("../output/binfiles/DS2_arma_cube.bin");
 }
-
-
 
 void single_slit(){
 
@@ -146,14 +146,29 @@ void triple_slit(){
 
 
 
-int main(){
-    // no_slit();
-    // double_slit_broad_sigma_y();
-    // double_slit_broader_sigma_y_short_time();
+int main(int argc, char **argv){
 
-    no_slits();
-    double_slit_first();
-    double_slit_second();
-    single_slit();
-    triple_slit();
+
+    //  If argument is not given, run all:
+    std::string arg1;
+    if(argc==1){arg1 = "ALL";}   // default
+    else{arg1.assign(argv[1]); }
+
+    if(arg1=="NS"){no_slits();}
+    else if(arg1=="DS1"){double_slit_first();}
+    else if(arg1=="DS2"){double_slit_second();}
+    else if(arg1=="SS"){single_slit();}
+    else if(arg1=="TS"){triple_slit();}
+    else if(arg1=="ALL"){ 
+        no_slits();
+        double_slit_first(); 
+        double_slit_second();    
+        single_slit();   
+        triple_slit();   
+    }
+    else{
+        std::cout << "Please provide a valid command line argument." << std::endl;
+        std::cout << "It can be one of the following: {NS, DS1, DS2, SS, TS, ALL}" << std::endl; 
+    }
+
 }

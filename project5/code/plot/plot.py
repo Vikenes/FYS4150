@@ -30,7 +30,6 @@ SMALLER_LEGENDSIZE = 16
 SMALLER_TITLESIZE = 20
 
 ### Set rc-params
-
 plt.rc("legend", fontsize=LEGENDSIZE, fancybox=True, loc="best", frameon=True, edgecolor="black")
 plt.rc("font", size=LABELSIZE)
 plt.rc("axes", titlesize=TITLESIZE, labelsize=LABELSIZE)
@@ -46,8 +45,8 @@ plt.rcParams['font.family'] = 'Times New Roman'
 
 
 ### Global setting commands
-TEMP = True    # makes temporary .png files instead of .pdf
-SAVE = True    # saves .pdf files
+TEMP = False    # makes temporary .png files instead of .pdf
+SAVE = False    # saves .pdf files
 PUSH = False    # git stuff
 SHOW = False    # show plots
 
@@ -120,9 +119,6 @@ def make_colourmap(ax, transposed_data, timestamp, cmap, norm, spatial_extent=(0
     ax.set_aspect("equal")
     return img, ax
 
-
-
-
 def default_mapfigure(timepoints, data, cmap="gnuplot", num_maps=3, vmin=-1, vmax=1):
     fig, axes = plt.subplots(nrows=1, ncols=num_maps, sharey=True, figsize=(15, 10))
 
@@ -148,8 +144,19 @@ def draw_walls(ax, yc_list, colour="palegreen"):
     xc = 0.5
     h = 0.05
     w = 0.02
-    for yc in yc_list:
-        ax.add_patch(plt.Rectangle((xc-w/2, yc-h/2), w, h, fc=colour, ec=colour, lw=0.2, alpha=0.6, clip_on=False))
+    # quick fix
+    # ymin = np.min(yc_list)
+    # if len(yc_list) > 2:
+    #     ymin = np.min(yc_list)+h/2
+    #     ymax = np.max(yc_list)+h/2
+
+    #     ax.add_patch(plt.Rectangle((xc-w/2, yc-h/2), w, h, fc=colour, ec=colour, lw=0.2, alpha=0.6, clip_on=False))
+
+    #     for yc in yc_list[1:-1]:
+    #         ax.add_patch(plt.Rectangle((xc-w/2, yc-h/2), w, h, fc=colour, ec=colour, lw=0.2, alpha=0.6, clip_on=False))
+    # else:
+    #     pass
+    pass
 
 
 def min_max_scale(x, a=-1, b=1, axis=1):

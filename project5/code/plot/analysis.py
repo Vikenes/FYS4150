@@ -11,7 +11,7 @@ import sys
 binfile_path = os.path.abspath(".") + "/../../output/binfiles/"
 
 class Analysis:
-    def __init__(self, binary_filename, title, label, num_of_slits=0, total_time=.008, default=1):
+    def __init__(self, binary_filename, title, label, num_of_slits=0, total_time=None, default=1):
         U_arma = pa.cx_cube()
         U_arma.load(binfile_path+binary_filename+".bin")
         self.U = np.asarray(U_arma)
@@ -21,8 +21,7 @@ class Analysis:
         self.title = title
         self.label = label
         self.num_of_slits = num_of_slits
-        self.T = total_time
-        self.default_setup(default)
+        self.default_setup(default, total_time=total_time)
         self.set_grid()
 
         self.wall_y = self.get_walls_ycoords()
@@ -35,13 +34,13 @@ class Analysis:
         if self.num_of_slits == 0:
             self.v0 = 0
     
-    def default_setup(self, which="first", num_of_slits=None):
+    def default_setup(self, which="first", num_of_slits=None, total_time=None):
         self.num_of_slits = num_of_slits or self.num_of_slits
         if str(which) in ["1", "first", "normal", "usual", "long"]:
-            self.T = 0.008
+            self.T = total_time or 0.008
             self.set_params()
         elif str(which) in ["2", "second", "other", "short"]:
-            self.T = 0.002
+            self.T = total_time or 0.002
             self.set_params(sigma=(0.05, 0.20))
         else:
             print("No default params set.")
@@ -98,6 +97,7 @@ class Analysis:
             ReU_points[j] = np.real(self.U[idx])
             ImU_points[j] = np.imag(self.U[idx])
             absUmax = np.max(np.abs(self.U[idx]))
+            # Normalise in strange way
             ReU_points[j] /= absUmax
             ImU_points[j] /= absUmax
             P_points[j] /= np.max(P_points[j])
@@ -151,7 +151,7 @@ class Analysis:
         s += "\n   " + f"dt = {self.dt:5.1e}"
         s += "\n   " + f" T = {self.T:5.1e}"
         s += "\n> Slits:" 
-        s += "\n   " + f"#slits = {self.num_of_slits:5}"
+        s += "\n   " + f"Nslits = {self.num_of_slits:5}"
         s += "\n   " + f"    v0 = {self.v0:5.1e}"
         s += "\n> Initial wave packet:" 
         s += "\n   " + f"xc = ({self.xc[0]:5.2f}, {self.xc[1]:5.2f})"
@@ -162,13 +162,17 @@ class Analysis:
 
 
 
-
+### 1. No slits
 NOSLITS = Analysis("NS_arma_cube", "No slits", label="NS")
 DSLIT1 = Analysis("DS1_arma_cube", "Double-slit (1)", label="DS1", num_of_slits=2)
+### 2. Double-slit (1)
 DSLIT1.set_params(sigma=(0.05, 0.10))
+### 3. Double-slit (2)
 DSLIT2 = Analysis("DS2_arma_cube", "Double-slit (2)", label="DS2", num_of_slits=2, default=2)
-SSLIT = Analysis("SS_arma_cube", "Single-slit", label="SS", num_of_slits=1, default=2)
-TSLIT = Analysis("TS_arma_cube", "Triple-slit", label="TS", num_of_slits=3, default=2)
+### 4. Single-slit
+SSLIT = Analysis("SS_arma_cube", "Single-slit", label="SS", num_of_slits=1, total_time=0.004, default=2)
+### 5. Triple-slit
+TSLIT = Analysis("TS_arma_cube", "Triple-slit", label="TS", num_of_slits=3, total_time=0.004, default=2)
 
 print(NOSLITS)
 print(DSLIT1)
@@ -177,22 +181,54 @@ print(SSLIT)
 print(TSLIT)
 
 
+
+
+
+
+which = {"NS":"NOSLITS", "DS1":"DSLIT1", "DS2":"DSLIT1", "SS":"SSLIT", "TS":"TSLIT", "ALL":"ALL"}
+anim = ["animate", "anim", "video", "animations"]
+fig = ["plot", "plots", "figures", "fig", "figure"]
+
+
+
 try:
-    if sys.argv[1].lower() in ["animate", "anim", "video"]:
-        NOSLITS.animate()
-        DSLIT1.animate()
-        DSLIT2.animate()
+    arg1 = sys.argv[1].upper().strip()
+    arg2 = sys.argv[2].lower().strip()
+
+    ### Animate
+    if arg2 in anim:
+        if arg1 in which.keys():
+            if arg1 != "ALL":
+                eval(f"{which[arg1]}.animate()")
+            else:
+                NOSLITS.animate()
+                DSLIT1.animate()
+                DSLIT2.animate()
+                SSLIT.animate()
+                TSLIT.animate()
+            PLOT.show_all()
+    ### Plot
+    elif arg2 in fig:
+        if arg1 in ["NS", "DS1"]:
+            NOSLITS.deviation(others=[DSLIT1])
+        elif arg1 in ["DS2", "SS", "TS"]:
+            eval(f"{which[arg1]}.snapshots((0, 0.001, 0.002))")
+            eval(f"{which[arg1]}.probability_vertical_screen()")
+        elif arg1 == "ALL":
+            NOSLITS.deviation(others=[DSLIT1])
+            DSLIT2.snapshots((0, 0.001, 0.002))
+            SSLIT.probability_vertical_screen()
+            TSLIT.probability_vertical_screen()
+
+
+        PLOT.show_all()
+
+    else:
+        print("Please provide a valid command line argument.")
+        print("It can be one of the following: {NS, DS1, DS2, SS, TS, ALL}")
+
 except IndexError:
     pass
 
 
-DSLIT2.snapshots((0, 0.001, 0.002))
-# TSLIT.snapshots((0, 0.001, 0.002))
-# NOSLITS.deviation() 
-# DSLIT1.deviation()  
-# NOSLITS.deviation(others=[DSLIT1])
-# DSLIT2.probability_vertical_screen(label=None)
-# SSLIT.probability_vertical_screen(label=None)
-# TSLIT.probability_vertical_screen(label=None)
 
-PLOT.show_all()

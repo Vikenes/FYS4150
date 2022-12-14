@@ -4,7 +4,7 @@
 
 /*
 Forslag: 
-    - Hva med å gjøre klassen mer brukervennlig ved å gir argumentene lengre navn?
+    - Hva med å gjøre klassen mer brukervennlig ved å gir argumentene lengre navn? Altså istedenfor 'Dta', bruke 'time_step_size' elns?
     - Gjøre det mulig å bare endre på en eller to parametre? F.eks. lage to default-settinger? Jeg kan sikkert fikse noe slikt, men idk.
 klem fra Nanna
 */
