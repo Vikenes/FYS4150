@@ -74,8 +74,6 @@ The same syntax as above can be used to specify what figures or animations to pr
 
 ### Prerequisites
 
-<mark>CHECK THESE!!<mark>
-
 In order to run the C++ code the following libraries are needed:
 
 * `sstream`
@@ -87,9 +85,9 @@ In order to run the C++ code the following libraries are needed:
 * `cmath`
 * `armadillo`
 * `typeinfo`
-* `random`
-* `algorithm`
-* `omp`
+* `complex`
+* `chrono`
+* `tuple`
 
 In order to run the python code the following libraries are needed:
 
@@ -98,6 +96,8 @@ In order to run the python code the following libraries are needed:
 * `pandas`
 * `os`
 * `pyarma`
+* `seaborn`
+* `sys`
 
 
 ## **RESULTS**
