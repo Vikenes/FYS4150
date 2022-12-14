@@ -146,11 +146,9 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
 
     \subsection{Initial validation}\label{sec:methods:sanity}
 
-        To  at any time $t$, the probabilities $p(\vec{x}_{i,j}; \, t)$ should sum up to one, as the particle is present inside the box. As a sanity check, we plot 
+        The total probability should be conserved in time, but small deviations are expected to occur from our numerical implementation. How well the probability is conserved will depend on the method chosen for solving equation \eqref{eq:matrix_equation_to_solve}, among other things. To assert that our implementations are reasonable, we will plot the deviations of $p(\vec{x}_{i,j}; \, t)$ from the true analytical value of $1$ as a function of time, namely  
         \begin{equation}\label{eq:total_probability_deviation}
-            \abs{1- p^\mathrm{tot}(t)}\,; \quad p^\mathrm{tot}(t) = \sum_{i,j\in [0, M)} p(\vec{x}_{i,j};\, t)
+            \abs{1- p^\mathrm{tot}(t)}\,; \quad p^\mathrm{tot}(t) = \sum_{i,j\in [0, M)} p(\vec{x}_{i,j};\, t).
         \end{equation}
-        as a function of time in figure~\ref{fig:ptot_deviation_NS_DS1}, where we see that the deviation ($\sim 10^{-14}$) is close to machine precision, i.e. negligible deviations.
-    
-        The next simulation we consider has a double-slit barrier and a somewhat broader initial wave packet in the vertical direction (\textit{DS1} in table~\ref{tab:simulations_info}). We perform the same sanity check as above and once again get deviations of order $ 10^{-14}$, also shown in figure~\ref{fig:ptot_deviation_NS_DS1}.        
+        We have omitted subscripts for the total two-dimensional probability to avoid confusion with the one dimensional probability introduced in equation \eqref{eq:tot_probability_along_y}. Our implementation of the potential barriers are may give rise to additional numerical inaccuracies. We therefore check our implementation by studying the total probability deviations when we have no barriers in the box, and when we have a single slit in the box.  
 % ===========================================
