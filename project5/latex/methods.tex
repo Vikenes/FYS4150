@@ -93,7 +93,7 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
 
     \subsubsection{Simulations}\label{sec:methods:simulation:simulations}
 
-        We aim to run a few experiments and their common setup is presented in table~\ref{tab:simulation_parameters}, where an asterisk is used to indicate that a certain parameter is related to a specific setup. The simulation specific parameters are presented in table~\ref{tab:simulations_info}, where we also define the names that we will use to refer to each simulation. 
+        We aim to run a few experiments and their common setup is presented in table~\ref{tab:simulation_parameters}, where an asterisk is used to indicate that a certain parameter is related to a specific setup. 
 
         \begin{table}[ht!]
             \centering
@@ -130,7 +130,7 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
             \label{tab:simulation_parameters}
         \end{table}
 
-
+        The simulation specific parameters are presented in table~\ref{tab:simulations_info}, where we also define the names that we will use to refer to each simulation. 
 
         \begin{table}[ht!]
             \centering
@@ -156,5 +156,5 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
         \begin{equation}\label{eq:total_probability_deviation}
             \abs{1- p^\mathrm{tot}(t)}\,; \quad p^\mathrm{tot}(t) = \sum_{i,j\in [0, M)} p(\vec{x}_{i,j};\, t).
         \end{equation}
-        We have omitted subscripts for the total two-dimensional probability to avoid confusion with the one dimensional probability introduced in equation \eqref{eq:tot_probability_along_y}. Our implementation of the potential barriers are may give rise to additional numerical inaccuracies. We therefore check our implementation by studying the total probability deviations when we have no barriers in the box, and when we have a single slit in the box.  
+        We have omitted subscripts for the total two-dimensional probability to avoid confusion with the one dimensional probability introduced in equation \eqref{eq:tot_probability_along_y}. Our implementation of the potential barriers are may give rise to additional numerical inaccuracies. We therefore check our implementation by studying the total probability deviations when we have no barriers in the box, and when we have a double slit in the box, i.e. three barriers. The double slit we will consider for this analysis is (\textit{DS1}).  
 % ===========================================
