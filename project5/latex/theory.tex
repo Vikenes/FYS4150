@@ -4,7 +4,7 @@
     \begin{equation}\label{eq:2d_schrodinger}
         \im \hbar \pdv{}{t}\Psi(t, \vec{x}) = -\frac{\hbar^2}{2m_\mathrm{P}}\nabla^{\!2} \Psi(t, \vec{x})  + \mathcal{V}(t, \vec{x}) \Psi(t, \vec{x}).
     \end{equation}
-    For a set of initial and boundary conditions, the partial differential equation (PDE) describes the temporal and spatial evolution of the complex-valued function $\Psi(t, \vec{x})$ related to the quantum state of the aforementioned particle. In such a case, at a time $t$, the probability density for an experimentalist to locate the particle at $\vec{x}$ is
+    For a set of initial and boundary conditions, the partial differential equation (PDE) describes the temporal and spatial evolution of the complex-valued (wave) function $\Psi(t, \vec{x})$ related to the quantum state of the aforementioned particle. In such a case, at a time $t$, the probability density for an experimentalist to locate the particle at $\vec{x}$ is
     \begin{equation}\label{eq:2d_bornrule}
         P(\vec{x}; \, t) = \abs{\Psi(t, \vec{x})}^2 = \Psi^{\!*}(t, \vec{x}) \Psi(t, \vec{x}),
     \end{equation} 
@@ -19,4 +19,4 @@
         p(\vec{x}; \, t) = \abs{u(t, \vec{x})}^2 = u^{\!*} (t, \vec{x})u(t, \vec{x}).
     \end{equation}
 
-    In this report we will refer to $u(t, \vec{x})$ as the \textit{wave function}, which is the solution of the dimensionless Schrödinger equation from equation~\eqref{eq:2d_schrodinger_dimless}. The aim is to solve for $u(t,\vec{x})$ in a confined space, with and without slits, and simulate the time evolution of Gaussian wave packets in this space. Due to the nature of wave functions, we would expect to observe wave phenomena such as dispersion and diffraction when exposed to slits. 
+    In this report we will refer to $u(t, \vec{x})$ as the \textit{wave function}, which is the solution of the dimensionless Schrödinger equation from equation~\eqref{eq:2d_schrodinger_dimless}. The aim is to solve for $u(t,\vec{x})$ in a confined space, with and without slits, and simulate the time evolution of Gaussian wave packets in this space.
