@@ -21,24 +21,9 @@ where we substituted $\Psi(t, \vec{x}) \to u(t, \vec{x})$. In equation \eqref{eq
     p(\vec{x}; \, t) = \abs{u(t, \vec{x})}^2 = u^{\!*} (t, \vec{x})u(t, \vec{x}).
 \end{equation}
 
-In this report we will refer to $u(t, \vec{x})$ as the \textit{wave function}, which is the solution of the dimensionless Schrödinger equation from equation~\eqref{eq:2d_schrodinger_dimless}. This is characterised as a wave function due to its complex nature \Johan{WTF is this correct or not}. The aim is to solve for $u(t,\vec{x})$ in a confined space, with and without slits, and simulate the time evolution of Gaussian wave packets in this space. Due to the nature of wave functions, we would expect to observe wave phenomena such as dispersion and diffraction when exposed to slits. 
+In this report we will refer to $u(t, \vec{x})$ as the \textit{wave function}, which is the solution of the dimensionless Schrödinger equation from equation~\eqref{eq:2d_schrodinger_dimless}. The aim is to solve for $u(t,\vec{x})$ in a confined space, with and without slits, and simulate the time evolution of Gaussian wave packets in this space. Due to the nature of wave functions, we would expect to observe wave phenomena such as dispersion and diffraction when exposed to slits. 
 
 The outline of this report will be as follows: Section~\ref{sec:methods} will be all about the methods we use, and how we discretise and solve equation~\eqref{eq:2d_schrodinger_dimless} on a two-dimensional grid. It is divided into two subsections, section~\ref{sec:methods:numerical_scheme} which is about discretisation (section~\ref{sec:methods:numerical_scheme:discretisation}) and implementation (section~\ref{sec:methods:numerical_scheme:implementation}) of the numerical scheme. Section~\ref{sec:methods:simulation} is about the initialisation of the system (section~\ref{sec:methods:simulation:initial_wave}), the slit configuration (section~\ref{sec:methods:simulation:slit_config}), the detector screen (section~\ref{sec:methods:simulation:screen}) and the simulation itself (section~\ref{sec:methods:simulation:simulations}). We present the results and sanity checks in section~\ref{sec:results}. In section~\ref{sec:discussion} we provide a brief discussion, and a conclusion in section~\ref{sec:conclusion}. There are also two appendices explaining the Crank-Nicolson discretisation (appendix~\ref{app:discretisation}), and the explanation of the matrices $A$ and $B$ (appendix~\ref{app:A_and_B}) used to solve our system. 
-
-
-
-\textbf{HUSK}:
-\begin{enumerate}
-    \item[*] Noe om diffraction \Johan {nemnt såvidt}
-    \item[*] Noe om hva vi forventer å se med og uten slits \Johan{same}
-    \item[*] Disclaimer: Forsvare bruket av begrepet wave packet / wave function \Johan{også nemnt såvidt men sjekk gjerne om det er bra nok}
-\end{enumerate}
-
-
-
-
-
-
 
 % ===========================================
 
