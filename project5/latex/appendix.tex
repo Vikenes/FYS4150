@@ -4,12 +4,17 @@
 
 \section{Discretisation}\label{app:discretisation}
 
-Suppose you have the (1+1)-dimensional PDE $\pdv*{u}{t}=F$ where $u=u(t,x)$ and $F = F(t, x, u, \pdv*{u}{x}, \pdv*[2]{u}{x})$. 
-The Crank-Nicolson scheme reads \citep{Crank-Nicolson}: 
+Suppose you want to solve the (1+1)-dimensional PDE 
+\begin{equation}\label{eq:very_general_PDE}
+    \pdv{u}{t}=F\,;\quad F = F(t, x, u, \pdv{u}{x}, \pdv[2]{u}{x}),
+\end{equation}
+where $u=u(t,x)$. Let $\Delta t$ be the time step size in the discretised verison of equation \eqref{eq:very_general_PDE}. The Crank-Nicolson scheme can be viewed as a combination of the forward and backward Euler method, respectively at current and subsequent time step, and reads \citep{Crank-Nicolson}: 
 \begin{equation}\label{eq:general_CN}
     \frac{u_i^{(n+1)}- u_{i}^{(n)} }{\Delta t} = \frac{1}{2} \closed{F_i^{(n+1)}+F_i^{(n)}},
 \end{equation}
-where $u_i^{(n)} = u(n\Delta t, i\Delta x)$ and $F_i^{(n)}$ is $F$ evaluated for $i, n$ and $u_i^{(n)}$. In our (2+1)-dimensional case where $u= u(t, \vec{x})$ we have
+where $u_i^{(n)} = u(n\Delta t, i\Delta x)$ and $F_i^{(n)}$ is $F$ evaluated for $i, n$ and $u_i^{(n)}$. 
+
+In our (2+1)-dimensional case where $u= u(t, \vec{x})$ we have
 \begin{align}\label{eq:2d_schrodinger_CN}
     \pdv{u}{t} = F(t, \vec{x}, u, \nabla^{\! 2}u)= \im \closed{\nabla^{\! 2} u - v(\vec{x}) u},
 \end{align}
@@ -17,11 +22,12 @@ and this approach translates to
 \begin{equation}\label{eq:2d_CN}
     \frac{u_{i,j}^{(n+1)}-u_{i,j}^{(n)}}{\Delta t} = \frac{1}{2} \closed{F_{i,j}^{(n+1)} + F_{i,j}^{(n)}} 
 \end{equation}
-where $u_{i,j}^{(n)} = u(n\Delta t, \vec{x}_{i,j})$, $\vec{x}_{i,j}=h(i,j)$, and $F_{i,j}^{(n)}$ is the right-hand side of equation \eqref{eq:2d_schrodinger_CN}, explicitly:
+where $u_{i,j}^{(n)} = u(n\Delta t, \vec{x}_{i,j})$, $\vec{x}_{i,j}=h(i,j)$, as in section~\ref{sec:methods:numerical_scheme:discretisation}, and $F_{i,j}^{(n)}$ is the right-hand side of equation~\eqref{eq:2d_schrodinger_CN}, explicitly:
 \begin{equation}
     F_{i, j}^{(n)} = \im \closed{  \bracket{\pdv[2]{u}{x}}_{i,j}^{(n)} + \bracket{\pdv[2]{u}{y}}_{i,j}^{(n)} - v_{i,j}u_{i,j}^{(n)}} \, ;
 \end{equation} 
-We can approximate the two spatial double derivatives \Nanna{(correct way to say?)} according to \Nanna{(Don't know what this approximation is called)}:
+
+Let $h$ be the minimal separation between to points on the lattice. We approximate the two spatial second derivatives at a time step $n$ as follows:
 \begin{subequations}
     \begin{align}
         \bracket{\pdv[2]{u}{x}}_{i,j}^{(n)} \approx \frac{1}{h^2} \closed{u_{i\!+\!1, j}-2u_{i,j} + u_{i\!-\!1, j}}^{(n)}\, ;\\
@@ -36,11 +42,11 @@ Define $r\equiv \frac{\im \Delta t}{2h^2}$. Further, let
     -\,& \frac{\im \Delta t}{2} v_{i,j}\,u_{i,j}^{(n)}.
     \end{split}
 \end{equation}
-Equation \eqref{eq:2d_CN} becomes:
+Equation~\eqref{eq:2d_CN} becomes:
 \begin{equation}\label{eq:final_CN_scheme}
     u_{i,j}^{(n+1)} - \mathcal{F}_{i,j}^{(n+1)} = u_{i, j}^{(n)} + \mathcal{F}_{i,j}^{(n)} \, ;
 \end{equation}
-The final discretisation \eqref{eq:final_CN_scheme} is valid for any step in time within the time range ($n\in[0, N_t-2]$) and all internal points on the grid ($i,j \in [1, M-2]$).
+This final discretisation is valid for any step in time within the time range ($n\in[0, N_t-2]$) and all internal points on the grid ($i,j \in [1, M-2]$).
 
 
 \newpage
