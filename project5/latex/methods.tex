@@ -1,7 +1,7 @@
 
 \section{Methods}\label{sec:methods}
 
-We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodinger_dimless} on a two-dimensional grid. Through the Born rule, equation~\eqref{eq:2d_bornrule_dimless}, we may from the wave function construct the probability of finding a particle somewhere on this grid. We confine the particle by imposing Dirichlet boundary conditions. In order to investigate the behaviour of the wave function we place two or more walls inside the box to create one or more slits. The specifics of such configurations is elaborated in section \ref{sec:methods:simulation:slit_config}. A point inside the box is called $\vec{x} =(x, y)$ and the time is $t$, all unitless quantities. Now $x, y \in [0,\,L]$ and $t\in[0,\,T]$. For simplicity we will use $L=1$, and $T$ is the time we simulate for. 
+We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodinger_dimless} on a two-dimensional grid. Through the Born rule, equation~\eqref{eq:2d_bornrule_dimless}, we may from the wave function construct the probability of finding a particle somewhere on this grid. We confine the particle by imposing Dirichlet boundary conditions (to be defined). In order to investigate the behaviour of the wave function we place two or more walls inside the box to create one or more slits. The specifics of such configurations is elaborated in section \ref{sec:methods:simulation:slit_config}. A point inside the box is called $\vec{x} =(x, y)$ and the time is $t$, all unitless quantities. Now $x, y \in [0,\,L]$ and $t\in[0,\,T]$. For simplicity we will use $L=1$, and $T$ is the time we simulate for. 
 
 \subsection{Numerical scheme}\label{sec:methods:numerical_scheme}
 
@@ -27,9 +27,15 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
             -\,& \frac{\im \Delta t}{2} v_{i,j}\,u_{i,j}^{(n)},
             \end{split}
         \end{equation}
-        and we have defined $r\equiv \frac{\im\Delta t}{2h^2}$. This time evolution is valid for any time step with the time range $n\in[0,N_t-2]$. Its spatial validity is restricted to the internal points of the grid; $i,j\in[1,M-2]$. For the boundary points we impose the Dirichlet boundary conditions (stated in the nomenclature). 
+        and we have defined $r\equiv \frac{\im\Delta t}{2h^2}$. This time evolution is valid for any time step with the time range $n\in[0,N_t-2]$. Its spatial validity is restricted to the internal points of the grid; $i,j\in[1,M-2]$. For the boundary points we impose the Dirichlet boundary conditions which are:
+        \begin{itemize*}
+            \item[] $u(t, \vec{x}_{0,j})       = u(t, x\!=\!0, y) = 0$. \\
+            \item[] $u(t, \vec{x}_{M\!-\!1,j}) = u(t, x\!=\!1, y) = 0$. \\
+            \item[] $u(t, \vec{x}_{i,0})       = u(t, x, y\!=\!0) = 0$. \\
+            \item[] $u(t, \vec{x}_{i,M\!-\!1}) = u(t, x, y\!=\!1) = 0$.
+        \end{itemize*} 
 
-        If we define 
+        If we then define 
         \begin{equation}
             \begin{split}
                 \vec{u}^{(n)} \equiv [&u_{1,1}^{(n)}, \dots, u_{M-2,1}^{(n)}, \dots, \\ 
