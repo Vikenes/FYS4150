@@ -1,27 +1,6 @@
 \section{Introduction}\label{sec:introduction}
 
-As with all good stories, this too starts in Ancient Greece, where Democritus laughingly postulated the world to be made up of tiny, indestructible elements \citep{berryman_2016}. This theory was later discarded with the discovery of elementary particles and eventually quarks. Things got even stranger when the theory of quantum mechanics was formalised in the first half of the 20th century \citep{QMH}, challenging established concept of physics like causality and deterministic behavioural descriptions of particles. This ultimately lead to the famous Schrödinger equation, that describes the behaviour of something called a wave function, which can be used to predict the probability distributions of the spatial and temporal whereabouts of particles. 
-
-For a single, non-relativistic particle with mass $m_\mathrm{P}$ in a two-dimensional potential $\mathcal{V}(t, \vec{x})$, the Schrödinger equation reads\footnote{In position space, that is.}
-\begin{equation}\label{eq:2d_schrodinger}
-    \im \hbar \pdv{}{t}\Psi(t, \vec{x}) = -\frac{\hbar^2}{2m_\mathrm{P}}\nabla^{\!2} \Psi(t, \vec{x})  + \mathcal{V}(t, \vec{x}) \Psi(t, \vec{x}).
-\end{equation}
-For a set of initial and boundary conditions, the partial differential equation (PDE) describes the temporal and spatial evolution of the complex-valued function $\Psi(t, \vec{x})$ related to the quantum state of the aforementioned particle. In such a case, at a time $t$, the probability density for an experimentalist to locate the particle at $\vec{x}$ is
-\begin{equation}\label{eq:2d_bornrule}
-    P(\vec{x}; \, t) = \abs{\Psi(t, \vec{x})}^2 = \Psi^{\!*}(t, \vec{x}) \Psi(t, \vec{x}),
-\end{equation} 
-originating from the Born rule; \sout{\Nanna{fill me}}
-
-In this report we will consider a dimensionless time-independent potential, i.e. we let $\mathcal{V}(t, \vec{x}) \to v(\vec{x})$. The specifics of the scaling do not concern us here, and we simply rewrite equation \eqref{eq:2d_schrodinger} to the dimensionless equation
-\begin{equation}\label{eq:2d_schrodinger_dimless}
-    \im \pdv{}{t}u(t, \vec{x}) = - \nabla^{\!2}u(t, \vec{x})+ v(\vec{x})u(t, \vec{x}),
-\end{equation}
-where we substituted $\Psi(t, \vec{x}) \to u(t, \vec{x})$. In equation \eqref{eq:2d_schrodinger_dimless} all variables are dimensionless. When demanding the proper normalisation on $u(t,\vec{x})$, it follows that the Born rule now takes the form of
-\begin{equation}\label{eq:2d_bornrule_dimless}
-    p(\vec{x}; \, t) = \abs{u(t, \vec{x})}^2 = u^{\!*} (t, \vec{x})u(t, \vec{x}).
-\end{equation}
-
-In this report we will refer to $u(t, \vec{x})$ as the \textit{wave function}, which is the solution of the dimensionless Schrödinger equation from equation~\eqref{eq:2d_schrodinger_dimless}. The aim is to solve for $u(t,\vec{x})$ in a confined space, with and without slits, and simulate the time evolution of Gaussian wave packets in this space. Due to the nature of wave functions, we would expect to observe wave phenomena such as dispersion and diffraction when exposed to slits. 
+As with all good stories, this too starts in Ancient Greece, where Democritus laughingly\footnote{This is hypothetical, but plausible as he was known as the ``laughing philosopher''.} postulated the world to be made up of tiny, indestructible elements \citep{berryman_2016}. This theory was later discarded with the discovery of elementary particles and eventually quarks. Things got even stranger when the theory of quantum mechanics was formalised in the first half of the 20th century \citep{QMH}, challenging established concept of physics like causality and deterministic behavioural descriptions of particles. This ultimately lead to the famous Schrödinger equation, that describes the behaviour of something called a wave function, which can be used to predict the probability distributions of the spatial and temporal whereabouts of particles. 
 
 The outline of this report will be as follows: Section~\ref{sec:methods} will be all about the methods we use, and how we discretise and solve equation~\eqref{eq:2d_schrodinger_dimless} on a two-dimensional grid. It is divided into two subsections, section~\ref{sec:methods:numerical_scheme} which is about discretisation (section~\ref{sec:methods:numerical_scheme:discretisation}) and implementation (section~\ref{sec:methods:numerical_scheme:implementation}) of the numerical scheme. Section~\ref{sec:methods:simulation} is about the initialisation of the system (section~\ref{sec:methods:simulation:initial_wave}), the slit configuration (section~\ref{sec:methods:simulation:slit_config}), the detector screen (section~\ref{sec:methods:simulation:screen}) and the simulation itself (section~\ref{sec:methods:simulation:simulations}). We present the results and sanity checks in section~\ref{sec:results}. In section~\ref{sec:discussion} we provide a brief discussion, and a conclusion in section~\ref{sec:conclusion}. There are also two appendices explaining the Crank-Nicolson discretisation (appendix~\ref{app:discretisation}), and the explanation of the matrices $A$ and $B$ (appendix~\ref{app:A_and_B}) used to solve our system. 
 
