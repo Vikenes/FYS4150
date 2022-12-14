@@ -1,35 +1,10 @@
 \section{Discussion}\label{sec:discussion}
 
+The sanity check represented by the graphs in figure~\ref{fig:ptot_deviation_NS_DS1} indicates that our solution is stable for $t\leq 0.008$. However, this result was only obtained from two particular simulation configurations. One of the main features in all our simulations were that we considered vertically symmetric wave packets propagating towards higher values of $x$. A more proper verification of our implementations would require tests with different initializations. Some natural choices for further investigation would be to consider wave packets initialized with a non-zero momentum in the vertical direction, as well as different choices for their vertical centre. Nonetheless, the initial testing provided desirable results within the scope of our analysis. 
 
-% The first two simulations:
+The animations show very different behaviours for \textit{NS} and \textit{DS1}. From the former to the latter, we can clearly see the effect of introducing slits and how the probability distribution navigates around the barriers. With no slits, we can clearly see the dispersive behaviour of the probability density in the $y$-direction. This effect is less noticeable when slits are present, as it's difficult to distinguish this feature from effects caused by interactions with the slits. It is worth noting that the large back-scattering present in the double slit simulations (and quite probably for the other slit configurations as well), occurs due to the initial wave packet being larger than the slit aperture for all the wave packets considered here.
 
-The sanity check represented by the graphs figure~\ref{fig:ptot_deviation_NS_DS1} indicates that our solution is stable for $t\leq 0.008$, which is satisfying. 
-
-\Nanna{FILL ME}
-
-The animations show very different behaviours for \textit{NS} and \textit{DS1}. From the former to the ladder, we can clearly see the effect of introducing slits and how the probability distribution navigates around the barriers. 
-
-The first experiment, for which the initial wave packet is circular, shows the expected behaviour as this is analytically solvable \Nanna{(Should check this solution)}. As the particle propagates in the $x$-direction, we can see the dispersive behaviour of the probability density in the $y$-direction. In other words, the initially narrow spatial probability distribution gets broader over time.
-% Something about the particle?
-
-%We see that the spatial distribution evolves from being circular and small to being elliptic with increasing eccentricity, having its semi-major axis in the $y$-direction. Even though the distribution is broader after a time, there are still large areas where one does not expect to find the particle at all.
-
-The second experiment starts out with a somewhat larger wave packet, being more spread out in the $y$-direction. It propagates to the double-slit where it is split in several ``pieces''. After hitting the walls and being bounced back, the slits make sure to divide the blobs into even more blobs. \Nanna{More here}
-
-\Nanna{Comment on boundary conditions}
-
-\Nanna{FILL ME}
-
-It is worth noting that the large back-scattering present in the double slit simulations (and quite probably for the other slit configurations as well), occurs due to the initial wave packet being larger that the slit aperture for all the wave packets considered here. 
-
-% The third sim.:
-
-
-The probability density 
-
-
-% The screen-thingy:
-
+When it comes to our choice of using the SuperLU method to solve the linear equations, this was an efficient way to deal with a complex aspect of the numerical implementations. One drawback with this choice is that we are left with little insight to the workings of our algorithm as a whole. For instance, figure~\ref{fig:ptot_deviation_NS_DS1} shows that the total probability deviates less when we had double slits, compared to the case when we had no slits. This seems to be a bit counterintuitive, and there may be several reasonable explanations for why we get this result. For one thing, our measurements of the deviations is not very informative, in the sense that we only measure the sum of absolute deviations. However, even with further improvements of the analysis, the SuperLU method prevents us from drawing assertive conclusions. This method utilizes concepts like partial pivoting, where the accuracy may depend on specifics of the configurations. Concluding about varying performance for different simulation configurations would thus require more extensive studies, where other numerical methods are considered.        
 
 
 
