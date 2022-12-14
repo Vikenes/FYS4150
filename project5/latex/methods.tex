@@ -61,11 +61,11 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
             &+ \im \vec{p}^\mathrm{T}(\vec{x}-\vec{x}_\mathrm{c})\}  
         \end{split}
         \end{equation}
-        where $\Sigma$, $\vec{x}_c$ and $\vec{p}$ are the spatial variance, spatial centre location and momentum of the initial wave packet, respectively, where we have defined $\Sigma \equiv \mathrm{diag}(\svec{\sigma}^2)$. This is a two dimensional complex Gaussian function. The parameters for different initialisations can be found in tables \ref{tab:simulation_parameters} and \ref{tab:simulations_info}. We normalise this initial state so that:
+        where $\Sigma$, $\vec{x}_c$ and $\vec{p}$ are the spatial variance, spatial centre location and momentum of the initial wave packet, respectively, where we have defined $\Sigma \equiv \mathrm{diag}(\svec{\sigma}^2)$. This is a two-dimensional complex Gaussian wave packet. The parameters for different initialisations can be found in tables \ref{tab:simulation_parameters} and \ref{tab:simulations_info}. We normalise this initial state so that:
         \begin{equation}
             \sum_{i,j}u_{i,j}^{(0)*}u_{i,j}^{(0)} = 1, 
         \end{equation}
-        which enables us to interpret $p_{i,j}^{n} = u_{i,j}^{(n)*}u_{i,j}^{(n)}$ as the probability that the particle is located in a small grid cell of size $h^2$, centred at $(x_i, y_i)$, which is in accordance with the Born rule from equation \eqref{eq:2d_bornrule_dimless}.
+        which enables us to interpret $p_{i,j}^{n} = u_{i,j}^{(n)*}u_{i,j}^{(n)}$ as the probability that the particle is located in a small grid cell of size $h^2$, centred at $(x_i, y_i)$, which is in accordance with the Born rule from equation \eqref{eq:2d_bornrule_dimless}. \Vetle{(Mention that we ensure/test that BC's are satisfied for this?)}
     
         % \begin{equation}\label{eq:p4_initial_condition_scalarform}
         %     u(t\!=\!0, \vec{x}) = \exp{-\frac{(x-x_\mathrm{c})^2}{2\sigma_x^2} -\frac{(y-y_\mathrm{c})^2}{2\sigma_y^2} + \im \vec{p}\cdot (\vec{x}-\vec{x}_\mathrm{c})}
