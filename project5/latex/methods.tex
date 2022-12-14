@@ -3,7 +3,7 @@
 
 \sout{We will use the Schrödinger equation to simulate a particle inside a two-dimensional quadratic box of size $L^2$. The use of  boundary conditions gives rise to the confinement of the particle \Nanna{or something like that}. We will place two or more walls inside the box to create one or more slits. The specifics of such configurations is elaborated in section \ref{sec:methods:simulation:slit_config}. A position inside if the box is called $\vec{x} =(x, y)$ and a time $t\in$, all unit less. Now $x, y \in [0,\,L]$ and $t\in[0,\,T]$ if we let $T$ be the time we simulate for. In this paper, we will use $L=1$.}
 
-We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodinger_dimless} on a two-dimensional grid. Through the Born rule, equation~\eqref{eq:2d_bornrule_dimless}, we may interpret this solution to be proportional to the probability of finding a particle somewhere on this grid. We confine the particle by imposing Dirichlet boundary conditions. In order to investigate the behaviour of the wave function we place two or more walls inside the box to create one or more slits. The specifics of such configurations is elaborated in section \ref{sec:methods:simulation:slit_config}. A position \Vetle{(position perhaps not the best erm)} inside the box is called $\vec{x} =(x, y)$ and a time $t\in$, all unit less \Vetle{(Unitless already mentioned in intro.)}. Now $x, y \in [0,\,L]$ and $t\in[0,\,T]$ if we let $T$ be the time we simulate for. In this paper, we will use $L=1$. \Vetle{(Last sentence(s) confusing)}
+We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodinger_dimless} on a two-dimensional grid. Through the Born rule, equation~\eqref{eq:2d_bornrule_dimless}, we may interpret this solution to be proportional to the probability of finding a particle somewhere on this grid. We confine the particle by imposing Dirichlet boundary conditions. In order to investigate the behaviour of the wave function we place two or more walls inside the box to create one or more slits. The specifics of such configurations is elaborated in section \ref{sec:methods:simulation:slit_config}. A position \Vetle{(position perhaps not the best erm)}inside if the box is called $\vec{x} =(x, y)$ and a time $t\in$, all unit less. Now $x, y \in [0,\,L]$ and $t\in[0,\,T]$ if we let $T$ be the time we simulate for. In this paper, we will use $L=1$. \Vetle{(Last sentence confusing)}
 
 \subsection{Numerical scheme}\label{sec:methods:numerical_scheme}
 
@@ -102,7 +102,7 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
                 Temporal step size ($\Delta t$) & $2.5 \cdot 10^{-5}$   \\
                 Total time ($T$)                & $*$                   \\
                 \hline
-                \multicolumn{2}{l}{\textbf{Slit configuration} (following section~\ref{sec:methods:slit_config})} \\
+                \multicolumn{2}{l}{\textbf{Slit configuration} (following section~\ref{sec:methods:simulation:slit_config})} \\
                 \hline
                 Number of slits ($N_\mathrm{slits}$)    & $*$                           \\
                 Number of walls; inner + outer          & $(N_\mathrm{slits}-1) \, + \, 2$\\
@@ -117,7 +117,7 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
                 Spatial extent ($\svec{\sigma}$)        & $(0.05, \,*)$             \\
                 Momentum ($\vec{p}$)                    & $(200,\, 0)$              \\
                 \hline
-                \multicolumn{2}{l}{\textbf{Vertical screen} (following section~\ref{sec:methods:screen})} \\
+                \multicolumn{2}{l}{\textbf{Vertical screen} (following section~\ref{sec:methods:simulation:screen})} \\
                 \hline
                 Horisontal position ($x_\mathrm{sc}$)   & $0.8$     \\
                 Time point ($t_\mathrm{sc}$)            & $0.002$   \\
@@ -133,7 +133,7 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
             \centering
             \begin{tabular}{clr|ccc}
                 \hline
-                & Simulation name & (label\footnote{Prefix to look for in \Nanna{link to animations etc.}}) & $N_\mathrm{slits}$ & $T$ & $\svec{\sigma}\cdot \hat{\vec{e}}_y$ \\
+                & Simulation name & (label\footnote{Prefix to look for in the \href{\animlink}{animations}}) & $N_\mathrm{slits}$ & $T$ & $\svec{\sigma}\cdot \hat{\vec{e}}_y$ \\
                 \hline
                 1. & No slits        & (\textit{NS})   & $0$   & $0.008$   & $0.05$ \\
                 2. & Double-slit (1) & (\textit{DS1})  & $2$   & $0.008$   & $0.10$ \\
