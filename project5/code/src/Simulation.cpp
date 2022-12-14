@@ -1,59 +1,76 @@
-// #include "Box.hpp"
+
 #include "Simulation.hpp"
-// #include "utils.hpp"
 
-/*
-Forslag: 
-    - Hva med å gjøre klassen mer brukervennlig ved å gir argumentene lengre navn? Altså istedenfor 'Dta', bruke 'time_step_size' elns?
-    - Gjøre det mulig å bare endre på en eller to parametre? F.eks. lage to default-settinger? Jeg kan sikkert fikse noe slikt, men idk.
-klem fra Nanna
-*/
 
-Simulation::Simulation(Box BBXa, double Dta, double Ta, double xca, double sigma_xa, double p_xa, double yca, double sigma_ya, double p_ya){
-    Dt = Dta;
-    T = Ta;
-    xc = xca;
-    sigma_x = sigma_xa;
-    p_x = p_xa;
-    yc = yca;
-    sigma_y = sigma_ya;
-    p_y = p_ya;
-    Nt = int(Ta/Dta)+1;
-    BBX = BBXa;
+Simulation::Simulation(Box box, double duration, double time_step_size, std::tuple<double,double> gaussian_extent, std::tuple<double,double> gaussian_centre_position, std::tuple<double,double> gaussian_momentum){
+    dt_ = time_step_size;
+    T_ = duration;
+    Nt_ = int(T_/dt_)+1;
+    box_ = box;
+    
+    //  set parameters in Gaussian:
+    gaussian_wavepacket(gaussian_extent, gaussian_centre_position, gaussian_momentum);
 
-    U0 = arma::cx_mat(BBX.M, BBX.M);
-    A = arma::sp_cx_mat((BBX.M-2)*(BBX.M-2), (BBX.M-2)*(BBX.M-2));
-    B = arma::sp_cx_mat((BBX.M-2)*(BBX.M-2), (BBX.M-2)*(BBX.M-2));
-    U = arma::cx_cube(BBX.M, BBX.M, Nt);
+    //  set up matices and cube:
+    U0_ = arma::cx_mat(box_.M, box_.M);
+    A_ = arma::sp_cx_mat((box_.M-2)*(box_.M-2), (box_.M-2)*(box_.M-2));
+    B_ = arma::sp_cx_mat((box_.M-2)*(box_.M-2), (box_.M-2)*(box_.M-2));
+    U_ = arma::cx_cube(box_.M, box_.M, Nt_);
+
 }
 
-void Simulation::initialise(void){
-    // Initial state:
-    std::cout<<"M: "<< BBX.M <<std::endl;
-    std::cout<<"Nt: "<< Nt <<std::endl;
-    std::cout<<"Initialising state..."<<std::endl;
-    initialise_state(U0, BBX.M, BBX.h, xc, yc, sigma_x, sigma_y, p_x, p_y);
-    u = make_column_vector(U0, BBX.M);
-    std::cout<<"-> State initialised"<<std::endl;
-    //  Set up A and B matrices:
-    fill_AB_matrix(BBX.M, BBX.h, Dt, BBX.V, A, B);
-    std::cout<<"-> A and B set up"<<std::endl;
-    U.slice(0) = U0;
-    std::cout<<"-> U-cube set up"<<std::endl;
+void Simulation::gaussian_wavepacket(std::tuple<double,double> extent, std::tuple<double,double> centre_position, std::tuple<double,double> momentum){
+    std::tie(sigmax_, sigmay_) = extent;
+    std::tie(xc_, yc_) = centre_position;
+    std::tie(px_, py_) = momentum;
+    //  update all member vairables:
+    gaussian_params_ = std::make_tuple(xc_, yc_, sigmax_, sigmay_, px_, py_);
 }
 
-arma::cx_cube Simulation::run_simulation(void){
-    std::cout<<"Running simulation:"<<std::endl;
+void Simulation::extend_wavepacket(double vertical_extent, double horisontal_extent){
+    //  update parameters:
+    gaussian_wavepacket(std::make_tuple(horisontal_extent, vertical_extent), std::make_tuple(xc_, yc_), std::make_tuple(px_, py_));
+}
+
+void Simulation::initialise(){
+    
+    //  initial state:
+    std::cout << " M = " << box_.M << std::endl;
+    std::cout << "Nt = " << Nt_ << std::endl;
+    std::cout << "Initialising state ..." << std::endl;
+    
+    initialise_state(U0_, box_.M, box_.h, xc_, yc_, sigmax_, sigmay_, px_, py_); //  from 'utils.cpp'
+    u_ = make_column_vector(U0_, box_.M); //  from 'utils.cpp'
+
+    std::cout << "-> State initialised" << std::endl;
+    
+    //  set up A and B matrices:
+    fill_AB_matrix(box_.M, box_.h, dt_, box_.V, A_, B_);  //  from 'utils.cpp'
+    U_.slice(0) = U0_;
+    std::cout << "-> U-cube set up" << std::endl;
+}
+
+
+arma::cx_cube Simulation::run_simulation(){
+
+    std::cout << "Running simulation:" << std::endl;
+
     auto t1 = std::chrono::high_resolution_clock::now();
-    for(int n=0; n<Nt-1; n++){
-        std::cout<<"-> "<<n+1<<" / "<<Nt-1<<std::endl;
-        arma::cx_vec bvec = B*u;
-        u = arma::spsolve(A,bvec);
-        U.slice(n+1) = make_matrix(u, BBX.M);
+    
+    //  solve for each time step:
+    for(int n=0; n<Nt_-1; n++){
+        std::cout << "-> " << n+1 << " / " << Nt_-1 << std::endl;
+        arma::cx_vec bvec = B_*u_;
+        u_ = arma::spsolve(A_, bvec);
+        U_.slice(n+1) = make_matrix(u_, box_.M);   //  from 'utils.cpp'
     }
+
     auto t2 = std::chrono::high_resolution_clock::now();
     double duration_seconds = std::chrono::duration<double>(t2-t1).count();
-    std::cout<<"Simulation successfully finished"<<std::endl;
-    std::cout<<"Run time: "<<duration_seconds<< "s, or " << duration_seconds / 60.0<<" minutes\n\n"<<std::endl;
-    return U;
+    
+    //  update runner:
+    std::cout << "Simulation finished" << std::endl;
+    std::cout << "Run time: " << duration_seconds << "s (" << duration_seconds / 60.0 << " mins)\n\n" << std::endl<< std::endl;
+
+    return U_;
 }

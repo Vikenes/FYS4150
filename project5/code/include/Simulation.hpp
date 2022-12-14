@@ -1,54 +1,79 @@
 #ifndef __Simulation_hpp__
 #define __Simulation_hpp__
 
-#include <sstream> 
-#include <string>
-#include <iomanip>
-#include <vector>
-#include <fstream>
-#include <iostream>
-#include <cmath>
-#include <armadillo>
-#include <typeinfo>
-#include <complex>
 #include <utils.hpp>
 #include <Box.hpp>
-#include <chrono>
+
 
 class Simulation{
-    // member variables:
-    public:
 
-        // Constructor
-        Simulation(Box BBXa, double Dta=2.5e-5, double Ta=0.008, double xca=0.25, double sigma_xa=0.05, double p_xa=200, double yca=0.5, double sigma_ya=0.05, double p_ya=0);
+    private:
 
-        double Dt;
-        double T;
-        double xc;
-        double sigma_x;
-        double p_x;
-        double yc;
-        double sigma_y;
-        double p_y;
-        int Nt;
-        Box BBX;
+        // Member variables
 
-        //  Initial states
-        arma::cx_mat U0; //initial state as matrix
-        arma::cx_vec u; //initial state as vector
+        double dt_;
+        double T_;
+        int Nt_;
+        Box box_;
+
+        double xc_, yc_;            //  gaussian centre position
+        double sigmax_, sigmay_;    //  gaussian extent (stdv.)
+        double px_, py_;            //  gaussian momentum (p-vec)
+
+        // initial states:
+        arma::cx_mat U0_;    //  initial state as matrix
+        arma::cx_vec u_;     //  initial state as vector
         
-        // Matrices A and B
-        arma::sp_cx_mat A, B;
+        // matrices A and B:
+        arma::sp_cx_mat A_, B_;   // matrix A, matrix B
 
-        // Cube to store the U matrices in time
-        arma::cx_cube U;
-
+        // system:
+        arma::cx_cube U_;    // cube to store the U matrices in time 
 
 
         // Member functions
-        void initialise(void);
+        /** 
+         * @brief Set up an initial 2D Gaussian wave packet
+         * @param extent sigma-vector in Gaussian
+         * @param centre_position xc-vector in Gaussian
+         * @param momentum p-vector in Gaussian
+        */
+        void gaussian_wavepacket(std::tuple<double,double> extent, std::tuple<double,double> centre_position, std::tuple<double,double> momentum);
+    
+    public:
 
-        arma::cx_cube run_simulation(void);
+        // Member variables
+        std::tuple<double, double, double, double, double, double> gaussian_params_;    //  parameters in the Gaussian 
+
+        // Constructor
+        /**
+         * @brief Construct simulation object.
+         * @param duration simulation duration
+         * @param time_step_size temporal step size
+         * @param gaussian_extent sigma-vector in Gaussian
+         * @param gaussian_centre_position xc-vector in Gaussian
+         * @param gaussian_momentum p-vector in Gaussian
+        */
+        Simulation(Box box, double duration=0.008, double time_step_size=2.5e-5, std::tuple<double,double> gaussian_extent=std::make_tuple(0.05,0.05), std::tuple<double,double> gaussian_centre_position=std::make_tuple(0.25,0.50), std::tuple<double,double> gaussian_momentum=std::make_tuple(200.0,0.0));
+        
+
+        // Member functions
+        /**
+         * @brief Initialise the simulation.
+        */
+        void initialise();
+        /**
+         * @brief Run the simulation. 
+         * @note Solves system using Armadillo's spsolve.
+         * @returns arma::cx_cube 'U' for which a slice n contains the solutions u_{i,j} for time point n
+        */
+        arma::cx_cube run_simulation();
+        /**
+         * @brief Easily extend the initial Gaussian in x- and/or y-direction.
+         * @param vertical_extent standard deviation of Gaussian in y-direction
+         * @param horisontal_extent standard deviation of Gaussian in x-direction
+        */
+        void extend_wavepacket(double vertical_extent=0.05, double horisontal_extent=0.05);
 };
 
 #endif
