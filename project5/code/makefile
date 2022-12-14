@@ -39,6 +39,11 @@ ifeq  ($(strip $(OPTIMISE)),yes)
     CXXFLAGS += -O3
 endif
 
+# Add O3 flag:
+ifeq  ($(strip $(OPTIMISER)),yes)
+    CXXFLAGS += -O3
+endif
+
 # # Add OpenMP flags:
 # ifeq ($(strip $(PARALLEL)), yes)
 # 	ifeq ($(detected_OS), Darwin)
