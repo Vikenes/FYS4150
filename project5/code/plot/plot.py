@@ -23,10 +23,10 @@ LABELSIZE = 25
 LEGENDSIZE = 20
 TITLESIZE = 30
 # for figures that are large ?
-SMALLER_TICKLABELSIZE = 14
+SMALLER_TICKLABELSIZE = 16
 SMALLER_LABELSIZE = 18
 SMALLER_LEGENDSIZE = 16
-SMALLER_TITLESIZE = 20
+SMALLER_TITLESIZE = 22
 
 ### Set rc-params
 plt.rc("legend", fontsize=LEGENDSIZE, fancybox=True, loc="best", frameon=True, edgecolor="black")
@@ -44,8 +44,8 @@ plt.rcParams['font.family'] = 'Times New Roman'
 
 
 ### Global setting commands
-TEMP = False    # makes temporary .png files instead of .pdf
-SAVE = False    # saves .pdf files
+TEMP = True    # makes temporary .png files instead of .pdf
+SAVE = True    # saves .pdf files
 PUSH = False    # git stuff
 SHOW = False    # show plots
 
@@ -110,34 +110,39 @@ def set_ax_info(ax, xlabel, ylabel=False, zlabel='none', style='plain', title=No
 ### "Local" functions
 
 
-def make_colourmap(ax, transposed_data, timestamp, cmap, norm, spatial_extent=(0,1,0,1), stamp_colour="white"):
-    img = ax.imshow(transposed_data, extent=spatial_extent, cmap=plt.get_cmap(cmap), norm=norm)
+def make_colourmap(ax, transposed_data, timestamp, cmap, norm, levels=False, spatial_extent=(0,1,0,1), stamp_colour="white"):
+    if levels:
+        img = ax.contourf(transposed_data, cmap=plt.get_cmap(cmap), norm=norm, extent=spatial_extent, levels=22)
+    else:
+        img = ax.imshow(transposed_data, extent=spatial_extent, cmap=plt.get_cmap(cmap), norm=norm)
+    
     # img.set_norm(norm)
     time_txt = ax.text(0.95, 0.95, r"$t = %.3f$"%timestamp, color=stamp_colour, ha="right", va="top", fontsize=LEGENDSIZE)
     ax.grid(False)
     ax.set_aspect("equal")
     return img, ax
 
-def default_mapfigure(timepoints, data, cmap="gnuplot", num_maps=3, vmin=-1, vmax=1):
-    fig, axes = plt.subplots(nrows=1, ncols=num_maps, sharey=True, figsize=(15, 10))
+def default_mapfigure(timepoints, data, c_label=lambda t:"", cmap="gnuplot", num_maps=3, levels=False, vmin=None, vmax=None):
+    fig, axes = plt.subplots(nrows=1, ncols=num_maps, sharey=True, figsize=(16, 10))
 
     axes.flat[0].set_ylabel(r"$y$")
-    norm = colourmaps.colors.Normalize(vmin=vmin, vmax=vmax)
-    # data /= np.max(np.abs(data), axis=1, keepdims=True)
 
     for j, ax in enumerate(axes.flat):
-        # data[j] /= np.max(np.abs(data[j]))
-        if np.any(data[j]) > vmax or np.any(data[j]) < vmin:
-            print("Some values outside of range!")
-        img, ax = make_colourmap(ax, data[j].T, timepoints[j], cmap, norm)
+        v_min = vmin or np.min(data[j])
+        v_max = vmax or np.max(data[j])
+        norm = colourmaps.colors.Normalize(vmin=v_min, vmax=v_max)
+        img, ax = make_colourmap(ax, data[j].T, timepoints[j], cmap, norm, levels)
         ax.set_xlabel(r"$x$")
         ax.tick_params("both", labelsize=SMALLER_TICKLABELSIZE)
+        cbar = fig.colorbar(img, ax=ax, location="top", shrink=0.98)#, format="%3.2f")#, ticks=(v_min, (v_max-v_min)/2, v_max))
+        # cbar.ax.tick_params(labelsize=SMALLER_TICKLABELSIZE, top=False, bottom=True, length=3, labelbottom=True, labeltop=False)
+        cbar.ax.tick_params(labelsize=SMALLER_TICKLABELSIZE, top=True, bottom=False, length=3, labelbottom=False, labeltop=True, rotation=18)
+        # cbar.set_label(c_label(timepoints[j]), fontsize=SMALLER_TITLESIZE)
+        ax.set_title(c_label(timepoints[j]), fontsize=SMALLER_TITLESIZE)
     
-    fig.subplots_adjust(hspace=0.01, wspace=0.10, left=0.06, right=0.98, bottom=0.06, top=0.96)
-    cbar = fig.colorbar(img, ax=axes, location="right", shrink=0.4)
-    cbar.ax.tick_params(labelsize=SMALLER_TICKLABELSIZE)
+    fig.subplots_adjust(hspace=0.12, wspace=0.12, left=0.06, right=0.98, bottom=0.06, top=0.96)
 
-    return fig, axes.flat, cbar
+    return fig, axes.flat
 
 def draw_walls(ax, yc_list, colour="palegreen"):
     xc = 0.5
@@ -156,13 +161,6 @@ def draw_walls(ax, yc_list, colour="palegreen"):
     # else:
     #     pass
     pass
-
-
-def min_max_scale(x, a=-1, b=1, axis=1):
-    xmin = np.min(x)#, axis=axis)
-    xmax = np.max(x)#, axis=axis)
-    return a + (x-xmin) * (b-a) / (xmax-xmin)
-
 
 
 ### Functions to be called in 'analysis.py'
@@ -226,21 +224,16 @@ def animate_probability_density(t, P, title=None, wall_y=[], mp4name="animation"
         anim.save(video_path + mp4name.split(".")[0] + '.mp4', writer="ffmpeg", bitrate=-1, fps=30)
 
 def snapshot_probability_density(t, P, Pmax=None, title=None, wall_y=None, pdfname="snapshot_P", spatial_extent=(0,1,0,1), vline=0.8, num_rows=1, save=SAVE, png_duplicate=TEMP, show=SHOW):
-    num_maps = len(t) # 3?
 
-    fig, axes, cbar = default_mapfigure(t, P, cmap="gnuplot", num_maps=len(t), vmin=0)
-    # if title is not None:
-    # fig.suptitle(r"$p(\mathbf{x}; \, t)$")
-    # cbar.set_label(r"$p(\mathbf{x}; \, t)/\max{p(\mathbf{x}; \, t=t_{n})}$")
-    cbar.set_label(r"$\propto p(\mathbf{x}; \, t)$")
-
+    label = lambda t: r"$p(\mathbf{x}; \, t\!=\!%.3f)$" %t
+    fig, axes = default_mapfigure(t, P, label, cmap="gnuplot", num_maps=len(t))#, vmin=0)
     if wall_y is not None:
         for ax in axes:
             draw_walls(ax, wall_y)
 
     ### plot the screening line:
     ax = axes[-1]
-    ax.axvline(vline, ls=':', lw=0.9, c="orangered", alpha=0.8)
+    ax.axvline(vline, ls=':', lw=1.2, c="orangered", alpha=0.8)
 
     if save:
         fig.savefig(plot_path + pdfname.split(".")[0] + ".pdf")
@@ -251,13 +244,9 @@ def snapshot_probability_density(t, P, Pmax=None, title=None, wall_y=None, pdfna
     
 def snapshot_real_wavefunction(t, ReU, Umax=None, title=None, wall_y=None, pdfname="snapshot_ReU", spatial_extent=(0,1,0,1), num_rows=1, save=SAVE, png_duplicate=TEMP, show=SHOW):
 
-    num_maps = len(t)
-    # fix these!
-    fig, axes, cbar = default_mapfigure(t, ReU, cmap="ocean", num_maps=len(t))#, vmax=Umax)
-    # if title is not None:
-    # fig.suptitle(r"$\mathrm{Re}(u(t, \vec{x}))$")
-    # axes[1].set_title(r"$\propto \mathrm{Re}\{u(t, \mathbf{x})\}$")
-    cbar.set_label(r"$\propto \mathrm{Re}\{u(t, \mathbf{x})\}$")
+    label = lambda t: r"$\mathrm{Re}\{u(t\!=\!%.3f, \mathbf{x})\}$" %t
+    fig, axes = default_mapfigure(t, ReU, label, cmap="ocean", num_maps=len(t), levels=True)
+
     if wall_y is not None:
         for ax in axes:
             draw_walls(ax,wall_y)
@@ -270,13 +259,10 @@ def snapshot_real_wavefunction(t, ReU, Umax=None, title=None, wall_y=None, pdfna
         plt.show()
 
 def snapshot_imaginary_wavefunction(t, ImU, Ulim=(None, None), title=None, wall_y=None, pdfname="snapshot_ImU", spatial_extent=(0,1,0,1), num_rows=1, save=SAVE, png_duplicate=TEMP, show=SHOW):
-    num_maps = len(t)
     
-    fig, axes, cbar= default_mapfigure(t, ImU, cmap="ocean", num_maps=len(t))
-    # if title is not None:
-    # fig.suptitle(r"$\mathrm{Im}(u(t, \vec{x}))$")
-    cbar.set_label(r"$\propto \mathrm{Im}\{u(t, \mathbf{x})\}$")
-    # cbar.set_label()
+    label = lambda t: r"$\mathrm{Im}\{u(t\!=\!%.3f, \mathbf{x})\}$" %t
+    fig, axes = default_mapfigure(t, ImU, label, cmap="ocean", num_maps=len(t), levels=True)
+   
     if wall_y is not None:
         for ax in axes:
             draw_walls(ax, wall_y)

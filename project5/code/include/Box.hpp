@@ -35,9 +35,6 @@ class Box{
 
         // Member functions
 
-        // old:
-        void set_up_walls(double v0, int Ns=2, double Th=0.02, double wxc=0.5, double wyc=0.5, double wall_piece_length=0.05, double aperture=0.05);
-
         /**
          * Set up walls to create vertically aligned slits in box.
          * @param num_of_slits number of slits

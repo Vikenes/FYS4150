@@ -8,6 +8,7 @@ import pyarma as pa
 import sys
 
 
+
 binfile_path = os.path.abspath(".") + "/../../output/binfiles/"
 
 class Analysis:
@@ -96,19 +97,12 @@ class Analysis:
             P_points[j] = self.P[idx]
             ReU_points[j] = np.real(self.U[idx])
             ImU_points[j] = np.imag(self.U[idx])
-            absUmax = np.max(np.abs(self.U[idx]))
-            # Normalise in strange way
-            ReU_points[j] /= absUmax
-            ImU_points[j] /= absUmax
-            P_points[j] /= np.max(P_points[j])
-
- 
 
         yc = self.wall_y
 
         ### Prob. density:
         pdfname = pdfnames[0] or self.label + "_snapshots_P"
-        PLOT.snapshot_probability_density(t_points, P_points, Pmax=np.max(P_points[1]), wall_y=yc, pdfname=pdfname)
+        PLOT.snapshot_probability_density(t_points, P_points, wall_y=yc, pdfname=pdfname)
         ### Real part of U:
         pdfname = pdfnames[1] or self.label + "_snapshots_ReU"
         PLOT.snapshot_real_wavefunction(t_points, ReU_points,  wall_y=yc, pdfname=pdfname)
@@ -211,7 +205,7 @@ try:
                 NOSLITS.deviation(others=[DSLIT1])
             elif arg1 in ["DS2", "SS", "TS"]:
                 eval(f"{which[arg1]}.snapshots((0, 0.001, 0.002))")
-                eval(f"{which[arg1]}.probability_vertical_screen()")
+                # eval(f"{which[arg1]}.probability_vertical_screen()")
             elif arg1 == "ALL":
                 NOSLITS.deviation(others=[DSLIT1])
                 DSLIT2.snapshots((0, 0.001, 0.002))
