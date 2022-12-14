@@ -1,8 +1,8 @@
-# Animations showing evolution probability denstity
+# Animations showing evolution probability
 
 See the [method-section of our report](https://github.com/Vikenes/FYS4150/blob/main/project5/latex/project5.pdf). 
 
-The `.mp4`-files show the spatial distribution of the probability density evolving in time. Pay attention to the dynamic colour bar: the probability density value on this bar has not been altered with, whilst the limits deciding the colour scale change with each time step.
+The `.mp4`-files show the spatial distribution of the probability distributrion evolving in time. Pay attention to the dynamic colour bar: the probability value on this bar has not been altered with, whilst the limits deciding the colour scale change with each time step.
 
 |Filename       |No.|Name               | Prefix    | Number of slits   | Simulation duration   | Vertical extent   |
 |:--            |--:|:---               | :---      | :----:            | :----:                | :----:            |

@@ -1,12 +1,12 @@
 
 \section{Methods}\label{sec:methods}
 
-We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodinger_dimless} on a two-dimensional grid. Through the Born rule, equation~\eqref{eq:2d_bornrule_dimless}, we may from the wave function construct the probability of finding a particle somewhere on this grid. We confine the particle by imposing Dirichlet boundary conditions. In order to investigate the behaviour of the wave function we place two or more walls inside the box to create one or more slits. The specifics of such configurations is elaborated in section \ref{sec:methods:simulation:slit_config}. A position \Vetle{(position perhaps not the best erm)}inside if the box is called $\vec{x} =(x, y)$ and a time $t\in$, all unit less. Now $x, y \in [0,\,L]$ and $t\in[0,\,T]$ if we let $T$ be the time we simulate for. In this paper, we will use $L=1$. \Vetle{(Last sentence confusing)}
+We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodinger_dimless} on a two-dimensional grid. Through the Born rule, equation~\eqref{eq:2d_bornrule_dimless}, we may from the wave function construct the probability of finding a particle somewhere on this grid. We confine the particle by imposing Dirichlet boundary conditions (to be defined). In order to investigate the behaviour of the wave function we place two or more walls inside the box to create one or more slits. The specifics of such configurations is elaborated in section \ref{sec:methods:simulation:slit_config}. A point inside the box is called $\vec{x} =(x, y)$ and the time is $t$, all unitless quantities. Now $x, y \in [0,\,L]$ and $t\in[0,\,T]$. For simplicity we will use $L=1$, and $T$ is the time we simulate for. 
 
 \subsection{Numerical scheme}\label{sec:methods:numerical_scheme}
 
     \subsubsection{Discretisation}\label{sec:methods:numerical_scheme:discretisation}
-        We discretise the position $\vec{x} \to \vec{x}_{i,j} = (x_i, y_j) = h(i,j)$, where $h$ is the spatial separation between two points on the grid and $i$ and $j$ are integers. We consider $M$ points in each direction, giving $i, j \in [0,\, M)$. The lattice is then made up of $(M-2) \cross (M-2)$ internal points and boundary points. The time points become $t\to t_n=n\Delta t$, where $\Delta t$ is the time step size and $N_t = T/\Delta t$ is the number of time points, so that the integer time steps are $n\in[0, N_t)$. In discretised form, we now write the wave function, probability density \Vetle{(density? Just double-checking)} and potential as 
+        We discretise the position $\vec{x} \to \vec{x}_{i,j} = (x_i, y_j) = h(i,j)$, where $h$ is the spatial separation between two points on the grid and $i$ and $j$ are integers. We consider $M$ points in each direction, giving $i, j \in [0,\, M)$, resulting in $M-1$ steps and $M-2$ internal points. The lattice is then made up of $(M-2) \cross (M-2)$ internal points and boundary points. The time points become $t\to t_n=n\Delta t$, where $\Delta t$ is the time step size and $N_t = T/\Delta t$ is the number of time points, so that the integer time steps are $n\in[0, N_t)$. In discretised form, we now write the wave function, probability density and potential as 
         \begin{align}
             u(t, \vec{x}) \to u(t_n, \vec{x}_{i,j}) &\equiv u_{i,j}^{(n)}, \\ 
             p(\vec{x};\, t) \to p(\vec{x}_{i,j};\, t_n) &\equiv p_{i,j}^{(n)}, \\
@@ -27,9 +27,15 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
             -\,& \frac{\im \Delta t}{2} v_{i,j}\,u_{i,j}^{(n)},
             \end{split}
         \end{equation}
-        and we have defined $r\equiv \frac{\im\Delta t}{2h^2}$. This time evolution is valid for any time step with the time range $n\in[0,N_t-2]$. Its spatial validity is restricted to the internal points of the grid; $i,j\in[1,M-2]$. For the boundary points we impose the Dirichlet boundary conditions (stated in the nomenclature). 
+        and we have defined $r\equiv \frac{\im\Delta t}{2h^2}$. This time evolution is valid for any time step with the time range $n\in[0,N_t-2]$. Its spatial validity is restricted to the internal points of the grid; $i,j\in[1,M-2]$. For the boundary points we impose the Dirichlet boundary conditions which are:
+        \begin{itemize*}
+            \item[] $u(t, \vec{x}_{0,j})       = u(t, x\!=\!0, y) = 0$. \\
+            \item[] $u(t, \vec{x}_{M\!-\!1,j}) = u(t, x\!=\!1, y) = 0$. \\
+            \item[] $u(t, \vec{x}_{i,0})       = u(t, x, y\!=\!0) = 0$. \\
+            \item[] $u(t, \vec{x}_{i,M\!-\!1}) = u(t, x, y\!=\!1) = 0$.
+        \end{itemize*} 
 
-        If we define 
+        If we then define 
         \begin{equation}
             \begin{split}
                 \vec{u}^{(n)} \equiv [&u_{1,1}^{(n)}, \dots, u_{M-2,1}^{(n)}, \dots, \\ 
@@ -51,10 +57,10 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
         where $u^{(n+1)}$ is the unknown we solve for. When solving equation \eqref{eq:matrix_equation_to_solve} we can use the structure of $A$ to our advantage. $A$ arise from a boundary value problem. We could use direct methods, such as Gaussian elimination or LU-decomposition. The latter may be used to compute the inverse, $A^{-1}$. This could be beneficial, since the constant $A^{-1}$ would apply at all time steps. We could also use iterative methods such as the Jacobi method or Gauss-Seidel. $A$ is diagonally dominant\footnote{See appendix \ref{app:A_and_B}}, and we are thus guaranteed convergence with the Jacobi method\citep{lecture_notes}. However, noticing that the vast majority of the entries in $A$ are zeros, we represent it numerically as a \textit{sparse matrix}, only saving the indices and values of non-zero entries. This allows us to use the \texttt{spsolve()} method from the \texttt{Armadillo} library to solve equation \eqref{eq:matrix_equation_to_solve}. The method solves the system of sparse linear equations by a special algorithm for performing LU decomposition, called a Supernoidal LU decomposition (SuperLU) \cite{SuperLU}. We refer to their article for a more detailed description of the algorithm.
         
 \subsection{Initialisation and simulation}\label{sec:methods:simulation}
-    Having addressed methods for advancing the system in time, we now turn our attention to how we initialise the system. Additionally, we describe how we model the slits in our simulation box. \Vetle{(Rewrote paragraph, not sure if the last sentence is akhtschually "correct")}  
+    Having addressed methods for advancing the system in time, we now turn our attention to how we initialise the system. Additionally, we describe how we model the slits in our simulation box. 
     
     \subsubsection{Initial wave packet}\label{sec:methods:simulation:initial_wave}
-        The initialisation is done by imposing the following initial condition. 
+        The initialisation is done by imposing the following initial condition:\footnote{We stress that the initialisation also has to obey the boundary conditions.} 
         \begin{equation}\label{eq:p4_initial_condition}
         \begin{split}
             u(t\!=\!0, \vec{x}) = \exp\{ &-(\vec{x}-\vec{x}_\mathrm{c})^\mathrm{T}\Sigma^{-1}(\vec{x}-\vec{x}_\mathrm{c}) \\ 
@@ -65,7 +71,7 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
         \begin{equation}
             \sum_{i,j}u_{i,j}^{(0)*}u_{i,j}^{(0)} = 1, 
         \end{equation}
-        which enables us to interpret $p_{i,j}^{n} = u_{i,j}^{(n)*}u_{i,j}^{(n)}$ as the probability that the particle is located in a small grid cell of size $h^2$, centred at $(x_i, y_i)$, which is in accordance with the Born rule from equation \eqref{eq:2d_bornrule_dimless}. \Vetle{(Mention that we ensure/test that BC's are satisfied for this?)}
+        which enables us to interpret $p_{i,j}^{n} = u_{i,j}^{(n)*}u_{i,j}^{(n)}$ as the probability that the particle is located in a small grid cell of size $h^2$, centred at $(x_i, y_i)$, which is in accordance with the Born rule from equation \eqref{eq:2d_bornrule_dimless}.
     
         % \begin{equation}\label{eq:p4_initial_condition_scalarform}
         %     u(t\!=\!0, \vec{x}) = \exp{-\frac{(x-x_\mathrm{c})^2}{2\sigma_x^2} -\frac{(y-y_\mathrm{c})^2}{2\sigma_y^2} + \im \vec{p}\cdot (\vec{x}-\vec{x}_\mathrm{c})}
@@ -73,7 +79,7 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
 
     \subsubsection{Slit configuration}\label{sec:methods:simulation:slit_config}
 
-        To create a \textit{single} slit, we need \textit{two} objects with the property that the particle \Vetle{(Wave rather than particle?)} cannot propagate through it. Said objects are to have a separation between them, a \textit{slit}, perpendicular to the dominating motion of the wave packet. A natural choice for the shape of these objects are rectangles. The separation of these rectangles, or ``walls'', then give rise to the slits. Three such walls give rise to two slits, and so on. However, to achieve proper $n$-slit experiments, we should make sure that the two outermost walls of this setup reach the edges of the grid, so that the only way of bypassing the wall is through the slits. 
+        To create a \textit{single} slit, we need \textit{two} objects with the property that the wave packet cannot propagate through it. Said objects are to have a separation between them, a \textit{slit}, perpendicular to the dominating motion of the wave packet. A natural choice for the shape of these objects are rectangles. The separation of these rectangles, or ``walls'', then give rise to the slits. Three such walls give rise to two slits, and so on. However, to achieve proper $n$-slit experiments, we should make sure that the two outermost walls of this setup reach the edges of the grid, so that the only way of bypassing the wall is through the slits. 
 
         A natural choice for modelling such walls is to set the potential at their grid positions to a high constant value. The slits can then be represented as zero-potential gateways through the large potential. We also set the potential to zero everywhere else in the box, meaning that the walls are the only place inside the box with a non-zero potential. We will make sure that the slit setup is symmetric around the box centre in both directions. Thus, say we want $n$ slits, we would need $n-1$ identical wall pieces and two identical walls that closes the gap between the outer slits and the box edges.
     
