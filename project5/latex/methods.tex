@@ -12,7 +12,7 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
             p(\vec{x};\, t) \to p(\vec{x}_{i,j};\, t_n) &\equiv p_{i,j}^{(n)}, \\
             v(\vec{x}) \to v(\vec{x}_{i,j})&\equiv v_{i,j}, 
         \end{align}
-        where the superscript $(n)$ refers to the time index. 
+        where the superscript $(n)$ refers to the time index. We will consider discretised quantities for the remainder of this report. We will therefore denote quantities both with and without subscripts, depending on whether we want to emphasize specific indices or not.  
 
     \subsubsection{Implementation}\label{sec:methods:numerical_scheme:implementation}
         In order to solve equation \eqref{eq:2d_schrodinger_dimless} numerically on a discretised grid, as explained above, we use the Crank-Nicolson method. A detailed derivation of the method we implement is given in appendix \ref{app:discretisation}. It allows us to express the time evolution of the system as:
