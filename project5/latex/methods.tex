@@ -29,9 +29,9 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
         \end{equation}
         and we have defined $r\equiv \frac{\im\Delta t}{2h^2}$. This time evolution is valid for any time step with the time range $n\in[0,N_t-2]$. Its spatial validity is restricted to the internal points of the grid; $i,j\in[1,M-2]$. For the boundary points we impose the Dirichlet boundary conditions which are:
         \begin{itemize*}
-            \item[] $u(t, \vec{x}_{0,j})       = u(t, x\!=\!0, y) = 0$. \\
-            \item[] $u(t, \vec{x}_{M\!-\!1,j}) = u(t, x\!=\!1, y) = 0$. \\
-            \item[] $u(t, \vec{x}_{i,0})       = u(t, x, y\!=\!0) = 0$. \\
+            \item[] $u(t, \vec{x}_{0,j})       = u(t, x\!=\!0, y) = 0$, \\
+            \item[] $u(t, \vec{x}_{M\!-\!1,j}) = u(t, x\!=\!1, y) = 0$, \\
+            \item[] $u(t, \vec{x}_{i,0})       = u(t, x, y\!=\!0) = 0$ and \\
             \item[] $u(t, \vec{x}_{i,M\!-\!1}) = u(t, x, y\!=\!1) = 0$.
         \end{itemize*}  
 
