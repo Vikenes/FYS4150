@@ -181,10 +181,6 @@ print(SSLIT)
 print(TSLIT)
 
 
-
-
-
-
 which = {"NS":"NOSLITS", "DS1":"DSLIT1", "DS2":"DSLIT1", "SS":"SSLIT", "TS":"TSLIT", "ALL":"ALL"}
 anim = ["animate", "anim", "video", "animations"]
 fig = ["plot", "plots", "figures", "fig", "figure"]
@@ -207,21 +203,21 @@ try:
                 SSLIT.animate()
                 TSLIT.animate()
             PLOT.show_all()
+        
     ### Plot
     elif arg2 in fig:
-        if arg1 in ["NS", "DS1"]:
-            NOSLITS.deviation(others=[DSLIT1])
-        elif arg1 in ["DS2", "SS", "TS"]:
-            eval(f"{which[arg1]}.snapshots((0, 0.001, 0.002))")
-            eval(f"{which[arg1]}.probability_vertical_screen()")
-        elif arg1 == "ALL":
-            NOSLITS.deviation(others=[DSLIT1])
-            DSLIT2.snapshots((0, 0.001, 0.002))
-            SSLIT.probability_vertical_screen()
-            TSLIT.probability_vertical_screen()
-
-
-        PLOT.show_all()
+        if arg1 in which.keys():
+            if arg1 in ["NS", "DS1"]:
+                NOSLITS.deviation(others=[DSLIT1])
+            elif arg1 in ["DS2", "SS", "TS"]:
+                eval(f"{which[arg1]}.snapshots((0, 0.001, 0.002))")
+                eval(f"{which[arg1]}.probability_vertical_screen()")
+            elif arg1 == "ALL":
+                NOSLITS.deviation(others=[DSLIT1])
+                DSLIT2.snapshots((0, 0.001, 0.002))
+                SSLIT.probability_vertical_screen()
+                TSLIT.probability_vertical_screen()
+            PLOT.show_all()
 
     else:
         print("Please provide a valid command line argument.")
