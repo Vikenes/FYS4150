@@ -1,10 +1,6 @@
 \section{Results}\label{sec:results}
 
-\Nanna{What to name these sections?}
-
-\Nanna{Maybe put links to animations here?}
-
-For the interested reader, we present animations of the probability density resulting from each simulation listed in table~\ref{tab:simulations_info} \href{\animlink}{here}. 
+For the interested reader with a keen interest in visualisation, we present animations of the probability density resulting from each simulation listed in table~\ref{tab:simulations_info} in our \href{\animlink}{GitHub} repository. 
 
 
 
@@ -14,7 +10,7 @@ For the interested reader, we present animations of the probability density resu
     \begin{equation}\label{eq:total_probability_deviation}
         \abs{1- p^\mathrm{tot}(t)}\,; \quad p^\mathrm{tot}(t) = \sum_{i,j\in [0, M)} p(\vec{x}_{i,j};\, t)
     \end{equation}
-    as a function of time in figure~\ref{fig:ptot_deviation_NS_DS1}, where we see that the deviation ($\sim 10^{-14}$) is close to machine precision.
+    as a function of time in figure~\ref{fig:ptot_deviation_NS_DS1}, where we see that the deviation ($\sim 10^{-14}$) is close to machine precision, i.e. negligible deviations.
 
     The next simulation we consider has a double-slit barrier and a somewhat broader initial wave packet in the vertical direction (\textit{DS1} in table~\ref{tab:simulations_info}). We perform the same sanity check as above and once again get deviations of order $ 10^{-14}$, also shown in figure~\ref{fig:ptot_deviation_NS_DS1}.
 
@@ -60,13 +56,11 @@ For the interested reader, we present animations of the probability density resu
     \end{figure*}
 
 
-
-
 \subsection{One-dimensional problem}
 
     Using the same parameters, we run two additional simulations (\textit{SS} and \textit{TS}), except that we vary the number of slits (see tables~\ref{tab:simulation_parameters} and~\ref{tab:simulations_info}). In the following, we study the system further by removing one dimension.
 
-    Take note of the dotted vertical line in the right panel of figure~\ref{fig:snapshots_p_DS2}. Following the method described in section~\ref{sec:sec:methods:simulation:screen}, we find the probability density along this screen for detecting the particle. \Nanna{Is this clear?} The distribution for this particular experiment is plotted as a function of $y$ in figure~\ref{fig:p_along_y_DS2}. The same screen is used for the single- and triple-slit experiments, resulting in the graphs in figures~\ref{fig:p_along_y_SS} and~\ref{fig:p_along_y_TS}, respectively. %The resulting one-dimensional probability distributions are presented in figure~\ref{fig:p_along_y}.
+    Take note of the dotted vertical line in the right panel of figure~\ref{fig:snapshots_p_DS2}. Following the method described in section~\ref{sec:methods:simulation:screen}, we find the probability density along this screen for detecting the particle. \Nanna{Is this clear?} The distribution for this particular experiment is plotted as a function of $y$ in figure~\ref{fig:p_along_y_DS2}. The same screen is used for the single- and triple-slit experiments, resulting in the graphs in figures~\ref{fig:p_along_y_SS} and~\ref{fig:p_along_y_TS}, respectively. %The resulting one-dimensional probability distributions are presented in figure~\ref{fig:p_along_y}.
 
     \begin{figure}
         \centering
