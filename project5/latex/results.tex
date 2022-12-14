@@ -1,13 +1,13 @@
 \section{Results}\label{sec:results}
 
-For the interested reader with a keen interest in visualisation, we present animations of the probability density resulting from each simulation listed in table~\ref{tab:simulations_info} in our \href{\animlink}{GitHub} repository. 
+For the interested reader with a keen interest in visualisation, we present animations of the probability density resulting from each simulation listed in table~\ref{tab:simulations_info} in our \href{\animlink}{GitHub}\footnote{\url{https://github.com/Vikenes/FYS4150/tree/main/project5/output/videos}} repository. 
 
 
 
 \subsection{Sanity check}\label{sec:results:sanity}
 
     The first simulation, where there are no slits, is run with parameters according to tables~\ref{tab:simulation_parameters} and~\ref{tab:simulations_info} (\textit{NS}). By rights, at any time $t$, the probabilities $p(\vec{x}_{i,j}; \, t)$ should sum up to one, as the particle is present inside the box. As a sanity check, we plot 
-    \begin{equation}\label{eq:total_probability_deviation}
+    \begin{equation}\label{eq:total_probability_deviation_old}
         \abs{1- p^\mathrm{tot}(t)}\,; \quad p^\mathrm{tot}(t) = \sum_{i,j\in [0, M)} p(\vec{x}_{i,j};\, t)
     \end{equation}
     as a function of time in figure~\ref{fig:ptot_deviation_NS_DS1}, where we see that the deviation ($\sim 10^{-14}$) is close to machine precision, i.e. negligible deviations.
