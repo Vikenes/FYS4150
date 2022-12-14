@@ -6,13 +6,13 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
 \subsection{Numerical scheme}\label{sec:methods:numerical_scheme}
 
     \subsubsection{Discretisation}\label{sec:methods:numerical_scheme:discretisation}
-        We discretise the position $\vec{x} \to \vec{x}_{i,j} = (x_i, y_j) = h(i,j)$, where $h$ is the spatial separation between two points on the grid and $i$ and $j$ are integers. We consider $M$ points in each direction, giving $i, j \in [0,\, M)$, resulting in $M-1$ steps and $M-2$ internal points. The lattice is then made up of $(M-2) \cross (M-2)$ internal points and boundary points. The time points become $t\to t_n=n\Delta t$, where $\Delta t$ is the time step size and $N_t = T/\Delta t$ is the number of time points, so that the integer time steps are $n\in[0, N_t)$. In discretised form, we now write the wave function, probability density and potential as 
+        We discretise the position $\vec{x} \to \vec{x}_{i,j} = (x_i, y_j) = h(i,j)$, where $h$ is the spatial separation between two points on the grid and $i$ and $j$ are integers. We consider $M$ points in each direction, giving $i, j \in [0,\, M)$, resulting in $M-1$ steps and $M-2$ internal points. The lattice is then made up of $(M-2) \cross (M-2)$ internal points in addition to boundary points. The time points become $t\to t_n=n\Delta t$, where $\Delta t$ is the time step size and $N_t = T/\Delta t$ is the number of time points, so that the integer time steps are $n\in[0, N_t)$. In discretised form, we now write the wave function, probability density and potential as 
         \begin{align}
             u(t, \vec{x}) \to u(t_n, \vec{x}_{i,j}) &\equiv u_{i,j}^{(n)}, \\ 
             p(\vec{x};\, t) \to p(\vec{x}_{i,j};\, t_n) &\equiv p_{i,j}^{(n)}, \\
             v(\vec{x}) \to v(\vec{x}_{i,j})&\equiv v_{i,j}, 
         \end{align}
-        where the superscript $(n)$ refers to the time index. 
+        where the superscript $(n)$ refers to the time step number. 
 
     \subsubsection{Implementation}\label{sec:methods:numerical_scheme:implementation}
         In order to solve equation \eqref{eq:2d_schrodinger_dimless} numerically on a discretised grid, as explained above, we use the Crank-Nicolson method. A detailed derivation of the method we implement is given in appendix \ref{app:discretisation}. It allows us to express the time evolution of the system as:
