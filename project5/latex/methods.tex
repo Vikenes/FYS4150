@@ -1,13 +1,13 @@
 
 \section{Methods}\label{sec:methods}
 
-We will use the Schrödinger equation to simulate a particle inside a two-dimensional quadratic box of size $L^2$. The use of periodic boundary conditions gives rise to the confinement of the particle \Nanna{or something like that}. We will place two or more walls inside the box to create one or more slits. The specifics of such configurations is elaborated in section \ref{sec:methods:slit_config}. A position inside if the box is called $\vec{x} =(x, y)$ and a time $t\in$, all unit less. Now $x, y \in [0,\,L]$ and $t\in[0,\,T]$ if we let $T$ be the time we simulate for. In this paper, we will use $L=1$.
+\sout{We will use the Schrödinger equation to simulate a particle inside a two-dimensional quadratic box of size $L^2$. The use of  boundary conditions gives rise to the confinement of the particle \Nanna{or something like that}. We will place two or more walls inside the box to create one or more slits. The specifics of such configurations is elaborated in section \ref{sec:methods:slit_config}. A position inside if the box is called $\vec{x} =(x, y)$ and a time $t\in$, all unit less. Now $x, y \in [0,\,L]$ and $t\in[0,\,T]$ if we let $T$ be the time we simulate for. In this paper, we will use $L=1$.}
 
-\subsection{Numerical scheme}
+We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodinger_dimless} on a two-dimensional grid. Through the Born rule, equation~\eqref{eq:2d_bornrule_dimless}, we may interpret this solution to be proportional to the probability of finding a particle somewhere on this grid. We confine the particle by imposing Dirichlet boundary conditions. In order to investigate the behaviour of the wave function we place two or more walls inside the box to create one or more slits. The specifics of such configurations is elaborated in section \ref{sec:methods:slit_config}. A position inside if the box is called $\vec{x} =(x, y)$ and a time $t\in$, all unit less. Now $x, y \in [0,\,L]$ and $t\in[0,\,T]$ if we let $T$ be the time we simulate for. In this paper, we will use $L=1$.
 
+\subsection{Numerical scheme}\label{sec:methods:numerical_scheme}
 
-\Nanna{How to solve etc.} 
-    \subsubsection{Discretisation}
+    \subsubsection{Discretisation}\label{sec:methods:numerical_scheme:discretisation}
         We discretise the position $\vec{x} \to \vec{x}_{i,j} = (x_i, y_j) = h(i,j)$, where $h$ is the spatial separation between two points on the grid. We consider $M$ points in each direction, giving $i, j \in [0,\, M)$. The lattice is then made up of $(M-2) \cross (M-2)$ internal points and boundary points. The time points become $t\to t_n=n\Delta t$, $n\in[0, N_t)$, where $\Delta t$ is the time step size and $N_t = T/\Delta t$ is the number of time points. Further, we find the wave function as
         \begin{equation}
             u(t, \vec{x}) \to u(t_n, \vec{x}_{i,j}) \equiv u_{i,j}^{(n)},
@@ -18,7 +18,7 @@ We will use the Schrödinger equation to simulate a particle inside a two-dimens
         \end{equation}
         The potential is discretised as $v(\vec{x}) \to v(\vec{x}_{i,j})\equiv v_{i,j}$. 
 
-    \subsubsection{Implementation}
+    \subsubsection{Implementation}\label{sec:methods:numerical_scheme:implementation}
         In order to solve equation \eqref{eq:2d_schrodinger_dimless} numerically on a discretised grid, as explained above, we use the Crank-Nicolson approximation. A derivation of this is given in appendix \ref{app:discretisation}. It allows us to express the time evolution of the system as:
         \begin{align}\label{eq:equation_to_solve_non-matrix}
             u_{i,j}^{(n+1)} - \mathcal{F}_{i,j}^{(n+1)} = u_{i, j}^{(n)} + \mathcal{F}_{i,j}^{(n)},
@@ -55,27 +55,27 @@ We will use the Schrödinger equation to simulate a particle inside a two-dimens
         \end{equation}
         where we solve for $u^{(n+1)}$. When solving equation \eqref{eq:matrix_equation_to_solve} we can use the structure of $A$ to our advantage. $A$ arise from a boundary value problem. We could use direct methods, such as Gaussian elimination or LU-decomposition to find $A^{-1}$. It could be beneficial to find this inverse since we solve for many time instances without changing $A$. We could also use iterative methods such as the Jacobi method or Gauss-Seidel. $A$ is by construction diagonally dominant\footnote{See appendix \ref{app:A_and_B}}, we are thus guaranteed convergence with the Jacobi method\citep{lecture_notes}. However, noticing that the vast majority of the entries in $A$ are zeros, we represent it numerically as a \textit{sparse matrix}, only saving the indices and values of non-zero entries. We thus use a build-in solver in Armadillo to solve equation \eqref{eq:matrix_equation_to_solve}.
         
-\subsection{Simulation}
+\subsection{Initialisation and simulation}\label{sec:methods:simulation}
     When simulating a system that evolves in time, we have to know how the system is before the simulation, at time $t=0$.
-    \subsubsection{Initial wave packet}\label{sec:methods:initial_wave}
-    The initialisation is done by imposing the following initial condition. 
-    \begin{equation}\label{eq:p4_initial_condition}
-    \begin{split}
-        u(t\!=\!0, \vec{x}) = & \exp{-(\vec{x}-\vec{x}_\mathrm{c})^\mathrm{T}\Sigma^{-1}(\vec{x}-\vec{x}_\mathrm{c}) + \im \vec{p}^\mathrm{T}(\vec{x}-\vec{x}_\mathrm{c})}  
-    \end{split}
-    \end{equation}
-    where $\Sigma = \mathrm{diag}(\svec{\sigma}^2)$, $\vec{x}_c$ and $\vec{p}$ are the spatial variance, spatial centre location and momentum of the initial wave packet. This is a two dimensional complex Gaussian function. The parameters for different initialisations can be found in tables \ref{tab:simulation_parameters} and \ref{tab:simulations_info}. We normalise this initial state so that:
-    \begin{equation}
-        \sum_{i,j}u_{i,j}^{(0)*}u_{i,j}^{(0)} = 1, 
-    \end{equation}
-    which enables us to interpret $p_{i,j}^{n} = u_{i,j}^{(n)*}u_{i,j}^{(n)}$ as the probability that the particle is located in a small grid cell of size $h^2$, centred at $(x_i, y_i)$, which is in accordance with the Born rule from equation \eqref{eq:2d_bornrule_dimless}.
- 
-    % \begin{equation}\label{eq:p4_initial_condition_scalarform}
-    %     u(t\!=\!0, \vec{x}) = \exp{-\frac{(x-x_\mathrm{c})^2}{2\sigma_x^2} -\frac{(y-y_\mathrm{c})^2}{2\sigma_y^2} + \im \vec{p}\cdot (\vec{x}-\vec{x}_\mathrm{c})}
-    % \end{equation}
+    
+    \subsubsection{Initial wave packet}\label{sec:methods:simulation:initial_wave}
+        The initialisation is done by imposing the following initial condition. 
+        \begin{equation}\label{eq:p4_initial_condition}
+        \begin{split}
+            u(t\!=\!0, \vec{x}) = & \exp{-(\vec{x}-\vec{x}_\mathrm{c})^\mathrm{T}\Sigma^{-1}(\vec{x}-\vec{x}_\mathrm{c}) + \im \vec{p}^\mathrm{T}(\vec{x}-\vec{x}_\mathrm{c})}  
+        \end{split}
+        \end{equation}
+        where $\Sigma = \mathrm{diag}(\svec{\sigma}^2)$, $\vec{x}_c$ and $\vec{p}$ are the spatial variance, spatial centre location and momentum of the initial wave packet. This is a two dimensional complex Gaussian function. The parameters for different initialisations can be found in tables \ref{tab:simulation_parameters} and \ref{tab:simulations_info}. We normalise this initial state so that:
+        \begin{equation}
+            \sum_{i,j}u_{i,j}^{(0)*}u_{i,j}^{(0)} = 1, 
+        \end{equation}
+        which enables us to interpret $p_{i,j}^{n} = u_{i,j}^{(n)*}u_{i,j}^{(n)}$ as the probability that the particle is located in a small grid cell of size $h^2$, centred at $(x_i, y_i)$, which is in accordance with the Born rule from equation \eqref{eq:2d_bornrule_dimless}.
+    
+        % \begin{equation}\label{eq:p4_initial_condition_scalarform}
+        %     u(t\!=\!0, \vec{x}) = \exp{-\frac{(x-x_\mathrm{c})^2}{2\sigma_x^2} -\frac{(y-y_\mathrm{c})^2}{2\sigma_y^2} + \im \vec{p}\cdot (\vec{x}-\vec{x}_\mathrm{c})}
+        % \end{equation}
 
-
-    \subsubsection{Slit configuration}\label{sec:methods:slit_config}
+    \subsubsection{Slit configuration}\label{sec:methods:simulation:slit_config}
 
         To create a \textit{single} slit, we need \textit{two} objects with the property that the particle cannot propagate through it. Said objects are to have a separation between them, a \textit{slit}, perpendicular to the dominating motion of the wave packet. A natural choice for the shape of these objects are rectangles. The separation of these rectangles, or ``walls'', then give rise to the slits. Three such walls give rise to two slits, and so on. However, to achieve proper $n$-slit experiments, we should make sure that the two outermost walls of this setup reach the edges of the grid, so that the only way of bypassing the wall is through the slits.
 
@@ -83,9 +83,7 @@ We will use the Schrödinger equation to simulate a particle inside a two-dimens
 
         We will make sure that the slit setup is symmetric around the box centre in both directions. Thus, say we want $n$ slits, we would need $n-1$ identical wall pieces and two identical walls that closes the gap between the outer slits and the box edges.
     
-
-
-    \subsubsection{Artificial detector screen}\label{sec:methods:screen}
+    \subsubsection{Artificial detector screen}\label{sec:methods:simulation:screen}
 
         To reduce the dimensionality of the problem, we can assume to measure a particle with a detector screen at some horisontal position $x=x_\mathrm{sc}$ and time $t=t_\mathrm{sc}$, so that the screen spans of the vertical axis $y$. With a smart choice of pairing ($t_\mathrm{sc}$ \& $x_\mathrm{sc}$), we can safely assume that the particle is located somewhere along this line. Thus, it makes sense to consider a normalised one-dimensional probability function $p_{x=x_\mathrm{sc}}(y;\, t_\mathrm{sc})$ (read: probability of $y$ given $x=x_\mathrm{sc}$, at $t=t_\mathrm{sc}$) such that
         \begin{equation}\label{eq:tot_probability_along_y}
@@ -93,9 +91,7 @@ We will use the Schrödinger equation to simulate a particle inside a two-dimens
         \end{equation}
         To study the expected diffraction pattern, it will be appropriate to choose a time and place right after the particle has passed through the slit(s). In the case with two slits, the setup imitates the famous double-slit experiment.
 
-
-
-    \subsubsection{Simulations}\label{sec:methods:simulations}
+    \subsubsection{Simulations}\label{sec:methods:simulation:simulations}
 
         We aim to run a few experiments and their common setup is presented in table~\ref{tab:simulation_parameters}. The parameters specific to the simulations are presented in table~\ref{tab:simulations_info}. Our initial experiment box will have no slits or wall.
 
