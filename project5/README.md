@@ -74,7 +74,7 @@ The same syntax as above can be used to specify what figures or animations to pr
 
 ### Prerequisites
 
-CHECK THESE!!
+<mark>CHECK THESE!!<mark>
 
 In order to run the C++ code the following libraries are needed:
 
@@ -112,7 +112,7 @@ The simulations are characterised by a code that will be the prefix in the names
 |4. |Single-slit        | SS        | 1                 | 0.004                 | 0.20              |
 |5. |Triple-slit        | TS        | 3                 | 0.004                 | 0.20              |
 
-==**Important**==: Due to the large sizes of the binary files resulting from the simulations, none of them is present in the repository. However, by running the code as explained above, the raw data is saved as `output/binfiles/XX_arma_cube.bin`.
+<mark>**Important**</mark>: Due to the large sizes of the binary files resulting from the simulations, none of them is present in the repository. However, by running the code as explained above, the raw data is saved as `output/binfiles/XX_arma_cube.bin`.
 
 The figures we have produced are available in `output/plots/temp/` as `.png`-files and in `output/plots/pdf/` as `.pdf`-files.
 
