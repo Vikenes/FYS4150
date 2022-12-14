@@ -164,8 +164,8 @@ class Analysis:
 
 ### 1. No slits
 NOSLITS = Analysis("NS_arma_cube", "No slits", label="NS")
-DSLIT1 = Analysis("DS1_arma_cube", "Double-slit (1)", label="DS1", num_of_slits=2)
 ### 2. Double-slit (1)
+DSLIT1 = Analysis("DS1_arma_cube", "Double-slit (1)", label="DS1", num_of_slits=2)
 DSLIT1.set_params(sigma=(0.05, 0.10))
 ### 3. Double-slit (2)
 DSLIT2 = Analysis("DS2_arma_cube", "Double-slit (2)", label="DS2", num_of_slits=2, default=2)
