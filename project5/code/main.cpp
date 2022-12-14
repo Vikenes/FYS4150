@@ -7,9 +7,7 @@
 
 /**
  * @brief Main program for FYS4150 project 5 code.
- * @author Nanna Bryne
- * @author Johan M. Kroken
- * @author Vetle A. Vikenes
+ * @authors Nanna Bryne, Johan M. Kroken & Vetle A. Vikenes
  */
 
 

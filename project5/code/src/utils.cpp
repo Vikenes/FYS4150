@@ -182,7 +182,7 @@ arma::cx_mat make_matrix(arma::cx_vec column_vector, int M){
         matrix(i,j) = column_vector(k);
     }
 
-    //  impose boundary conditions:
+    //  impose Dirichlet boundary conditions:
     matrix.col(0).fill(0);
     matrix.col(M-1).fill(0);
     matrix.row(0).fill(0);

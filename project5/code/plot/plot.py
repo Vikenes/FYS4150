@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt 
 import pandas as pd 
 import os
-from IPython import embed
 from matplotlib.animation import FuncAnimation
 from matplotlib import cm as colourmaps
 
