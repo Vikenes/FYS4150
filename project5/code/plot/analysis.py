@@ -181,7 +181,7 @@ print(SSLIT)
 print(TSLIT)
 
 
-which = {"NS":"NOSLITS", "DS1":"DSLIT1", "DS2":"DSLIT1", "SS":"SSLIT", "TS":"TSLIT", "ALL":"ALL"}
+which = {"NS":"NOSLITS", "DS1":"DSLIT1", "DS2":"DSLIT2", "SS":"SSLIT", "TS":"TSLIT", "ALL":"ALL"}
 anim = ["animate", "anim", "video", "animations"]
 fig = ["plot", "plots", "figures", "fig", "figure"]
 
