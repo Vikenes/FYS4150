@@ -54,107 +54,106 @@ We will use the Schrödinger equation to simulate a particle inside a two-dimens
                 A\vec{u}^{(n+1)} &= \vec{b},
             \end{split}
         \end{equation}
-        where we solve for $u^{(n+1)}$. When solving equation \eqref{eq:matrix_equation_to_solve} we can use the structure of $A$ to our advantage. We could use direct methods, such as Guassian elimination or LU-decomposition to find $A^{-1}$. It could be beneficial to find this inverse since we solve for many time instances without changing $A$. We could also use iterative methods such as the Jacobi method or Guass-Seidel. $A$ is by construction diagonally dominant\footnote{See appendix \Johan{ref to appendix about A and B}}, we are thus guaranteed convergence with the Jacobi method \Johan{More here?}. However, noticing that the vast majority of the entries in $A$ are zeros, we represent it numerically as a \textit{sparse matrix}, only saving the indices and values of non-zero entries. We thus use a build in solver in Armadillo to solve equation \eqref{eq:matrix_equation_to_solve} \Johan{this citation should perhaps not be here}\citep{lecture_notes}.
-
-\subsection{Periodic boundaries}\label{sec:method:periodic_boundaries}
-    \Nanna{Dirichlet}
-
-\subsection{Initial wave packet}\label{sec:method:initial_wave}
-
-
-    \Nanna{choose one of these:}
+        where we solve for $u^{(n+1)}$. When solving equation \eqref{eq:matrix_equation_to_solve} we can use the structure of $A$ to our advantage. $A$ arise from a boundary value problem. We could use direct methods, such as Gaussian elimination or LU-decomposition to find $A^{-1}$. It could be beneficial to find this inverse since we solve for many time instances without changing $A$. We could also use iterative methods such as the Jacobi method or Gauss-Seidel. $A$ is by construction diagonally dominant\footnote{See appendix \Johan{ref to appendix about A and B}}, we are thus guaranteed convergence with the Jacobi method \Johan{More here?}. However, noticing that the vast majority of the entries in $A$ are zeros, we represent it numerically as a \textit{sparse matrix}, only saving the indices and values of non-zero entries. We thus use a build in solver in Armadillo to solve equation \eqref{eq:matrix_equation_to_solve} \Johan{this citation should perhaps not be here}\citep{lecture_notes}.
+        
+\subsection{Simulation}
+    When simulating a system, we have to evolve it in time, and thus initialise it with an initial state.
+    \subsubsection{Initial wave packet}\label{sec:method:initial_wave}
+    The initialisation is done by imposing the following initial condition. 
     \begin{equation}\label{eq:p4_initial_condition}
     \begin{split}
         u(t\!=\!0, \vec{x}) = & \exp{-(\vec{x}-\vec{x}_\mathrm{c})^\mathrm{T}\Sigma^{-1}(\vec{x}-\vec{x}_\mathrm{c}) + \im \vec{p}^\mathrm{T}(\vec{x}-\vec{x}_\mathrm{c})} \,;  \\ 
         &\quad\Sigma = \mathrm{diag}(\svec{\sigma}^2)  
     \end{split}
     \end{equation}
+    \Johan{check how thourough you need to be when defining the variables in the above equation}
+    This initial state is normalised such that $\langle \vec{u}^{(0)} | \vec{u}^{(0)}\rangle = 1$, so that the initial probability starts out normalised to 1. \Johan{rewrite thsi, make it clearer}.
  
-    \begin{equation}\label{eq:p4_initial_condition_scalarform}
-        u(t\!=\!0, \vec{x}) = \exp{-\frac{(x-x_\mathrm{c})^2}{2\sigma_x^2} -\frac{(y-y_\mathrm{c})^2}{2\sigma_y^2} + \im \vec{p}\cdot (\vec{x}-\vec{x}_\mathrm{c})}
-    \end{equation}
+    % \begin{equation}\label{eq:p4_initial_condition_scalarform}
+    %     u(t\!=\!0, \vec{x}) = \exp{-\frac{(x-x_\mathrm{c})^2}{2\sigma_x^2} -\frac{(y-y_\mathrm{c})^2}{2\sigma_y^2} + \im \vec{p}\cdot (\vec{x}-\vec{x}_\mathrm{c})}
+    % \end{equation}
 
 
-\subsection{Slit configuration}\label{sec:method:slit_config}
-    To create a single slit, we need \textit{two} objects with the property that the particle cannot propagate through it. Said objects are to have a separation between them, a \textit{slit}, perpendicular to the dominating motion of the particle \Nanna{Pls send help, cannot write proper sentences any more:}. A natural choice for the shape is the rectangular with the longer side parallel to the slit, \Nanna{(Some theory about interference??)} hence the name ``wall''. Three such walls give rise to two slits, etcetera. Therefore, 
-    \begin{equation}
-        \#\mathrm{walls} = \begin{cases}
-            \#\mathrm{slits} + 1 \quad &\mathrm{if}\,\, \#\mathrm{slits} \geq 1 \\
-            0 \quad                     &\mathrm{if}\,\, \#\mathrm{slits} =0 
-        \end{cases}.
-    \end{equation}
-    % OK, I admit, this was unnecessary...
+    \subsubsection{Slit configuration}\label{sec:method:slit_config}
+        To create a single slit, we need \textit{two} objects with the property that the particle cannot propagate through it. Said objects are to have a separation between them, a \textit{slit}, perpendicular to the dominating motion of the particle \Nanna{Pls send help, cannot write proper sentences any more:}. A natural choice for the shape is the rectangular with the longer side parallel to the slit, \Nanna{(Some theory about interference??)} hence the name ``wall''. Three such walls give rise to two slits, etcetera.
+    %     \begin{equation}
+    %         \#\mathrm{walls} = \begin{cases}
+    %             \#\mathrm{slits} + 1 \quad &\mathrm{if}\,\, \#\mathrm{slits} \geq 1 \\
+    %             0 \quad                     &\mathrm{if}\,\, \#\mathrm{slits} =0 
+    %         \end{cases}.
+    %     \end{equation}
+    % % OK, I admit, this was unnecessary...
 
-    To give the Schrödinger equation information about these walls, we simply create a very large potential in the walls. These potential barriers will resemble concrete \Nanna{(mener egt ikke betong, men konkrete... hva er ordet??)} walls in the sense that the particle will have to navigate around it in order to get through to the other side.
+        To give the Schrödinger equation information about these walls, we simply create a very large potential in the walls. These potential barriers will resemble concrete \Nanna{(mener egt ikke betong, men konkrete... hva er ordet??)} walls in the sense that the particle will have to navigate around it in order to get through to the other side.
 
-    In particular, we will set up a number of such walls in the middle of our box, the separation between which is the aperture, aligned perpendicular to the initial momentum $\vec{p}$ in equation \eqref{eq:p4_initial_condition}. We will make sure that the slit setup is symmetric around the box centre in both directions.
-
-
-\subsection{Artificial detector screen}\label{sec:method:screen}
-
-    To reduce the dimensionality of the problem, we can assume to measure a particle with a detector screen at some horisontal position $x=x_\mathrm{sc}$ and time $t=t_\mathrm{sc}$, so that the screen spans of the vertical axis $y$. With a smart choice of pairing ($t_\mathrm{sc}$ \& $x_\mathrm{sc}$), we can safely assume that the particle is located somewhere along this line. Thus, it makes sense to consider a normalised one-dimensional probability function $p_{x=x_\mathrm{sc}}(y;\, t_\mathrm{sc})$ (read: probability of $y$ given $x=x_\mathrm{sc}$, at $t=t_\mathrm{sc}$) such that
-    \begin{equation}\label{eq:tot_probability_along_y}
-        p^\mathrm{tot}_{x=x_\mathrm{sc}}(t\!=\!t_\mathrm{sc}) =\sum_{j\in [0, M)} p_{x=x_\mathrm{sc}}(y_j;\, t_\mathrm{sc}) = 1.
-    \end{equation}
-    \Nanna{Do we have to explain how we find this?}
+        In particular, we will set up a number of such walls in the middle of our box, the separation between which is the aperture, aligned perpendicular to the initial momentum $\vec{p}$ in equation \eqref{eq:p4_initial_condition}. We will make sure that the slit setup is symmetric around the box centre in both directions.
 
 
+    \subsubsection{Artificial detector screen}\label{sec:method:screen}
 
-\subsection{Simulation parameters}\label{sec:method:simulation_parameters}
-
-    \begin{table}[ht!]
-        \centering
-        \begin{tabular}{l|c}
-            \hline
-            \multicolumn{2}{l}{\textbf{Simulation parameters} \Nanna{??}} \\
-            \hline
-            Spatial step size ($h$)         & $5.0 \cdot 10^{-3}$   \\
-            Temporal step size ($\Delta t$) & $2.5 \cdot 10^{-5}$   \\
-            Total time ($T$)                & $*$                   \\
-            \hline
-            \multicolumn{2}{l}{\textbf{Slit configuration} (following section \ref{sec:method:slit_config})} \\
-            \hline
-            Number of slits ($\#\mathrm{slits}$)    & $*$                           \\
-            Number of identical walls               & $\#\mathrm{slits} + 1 \geq 2$ \\
-            Wall dimensions; width$\cross$height    & $0.02\cross 0.05$             \\
-            Wall centre position                    & $(0.5,\, \sim\!0.5)$\footnote{Slit setup symmetric around $y=0.5$.}   \\
-            Slit aperture (separation between walls)& $0.05$                        \\
-            Potential inside barrier ($v_0$)        & $1.0\cdot 10^{10}$            \\
-            \hline
-            \multicolumn{2}{l}{\textbf{Initial wave packet} (the Gaussian in equation \eqref{eq:p4_initial_condition})} \\
-            \hline
-            Centre position ($\vec{x}_\mathrm{c}$)  & $(0.25,\,0.50)$           \\
-            Spatial extent ($\svec{\sigma}$)        & $(0.05, \,*)$             \\
-            Momentum ($\vec{p}$)                    & $(200,\, 0)$              \\
-            \hline
-            \multicolumn{2}{l}{\textbf{Vertical screen} (following section \ref{sec:method:screen})} \\
-            \hline
-            Horisontal position ($x_\mathrm{sc}$)   & $0.8$     \\
-            Time point ($t_\mathrm{sc}$)            & $0.002$   \\
-            \hline
-        \end{tabular}
-        \caption{Numerical values for static simulation parameters. Simulation-specific values are denoted "$*$".}
-        \label{tab:simulation_parameters}
-    \end{table}
+        To reduce the dimensionality of the problem, we can assume to measure a particle with a detector screen at some horisontal position $x=x_\mathrm{sc}$ and time $t=t_\mathrm{sc}$, so that the screen spans of the vertical axis $y$. With a smart choice of pairing ($t_\mathrm{sc}$ \& $x_\mathrm{sc}$), we can safely assume that the particle is located somewhere along this line. Thus, it makes sense to consider a normalised one-dimensional probability function $p_{x=x_\mathrm{sc}}(y;\, t_\mathrm{sc})$ (read: probability of $y$ given $x=x_\mathrm{sc}$, at $t=t_\mathrm{sc}$) such that
+        \begin{equation}\label{eq:tot_probability_along_y}
+            p^\mathrm{tot}_{x=x_\mathrm{sc}}(t\!=\!t_\mathrm{sc}) =\sum_{j\in [0, M)} p_{x=x_\mathrm{sc}}(y_j;\, t_\mathrm{sc}) = 1.
+        \end{equation}
+        \Nanna{Do we have to explain how we find this?}
 
 
 
-    \begin{table}[ht!]
-        \centering
-        \begin{tabular}{clr|ccc}
-            \hline
-            & Simulation name & (label\footnote{Prefix to look for in \Nanna{link to animations etc.}}) & $\#\mathrm{slits}$ & $T$ & $\svec{\sigma}\cdot \hat{\vec{e}}_y$ \\
-            \hline
-            1. & No slits        & (\textit{NS})   & $0$   & $0.008$   & $0.05$ \\
-            2. & Double-slit (1) & (\textit{DS1})  & $2$   & $0.008$   & $0.10$ \\
-            3. & Double-slit (2) & (\textit{DS2})  & $2$   & $0.002$   & $0.20$ \\
-            4. & Single-slit     & (\textit{SS})   & $1$   & $0.002$   & $0.20$ \\
-            5. & Triple-slit     & (\textit{TS})   & $3$   & $0.002$   & $0.20$ \\
-            \hline
-        \end{tabular}
-        \caption{Supplement to table \ref{tab:simulation_parameters}. Additional information about the simulations considered in this paper.}
-        \label{tab:simulations_info}
-    \end{table}
+    \subsubsection{Simulation parameters}\label{sec:method:simulation_parameters}
+
+        \begin{table}[ht!]
+            \centering
+            \begin{tabular}{l|c}
+                \hline
+                \multicolumn{2}{l}{\textbf{Simulation parameters} \Nanna{??}} \\
+                \hline
+                Spatial step size ($h$)         & $5.0 \cdot 10^{-3}$   \\
+                Temporal step size ($\Delta t$) & $2.5 \cdot 10^{-5}$   \\
+                Total time ($T$)                & $*$                   \\
+                \hline
+                \multicolumn{2}{l}{\textbf{Slit configuration} (following section \ref{sec:method:slit_config})} \\
+                \hline
+                Number of slits ($\#\mathrm{slits}$)    & $*$                           \\
+                Number of identical walls               & $\#\mathrm{slits} + 1 \geq 2$ \\
+                Wall dimensions; width$\cross$height    & $0.02\cross 0.05$             \\
+                Wall centre position                    & $(0.5,\, \sim\!0.5)$\footnote{Slit setup symmetric around $y=0.5$.}   \\
+                Slit aperture (separation between walls)& $0.05$                        \\
+                Potential inside barrier ($v_0$)        & $1.0\cdot 10^{10}$            \\
+                \hline
+                \multicolumn{2}{l}{\textbf{Initial wave packet} (the Gaussian in equation \eqref{eq:p4_initial_condition})} \\
+                \hline
+                Centre position ($\vec{x}_\mathrm{c}$)  & $(0.25,\,0.50)$           \\
+                Spatial extent ($\svec{\sigma}$)        & $(0.05, \,*)$             \\
+                Momentum ($\vec{p}$)                    & $(200,\, 0)$              \\
+                \hline
+                \multicolumn{2}{l}{\textbf{Vertical screen} (following section \ref{sec:method:screen})} \\
+                \hline
+                Horisontal position ($x_\mathrm{sc}$)   & $0.8$     \\
+                Time point ($t_\mathrm{sc}$)            & $0.002$   \\
+                \hline
+            \end{tabular}
+            \caption{Numerical values for static simulation parameters. Simulation-specific values are denoted "$*$".}
+            \label{tab:simulation_parameters}
+        \end{table}
+
+
+
+        \begin{table}[ht!]
+            \centering
+            \begin{tabular}{clr|ccc}
+                \hline
+                & Simulation name & (label\footnote{Prefix to look for in \Nanna{link to animations etc.}}) & $\#\mathrm{slits}$ & $T$ & $\svec{\sigma}\cdot \hat{\vec{e}}_y$ \\
+                \hline
+                1. & No slits        & (\textit{NS})   & $0$   & $0.008$   & $0.05$ \\
+                2. & Double-slit (1) & (\textit{DS1})  & $2$   & $0.008$   & $0.10$ \\
+                3. & Double-slit (2) & (\textit{DS2})  & $2$   & $0.002$   & $0.20$ \\
+                4. & Single-slit     & (\textit{SS})   & $1$   & $0.002$   & $0.20$ \\
+                5. & Triple-slit     & (\textit{TS})   & $3$   & $0.002$   & $0.20$ \\
+                \hline
+            \end{tabular}
+            \caption{Supplement to table \ref{tab:simulation_parameters}. Additional information about the simulations considered in this paper.}
+            \label{tab:simulations_info}
+        \end{table}
 
 
 % ===========================================
