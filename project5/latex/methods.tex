@@ -53,16 +53,17 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
         where $u^{(n+1)}$ is the unknown we solve for. When solving equation \eqref{eq:matrix_equation_to_solve} we can use the structure of $A$ to our advantage. $A$ arise from a boundary value problem. We could use direct methods, such as Gaussian elimination or LU-decomposition. The latter may be used to compute the inverse, $A^{-1}$. This could be beneficial, since the constant $A^{-1}$ would apply at all time steps. We could also use iterative methods such as the Jacobi method or Gauss-Seidel. $A$ is diagonally dominant\footnote{See appendix \ref{app:A_and_B}}, and we are thus guaranteed convergence with the Jacobi method\citep{lecture_notes}. However, noticing that the vast majority of the entries in $A$ are zeros, we represent it numerically as a \textit{sparse matrix}, only saving the indices and values of non-zero entries. This allows us to use the ``spsolve()'' method of the Armadillo to solve equation \eqref{eq:matrix_equation_to_solve}. The method solves the system of sparse linear equations by a special algorithm for performing LU decomposition, called a Supernoidal LU decomposition (SuperLU) \cite{SuperLU}. We refer to their article for a more detailed description of the algorithm. \Vetle{(Formatting of "Armadillo" and "spsolve()" needs to be fixed!)} 
         
 \subsection{Initialisation and simulation}\label{sec:methods:simulation}
-    When simulating a system that evolves in time, we have to know how the system is before the simulation, at time $t=0$.
+    Having addressed methods for advancing the system in time, we now turn our attention to how we initialise the system. Additionally, we describe how we model the slits in our simulation box. \Vetle{(Rewrote paragraph, not sure if the last sentence is akhtschually "correct")}  
     
     \subsubsection{Initial wave packet}\label{sec:methods:simulation:initial_wave}
         The initialisation is done by imposing the following initial condition. 
         \begin{equation}\label{eq:p4_initial_condition}
         \begin{split}
-            u(t\!=\!0, \vec{x}) = & \exp{-(\vec{x}-\vec{x}_\mathrm{c})^\mathrm{T}\Sigma^{-1}(\vec{x}-\vec{x}_\mathrm{c}) + \im \vec{p}^\mathrm{T}(\vec{x}-\vec{x}_\mathrm{c})}  
+            u(t\!=\!0, \vec{x}) = \exp\{ &-(\vec{x}-\vec{x}_\mathrm{c})^\mathrm{T}\Sigma^{-1}(\vec{x}-\vec{x}_\mathrm{c}) \\ 
+            &+ \im \vec{p}^\mathrm{T}(\vec{x}-\vec{x}_\mathrm{c})\}  
         \end{split}
         \end{equation}
-        where $\Sigma = \mathrm{diag}(\svec{\sigma}^2)$, $\vec{x}_c$ and $\vec{p}$ are the spatial variance, spatial centre location and momentum of the initial wave packet. This is a two dimensional complex Gaussian function. The parameters for different initialisations can be found in tables \ref{tab:simulation_parameters} and \ref{tab:simulations_info}. We normalise this initial state so that:
+        where $\Sigma$, $\vec{x}_c$ and $\vec{p}$ are the spatial variance, spatial centre location and momentum of the initial wave packet, respectively, where we have defined $\Sigma \equiv \mathrm{diag}(\svec{\sigma}^2)$. This is a two dimensional complex Gaussian function. The parameters for different initialisations can be found in tables \ref{tab:simulation_parameters} and \ref{tab:simulations_info}. We normalise this initial state so that:
         \begin{equation}
             \sum_{i,j}u_{i,j}^{(0)*}u_{i,j}^{(0)} = 1, 
         \end{equation}
