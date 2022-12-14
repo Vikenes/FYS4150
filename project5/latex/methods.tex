@@ -48,7 +48,7 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
                 &\text{2. Solve the matrix equation: } A\vec{u}^{(n+1)} = \vec{b},
             \end{split}
         \end{equation}
-        where $u^{(n+1)}$ is the unknown we solve for. When solving equation \eqref{eq:matrix_equation_to_solve} we can use the structure of $A$ to our advantage. $A$ arise from a boundary value problem. We could use direct methods, such as Gaussian elimination or LU-decomposition. The latter may be used to compute the inverse, $A^{-1}$. This could be beneficial, since the constant $A^{-1}$ would apply at all time steps. We could also use iterative methods such as the Jacobi method or Gauss-Seidel. $A$ is diagonally dominant\footnote{See appendix \ref{app:A_and_B}}, and we are thus guaranteed convergence with the Jacobi method\citep{lecture_notes}. However, noticing that the vast majority of the entries in $A$ are zeros, we represent it numerically as a \textit{sparse matrix}, only saving the indices and values of non-zero entries. We therefore use the built-in method solver in Armadillo to solve equation \eqref{eq:matrix_equation_to_solve}, whose solution is only valid on the interior of our grid. The boundary points are given by the boundary conditions.\Vetle{(Not done here, will continue shortly.)}
+        where $u^{(n+1)}$ is the unknown we solve for. When solving equation \eqref{eq:matrix_equation_to_solve} we can use the structure of $A$ to our advantage. $A$ arise from a boundary value problem. We could use direct methods, such as Gaussian elimination or LU-decomposition. The latter may be used to compute the inverse, $A^{-1}$. This could be beneficial, since the constant $A^{-1}$ would apply at all time steps. We could also use iterative methods such as the Jacobi method or Gauss-Seidel. $A$ is diagonally dominant\footnote{See appendix \ref{app:A_and_B}}, and we are thus guaranteed convergence with the Jacobi method\citep{lecture_notes}. However, noticing that the vast majority of the entries in $A$ are zeros, we represent it numerically as a \textit{sparse matrix}, only saving the indices and values of non-zero entries. This allows us to use the ``spsolve()'' method of the Armadillo to solve equation \eqref{eq:matrix_equation_to_solve}. The method solves the system of sparse linear equations by a special algorithm for performing LU decomposition, called a Supernoidal LU decomposition (SuperLU) \cite{SuperLU}. We refer to their article for a more detailed description of the algorithm. \Vetle{(Formatting of "Armadillo" and "spsolve()" needs to be fixed!)} 
         
 \subsection{Initialisation and simulation}\label{sec:methods:simulation}
     When simulating a system that evolves in time, we have to know how the system is before the simulation, at time $t=0$.
@@ -131,7 +131,7 @@ We will solve the dimensionless wave function from equation~\eqref{eq:2d_schrodi
             \centering
             \begin{tabular}{clr|ccc}
                 \hline
-                & Simulation name & (label\footnote{Prefix to look for in the \href{\animlink}{animations}}) & $N_\mathrm{slits}$ & $T$ & $\svec{\sigma}\cdot \hat{\vec{e}}_y$ \\
+                & Simulation name & (label\footnote{Prefix to look for amongst the \href{\animlink}{animations}.}) & $N_\mathrm{slits}$ & $T$ & $\svec{\sigma}\cdot \hat{\vec{e}}_y$ \\
                 \hline
                 1. & No slits        & (\textit{NS})   & $0$   & $0.008$   & $0.05$ \\
                 2. & Double-slit (1) & (\textit{DS1})  & $2$   & $0.008$   & $0.10$ \\

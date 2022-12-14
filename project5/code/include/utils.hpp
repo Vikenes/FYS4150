@@ -89,7 +89,7 @@ arma::cx_vec make_column_vector(arma::cx_mat U, int M);
 
 /**
  * @brief Set up a matrix of size M*M from the flattened column vector
- * @note Imposes periodic boundary conditions.
+ * @note Imposes Dirichlet boundary conditions.
  * @param column_vector flattened column vector u 
  * @param M number of points in each direction
 */

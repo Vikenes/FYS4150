@@ -69,7 +69,7 @@ class Simulation{
         */
         arma::cx_cube run_simulation();
         /**
-         * @brief Easily extend the initial Gaussian in x- and/or y-direction.
+         * @brief Easily extend the initial Gaussian in x- and/or y-direction. (Kind of strange solution, but will keep it.)
          * @param vertical_extent standard deviation of Gaussian in y-direction
          * @param horisontal_extent standard deviation of Gaussian in x-direction
         */
